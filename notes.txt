@@ -1,0 +1,16 @@
+Login Details
+
+Username: hcgaming
+Password: WG8g6h+Ti7c5]R
+
+Control Panel URL: http://139.162.18.125:2082/
+Once your domain has propagated, you may also use http://www.hcgaming.my:2082/
+
+Server Information
+
+Server Name: sg203
+Server IP: 139.162.18.125
+
+Admin Credentials:
+Username: backlight
+Password: B4ck1ight

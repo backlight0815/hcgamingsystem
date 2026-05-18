@@ -36,7 +36,14 @@ class ProfileController extends Controller
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
+public function connectDiscord()
+{
+    $user = auth()->user();                     // Get logged-in user
+    $user->discord_connected_at = now();        // Save current timestamp
+    $user->save();                              // Update DB
 
+    return redirect('https://discord.gg/FWWYuf3kXM'); // Redirect to Discord
+}
     /**
      * Delete the user's account.
      */

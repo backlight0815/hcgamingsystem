@@ -13,8 +13,21 @@ class FeatureToggleController extends Controller
      */
     public function index()
     {
-        $features = FeatureToggle::all();
-        return view('admin.config.features_config', compact('features'));
+        FeatureToggle::ensureDefaultFeatures();
+
+        $moduleFeatureNames = array_keys(FeatureToggle::moduleDefinitions());
+        $features = FeatureToggle::all()
+            ->sortBy(function (FeatureToggle $feature) use ($moduleFeatureNames): string {
+                $prefix = in_array($feature->feature_name, $moduleFeatureNames, true) ? '0' : '1';
+
+                return $prefix . '_' . $feature->feature_name;
+            })
+            ->values();
+
+        $moduleDefinitions = FeatureToggle::moduleDefinitions();
+        $featureDefinitions = FeatureToggle::defaultFeatureDefinitions();
+
+        return view('admin.config.features_config', compact('features', 'moduleDefinitions', 'featureDefinitions'));
     }
 
     /**
@@ -31,7 +44,7 @@ class FeatureToggleController extends Controller
             'enabled' => 1 // default enabled
         ]);
 
-        return redirect()->back()->with('success', 'Feature added successfully!');
+        return redirect()->back()->with('success', 'Feature added successfully.');
     }
 
     /**
@@ -43,6 +56,6 @@ class FeatureToggleController extends Controller
         $feature->enabled = $request->enabled == '1' ? 1 : 0;
         $feature->save();
 
-        return redirect()->back()->with('success', 'Feature updated successfully!');
+        return redirect()->back()->with('success', 'Feature updated successfully.');
     }
 }

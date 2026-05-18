@@ -46,6 +46,30 @@
                                 </div>
                             </div>
 
+                            {{-- Pip Factor --}}
+                            <div class="row mb-3">
+                                <label for="pip_factor" class="col-sm-2 col-form-label">Pip Factor</label>
+                                <div class="col-sm-10">
+                                    <input name="pip_factor" class="form-control" type="number" step="0.00001" id="pip_factor" value="{{ old('pip_factor', $pair->pip_factor ?? 1) }}">
+                                    <small class="text-muted">Used to calculate pips (e.g., XAUUSD = 0.1, BTCUSD = 1)</small>
+                                    @error('pip_factor')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            {{-- Pip Decimal --}}
+                            <div class="row mb-3">
+                                <label for="pip_decimal" class="col-sm-2 col-form-label">Pip Decimal</label>
+                                <div class="col-sm-10">
+                                    <input name="pip_decimal" class="form-control" type="number" step="1" min="0" id="pip_decimal" value="{{ old('pip_decimal', $pair->pip_decimal ?? 0) }}">
+                                    <small class="text-muted">Number of decimals to show in pips (e.g., 1 or 2)</small>
+                                    @error('pip_decimal')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
                             {{-- Submit Button --}}
                             <input type="submit" class="btn btn-info waves-effect waves-light" value="Update Pair">
 

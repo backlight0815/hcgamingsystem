@@ -39,6 +39,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\CheckBanned::class,
+            \App\Http\Middleware\EnsureTraderOnboardingApproved::class,
             // \App\Http\Middleware\CheckSession::class,
 
 
@@ -70,6 +71,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'check' => \App\Http\Middleware\CheckAge::class,
+        'feature' => \App\Http\Middleware\CheckFeatureEnabled::class,
 
     ];
     protected $routeMiddleware = [
@@ -77,7 +79,7 @@ class Kernel extends HttpKernel
         'role' => \App\Http\Middleware\CheckRole::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'pageview' => \App\Http\Middleware\PageViewMiddleware::class,
-   // 'feature' => \App\Http\Middleware\CheckFeatureEnabled::class,
+        'feature' => \App\Http\Middleware\CheckFeatureEnabled::class,
 
     ];
 }

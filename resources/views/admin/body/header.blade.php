@@ -52,7 +52,80 @@
 @php
     $id =Auth::user()->id;
     $adminData = App\Models\User::find($id);
+    $headerNotifications = collect();
+    $unreadNotificationCount = 0;
+
+    try {
+        if (\Illuminate\Support\Facades\Schema::hasTable('app_notifications') && \Illuminate\Support\Facades\Route::has('notifications.index')) {
+            $notificationBaseQuery = \App\Models\AppNotification::visibleToUser($adminData);
+            $unreadNotificationCount = (clone $notificationBaseQuery)
+                ->whereDoesntHave('reads', fn ($query) => $query->where('user_id', $adminData->id))
+                ->count();
+            $headerNotifications = (clone $notificationBaseQuery)
+                ->with(['reads' => fn ($query) => $query->where('user_id', $adminData->id)])
+                ->latest('published_at')
+                ->latest()
+                ->take(5)
+                ->get();
+        }
+    } catch (\Throwable $exception) {
+        $headerNotifications = collect();
+        $unreadNotificationCount = 0;
+    }
 @endphp
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="ri-notification-3-line"></i>
+                    @if($unreadNotificationCount > 0)
+                        <span class="badge bg-danger rounded-pill position-absolute" style="top: 12px; right: 8px;">
+                            {{ $unreadNotificationCount > 9 ? '9+' : $unreadNotificationCount }}
+                        </span>
+                    @endif
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0" aria-labelledby="page-header-notifications-dropdown">
+                    <div class="p-3 border-bottom">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="m-0">Notifications</h6>
+                            </div>
+                            <div class="col-auto">
+                                <a href="{{ route('notifications.index') }}" class="small">View All</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="max-height: 280px; overflow-y: auto;">
+                        @forelse($headerNotifications as $notification)
+                            @php($notificationRead = $notification->isReadBy($adminData))
+                            <form action="{{ route('notifications.read', $notification->id) }}" method="POST" class="m-0">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-start py-3 {{ $notificationRead ? '' : 'bg-light' }}">
+                                    <div class="d-flex align-items-start">
+                                        <div class="avatar-xs me-3">
+                                            <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                                <i class="ri-message-3-line"></i>
+                                            </span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <h6 class="mt-0 mb-1">{{ \Illuminate\Support\Str::limit($notification->title, 42) }}</h6>
+                                            <div class="font-size-12 text-muted">
+                                                <p class="mb-1">{{ \Illuminate\Support\Str::limit($notification->message, 72) }}</p>
+                                                <p class="mb-0">
+                                                    <i class="mdi mdi-clock-outline"></i>
+                                                    {{ $notification->published_at?->diffForHumans() ?? $notification->created_at?->diffForHumans() }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </button>
+                            </form>
+                        @empty
+                            <div class="p-4 text-center text-muted">No notifications yet.</div>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
 
             <div class="dropdown d-inline-block user-dropdown">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"

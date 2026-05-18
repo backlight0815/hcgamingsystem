@@ -16,5 +16,7 @@ class TradingPair extends Model
     protected $fillable = [
         'symbol',
         'description',
+            'pip_factor',
+        'pip_decimal',
     ];
 }

@@ -9,12 +9,11 @@ class TradingJournal extends Model
 {
     use HasFactory;
 
-
-protected $table = 'trading_journals';
+    protected $table = 'trading_journals';
 
     protected $fillable = [
-              'type',          // ✅ 'trade' or 'deposit'
-        'user_id',       // ✅ track owner
+        'type',
+        'user_id',
         'open_date',
         'close_date',
         'pair',
@@ -28,9 +27,13 @@ protected $table = 'trading_journals';
         'notes',
     ];
 
-    public function user()
-{
-    return $this->belongsTo(User::class);
-}
+    protected $casts = [
+        'open_date' => 'datetime',
+        'close_date' => 'datetime',
+    ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

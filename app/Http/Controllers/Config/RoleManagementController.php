@@ -4,31 +4,46 @@ namespace App\Http\Controllers\Config;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class RoleManagementController extends Controller
 {
-    // Show all roles
- // Show all roles
     public function AllRoles()
     {
-
-             $breadcrumbData = [
+        $breadcrumbData = [
             ['label' => 'HC Gaming', 'url' => route('all.statistics')],
             ['label' => 'Role Management', 'url' => route('all.roles')],
-
         ];
-        $roles = Role::orderBy('id', 'desc')->get();
-        return view('admin.role.roles_all', compact('roles','breadcrumbData'));
+
+        $roles = Role::orderBy('id')->get();
+        $userCountsByRole = User::selectRaw('role_id, COUNT(*) as total')
+            ->groupBy('role_id')
+            ->pluck('total', 'role_id');
+        $activeUserCountsByRole = User::where('status', 1)
+            ->selectRaw('role_id, COUNT(*) as total')
+            ->groupBy('role_id')
+            ->pluck('total', 'role_id');
+
+        return view('admin.role.roles_all', compact(
+            'roles',
+            'breadcrumbData',
+            'userCountsByRole',
+            'activeUserCountsByRole'
+        ));
     }
 
-    // Show add role form
     public function AddRole()
     {
-        return view('admin.role.roles_add');
+        $breadcrumbData = [
+            ['label' => 'HC Gaming', 'url' => route('all.statistics')],
+            ['label' => 'Role Management', 'url' => route('all.roles')],
+            ['label' => 'Add Role', 'url' => route('add.role')],
+        ];
+
+        return view('admin.role.roles_add', compact('breadcrumbData'));
     }
 
-    // Store role (with manual ID support)
     public function StoreRole(Request $request)
     {
         $request->validate([
@@ -46,14 +61,20 @@ class RoleManagementController extends Controller
         return redirect()->route('all.roles')->with('success', 'Role created successfully.');
     }
 
-    // Show edit form
     public function EditRole($id)
     {
         $role = Role::findOrFail($id);
-        return view('admin.role.roles_edit', compact('role'));
+        $breadcrumbData = [
+            ['label' => 'HC Gaming', 'url' => route('all.statistics')],
+            ['label' => 'Role Management', 'url' => route('all.roles')],
+            ['label' => 'Edit Role', 'url' => route('edit.role', $role->id)],
+        ];
+
+        $assignedUsers = User::where('role_id', $role->id)->count();
+
+        return view('admin.role.roles_edit', compact('role', 'breadcrumbData', 'assignedUsers'));
     }
 
-    // Update role
     public function UpdateRole(Request $request, $id)
     {
         $role = Role::findOrFail($id);
@@ -71,9 +92,14 @@ class RoleManagementController extends Controller
         return redirect()->route('all.roles')->with('success', 'Role updated successfully.');
     }
 
-    // Delete role
     public function DeleteRole($id)
     {
+        if (User::where('role_id', $id)->exists()) {
+            return redirect()
+                ->route('all.roles')
+                ->with('error', 'This role has assigned users and cannot be deleted.');
+        }
+
         Role::findOrFail($id)->delete();
         return redirect()->route('all.roles')->with('success', 'Role deleted successfully.');
     }

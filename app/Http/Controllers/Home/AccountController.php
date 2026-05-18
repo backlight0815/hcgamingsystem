@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Home;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;
+use App\Models\TradingPositionApplication;
 use Illuminate\Http\Request;
 use App\Models\User;
 
@@ -33,7 +34,7 @@ class AccountController extends Controller
         $suspendedCount = User::where('status','0')->count();
 
         // $user = User::get();
-        $user = User::with('upline')->get();
+        $user = User::with(['upline', 'commissions'])->latest()->get();
 
 
         return view('admin.account.account_all', compact('user', 'users', 'suspendedCount', 'activeCount','breadcrumbData'));
@@ -121,7 +122,7 @@ public function updateAccountStatus(Request $request){
         ];
         $adminCount = User::where('role_id', '2')->count();
 
-        $admins = User::where('role_id', '2')->get();
+        $admins = User::with(['upline', 'commissions'])->where('role_id', '2')->latest()->get();
         $activeCount = $admins->where('status', '1')->count();
         $suspendedCount = $admins->where('status', '0')->count();
 
@@ -200,7 +201,68 @@ public function updateAccountStatus(Request $request){
             }//End Methods
 
 
+  public function AllSignalProvider() {
+        $breadcrumbData = [
+            ['label' => 'HC Gaming', 'url' => route('all.statistics')],
+            ['label' => 'Signal Provider Management', 'url' => route('all.signal_provider')],
+        ];
+        $signalProviderRoles = [201, 202, 502];
 
+        $provider = User::with(['upline', 'commissions'])
+            ->whereIn('role_id', $signalProviderRoles)
+            ->latest()
+            ->get();
+        $signalProviderCount = $provider->count();
+        $activeCount = $provider->where('status', '1')->count();
+        $suspendedCount = $provider->where('status', '0')->count();
+
+        return view('admin.account.dealer_account_all', compact('signalProviderCount','provider','activeCount','suspendedCount','breadcrumbData'));
+    }
+
+    public function EditSignalProviderAccount($id){
+        $agent_details = User::findOrFail($id);
+        return view('admin.account.dealer_account_edit', compact('agent_details'));
+    }
+
+    public function UpdateSignalProvider(Request $request){
+        $request->validate([
+            'account_username' => 'required|unique:users,username,' . $request->id,
+            'account_name' => 'required',
+            'account_email' => [
+                'required',
+                'email',
+                'unique:users,email,' . $request->id,
+                'regex:/@(gmail|ymail|yahoo|hotmail|outlook)\.com$/i',
+            ],
+            'account_status' => 'required',
+            'account_role' => 'required',
+        ], [
+            'account_username.required' => 'The username field is required.',
+            'account_username.unique' => 'Username is already taken.',
+            'account_name.required' => 'The name field is required.',
+            'account_email.required' => 'The email field is required.',
+            'account_email.email' => 'Please provide a valid email address.',
+            'account_email.unique' => 'Email is already taken.',
+            'account_email.regex' => 'Only Gmail, Yahoo, Ymail, Hotmail, and Outlook email addresses are allowed.',
+            'account_status.required' => 'The status field is required.',
+            'account_role.required' => 'The role field is required.',
+        ]);
+
+        User::findOrFail($request->id)->update([
+            'username'=> $request->account_username,
+            'name'=> $request->account_name,
+            'email'=> $request->account_email,
+            'status'=> $request->account_status,
+            'role_id'=> $request->account_role,
+        ]);
+
+        $notification = array(
+            'message' =>'Signal Provider Updated Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('all.signal_provider')->with($notification);
+    }
 
     public function AllAgent() {
         $breadcrumbData = [
@@ -209,7 +271,7 @@ public function updateAccountStatus(Request $request){
         ];
         $agentCount = User::where('role_id', '350')->count();
 
-        $agents = User::where('role_id', '350')->get();
+        $agents = User::with(['upline', 'commissions'])->where('role_id', '350')->latest()->get();
         $activeCount = $agents->where('status', '1')->count();
         $suspendedCount = $agents->where('status', '0')->count();
 
@@ -299,7 +361,7 @@ public function updateAccountStatus(Request $request){
         ];
         $customerCount = User::where('role_id', '700')->count();
 
-        $customers = User::where('role_id', '700')->get();
+        $customers = User::with(['upline', 'commissions'])->where('role_id', '700')->latest()->get();
         $activeCount = $customers->where('status', '1')->count();
         $suspendedCount = $customers->where('status', '0')->count();
 
@@ -385,13 +447,20 @@ public function updateAccountStatus(Request $request){
             ['label' => 'HC Gaming', 'url' => route('all.statistics')],
             ['label' => 'Traders Management', 'url' => route('all.traders.account')],
         ];
-        $tradersCount = User::where('role_id', '750')->count();
+        $tradingRoles = TradingPositionApplication::tradingMemberRoles();
 
-        $traders = User::where('role_id', '750')->get();
+        $traders = User::with(['upline', 'commissions', 'latestTraderOnboardingApplication'])
+            ->whereIn('role_id', $tradingRoles)
+            ->latest()
+            ->get();
+        $tradersCount = $traders->count();
+        $leaderCount = $traders->where('role_id', TradingPositionApplication::ROLE_LEADERSHIP)->count();
+        $recruiterCount = $traders->where('role_id', TradingPositionApplication::ROLE_RECRUITER)->count();
+        $regularTraderCount = $traders->where('role_id', 750)->count();
         $activeCount = $traders->where('status', '1')->count();
         $suspendedCount = $traders->where('status', '0')->count();
 
-        return view('admin.account.traders_account_all', compact('tradersCount','traders','activeCount','suspendedCount','breadcrumbData'));
+        return view('admin.account.traders_account_all', compact('tradersCount','leaderCount','recruiterCount','regularTraderCount','traders','activeCount','suspendedCount','breadcrumbData'));
     }
   public function EditTradersAccount($id){
         $traders_details = User::findOrFail($id);
@@ -497,5 +566,3 @@ public function DeleteAccount($id){
 
 
     }//end Methods
-
-

@@ -13,7 +13,7 @@ class TradingJournalBackup extends Model
     protected $table = 'trading_journals_backup';
 
     protected $fillable = [
-        'type',          // ✅ 'trade' or 'deposit'
+               'type',          // ✅ 'trade' or 'deposit'
         'user_id',       // ✅ track owner
         'open_date',
         'close_date',
@@ -26,10 +26,16 @@ class TradingJournalBackup extends Model
         'profit_loss',
         'result',
         'notes',
+        'capital',
+    ];
+
+    protected $casts = [
+        'open_date' => 'datetime',
+        'close_date' => 'datetime',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-} 
+}

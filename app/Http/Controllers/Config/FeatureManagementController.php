@@ -11,55 +11,80 @@ class FeatureManagementController extends Controller
     // Show all features
     public function AllFeatures()
     {
-                $breadcrumbData=[
+        FeatureToggle::ensureDefaultFeatures();
+
+        $breadcrumbData = [
             ['label' => 'HC Gaming', 'url' => route('all.statistics')],
             ['label' => 'Features Management', 'url' => route('all.features')],
-
         ];
-$features = FeatureToggle::orderBy('feature_name', 'desc')->get();
-        return view('admin.features_management.features_all', compact('features','breadcrumbData'));
+
+        $features = FeatureToggle::orderBy('feature_name')->get();
+        $moduleDefinitions = FeatureToggle::moduleDefinitions();
+        $featureDefinitions = FeatureToggle::defaultFeatureDefinitions();
+
+        return view('admin.features_management.features_all', compact(
+            'features',
+            'breadcrumbData',
+            'moduleDefinitions',
+            'featureDefinitions'
+        ));
     }
 
-    // Show add form
     public function AddFeature()
     {
-        return view('admin.features_management.features_add');
+        $breadcrumbData = [
+            ['label' => 'HC Gaming', 'url' => route('all.statistics')],
+            ['label' => 'Features Management', 'url' => route('all.features')],
+            ['label' => 'Add Feature', 'url' => route('add.feature')],
+        ];
+
+        return view('admin.features_management.features_add', compact('breadcrumbData'));
     }
 
-    // Store new feature
     public function StoreFeature(Request $request)
     {
         $request->validate([
-            'feature_name' => 'required|string|max:255',
+            'feature_name' => 'required|string|max:255|unique:feature_toggles,feature_name',
         ]);
 
         FeatureToggle::create([
             'feature_name' => $request->feature_name,
-            'enabled' => 1, // default enabled
+            'enabled' => $request->has('enabled') ? $request->boolean('enabled') : true,
         ]);
-// Redirect to the URL sent by form, or fallback
-    return redirect($request->input('redirect_to', route('all.features')))
-           ->with('success', 'Feature added successfully!');
+
+        return redirect($request->input('redirect_to', route('all.features')))
+            ->with('success', 'Feature added successfully!');
     }
 
-    // Show edit form
     public function EditFeature($id)
     {
         $feature = FeatureToggle::findOrFail($id);
-        return view('admin.features_management.features_edit', compact('feature'));
+        $breadcrumbData = [
+            ['label' => 'HC Gaming', 'url' => route('all.statistics')],
+            ['label' => 'Features Management', 'url' => route('all.features')],
+            ['label' => 'Edit Feature', 'url' => route('edit.feature', $feature->id)],
+        ];
+        $moduleDefinitions = FeatureToggle::moduleDefinitions();
+        $featureDefinitions = FeatureToggle::defaultFeatureDefinitions();
+
+        return view('admin.features_management.features_edit', compact(
+            'feature',
+            'breadcrumbData',
+            'moduleDefinitions',
+            'featureDefinitions'
+        ));
     }
 
-    // Update feature
     public function UpdateFeature(Request $request, $id)
     {
         $request->validate([
-            'feature_name' => 'required|string|max:255',
+            'feature_name' => 'required|string|max:255|unique:feature_toggles,feature_name,' . $id,
         ]);
 
         $feature = FeatureToggle::findOrFail($id);
         $feature->update([
             'feature_name' => $request->feature_name,
-            'enabled' => $request->enabled ?? 0,
+            'enabled' => $request->boolean('enabled'),
         ]);
 
         return redirect()->route('all.features')->with('success', 'Feature updated successfully.');

@@ -11,6 +11,10 @@ return new class extends Migration
      */
 public function up()
 {
+    if (Schema::hasColumn('trading_journals', 'capital')) {
+        return;
+    }
+
     Schema::table('trading_journals', function (Blueprint $table) {
         $table->decimal('capital', 10, 2)->nullable()->after('notes'); // Adjust 'after' column as needed
     });
@@ -18,6 +22,10 @@ public function up()
 
 public function down()
 {
+    if (! Schema::hasColumn('trading_journals', 'capital')) {
+        return;
+    }
+
     Schema::table('trading_journals', function (Blueprint $table) {
         $table->dropColumn('capital');
     });

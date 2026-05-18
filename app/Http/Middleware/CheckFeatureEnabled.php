@@ -9,7 +9,15 @@ class CheckFeatureEnabled
 {
     public function handle(Request $request, Closure $next, $featureName)
     {
-        if (!feature_enabled($featureName)) {
+        $enabled = str_starts_with($featureName, 'module_')
+            ? module_enabled($featureName)
+            : feature_enabled($featureName);
+
+        if (!$enabled) {
+            if (!$request->expectsJson()) {
+                abort(403, 'This feature is currently disabled.');
+            }
+
             return response()->json([
                 'message' => 'This feature is currently disabled.'
             ], 403);

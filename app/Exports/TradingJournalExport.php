@@ -15,6 +15,8 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Illuminate\Support\Collection;
+use Carbon\Carbon;
+
 
 class TradingJournalExport implements FromCollection, WithTitle, WithHeadings, WithMapping, WithEvents, ShouldAutoSize, WithStyles
 {
@@ -121,21 +123,18 @@ public function registerEvents(): array
 
             // --- Grade and Points Calculation ---
             [$winRatePoints, $winRateGrade] = match (true) {
-                 $winRate >= 90 => [30, 'A+'],
-    $winRate >= 85 => [28, 'A'],
-    $winRate >= 80 => [26, 'A-'],
-    $winRate >= 75 => [24, 'B+'],
-    $winRate >= 70 => [22, 'B'],
-    $winRate >= 65 => [20, 'B-'],
-    $winRate >= 60 => [18, 'C+'],
-    $winRate >= 55 => [16, 'C'],
-    $winRate >= 50 => [14, 'C-'],
-    $winRate >= 40 => [10, 'D'],
-    $winRate >= 20 => [5, 'E'],
-            $winRate < 20 && $winRate >= 1 => [0, 'F'],
-                default         => [0, 'F'],
-            };
 
+     $winRate >= 75 => [30, 'A'],   // was 70 → now 75
+    $winRate >= 65 => [25, 'B+'],  // was 60 → now 65
+    $winRate >= 60 => [25, 'B'],  // was 60 → now 65
+    $winRate >= 55 => [20, 'C+'],   // was 50 → now 55
+    $winRate >= 50 => [17, 'C'],   // was 50 → now 55
+    $winRate >= 45 => [15, 'D+'],   // was 40 → now 45
+    $winRate >= 35 => [10, 'D'],   // was 30 → now 35
+    $winRate >  0  => [5,  'E'],   // same as before, >0 to cover beginners
+    $winRate < 20 && $winRate >= 1 => [0, 'F'], // still fallback for very low win rate
+    default => [0, 'N/A'],
+        };
         
 
              // RRR
@@ -144,18 +143,13 @@ public function registerEvents(): array
             [$rrrPoints, $rrrGrade] = [30, 'A+'];
         } elseif (is_numeric($averageRRR)) {
             [$rrrPoints, $rrrGrade] = match (true) {
-            $averageRRR >= 6.0 => [30, 'A+'],
-        $averageRRR >= 5.5 => [28, 'A'],
-        $averageRRR >= 5.0 => [26, 'A-'],
-        $averageRRR >= 4.5 => [24, 'B+'],
-        $averageRRR >= 4.0 => [22, 'B'],
-        $averageRRR >= 3.5 => [20, 'B-'],
-        $averageRRR >= 3.0 => [18, 'C+'],
-        $averageRRR >= 2.5 => [16, 'C'],
-        $averageRRR >= 2.0 => [14, 'C-'],
-        $averageRRR >= 1.5 => [10, 'D'],
-        $averageRRR >= 1.0 => [6,  'E'],
-                default => [0, 'F'],
+            $averageRRR >= 5.75 => [30, 'A+'],  // was 5.0
+    $averageRRR >= 3.45 => [25, 'A'],   // was 3.0
+    $averageRRR >= 2.30 => [20, 'B'],   // was 2.0
+    $averageRRR >= 1.73 => [15, 'C'],   // was 1.5
+    $averageRRR >= 1.15 => [10, 'D'],   // was 1.0
+    $averageRRR > 0    => [5,  'E'],   
+    default             => [0, 'F'],
             };
         } else {
             [$rrrPoints, $rrrGrade] = [0, 'F'];
@@ -164,13 +158,12 @@ public function registerEvents(): array
 
            // Growth (Max 15 points)
 [$growthPoints, $growthGrade] = match (true) {
-         $growthPercent >= 15 => [5, 'A'], // Exceptional growth
-    $growthPercent >= 10 => [4, 'B'],  // Strong growth
-    $growthPercent >= 5  => [3,  'C+'], // Acceptable growth
-    $growthPercent >= 3  => [2,  'C'], // Very weak
-    $growthPercent >= 2  => [1,  'D'], // Very weak
-    $growthPercent >= 1  => [1,  'E'], // Very weak
-    default              => [0,  'F'],  // Negative or zero growth
+$growthPercent >= 15   => [10, 'A'],  // was 10
+    $growthPercent >= 7.5  => [7,  'B'],  // was 5
+    $growthPercent >= 4.5  => [5,  'C'],  // was 3
+    $growthPercent >= 1.5  => [3,  'D'],  // was 1
+    $growthPercent > 0     => [1,  'E'],
+    default                => [0,  'F'],
 };
 
 
@@ -194,63 +187,106 @@ $drawdownScore = 0;
 // Later: subtract this from total score (convert to positive before subtracting)
 $drawdownPenalty = abs($drawdownPenalty);
 
-       
-    [$consistencyPoints, $consistencyGrade] = ($totalTrades >= 1 && is_numeric($stdDeviation)) ? match (true) {
-         $stdDeviation <= 15   => [25, 'A+'],
-         $stdDeviation <= 20  => [20, 'A'],
-            $stdDeviation <= 25  => [15, 'A-'],
-            $stdDeviation <= 30  => [10, 'B'],
-            $stdDeviation <= 35  => [5, 'C'],
-            $stdDeviation <= 40  => [2, 'D'],
-            $stdDeviation <= 45  => [1, 'E'],
-        default              => [0, 'F'],
-    } : [0, 'N/A'];
+  // ---------------- Consistency Evaluation (R-multiple based) ----------------
+
+
+// -------- Consistency Rule (FundingPips 15% rule) --------
+
+// Group trades by day and sum profits for each day
+$dailyPnL = $journals->groupBy(fn ($t) => Carbon::parse($t->close_date)->toDateString())
+                     ->map(fn ($day) => (float) $day->sum('profit_loss'));
+
+// Biggest winning day
+$biggestWinningDay = $dailyPnL->count() ? max($dailyPnL->toArray()) : 0;
+
+// Current total account profit (sum of all daily PnL)
+$currentTotalProfit = $dailyPnL->sum() ?? 0;
+
+// Consistency score (%)
+$consistencyPercent = $currentTotalProfit > 0
+    ? round(($biggestWinningDay / $currentTotalProfit) * 100, 2)
+    : 0;
+
+// Check if consistency target met (<= 15%)
+$consistencyPassed = $consistencyPercent <= 15;
+
+// Grade / Status
+$consistencyGrade = $consistencyPassed ? '✅ Passed' : '⏳ Pending (Keep Trading)';
 
             [$expectancyPoints, $expectancyGrade] = match (true) {
-                    $expectancy >= 40 => [10, 'A+'],
-                $expectancy >= 35 => [7, 'A'],
-                $expectancy >= 30 => [6, 'A−'],
-                $expectancy >= 25 => [5, 'B+'],
-                $expectancy >= 20 => [4, 'B'],
-                $expectancy >= 15 => [3, 'C+'],
-                $expectancy >= 10 => [2, 'C'],
-                $expectancy >= 5 => [1, 'D'],
-                $expectancy >= 0 => [0, 'E'],
-                $expectancy >= -5 => [-1, 'F'],
-                $expectancy >= -10 => [-2, 'F'],
-                default => [0, 'N/A'],
+  $expectancy >= 40  => [10, 'A+'],  // was 20
+    $expectancy >= 20  => [7,  'B'],   // was 10
+    $expectancy >= 10  => [5,  'C'],   // was 5
+    $expectancy >= 0   => [0,  'N/A'],   // same
+    $expectancy >= -10 => [-1, 'F'],   // was -5
+    $expectancy >= -20 => [-2, 'F'],   // was -10
+    default            => [0, 'N/A'],
             };
+
+
+// -------- Consistency Score Points -------
+ if ($consistencyPercent <= 10) {
+     $consistencyPoints = 15; // Full score
+    $consistencyGrade  = 'S';
+}
+elseif ($consistencyPercent <= 15) {
+    $consistencyPoints = 12; // Full score
+    $consistencyGrade  = 'A';
+} elseif ($consistencyPercent <= 20) {
+    $consistencyPoints = 10;
+    $consistencyGrade  = 'B+';
+} elseif ($consistencyPercent <= 25) {
+
+} elseif ($consistencyPercent <= 30) {
+    $consistencyPoints = 8;
+    $consistencyGrade  = 'B';
+} elseif ($consistencyPercent <= 35) {
+    $consistencyPoints = 6;
+    $consistencyGrade  = 'B-';
+} elseif ($consistencyPercent <= 50) {
+    $consistencyPoints = 4;
+    $consistencyGrade  = 'C';
+} elseif ($consistencyPercent <= 65) {
+    $consistencyPoints = 2;
+    $consistencyGrade  = 'D';
+} elseif ($consistencyPercent <= 80) {
+        $consistencyPoints = 1;
+    $consistencyGrade  = 'E';
+}else{
+    $consistencyPoints = 0;
+    $consistencyGrade  = 'F';
+}
 
             $totalScore = $winRatePoints + $rrrPoints + $growthPoints + $drawdownPenalty + $consistencyPoints + $expectancyPoints;
             $finalScore = $totalScore;
 
             $rating = match (true) {
-                $finalScore >= 95 => 'A+',
-                $finalScore >= 90 => 'A',
-                $finalScore >= 85 => 'A−',
-                $finalScore >= 80 => 'B+',
-                $finalScore >= 75 => 'B',
-                $finalScore >= 70 => 'B−',
-                $finalScore >= 65 => 'C+',
-                $finalScore >= 60 => 'C',
-                $finalScore >= 55 => 'C−',
-                $finalScore >= 50 => 'D+',
+                $finalScore >= 95 => 'S',
+                $finalScore >= 90 => 'A+',
+                $finalScore >= 85 => 'A',
+                $finalScore >= 80 => 'A-',
+                $finalScore >= 75 => 'B+',
+                $finalScore >= 70 => 'B',
+                $finalScore >= 65 => 'B-',
+                $finalScore >= 60 => 'C+',
+                $finalScore >= 55 => 'C',
+                $finalScore >= 50 => 'C-',
                 $finalScore >= 45 => 'D',
                 $finalScore >= 40 => 'D−',
                 $finalScore >= 30 => 'E',
                 default            => 'F',
             };
 
-            $grades = collect([$winRateGrade, $rrrGrade, $growthGrade, $drawdownGrade,$consistencyPoints]);
-            $cGrades = $grades->filter(fn($g) => $g === 'C')->count();
-            $cPlusExists = $grades->contains('C+');
-            $dExists = $grades->contains('D');
+            // $grades = collect([$winRateGrade, $rrrGrade, $growthGrade, $drawdownGrade,$consistencyPoints]);
+            // $cGrades = $grades->filter(fn($g) => $g === 'C')->count();
+            // $cPlusExists = $grades->contains('C+');
+            // $dExists = $grades->contains('D');
 
-            if ($rating === 'A+' && $grades->contains(fn($g) => $g !== 'A+')) $rating = 'A';
-            if ($cPlusExists && in_array($rating, ['A+', 'A'])) $rating = 'B+';
-            if ($cGrades === 1 && in_array($rating, ['A+', 'A', 'B+'])) $rating = 'B';
-            if ($cGrades >= 2 && in_array($rating, ['A+', 'A', 'B+', 'B'])) $rating = 'C+';
-            if ($dExists && !in_array($rating, ['C+', 'C', 'C−', 'D+', 'D', 'D−', 'E', 'F'])) $rating = 'C+';
+            // if ($rating === 'A+' && $grades->contains(fn($g) => $g !== 'A+')) $rating = 'A';
+            // if ($cPlusExists && in_array($rating, ['A+', 'A'])) $rating = 'B+';
+            // if ($cGrades === 1 && in_array($rating, ['A+', 'A', 'B+'])) $rating = 'B';
+            // if ($cGrades >= 2 && in_array($rating, ['A+', 'A', 'B+', 'B'])) $rating = 'C+';
+            // if ($dExists && !in_array($rating, ['C+', 'C', 'C−', 'D+', 'D', 'D−', 'E', 'F'])) $rating = 'C+';
 
             // ✅ Output to Sheet
             $sheet = $event->sheet->getDelegate();
@@ -287,7 +323,7 @@ $drawdownPenalty = abs($drawdownPenalty);
             $sheet->setCellValue("C" . ($startRow + 8), $drawdownGrade);
 
             $sheet->setCellValue("A" . ($startRow + 9), 'Consistency Score (σ)');
-            $sheet->setCellValue("B" . ($startRow + 9), round($stdDeviation, 2));
+            $sheet->setCellValue("B" . ($startRow + 9), round($consistencyPercent, 2));
             $sheet->setCellValue("C" . ($startRow + 9), $consistencyGrade);
 
             $sheet->setCellValue("A" . ($startRow + 10), 'Expectancy');

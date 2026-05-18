@@ -20,6 +20,10 @@ class Referral extends Model
     public function agent(){
         return $this->belongsTo(User::class,'user_id');
     }
+
+        public function provider(){
+        return $this->belongsTo(User::class,'user_id');
+    }
     public function upline()
     {
         return $this->belongsTo(User::class, 'upline_user_id');

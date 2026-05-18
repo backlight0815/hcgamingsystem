@@ -30,5 +30,12 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    'discord' => [
+    'webhook' => env('DISCORD_WEBHOOK_URL'),
+],
+
+    'broker' => [
+        'registration_url' => env('BROKER_REGISTRATION_URL'),
+    ],
 
 ];

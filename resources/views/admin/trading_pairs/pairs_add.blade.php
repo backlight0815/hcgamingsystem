@@ -47,6 +47,30 @@
                                 </div>
                             </div>
 
+                            {{-- Pip Factor --}}
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label">Pip Factor</label>
+                                <div class="col-sm-9">
+                                    <input name="pip_factor" type="number" step="0.000001" class="form-control" placeholder="e.g. 0.0001 for EURUSD, 0.01 for JPY pairs, 0.1 for Gold"
+                                           value="{{ old('pip_factor', '0.0001') }}">
+                                    @error('pip_factor')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            {{-- Pip Decimal --}}
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label">Pip Decimal</label>
+                                <div class="col-sm-9">
+                                    <input name="pip_decimal" type="number" min="0" max="6" class="form-control" placeholder="e.g. 4 for EURUSD, 2 for JPY, 1 for Gold"
+                                           value="{{ old('pip_decimal', '4') }}">
+                                    @error('pip_decimal')
+                                    <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
                             {{-- Submit Button --}}
                             <div class="text-end">
                                 <button type="submit" class="btn btn-info waves-effect waves-light">Add Pair</button>

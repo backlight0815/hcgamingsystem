@@ -1,266 +1,352 @@
 @extends('admin.admin_master')
 @section('admin')
 
+@php
+    $roleId = (int) auth()->user()->role_id;
+    $profile = $dashboardProfile ?? [
+        'eyebrow' => 'Workspace',
+        'title' => 'Dashboard',
+        'subtitle' => 'Your available tools are controlled by role access and enabled business modules.',
+        'accent' => 'primary',
+    ];
+
+    $toneMap = [
+        'primary' => ['soft' => 'rgba(15, 156, 243, .12)', 'text' => '#4bb3fd'],
+        'success' => ['soft' => 'rgba(26, 188, 156, .12)', 'text' => '#36d0b6'],
+        'warning' => ['soft' => 'rgba(245, 183, 77, .14)', 'text' => '#f5b74d'],
+        'danger' => ['soft' => 'rgba(244, 106, 106, .14)', 'text' => '#f46a6a'],
+        'info' => ['soft' => 'rgba(80, 165, 241, .14)', 'text' => '#50a5f1'],
+        'secondary' => ['soft' => 'rgba(154, 166, 189, .12)', 'text' => '#9aa6bd'],
+        'purple' => ['soft' => 'rgba(111, 132, 255, .14)', 'text' => '#8ea0ff'],
+    ];
+@endphp
+
+<title>Dashboard | HC Gaming</title>
+
 <style>
-    @media screen and (max-width: 768px) {
-        .table-responsive {
-            overflow-x: auto;
+    .role-dashboard-hero,
+    .role-dashboard-card,
+    .role-dashboard-table {
+        border: 1px solid #31384c;
+        background: #252b3b;
+        border-radius: 8px;
+        color: #d6deeb;
+    }
+
+    .role-dashboard-hero {
+        padding: 24px;
+    }
+
+    .role-dashboard-eyebrow {
+        color: #b8c4d6;
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: .08em;
+        font-weight: 700;
+    }
+
+    .role-dashboard-hero h2 {
+        color: #eef2f7;
+        font-size: 28px;
+        line-height: 1.25;
+        margin: 8px 0;
+    }
+
+    .role-dashboard-card .card-title,
+    .role-dashboard-card h4,
+    .role-dashboard-metric h4,
+    .role-dashboard-module .fw-semibold {
+        color: #eef2f7;
+    }
+
+    .role-dashboard-muted,
+    .role-dashboard-card p,
+    .role-dashboard-activity-meta {
+        color: #b8c4d6;
+    }
+
+    .role-dashboard-metric {
+        height: 100%;
+        border: 1px solid #31384c;
+        background: #252b3b;
+        border-radius: 8px;
+        padding: 18px;
+    }
+
+    .role-dashboard-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+    }
+
+    .role-dashboard-value {
+        color: #eef2f7;
+        font-size: 24px;
+        font-weight: 700;
+        margin: 12px 0 4px;
+    }
+
+    .role-dashboard-action {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: 8px;
+        border: 1px solid #31384c;
+        color: #d6deeb;
+        transition: background .15s ease, border-color .15s ease;
+    }
+
+    .role-dashboard-action:hover {
+        color: #fff;
+        background: #2b3144;
+        border-color: #3c465f;
+    }
+
+    .role-dashboard-action i {
+        font-size: 18px;
+        color: #50a5f1;
+    }
+
+    .role-dashboard-activity {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 13px 0;
+        border-bottom: 1px solid #31384c;
+    }
+
+    .role-dashboard-activity:last-child {
+        border-bottom: 0;
+    }
+
+    .role-dashboard-activity-title {
+        color: #eef2f7;
+        font-weight: 600;
+    }
+
+    .role-dashboard-module {
+        border: 1px solid #31384c;
+        border-radius: 8px;
+        padding: 14px;
+        height: 100%;
+    }
+
+    .role-dashboard-table th,
+    .role-dashboard-table td {
+        border-color: #31384c;
+        color: #d6deeb;
+        vertical-align: middle;
+    }
+
+    .role-dashboard-table tbody tr {
+        background: #252b3b;
+    }
+
+    .role-dashboard-table thead th {
+        background: #071d3d;
+        color: #fff;
+    }
+
+    .role-dashboard-card .badge,
+    .role-dashboard-table .badge {
+        color: #fff;
+    }
+
+    @media (max-width: 767px) {
+        .role-dashboard-hero h2 {
+            font-size: 22px;
+        }
+
+        .role-dashboard-activity {
+            align-items: flex-start;
+            flex-direction: column;
         }
     }
-    </style>
-    <head>
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.min.css">
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.min.js"></script>
-    </head>
-
-        <title>Dashboard | HC Gaming</title>
+</style>
 
 <div class="page-content">
     <div class="container-fluid">
-
-        <!-- start page title -->
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                     <h4 class="mb-sm-0">Dashboard</h4>
-
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Hc Gaming</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('all.statistics') }}">HC Gaming</a></li>
                             <li class="breadcrumb-item active">Dashboard</li>
                         </ol>
                     </div>
-
-
-
                 </div>
             </div>
         </div>
-        <!-- end page title -->
 
-        <div class="row">
-            @if(Auth::user()->role_id != 700)
-
-            <div class="col-xl-3 col-md-6">
-
-                <div class="card">
-
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <p class="text-truncate font-size-14 mb-2">{{ $userstatistics['label'] }}</p>
-                                <h4 class="mb-2">{{ $userstatistics['total'] }}</h4>
-                                <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>9.23%</span>from previous period</p>
+        <div class="role-dashboard-hero mb-4">
+            <div class="row align-items-center g-3">
+                <div class="col-xl-8">
+                    <div class="role-dashboard-eyebrow">{{ $profile['eyebrow'] }}</div>
+                    <h2>{{ $profile['title'] }}</h2>
+                    <p class="role-dashboard-muted mb-0">{{ $profile['subtitle'] }}</p>
+                </div>
+                <div class="col-xl-4">
+                    <div class="row g-2">
+                        @foreach($dashboardModules ?? [] as $module)
+                            <div class="col-12">
+                                <div class="role-dashboard-module">
+                                    <div class="d-flex justify-content-between align-items-center gap-2">
+                                        <div>
+                                            <div class="fw-semibold text-light">{{ $module['label'] }}</div>
+                                            <div class="small role-dashboard-muted">{{ $module['feature_name'] }}</div>
+                                        </div>
+                                        <span class="badge bg-{{ $module['enabled'] ? 'success' : 'secondary' }}">
+                                            {{ $module['enabled'] ? 'On' : 'Off' }}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="avatar-sm">
-                                <span class="avatar-title bg-light text-primary rounded-3">
-                                    <i class="ri-user-3-line font-size-24"></i>
-
-                                </span>
-                            </div>
-                        </div>
-                    </div><!-- end cardbody -->
-
-                </div><!-- end card -->
-
-            </div><!-- end col -->
-            @endif
-
-            <div class="col-xl-3 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <p class="text-truncate font-size-14 mb-2">{{ $orderstatistics['label'] }}</p>
-                                <h4 class="mb-2">{{ $orderstatistics['total'] }}</h4>
-                                <p class="text-muted mb-0"><span class="text-danger fw-bold font-size-12 me-2"><i class="ri-arrow-right-down-line me-1 align-middle"></i>1.09%</span>from previous period</p>
-                            </div>
-                            <div class="avatar-sm">
-                                <span class="avatar-title bg-light text-success rounded-3">
-                                    <i class="ri-file-list-3-line font-size-24"></i>
-
-                                </span>
-                            </div>
-                        </div>
-                    </div><!-- end cardbody -->
-                </div><!-- end card -->
-            </div><!-- end col -->
-            @if(Auth::user()->role_id == '1'||Auth::user()->role_id=='2')
-            <div class="col-xl-3 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <p class="text-truncate font-size-14 mb-2">Total Product</p>
-                                <h4 class="mb-2">{{ $productstatistics['total'] }}</h4>
-                                <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>16.2%</span>from previous period</p>
-                            </div>
-                            <div class="avatar-sm">
-                                <span class="avatar-title bg-light text-primary rounded-3">
-                                    <i class="ri-shopping-cart-2-line font-size-24"></i>
-
-                                </span>
-                            </div>
-                        </div>
-                    </div><!-- end cardbody -->
-                </div><!-- end card -->
-            </div><!-- end col -->
-            @endif
-            @if(Auth::user()->role_id=='350')
-            <div class="col-xl-3 col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <p class="text-truncate font-size-14 mb-2">Total Product Launch</p>
-                                <h4 class="mb-2">{{ $downlinePurchasedProductsCount }}</h4>
-                                <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>16.2%</span>from previous period</p>
-                            </div>
-                            <div class="avatar-sm">
-                                <span class="avatar-title bg-light text-primary rounded-3">
-                                    <i class="ri-shopping-cart-2-line font-size-24"></i>
-
-                                </span>
-                            </div>
-                        </div>
-                    </div><!-- end cardbody -->
-                </div><!-- end card -->
-            </div><!-- end col -->
-            @endif
-<!--Latest-->
-
-@if (Auth::user()->role_id == '1' || Auth::user()->role_id == '2' || Auth::user()->role_id == '350')
-    <div class="col-xl-3 col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-flex">
-                    <div class="flex-grow-1">
-                        <p class="text-truncate font-size-14 mb-2">Total Sales (RM)</p>
-                        @if (Auth::user()->role_id == '1' || Auth::user()->role_id == '2')
-                            @if (isset($salesPerformances) && $salesPerformances->isNotEmpty())
-                                <h4 class="mb-2">{{ $salesPerformances->sum('total_sales') }}</h4>
-                            @else
-                                <h4 class="mb-2">0</h4>
-                            @endif
-                        @elseif (Auth::user()->role_id == '350')
-                            @if (isset($salesPerformances) && $salesPerformances->isNotEmpty())
-                                <h4 class="mb-2">{{ $salesPerformances->where('user_id', Auth::user()->id)->sum('total_sales') }}</h4>
-                            @else
-                                <h4 class="mb-2">0</h4>
-                            @endif
-                        @endif
-                        <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="ri-arrow-right-up-line me-1 align-middle"></i>8.5%</span>from previous period</p>
-                    </div>
-                    <div class="avatar-sm">
-                        {{-- <span class="avatar-title bg-light text-primary rounded-3"> --}}
-                            {{-- <i class="ri-settings-2-line font-size-24"></i> --}}
-                        {{-- </span> --}}
+                        @endforeach
                     </div>
                 </div>
-            </div><!-- end cardbody -->
-        </div><!-- end card -->
-    </div><!-- end col -->
-@endif
-
-
-
-
-
-
-
-        </div><!-- end row -->
+            </div>
+        </div>
 
         <div class="row">
-
-        <!-- end row -->
+            @forelse($dashboardMetrics ?? [] as $metric)
+                @php
+                    $tone = $toneMap[$metric['tone']] ?? $toneMap['primary'];
+                @endphp
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="role-dashboard-metric">
+                        <div class="d-flex justify-content-between align-items-start gap-3">
+                            <div>
+                                <div class="role-dashboard-muted small">{{ $metric['label'] }}</div>
+                                <div class="role-dashboard-value">{{ $metric['value'] }}</div>
+                                <div class="role-dashboard-muted small">{{ $metric['caption'] }}</div>
+                            </div>
+                            <span class="role-dashboard-icon" style="background: {{ $tone['soft'] }}; color: {{ $tone['text'] }};">
+                                <i class="{{ $metric['icon'] }}"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="col-12 mb-4">
+                    <div class="alert alert-secondary mb-0">
+                        No dashboard metrics are available for the current module configuration.
+                    </div>
+                </div>
+            @endforelse
+        </div>
 
         <div class="row">
-            <div class="col-xl-12">
-                <div class="card">
+            <div class="col-xl-4 mb-4">
+                <div class="card role-dashboard-card mb-0">
                     <div class="card-body">
-                        <div class="dropdown float-end">
-                            <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="mdi mdi-dots-vertical"></i>
+                        <h4 class="card-title mb-3">Quick Actions</h4>
+                        @forelse($dashboardActions ?? [] as $action)
+                            <a href="{{ $action['url'] }}" class="role-dashboard-action mb-2">
+                                <i class="{{ $action['icon'] }}"></i>
+                                <span>{{ $action['label'] }}</span>
                             </a>
-
-                        </div>
-
-                        <h4 class="card-title mb-4">Latest Transactions</h4>
-
-                        <div class="table-responsive">
-                            <table id="myshippingorder" class="table table-bordered" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Username</th>
-
-                                        <th>Grand Total</th>
-                                        <th>Stocks</th>
-                                        <th>Status</th>
-                                        <th>Transaction Date</th>
-                                        {{-- <th>Action</th> --}}
-
-                                        <th>Payment Proof</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php($i=1)
-                                    @foreach($shippingorders  as $item)
-                                    <tr>
-                                        <td>{{ $i++ }}</td>
-                                        <th>{{ $item->user->username }}</th>
-
-                                        <td>RM {{ $item->total_amount }}</td>
-                                        <td>{{ $item->orderItems->sum('quantity') }}</td>
-                                        @if($item->status==0)
-                                        <td style="color:grey"> Processing </td>
-                                        @elseif($item->status==1)
-                                        <td style="color:orange"> Confirmed </td>
-                                        @elseif($item->status==2)
-                                        <td style="color:darkblue"> Delivery </td>
-                                        @elseif($item->status==3)
-                                        <td style="color:green"> Completed </td>
-                                        @elseif($item->status==-1)
-                                        <td style="color:red"> Rejected </td>
-
-                                        @endif
-
-                                        <td>{{ $item->created_at }}</td>
-
-                                    <td>
-                                        <a href="{{ asset($item->payment_proof) }}" data-lightbox="image" data-title="Payment Proof">
-                                            <img src="{{ asset($item->payment_proof) }}" style="width: 60px; height: 60px;" alt="Payment Proof">
-                                        </a>
-                                    </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div><!-- end card -->
-                </div><!-- end card -->
+                        @empty
+                            <p class="mb-0">No direct actions are available while the related module is turned off.</p>
+                        @endforelse
+                    </div>
+                </div>
             </div>
-            <!-- end col -->
 
+            <div class="col-xl-8 mb-4">
+                <div class="card role-dashboard-card mb-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center gap-2 mb-2">
+                            <h4 class="card-title mb-0">Recent Activity</h4>
+                            <span class="badge bg-{{ $profile['accent'] === 'purple' ? 'primary' : $profile['accent'] }}">
+                                {{ $profile['eyebrow'] }}
+                            </span>
+                        </div>
+
+                        @forelse($recentActivity ?? [] as $activity)
+                            <div class="role-dashboard-activity">
+                                <div>
+                                    <div class="role-dashboard-activity-title">{{ $activity['title'] }}</div>
+                                    <div class="role-dashboard-activity-meta small">{{ $activity['meta'] }}</div>
+                                </div>
+                                <span class="badge bg-{{ $activity['tone'] }}">{{ $activity['value'] }}</span>
+                            </div>
+                        @empty
+                            <p class="mb-0">Recent activity will appear here once the enabled module has new records.</p>
+                        @endforelse
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- end row -->
-    </div>
 
+        @if($ecommerceEnabled && in_array($roleId, [1, 2, 350, 700], true))
+            <div class="row">
+                <div class="col-12">
+                    <div class="card role-dashboard-card">
+                        <div class="card-body">
+                            <h4 class="card-title mb-3">Latest Orders</h4>
+                            <div class="table-responsive">
+                                <table class="table table-bordered role-dashboard-table mb-0">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Username</th>
+                                            <th>Total</th>
+                                            <th>Items</th>
+                                            <th>Status</th>
+                                            <th>Transaction Date</th>
+                                            <th>Payment Proof</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($shippingorders as $item)
+                                            @php
+                                                $statusLabels = [-1 => 'Rejected', 0 => 'Processing', 1 => 'Confirmed', 2 => 'Delivery', 3 => 'Completed'];
+                                                $statusTones = [-1 => 'danger', 0 => 'secondary', 1 => 'warning', 2 => 'info', 3 => 'success'];
+                                                $status = (int) $item->status;
+                                            @endphp
+                                            <tr>
+                                                <td>#{{ $item->id }}</td>
+                                                <td>{{ optional($item->user)->username ?? '-' }}</td>
+                                                <td>RM {{ number_format((float) $item->total_amount, 2) }}</td>
+                                                <td>{{ $item->orderItems->sum('quantity') }}</td>
+                                                <td>
+                                                    <span class="badge bg-{{ $statusTones[$status] ?? 'secondary' }}">
+                                                        {{ $statusLabels[$status] ?? 'Unknown' }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ optional($item->created_at)->format('d M Y, h:i A') }}</td>
+                                                <td>
+                                                    @if($item->payment_proof)
+                                                        <a href="{{ asset($item->payment_proof) }}" target="_blank" class="btn btn-sm btn-outline-info">
+                                                            View
+                                                        </a>
+                                                    @else
+                                                        <span class="role-dashboard-muted">No proof</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="7" class="text-center role-dashboard-muted">No order records found.</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+    </div>
 </div>
-<script>
-  $(document).ready(function() {
-    $('#myshippingorder').DataTable({
-        // Other DataTable options...
-        "columnDefs": [
-            { "orderable": false, "targets": [2, 6] } // Disable sorting for columns 3 (index 2) and 5 (index 6)
-        ]
-    });
-});
-      </script>
+
 @endsection

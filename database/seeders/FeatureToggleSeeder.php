@@ -9,16 +9,10 @@ class FeatureToggleSeeder extends Seeder
 {
     public function run()
     {
-        $features = [
-            ['feature_name' => 'ewallet_topup', 'enabled' => true],
-            ['feature_name' => 'ewallet_withdraw', 'enabled' => false],
-            // add other ewallet related toggles here
-        ];
-
-        foreach ($features as $feature) {
+        foreach (FeatureToggle::defaultFeatureDefinitions() as $featureName => $definition) {
             FeatureToggle::updateOrCreate(
-                ['feature_name' => $feature['feature_name']],
-                ['enabled' => $feature['enabled']]
+                ['feature_name' => $featureName],
+                ['enabled' => (bool) ($definition['default'] ?? true)]
             );
         }
     }

@@ -6,6 +6,8 @@ use App\Models\Referral;
 use App\Models\Commission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Role;
+use App\Models\SignalProviderCertificate;
 use App\Models\User;
 use App\Models\Network;
 use Illuminate\Support\Facades\DB;
@@ -39,6 +41,79 @@ public function Profile(){
 
 $id = Auth::user()->id;
 $adminData = User::with('upline')->find($id);
+$roleLabels = [
+    1 => 'Super Admin',
+    2 => 'Admin',
+    201 => 'Junior Signal Provider',
+    202 => 'Senior Signal Provider',
+    350 => 'Agent',
+    501 => 'Market Analyst',
+    502 => 'Signal Provider Management',
+    700 => 'Customer',
+    750 => 'Trader',
+    760 => 'Leadership',
+    770 => 'Recruiter',
+];
+$accountLevelLabel = Role::where('id', $adminData->role_id)->value('name')
+    ?: ($roleLabels[(int) $adminData->role_id] ?? 'Role ' . $adminData->role_id);
+
+$latestCertificate = SignalProviderCertificate::where('user_id', $id)
+    ->latest('updated_at')
+    ->first();
+$publishedCertificate = SignalProviderCertificate::where('user_id', $id)
+    ->where('status', SignalProviderCertificate::STATUS_PUBLISHED)
+    ->latest('published_at')
+    ->first();
+$approvedCertificate = SignalProviderCertificate::where('user_id', $id)
+    ->where('status', SignalProviderCertificate::STATUS_APPROVED)
+    ->latest('approved_at')
+    ->first();
+$certificateScore = (int) ($adminData->total_score ?? 0);
+
+$certificateReadiness = [
+    'label' => 'Not Evaluated Yet',
+    'tone' => 'pending',
+    'note' => 'Complete trading or signal performance reviews to unlock certificate evaluation.',
+];
+
+if ($publishedCertificate) {
+    $certificateReadiness = [
+        'label' => 'Certified',
+        'tone' => 'connected',
+        'note' => $publishedCertificate->certificate_type_label . ' published on ' . optional($publishedCertificate->published_at)->format('d M Y') . '.',
+    ];
+} elseif ($approvedCertificate) {
+    $certificateReadiness = [
+        'label' => 'Qualified - Pending Publish',
+        'tone' => 'qualified',
+        'note' => $approvedCertificate->certificate_type_label . ' has been approved and is waiting for publishing.',
+    ];
+} elseif ($latestCertificate && $latestCertificate->status === SignalProviderCertificate::STATUS_DRAFT) {
+    $certificateReadiness = [
+        'label' => 'Under Certificate Review',
+        'tone' => 'pending',
+        'note' => 'A draft certificate exists and is pending administration review.',
+    ];
+} elseif ($certificateScore >= 85) {
+    $certificateReadiness = [
+        'label' => 'Expert Evaluation Ready',
+        'tone' => 'connected',
+        'note' => 'Current evaluation score: ' . $certificateScore . '/100.',
+    ];
+} elseif ($certificateScore >= 60) {
+    $certificateReadiness = [
+        'label' => 'Strategy Evaluation Qualified',
+        'tone' => 'qualified',
+        'note' => 'Current evaluation score: ' . $certificateScore . '/100. Minimum threshold met.',
+    ];
+} elseif ($certificateScore > 0) {
+    $certificateReadiness = [
+        'label' => 'Not Qualified Yet',
+        'tone' => 'pending',
+        'note' => 'Current evaluation score: ' . $certificateScore . '/100. Minimum target is 60/100.',
+    ];
+}
+
 $agentData = Referral::where('upline_user_id', $id)->get();
 $commissionData  = Commission::where('upline_user_id',$id)->get();
 // $agentUsername = $agentData?$agentData->agent->username:null;
@@ -50,11 +125,34 @@ $agentUsernames = $agentData->map(function ($referral) {
     return $referral->agent->username;
 });
 
+    // Map prop firm phase into text
+    $phaseMapping = [
+        1 => 'Phase 1 🟢',
+        2 => 'Phase 2 🟡',
+        3 => 'HC Funded Traders'
+    ];
+// Default phase text
+    $propFirmPhaseText = $phaseMapping[$adminData->prop_firm_phase] ?? 'N/A';
 
+    // Extra logic for funded_status
+    if ($adminData->prop_firm_phase == 3) {
+        if ($adminData->funded_status == 0) {
+            $propFirmPhaseText .= '⏳';
+        }
+    }
 
 // $username = $adminData->users->username;
 // $uplineUsername = $adminData->parent_user_id->id;
-return view('admin.admin_profile_view',compact('adminData','agentData','agentUsernames','commissionAmount'));
+return view('admin.admin_profile_view',compact(
+    'adminData',
+    'agentData',
+    'agentUsernames',
+    'commissionAmount',
+    'propFirmPhaseText',
+    'accountLevelLabel',
+    'certificateReadiness',
+    'latestCertificate'
+));
 
 
 

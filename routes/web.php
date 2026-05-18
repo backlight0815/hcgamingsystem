@@ -1,4 +1,5 @@
 <?php
+use App\Models\SignalProviderCertificate; // Make sure you have this model
 
 use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\Dealer\AddressController;
@@ -26,6 +27,7 @@ use App\Http\Controllers\Home\BlogCategoryController;
 use App\Http\Controllers\Home\BlogController;
 use App\Http\Controllers\Home\FooterController;
 use App\Http\Controllers\Home\ContactController;
+use App\Http\Controllers\Home\CommunityShowcaseController;
 use App\Http\Controllers\Home\ServiceController;
 use App\Http\Controllers\Home\RecruitmentController;
 use App\Http\Controllers\Stock\StockController;
@@ -45,6 +47,28 @@ use App\Http\Controllers\Trading\TradersPerformancesController;
 use App\Http\Controllers\Config\FeatureToggleController;
 use App\Http\Controllers\Config\RoleManagementController;
 use App\Http\Controllers\Config\FeatureManagementController;
+use App\Http\Controllers\Trading\MarketAnalystController;
+use App\Http\Controllers\Trading\FundedTraderController;
+use App\Http\Controllers\Trading\LeaderboardController;
+use App\Http\Controllers\Trading\TradingSignalController;
+use App\Http\Controllers\Trading\KnowledgeCentreController;
+use App\Http\Controllers\Trading\CommunityManagementController;
+use App\Http\Controllers\Trading\SignalPerformanceController;
+use App\Http\Controllers\Trading\NewsController;
+use App\Http\Controllers\Trading\TradingReasonController;
+use App\Http\Controllers\Trading\SignalProviderCertificateController;
+use App\Http\Controllers\Trading\TradingStatisticsController;
+use App\Http\Controllers\Trading\TradingBacktestController;
+use App\Http\Controllers\Trading\TradingRecordingController;
+use App\Http\Controllers\Trading\TradingBlogController;
+use App\Http\Controllers\Trading\TraderOnboardingController;
+use App\Http\Controllers\Trading\TradingPositionApplicationController;
+use App\Http\Controllers\Trading\TraderReadinessChecklistController;
+use App\Http\Controllers\Trading\MarketingResourceController;
+use App\Http\Controllers\Trading\TradingAppointmentController;
+use App\Http\Controllers\Trading\TradingExaminationController;
+use App\Http\Controllers\Support\SupportTicketController;
+use App\Http\Controllers\AppNotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +91,9 @@ Route::controller(demoController::class)->group(function(){
     Route::get('/','HomeMain')->name('home');
 
 });
+
+Route::get('/hc-trading-community', [CommunityShowcaseController::class, 'show'])
+    ->name('community.showcase');
 
 //Admin All Route
 
@@ -164,27 +191,31 @@ Route::controller(PortfolioController::class)->group(function(){
 //Account All Route
 Route::controller(AccountController::class)->group(function(){
     Route::get('/all/account','AllAccount')->name('all.account');
+    Route::get('/all/signalprovider','AllSignalProvider')->name('all.signal_provider');
+    Route::get('/edit/signalprovider/account/{id}','EditSignalProviderAccount')->name('edit.signal_provider.account');
+    Route::post('/update/signalprovider/account','UpdateSignalProvider')->name('update.signal_provider');
+
     Route::get('/all/agent','AllAgent')->name('all.agent.account');
     Route::get('/edit/agent/account/{id}','EditAgentAccount')->name('edit.agent.account');
     Route::post('/update/agent/account','UpdateAgent')->name('update.agent');
-    Route::post('/update','AccountController@update')->name('updateAgentStatus');
+    Route::post('/update','updateAgentStatus')->name('updateAgentStatus');
     Route::get('/all/customer','AllCustomer')->name('all.customer.account');
     Route::get('/edit/customer/account/{id}','EditCustomerAccount')->name('edit.customer.account');
     Route::post('/update/customer/account','UpdateCustomer')->name('update.customer');
-    Route::post('/update','AccountController@update')->name('updateCustomerStatus');
+    Route::post('/update','updateCustomerStatus')->name('updateCustomerStatus');
     Route::get('/all/admin','AllAdmin')->name('all.admin.account');
     Route::get('/edit/admin/account/{id}','EditAdminAccount')->name('edit.admin.account');
     Route::post('/update/admin/account','UpdateAdmin')->name('update.admin');
-    Route::post('/update','AccountController@update')->name('updateAdminStatus');
+    Route::post('/update','updateAdminStatus')->name('updateAdminStatus');
     Route::post('/update/account','UpdateAccount')->name('update.account');
     Route::get('/edit/account/{id}','EditAccount')->name('edit.account');
-    Route::post('/update','AccountController@update')->name('updateAccountStatus');
+    Route::post('/update','updateAccountStatus')->name('updateAccountStatus');
     Route::get('/delete/account/{id}','DeleteAccount')->name('delete.account');
 
      Route::get('/all/traders','AllTraders')->name('all.traders.account');
     Route::get('/edit/traders/account/{id}','EditTradersAccount')->name('edit.traders.account');
     Route::post('/update/traders/account','UpdateTraders')->name('update.traders');
-    Route::post('/update','AccountController@update')->name('updateTradersStatus');
+    Route::post('/update','updateTradersStatus')->name('updateTradersStatus');
 
 });
 
@@ -201,7 +232,250 @@ Route::controller(BlogCategoryController::class)->group(function(){
 
 });
 
+// Signal Performance
+Route::controller(SignalPerformanceController::class)->group(function() {
+    Route::get('/signal-performance', 'index')->name('signal.performance.index');
+    Route::post('/signal-performance/send-discord', 'sendDiscord')
 
+        ->name('signal.performance.sendDiscord'); // ✅ new route
+
+           // Weekly Discord
+    Route::post('/signal-performance/send-discord-weekly', 'sendDiscordWeekly')
+        ->name('signal.performance.sendDiscordWeekly');
+
+                   // Weekly Discord
+    Route::post('/signal-performance/submit-weekly-performances', 'submitWeeklyPerformances')
+        ->name('signal.performance.submitWeeklyPerformances');
+
+          // ✅ Export Excel
+    Route::get('/signal-performance/export', 'exportExcel')
+        ->name('signal.performance.export');
+
+    Route::get('/signal-performance/report/pdf', 'exportPdf')
+        ->name('signal.performance.report.pdf');
+
+         // ✅ Import Excel
+    Route::post('/signal-performance/import', 'importExcel')
+        ->name('signal.performance.import'); // new
+
+        Route::get('/signal-performance/template',  'downloadTemplate')
+    ->name('signal.performance.template');
+
+});
+
+Route::controller(NewsController::class)->group(function () {
+
+    // List all news
+    Route::get('/news', 'index')->name('trading.news.index');
+
+    // Show create form
+    Route::get('/news/create', 'create')->name('trading.news.create');
+
+    // Store new news
+    Route::post('/news/store', 'store')->name('trading.news.store');
+
+    // Show edit form
+    Route::get('/news/{id}/edit', 'edit')->name('trading.news.edit');
+
+    // Update news
+    Route::post('/news/{id}/update', 'update')->name('trading.news.update');
+
+    // Delete news
+    Route::delete('/news/{id}/delete', 'destroy')->name('trading.news.destroy');
+
+    // Send a single news to Discord
+    Route::post('/news/{id}/send-discord', 'sendToDiscord')->name('trading.news.sendDiscord');
+});
+
+Route::controller(KnowledgeCentreController::class)->group(function() {
+    // CRUD
+    Route::get('/knowledge-centre', 'index')->name('knowledge.centre.index');
+    Route::get('/knowledge-centre/create', 'create')->name('knowledge.centre.create');
+    Route::post('/knowledge-centre', 'store')->name('knowledge.centre.store');
+    Route::get('/knowledge-centre/{id}/edit', 'edit')->name('knowledge.centre.edit');
+    Route::post('/knowledge-centre/{id}', 'update')->name('knowledge.centre.update');
+    Route::delete('/knowledge-centre/{id}', 'destroy')->name('knowledge.centre.destroy');
+    Route::post('/knowledge-centre/{knowledge}/approve', 'approve')->name('knowledge.centre.approve');
+    Route::get('/trading/knowledge-centre', 'traderIndex')->middleware('auth')->name('trading.knowledge.centre.index');
+
+    // Discord send (POST)
+    Route::post('/knowledge-centre/send-discord/{id}', 'sendToDiscord')
+        ->name('knowledge.centre.sendDiscord'); // ✅ new route
+
+            // Bulk download all PDFs as ZIP
+    Route::get('/knowledge-centre/download-zip', 'downloadZip')
+        ->name('knowledge.centre.downloadZip'); // 📦 new route
+});
+// ===== Trading Signal Routes =====
+Route::controller(TradingSignalController::class)->group(function () {
+
+    // 📄 List & Manage Trading Signals
+    Route::get('/all/trading/signals', 'index')->name('all.trading.signals');
+    Route::get('/add/trading/signal', 'create')->name('add.trading.signal');
+    Route::post('/store/trading/signal', 'store')->name('store.trading.signal');
+    Route::get('/edit/trading/signal/{id}', 'edit')->name('edit.trading.signal');
+Route::post('/update/trading/signal/{id}', 'update')->name('update.trading.signal');
+    Route::get('/delete/trading/signal/{id}', 'destroy')->name('delete.trading.signal');
+Route::get('/view/trading/signal/{id}', 'show')->name('view.trading.signal');
+
+    // 🔴 Cancel Trading Signal
+    Route::post('/cancel/trading/signal/{id}', 'cancel')->name('cancel.trading.signal');
+
+    // ✅ Activate Trading Signal
+    Route::post('/activate/trading/signal/{id}', 'activate')->name('activate.trading.signal');
+
+    // 🛑 Stop Loss (SL) Trading Signal
+    Route::post('/sl/trading/signal/{id}', 'sl')->name('sl.trading.signal');
+
+    // ⚖️ Breakeven Routes
+    Route::post('/set-be/trading/signal/{id}', 'setBE')->name('setbe.trading.signal');      // Announce Set BE
+    Route::post('/be-hitted/trading/signal/{id}', 'beHitted')->name('behitted.trading.signal');  // BE actually hit
+
+    // 🎯 Take Profit (TP) Trading Signals
+    Route::post('/tp1/trading/signal/{id}', 'tp1')->name('tp1.trading.signal');
+    Route::post('/tp2/trading/signal/{id}', 'tp2')->name('tp2.trading.signal');
+    Route::post('/tp3/trading/signal/{id}', 'tp3')->name('tp3.trading.signal');
+    Route::post('/tp4/trading/signal/{id}', 'tp4')->name('tp4.trading.signal');
+    Route::post('/tp5/trading/signal/{id}', 'tp5')->name('tp5.trading.signal');
+    Route::post('/tp6/trading/signal/{id}', 'tp6')->name('tp6.trading.signal');
+    Route::post('/tp7/trading/signal/{id}', 'tp7')->name('tp7.trading.signal');
+    Route::post('/tp8/trading/signal/{id}', 'tp8')->name('tp8.trading.signal');
+    Route::post('/tp9/trading/signal/{id}', 'tp9')->name('tp9.trading.signal');
+    Route::post('/tp10/trading/signal/{id}', 'tp10')->name('tp10.trading.signal');
+
+  // ✅ Mark Trading Signal as Done
+Route::post('/close/trading/signal/{id}', 'markDone')
+    ->name('close.trading.signal');
+
+    // 📊 Signal Dashboard
+    Route::get('/signals/dashboard', 'memberDashboard')
+        ->name('member.signals.dashboard');
+
+    // 📡 Active Signals
+    Route::get('/signals/active', 'memberActiveSignals')
+        ->name('member.signals.active');
+
+    // ✅ Closed Signals
+    Route::get('/signals/closed', 'memberClosedSignals')
+        ->name('member.signals.closed');
+
+    // 📜 Signal History
+    Route::get('/signals/history', 'memberSignalHistory')
+        ->name('member.signals.history');
+
+    // 🔎 View Signal Details
+    Route::get('/signals/view/{id}', 'memberViewSignal')
+        ->name('member.signals.view');
+
+});
+
+Route::controller(TradingReasonController::class)->group(function() {
+    // List all reasons
+    Route::get('/all/trading/reason', 'index')->name('all.trading.reason');
+
+    // Create new reason
+    Route::get('/add/trading/reason', 'create')->name('add.trading.reason');
+    Route::post('/store/trading/reason', 'store')->name('store.trading.reason');
+
+    // Edit existing reason
+    Route::get('/edit/trading/reason/{id}', 'edit')->name('edit.trading.reason');
+    Route::post('/update/trading/reason/{id}', 'update')->name('update.trading.reason');
+
+    // Delete reason
+    Route::get('/delete/trading/reason/{id}', 'destroy')->name('delete.trading.reason');
+});
+
+Route::controller(CommunityManagementController::class)->group(function() {
+    // 🔹 List all communities
+    Route::get('/all/communities', 'index')->name('communities.index');
+
+    // 🔹 Add new community
+    Route::get('/add/community', 'create')->name('communities.create');
+    Route::post('/store/community', 'store')->name('communities.store');
+
+    // 🔹 Edit existing community
+    Route::get('/edit/community/{id}', 'edit')->name('communities.edit');
+    Route::post('/update/community/{id}', 'update')->name('communities.update');
+
+    // 🔹 Delete community
+    Route::get('/delete/community/{id}', 'destroy')->name('communities.destroy');
+
+    // 🔹 Community documentation library
+    Route::get('/community-documents', 'documentsIndex')->middleware('auth')->name('communities.documents.index');
+    Route::post('/community-documents', 'storeDocument')->middleware('auth')->name('communities.documents.store');
+    Route::post('/community-documents/{document}/view', 'viewDocument')->middleware('auth')->name('communities.documents.view');
+    Route::post('/community-documents/{document}/download', 'downloadDocument')->middleware('auth')->name('communities.documents.download');
+    Route::delete('/community-documents/{document}', 'destroyDocument')->middleware('auth')->name('communities.documents.destroy');
+
+    // 🔹 TP Notification Dashboard
+    Route::get('/tp-settings-dashboard', 'tpSettingsDashboard')->name('communities.tp_settings');
+    Route::post('/tp-settings-dashboard', 'updateTpSettingsDashboard')->name('communities.tp_settings_dashboard.update');
+
+     // 🔹 Discord @everyone toggle update
+    Route::post('/everyone-toggle', 'updateEveryoneToggle')->name('communities.everyone_toggle.update');
+});
+
+Route::middleware(['auth'])->controller(CommunityShowcaseController::class)->group(function () {
+    Route::get('/admin/community-showcase', 'edit')->name('admin.community.showcase.edit');
+    Route::post('/admin/community-showcase', 'update')->name('admin.community.showcase.update');
+});
+
+Route::controller(MarketAnalystController::class)->group(function() {
+
+    // 🔹 List all market analyses
+    Route::get('/market-analyst/all', 'index')->name('market-analyst.index');
+
+    // 🔹 Add new market analysis
+    Route::get('/market-analyst/create', 'create')->name('market-analyst.create');
+    Route::post('/market-analyst/store', 'store')->name('market-analyst.store');
+
+    // 🔹 Edit market analysis
+    Route::get('/market-analyst/edit/{id}', 'edit')->name('market-analyst.edit');
+    Route::post('/market-analyst/update/{id}', 'update')->name('market-analyst.update');
+
+    // 🔹 Delete market analysis
+    Route::get('/market-analyst/delete/{id}', 'destroy')->name('market-analyst.destroy');
+// 🔹 View single market analysis details
+Route::get('/market-analyst/show/{id}', 'show')->name('market-analyst.show');
+
+    // 🔹 Send market analysis to Discord
+    Route::post('/market-analyst/send-discord/{id}', 'sendToDiscord')->name('market-analyst.sendDiscord');
+
+    Route::get('/trading/market-analyst', 'traderIndex')->name('trading.market-analyst.index');
+    Route::get('/trading/market-analyst/{analysis}', 'traderShow')->name('trading.market-analyst.show');
+});
+
+
+
+Route::middleware(['auth'])->controller(SignalProviderCertificateController::class)->group(function() {
+
+    // Admin: show certificate management page.
+    Route::get('/certificate/all', 'index')->name('certificate.index');
+
+    // Eligible members: show own published certificates.
+    Route::get('/certificate/my', 'providerindex')->name('provider.certificate.index');
+
+    // Admin: show certificate generator form.
+    Route::get('/certificate/add', 'create')->name('certificate.create');
+
+    // Admin: generate certificate image for selected user and level.
+    Route::post('/certificate/upload/{userId}/{level}', 'upload')->name('certificate.upload');
+
+    // Admin: compatibility route for certificate creation.
+    Route::post('/certificate/add', 'addCertificate')->name('certificate.add');
+
+    // Certificate workflow and password-confirmed access.
+    Route::post('/certificate/{certificate}/approve', 'approve')->name('certificate.approve');
+    Route::post('/certificate/{certificate}/publish', 'publish')->name('certificate.publish');
+    Route::post('/certificate/{certificate}/regenerate', 'regenerate')->name('certificate.regenerate');
+    Route::post('/certificate/{certificate}/revoke', 'revoke')->name('certificate.revoke');
+    Route::post('/certificate/{certificate}/view', 'view')->name('certificate.view');
+    Route::post('/certificate/{certificate}/download', 'download')->name('certificate.download');
+    Route::delete('/certificate/{certificate}', 'destroy')->name('certificate.destroy');
+
+    // Optional: list all certificates for a specific user.
+    Route::get('/certificates/{userId}', 'index')->name('certificates.index');
+});
 //Blog All Route
 Route::controller(BlogController::class)->group(function(){
     Route::get('/all/blog','AllBlog')->name('all.blog');
@@ -483,7 +757,7 @@ Route::post('/store/wallet', 'StoreWallet')->name('store.wallet');
     Route::get('/admn/dealerwallets-update/{id}/reject','UpdateDealerWalletsRejectStatus')->name('update.wallets.to.reject.status');
 });
 
-Route::controller(FeatureToggleController::class)->prefix('admin')->name(config('routes.admin_name_prefix', 'admin.'))->group(function () {
+Route::controller(FeatureToggleController::class)->prefix('admin')->middleware(['auth'])->name(config('routes.admin_name_prefix', 'admin.'))->group(function () {
 
     // List features (no middleware needed)
     Route::get('/features', 'index')->name('features.index');
@@ -493,7 +767,7 @@ Route::controller(FeatureToggleController::class)->prefix('admin')->name(config(
 });
 
 
-Route::controller(FeatureManagementController::class)->group(function () {
+Route::controller(FeatureManagementController::class)->middleware(['auth'])->group(function () {
     Route::get('/all/features', 'AllFeatures')->name('all.features');
     Route::get('/add/feature', 'AddFeature')->name('add.feature');
     Route::post('/store/feature', 'StoreFeature')->name('store.feature');
@@ -525,6 +799,148 @@ Route::controller(EventController::class)->group(function(): void{
 
 });
 
+// ✅ Trading Statistics Routes
+Route::get('/statistics', [TradingStatisticsController::class, 'index'])->name('statistics.index');
+Route::middleware(['auth'])->group(function (): void {
+    Route::get('/trading/backtest', [TradingBacktestController::class, 'index'])->name('trading.backtest.index');
+    Route::post('/trading/backtest/upload', [TradingBacktestController::class, 'upload'])->name('trading.backtest.upload');
+});
+// Trading Recording Classes
+Route::middleware(['auth'])->controller(TradingRecordingController::class)->group(function (): void {
+    Route::get('/admin/trading-recordings', 'adminIndex')->name('admin.trading.recordings.index');
+    Route::get('/admin/trading-recordings/create', 'create')->name('admin.trading.recordings.create');
+    Route::post('/admin/trading-recordings', 'store')->name('admin.trading.recordings.store');
+    Route::get('/admin/trading-recordings/{recording}', 'show')->name('admin.trading.recordings.show');
+    Route::get('/admin/trading-recordings/{recording}/edit', 'edit')->name('admin.trading.recordings.edit');
+    Route::put('/admin/trading-recordings/{recording}', 'update')->name('admin.trading.recordings.update');
+    Route::post('/admin/trading-recordings/{recording}/approve', 'approve')->name('admin.trading.recordings.approve');
+    Route::get('/admin/trading-recordings/{recording}/materials/{material}/download', 'adminDownloadMaterial')->name('admin.trading.recordings.materials.download');
+    Route::delete('/admin/trading-recordings/{recording}/materials/{material}', 'destroyMaterial')->name('admin.trading.recordings.materials.destroy');
+    Route::delete('/admin/trading-recordings/{recording}', 'destroy')->name('admin.trading.recordings.destroy');
+
+    Route::get('/trading/recordings', 'traderIndex')->name('trading.recordings.index');
+    Route::post('/trading/recordings/{recording}/view', 'traderView')
+        ->middleware('throttle:6,1')
+        ->name('trading.recordings.view');
+    Route::post('/trading/recordings/{recording}/download', 'traderDownload')
+        ->middleware('throttle:6,1')
+        ->name('trading.recordings.download');
+    Route::post('/trading/recordings/{recording}/materials/{material}/download', 'traderDownloadMaterial')
+        ->middleware('throttle:6,1')
+        ->name('trading.recordings.materials.download');
+});
+
+// Trading Blog
+Route::middleware(['auth'])->controller(TradingBlogController::class)->group(function (): void {
+    Route::get('/admin/trading-blogs', 'adminIndex')->name('admin.trading.blogs.index');
+    Route::get('/admin/trading-blogs/create', 'create')->name('admin.trading.blogs.create');
+    Route::post('/admin/trading-blogs', 'store')->name('admin.trading.blogs.store');
+    Route::get('/admin/trading-blogs/{blog}/edit', 'edit')->name('admin.trading.blogs.edit');
+    Route::put('/admin/trading-blogs/{blog}', 'update')->name('admin.trading.blogs.update');
+    Route::delete('/admin/trading-blogs/{blog}', 'destroy')->name('admin.trading.blogs.destroy');
+
+    Route::get('/trading/blogs', 'index')->name('trading.blogs.index');
+    Route::get('/trading/blogs/{blog:slug}', 'show')->name('trading.blogs.show');
+});
+
+// Marketing Resources
+Route::middleware(['auth'])->controller(MarketingResourceController::class)->group(function (): void {
+    Route::get('/admin/marketing-resources', 'adminIndex')->name('admin.marketing.resources.index');
+    Route::get('/admin/marketing-resources/create', 'create')->name('admin.marketing.resources.create');
+    Route::post('/admin/marketing-resources', 'store')->name('admin.marketing.resources.store');
+    Route::get('/admin/marketing-resources/{resource}/edit', 'edit')->name('admin.marketing.resources.edit');
+    Route::put('/admin/marketing-resources/{resource}', 'update')->name('admin.marketing.resources.update');
+    Route::delete('/admin/marketing-resources/{resource}', 'destroy')->name('admin.marketing.resources.destroy');
+    Route::get('/admin/marketing-resources/{resource}/download', 'adminDownload')->name('admin.marketing.resources.download');
+
+    Route::get('/marketing-resources', 'leaderIndex')->name('marketing.resources.index');
+    Route::post('/marketing-resources/{resource}/view', 'view')->middleware('throttle:8,1')->name('marketing.resources.view');
+    Route::post('/marketing-resources/{resource}/download', 'download')->middleware('throttle:8,1')->name('marketing.resources.download');
+});
+
+// Support Tickets
+Route::middleware(['auth'])->controller(SupportTicketController::class)->group(function (): void {
+    Route::get('/support/tickets', 'index')->name('support.tickets.index');
+    Route::get('/support/tickets/create', 'create')->name('support.tickets.create');
+    Route::post('/support/tickets', 'store')->name('support.tickets.store');
+    Route::get('/support/tickets/{ticket}', 'show')->name('support.tickets.show');
+    Route::post('/support/tickets/{ticket}/reply', 'reply')->name('support.tickets.reply');
+    Route::post('/support/tickets/{ticket}/close', 'close')->name('support.tickets.close');
+    Route::get('/support/tickets/attachments/{attachment}/download', 'downloadAttachment')->name('support.tickets.attachments.download');
+});
+
+// Notifications
+Route::middleware(['auth'])->controller(AppNotificationController::class)->group(function (): void {
+    Route::get('/notifications', 'index')->name('notifications.index');
+    Route::post('/notifications/read-all', 'markAllRead')->name('notifications.read_all');
+    Route::post('/notifications/{notification}/read', 'markRead')->name('notifications.read');
+
+    Route::get('/admin/notifications', 'adminIndex')->name('admin.notifications.index');
+    Route::get('/admin/notifications/create', 'create')->name('admin.notifications.create');
+    Route::post('/admin/notifications', 'store')->name('admin.notifications.store');
+    Route::get('/admin/notifications/{notification}/edit', 'edit')->name('admin.notifications.edit');
+    Route::put('/admin/notifications/{notification}', 'update')->name('admin.notifications.update');
+    Route::delete('/admin/notifications/{notification}', 'destroy')->name('admin.notifications.destroy');
+});
+
+// Trading Appointments
+Route::middleware(['auth'])->controller(TradingAppointmentController::class)->group(function (): void {
+    Route::get('/admin/trading-appointments', 'adminIndex')->name('admin.trading.appointments.index');
+    Route::post('/admin/trading-appointments/slots', 'storeSlot')->name('admin.trading.appointments.slots.store');
+    Route::put('/admin/trading-appointments/slots/{slot}', 'updateSlot')->name('admin.trading.appointments.slots.update');
+    Route::delete('/admin/trading-appointments/slots/{slot}', 'destroySlot')->name('admin.trading.appointments.slots.destroy');
+    Route::post('/admin/trading-appointments/{appointment}/approve', 'approve')->name('admin.trading.appointments.approve');
+    Route::post('/admin/trading-appointments/{appointment}/reject', 'reject')->name('admin.trading.appointments.reject');
+
+    Route::get('/trading/appointments', 'index')->name('trading.appointments.index');
+    Route::post('/trading/appointments/slots/{slot}/book', 'bookSlot')->name('trading.appointments.slots.book');
+    Route::post('/trading/appointments/preferred', 'storePreferred')->name('trading.appointments.preferred.store');
+    Route::post('/trading/appointments/{appointment}/cancel', 'cancel')->name('trading.appointments.cancel');
+});
+
+// Trading Examination
+Route::middleware(['auth'])->controller(TradingExaminationController::class)->group(function (): void {
+    Route::get('/trading/exams', 'index')->name('trading.exams.index');
+    Route::post('/trading/exams/{attempt}/submit', 'submitDaily')->name('trading.exams.submit');
+
+    Route::get('/admin/trading-exams', 'questionBank')->name('admin.trading.exams.index');
+    Route::post('/admin/trading-exams/questions', 'storeQuestion')->name('admin.trading.exams.questions.store');
+    Route::get('/admin/trading-exams/questions/{question}/edit', 'editQuestion')->name('admin.trading.exams.questions.edit');
+    Route::put('/admin/trading-exams/questions/{question}', 'updateQuestion')->name('admin.trading.exams.questions.update');
+    Route::delete('/admin/trading-exams/questions/{question}', 'destroyQuestion')->name('admin.trading.exams.questions.destroy');
+    Route::post('/admin/trading-exams/questions/{question}/approve', 'approveQuestion')->name('admin.trading.exams.questions.approve');
+    Route::post('/admin/trading-exams/questions/{question}/reject', 'rejectQuestion')->name('admin.trading.exams.questions.reject');
+    Route::post('/admin/trading-exams/quota-requests', 'requestQuota')->name('admin.trading.exams.quota.request');
+    Route::post('/admin/trading-exams/quota-requests/{quotaRequest}/approve', 'approveQuota')->name('admin.trading.exams.quota.approve');
+    Route::post('/admin/trading-exams/quota-requests/{quotaRequest}/reject', 'rejectQuota')->name('admin.trading.exams.quota.reject');
+});
+
+Route::middleware(['auth'])->controller(TraderOnboardingController::class)->group(function (): void {
+    Route::get('/trader-onboarding', 'show')->name('trader.onboarding.show');
+    Route::post('/trader-onboarding', 'store')->name('trader.onboarding.store');
+
+    Route::get('/admin/trader-onboarding', 'adminIndex')->name('admin.trader_onboarding.index');
+    Route::post('/admin/trader-onboarding/{application}/approve', 'approve')->name('admin.trader_onboarding.approve');
+    Route::post('/admin/trader-onboarding/{application}/reject', 'reject')->name('admin.trader_onboarding.reject');
+    Route::post('/admin/trader-onboarding/{application}/reopen', 'reopen')->name('admin.trader_onboarding.reopen');
+    Route::get('/admin/trader-onboarding/{application}/document', 'downloadDocument')->name('admin.trader_onboarding.download');
+});
+
+Route::middleware(['auth'])->controller(TradingPositionApplicationController::class)->group(function (): void {
+    Route::get('/trading/positions', 'index')->name('trading.positions.index');
+    Route::post('/trading/positions', 'store')->name('trading.positions.store');
+
+    Route::get('/admin/trading-positions', 'adminIndex')->name('admin.trading_positions.index');
+    Route::post('/admin/trading-positions/{application}/approve', 'approve')->name('admin.trading_positions.approve');
+    Route::post('/admin/trading-positions/{application}/reject', 'reject')->name('admin.trading_positions.reject');
+    Route::get('/admin/trading-positions/{application}/document', 'downloadDocument')->name('admin.trading_positions.download');
+});
+
+Route::middleware(['auth'])->controller(TraderReadinessChecklistController::class)->group(function (): void {
+    Route::get('/trading/readiness-checklist', 'index')->name('trader.readiness.index');
+    Route::post('/trading/readiness-checklist/reset', 'reset')->name('trader.readiness.reset');
+    Route::post('/trading/readiness-checklist/{item}', 'update')->name('trader.readiness.update');
+});
 
 // ✅ Trading Journal Routes
 Route::controller(TradingJournalController::class)->group(function (): void {
@@ -541,7 +957,43 @@ Route::controller(TradingJournalController::class)->group(function (): void {
     Route::post('/trading-journal/deposit', 'StoreDeposit')->name('store.trading.deposit');
 
 
+    // --- Excel Import / Export for Trading Journal ---
+    Route::get('/trading-journal/template/download', 'DownloadTemplate')->name('download.trades.template'); // download Excel template
+    Route::post('/trading-journal/import', 'ImportTrades')->name('import.trading.journal'); // import trades from Excel
+    Route::post('/trading-journal/prop-firm-questions/{question}/answer', 'answerPropFirmQuestion')
+        ->name('trading.propfirm.questions.answer');
 });
+// Funded Traders Routes
+Route::middleware(['auth'])->controller(FundedTraderController::class)->group(function () {
+
+    // View all funded traders (Pending, Approved, Rejected, Suspended)
+    Route::get('/admin/funded-traders', 'AllFundedTrader')
+        ->name('admin.funded_traders.index');
+
+    // Approve funded trader (POST)
+    Route::post('/admin/funded-traders/{id}/approve', 'approve')
+        ->name('admin.funded_traders.approve');
+
+    // Reject funded trader (POST)
+    Route::post('/admin/funded-traders/{id}/reject', 'reject')
+        ->name('admin.funded_traders.reject');
+
+    // Suspend funded trader (POST)
+    Route::post('/admin/funded-traders/{id}/suspend', 'suspend')
+        ->name('admin.funded_traders.suspend');
+
+    Route::post('/admin/funded-traders/{id}/questions', 'askQuestion')
+        ->name('admin.funded_traders.questions.store');
+
+    Route::post('/admin/funded-traders/questions/{question}/resolve', 'resolveQuestion')
+        ->name('admin.funded_traders.questions.resolve');
+});
+
+Route::prefix('trading')->group(function () {
+    Route::get('/leaderboard', [App\Http\Controllers\Trading\LeaderboardController::class, 'index'])
+        ->name('trading.leaderboard.index');
+});
+
 
 // ✅ Traders Performance Routes
 Route::controller(TradersPerformancesController::class)->group(function (): void {
@@ -569,6 +1021,22 @@ Route::get('/trader-performance/export', 'AdminTradingJournalExport')->name('tra
 });
 
 
+Route::controller(LeaderboardController::class)->group(function (): void {
+
+    // --- Leaderboard Main (RRR Ranking) ---
+    Route::get('/leaderboard', 'index')->name('trading.leaderboard.index');
+
+    // (Optional) Filter Leaderboard by Month/Year/User
+    Route::get('/leaderboard/filter', 'filter')->name('trading.leaderboard.filter');
+
+    // (Optional) Export Leaderboard (Excel/PDF etc.)
+    Route::get('/leaderboard/export', 'export')->name('trading.leaderboard.export');
+
+    // (Optional) View Individual Trader’s Leaderboard Entry
+Route::get('/leaderboard/trader/{id}', 'showTrader')
+    ->name('trading.leaderboard.showTrader');
+});
+
 // Trading Pair Routes
 Route::controller(TradingPairController::class)->group(function (): void {
     Route::get('/all/trading-pairs', 'AllTradingPairs')->name('all.trading.pairs');
@@ -577,6 +1045,11 @@ Route::controller(TradingPairController::class)->group(function (): void {
     Route::get('/edit/trading-pair/{id}', 'EditTradingPair')->name('edit.trading.pair');
     Route::post('/update/trading-pair/{id}', 'UpdateTradingPair')->name('update.trading.pair');
     Route::get('/delete/trading-pair/{id}', 'DeleteTradingPair')->name('delete.trading.pair');
+
+    // ✅ Import Excel route
+    Route::post('/import/trading-pairs', 'ImportTradingPairs')->name('import.trading.pairs');
+    // ✅ Template download
+    Route::get('/download/trading-pairs-template', 'DownloadTemplate')->name('download.trading.pairs.template');
 });
 
 // Role Management Routes
@@ -608,22 +1081,26 @@ Route::controller(CapitalController::class)
 
 
 // Dashboard All Route
-Route::controller(DashboardController::class)->group(function(){
+Route::controller(DashboardController::class)->middleware(['auth'])->group(function(){
     Route::get('/all/dashboard/statistics','AllStatistics')->name('all.statistics');
     // Route::get('/all/dashboard/statistics/latestorder','LatestShippingOrders')->name('all.statistics');
 
 });
 
+Route::get('/all/dashboard/trading-statistics', [TradingStatisticsController::class, 'index'])->name('all.trading.statistics');
 
 
-Route::get('/dashboard', function () {
-    return view('admin.dashboard.dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/dashboard', [DashboardController::class, 'AllStatistics'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        // ✅ New route for Connect Discord
+    Route::get('/discord/connect', [ProfileController::class, 'connectDiscord'])->name('discord.connect');
 });
 
 require __DIR__.'/auth.php';

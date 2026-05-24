@@ -17,6 +17,10 @@
         3 => 'bg-warning text-dark',
         default => 'bg-secondary',
     };
+    $journalTime = app(\App\Services\TradingJournalTimeService::class);
+    $selectedTimeView = $journalTime->normalizeMode($selectedTimeView ?? request('time_view'));
+    $selectedTimeViewOffset = $journalTime->normalizeOffset($selectedTimeViewOffset ?? request('mt5_offset_minutes', $journal->time_input_offset_minutes ?? null), $selectedTimeView);
+    $selectedMt5ViewOffset = $journalTime->normalizeOffset(request('mt5_offset_minutes', $journal->time_input_offset_minutes ?? null), \App\Services\TradingJournalTimeService::TIMEZONE_MT5);
 @endphp
 
 <title>Trading Journal Details | HC Gaming Studio</title>
@@ -138,6 +142,7 @@
                     <div class="journal-detail-meta">
                         <span class="badge {{ $directionClass }}">{{ $directionLabel }}</span>
                         <span class="badge {{ $resultClass }}">{{ $resultLabel }}</span>
+                        <span class="badge bg-light text-dark">Saved from {{ $journalTime->label($journal->time_input_timezone ?? null, $journal->time_input_offset_minutes ?? null) }}</span>
                         @if($tradingPair && $tradingPair->description)
                             <span class="badge bg-light text-dark">{{ $tradingPair->description }}</span>
                         @endif
@@ -155,14 +160,14 @@
                 <div class="row g-3 mb-4">
                     <div class="col-md-3 col-sm-6">
                         <div class="journal-metric">
-                            <span>Open Time</span>
-                            <strong>{{ optional($journal->open_date)->format('Y-m-d H:i') ?? '-' }}</strong>
+                            <span>Open Time ({{ $journalTime->shortLabel($selectedTimeView, $selectedTimeViewOffset) }})</span>
+                            <strong>{{ $journalTime->formatForDisplay($journal->open_date, $selectedTimeView, $selectedTimeViewOffset) }}</strong>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6">
                         <div class="journal-metric">
-                            <span>Close Time</span>
-                            <strong>{{ optional($journal->close_date)->format('Y-m-d H:i') ?? '-' }}</strong>
+                            <span>Close Time ({{ $journalTime->shortLabel($selectedTimeView, $selectedTimeViewOffset) }})</span>
+                            <strong>{{ $journalTime->formatForDisplay($journal->close_date, $selectedTimeView, $selectedTimeViewOffset) }}</strong>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6">
@@ -202,6 +207,23 @@
                         <div class="journal-metric">
                             <span>Result</span>
                             <strong>{{ $resultLabel }}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="journal-metric">
+                            <span>Malaysia Time</span>
+                            <strong>Open: {{ $journalTime->formatForDisplay($journal->open_date, \App\Services\TradingJournalTimeService::TIMEZONE_MALAYSIA) }}</strong>
+                            <strong>Close: {{ $journalTime->formatForDisplay($journal->close_date, \App\Services\TradingJournalTimeService::TIMEZONE_MALAYSIA) }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="journal-metric">
+                            <span>MT5 Platform Time</span>
+                            <strong>Open: {{ $journalTime->formatForDisplay($journal->open_date, \App\Services\TradingJournalTimeService::TIMEZONE_MT5, $selectedMt5ViewOffset) }}</strong>
+                            <strong>Close: {{ $journalTime->formatForDisplay($journal->close_date, \App\Services\TradingJournalTimeService::TIMEZONE_MT5, $selectedMt5ViewOffset) }}</strong>
                         </div>
                     </div>
                 </div>

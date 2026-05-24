@@ -17,6 +17,9 @@ use App\Models\User;
 use App\Models\FeatureToggle;
 use Illuminate\Support\Facades\Schema;
 use App\Services\PropFirmEvaluator;
+use App\Services\AppNotificationService;
+use App\Services\TradingJournalAnalytics;
+use App\Services\TradingJournalTimeService;
 use Illuminate\Support\Facades\Mail; // ← Add this
 use App\Mail\PropFirmNotificationMail; // ✅ correct import
 use App\Exports\TradesTemplateExport;
@@ -26,6 +29,9 @@ use App\Models\PropFirmEvaluationQuestion;
 
 class TradingJournalController extends Controller
 {
+    private const REVIEW_PHASE1_PROFIT_TARGET = 'phase1_profit_target_review';
+    private const REVIEW_PHASE1_PROFITABLE_DAYS_REQUIRED = 'phase1_profitable_days_required';
+
     /**
      * Logged-in user's monthly trading journal + Prop Firm evaluation
      */
@@ -37,6 +43,8 @@ public function AllTradingJournal(Request $request)
 
         $userId = Auth::id();
     $currentUser = auth()->user();
+    $selectedTimeView = $this->journalTimeService()->normalizeMode($request->input('time_view'));
+    $selectedTimeViewOffset = $this->journalTimeService()->normalizeOffset($request->input('mt5_offset_minutes'), $selectedTimeView);
     $propFirmLockMessage = $this->propFirmLockMessage($currentUser);
     $pendingEvaluationQuestions = PropFirmEvaluationQuestion::where('user_id', $userId)
         ->where('status', PropFirmEvaluationQuestion::STATUS_OPEN)
@@ -106,6 +114,7 @@ $totalWithdrawals = abs(Capital::where('user_id', $userId)->where('type', 2)->su
 $netPL          = $journals->sum('profit_loss');  // Net PnL of all trades
 $initialCapital = $totalDeposits;                 // Deposits as starting capital
 $currentBalance = $totalDeposits + $netPL - $totalWithdrawals;
+$analytics = new TradingJournalAnalytics();
  // 🚫 Backend guard: block if feature disabled
     // ======================================================
 
@@ -129,6 +138,9 @@ $currentBalance = $totalDeposits + $netPL - $totalWithdrawals;
         $drawdownPercent = $initialCapital > 0
             ? round((abs(min(0, $netPL)) / $initialCapital) * 100, 2)
             : 0;
+        $maxDrawdownAmount = $this->calculateJournalMaxDrawdownAmount($journals);
+        $recoveryFactor = $maxDrawdownAmount > 0 ? round($netPL / $maxDrawdownAmount, 2) : ($netPL > 0 ? 'No Drawdown' : 'N/A');
+        [$recoveryPoints, $recoveryGrade] = $this->journalRecoveryFactorScore($recoveryFactor, (float) $netPL, (float) $maxDrawdownAmount, $totalTrades > 0);
 
         // Expectancy
         $averageWin      = $winTrades->count() > 0 ? $winTrades->avg('profit_loss') : 0;
@@ -136,34 +148,42 @@ $currentBalance = $totalDeposits + $netPL - $totalWithdrawals;
         $winRateDecimal  = $totalTrades > 0 ? $winTrades->count() / $totalTrades : 0;
         $lossRateDecimal = $totalTrades > 0 ? $lossTrades->count() / $totalTrades : 0;
         $expectancy      = round(($winRateDecimal * $averageWin) - ($lossRateDecimal * $averageLoss), 2);
-// ---------------- Consistency Evaluation (FundingPips 15% rule) ----------------
+// ---------------- Consistency Evaluation (40% Best Day Rule) ----------------
 
-// -------- Consistency Rule (FundingPips 15% rule) --------
+// -------- Consistency Rule (40% Best Day Rule) --------
 
 // Group trades by day and sum profits for each day
-$dailyPnL = $journals->groupBy(fn ($t) => Carbon::parse($t->close_date)->toDateString())
-                     ->map(fn ($day) => (float) $day->sum('profit_loss'));
+$bestDayRule = $analytics->bestDayRule($journals);
+unset($bestDayRule['daily_profit_loss']);
+$grossProfitRule = $analytics->grossProfitRule($journals, (float) $initialCapital);
+$hedgingProfile = $analytics->hedgingProfile($journals);
+$positionProfile = $analytics->positionConsistency($journals);
+$durationProfile = $analytics->durationStats($journals);
+$traderStyleProfile = $analytics->behavioralRiskProfile($journals, (float) $initialCapital);
+$behaviorWeeklyProfile = $analytics->behaviorWeeklyComparison($journals, (float) $initialCapital);
+$behaviorScorePenalty = $analytics->behaviorScorePenalty($traderStyleProfile, 0);
+$performanceMeaning = 'No trading performance score is available yet. Add trade records to generate the evaluation meaning.';
+
+$dailyPnL = $analytics->dailyProfitLoss($journals);
 
 // Biggest winning day
-$biggestWinningDay = $dailyPnL->count() ? max($dailyPnL->toArray()) : 0;
+$biggestWinningDay = $bestDayRule['best_winning_day'];
 
 // Current total account profit (sum of all daily PnL)
-$currentTotalProfit = $dailyPnL->sum() ?? 0;
+$currentTotalProfit = $bestDayRule['total_generated_profit'];
 
 // Consistency score (%)
-$consistencyPercent = $currentTotalProfit > 0
-    ? round(($biggestWinningDay / $currentTotalProfit) * 100, 2)
-    : 0;
+$consistencyPercent = $bestDayRule['score_percent'];
 
-// Check if consistency target met (<= 15%)
-$consistencyPassed = $consistencyPercent <= 15;
+// Check if consistency target met (<= 40%)
+$consistencyPassed = $bestDayRule['passed'];
 
 // Grade / Status
-$consistencyGrade = $consistencyPassed ? '✅ Passed' : '⏳ Pending (Keep Trading)';
+$consistencyGrade = $bestDayRule['grade'];
 
         if ($totalTrades == 0) {
-            $winRateGrade = $rrrGrade = $growthGrade = $drawdownGrade = $consistencyGrade = $expectancyGrade = 'N/A';
-            $winRatePoints = $rrrPoints = $growthPoints = $drawdownPenalty = $consistencyPoints = $expectancyPoints = 0;
+            $winRateGrade = $rrrGrade = $growthGrade = $recoveryGrade = $drawdownGrade = $consistencyGrade = $expectancyGrade = 'N/A';
+            $winRatePoints = $rrrPoints = $growthPoints = $recoveryPoints = $drawdownPenalty = $consistencyPoints = $expectancyPoints = 0;
             $totalScore = 0;
             $rating = 'N/A';
         } else {
@@ -236,41 +256,34 @@ $consistencyGrade = $consistencyPassed ? '✅ Passed' : '⏳ Pending (Keep Tradi
             };
 
 // -------- Consistency Score Points -------
- if ($consistencyPercent <= 10) {
-     $consistencyPoints = 15; // Full score
-    $consistencyGrade  = 'S';
-}
-elseif ($consistencyPercent <= 15) {
-    $consistencyPoints = 12; // Full score
-    $consistencyGrade  = 'A';
-} elseif ($consistencyPercent <= 20) {
-    $consistencyPoints = 10;
-    $consistencyGrade  = 'B+';
-} elseif ($consistencyPercent <= 25) {
-
-} elseif ($consistencyPercent <= 30) {
-    $consistencyPoints = 8;
-    $consistencyGrade  = 'B';
-} elseif ($consistencyPercent <= 35) {
-    $consistencyPoints = 6;
-    $consistencyGrade  = 'B-';
-} elseif ($consistencyPercent <= 50) {
-    $consistencyPoints = 4;
-    $consistencyGrade  = 'C';
-} elseif ($consistencyPercent <= 65) {
-    $consistencyPoints = 2;
-    $consistencyGrade  = 'D';
-} elseif ($consistencyPercent <= 80) {
-        $consistencyPoints = 1;
-    $consistencyGrade  = 'E';
-}else{
+if ($currentTotalProfit <= 0) {
     $consistencyPoints = 0;
-    $consistencyGrade  = 'F';
+    $consistencyGrade = 'N/A';
+} elseif ($consistencyPercent <= 20) {
+    $consistencyPoints = 15;
+    $consistencyGrade = 'S';
+} elseif ($consistencyPercent <= 30) {
+    $consistencyPoints = 12;
+    $consistencyGrade = 'A';
+} elseif ($consistencyPercent <= 40) {
+    $consistencyPoints = 10;
+    $consistencyGrade = 'B';
+} elseif ($consistencyPercent <= 50) {
+    $consistencyPoints = 6;
+    $consistencyGrade = 'C';
+} elseif ($consistencyPercent <= 65) {
+    $consistencyPoints = 3;
+    $consistencyGrade = 'D';
+} else {
+    $consistencyPoints = 0;
+    $consistencyGrade = 'F';
 }
 
 
             // Final Score & Rating
-$totalScore = $winRatePoints + $rrrPoints + $growthPoints + $consistencyPoints + $expectancyPoints - $drawdownPenalty;
+$baseTotalScore = $winRatePoints + $rrrPoints + $recoveryPoints + $consistencyPoints + $expectancyPoints - $drawdownPenalty;
+$behaviorScorePenalty = $analytics->behaviorScorePenalty($traderStyleProfile, (float) $baseTotalScore);
+$totalScore = (float) data_get($behaviorScorePenalty, 'adjusted_score', $baseTotalScore);
 
             $rating = match (true) {
                 $totalScore >= 95 => 'S',
@@ -360,8 +373,7 @@ if ($featureEnabled) {
         $targetProgressPct   = $targetAmount > 0 ? round(($pnlSum / $targetAmount) * 100, 2) : 0;
 
         // -------- Max Daily Loss --------
-        $dailyPnL = $journals->groupBy(fn ($t) => Carbon::parse($t->close_date)->toDateString())
-            ->map(fn ($day) => (float) $day->sum('profit_loss'));
+        $dailyPnL = $analytics->dailyProfitLoss($journals);
 
         $worstDayPnL          = $dailyPnL->count() ? min($dailyPnL->toArray()) : 0;
         $maxDailyLossAmount   = -1 * $startingBalance * ($phaseRules['max_daily_loss'] / 100);
@@ -374,12 +386,9 @@ if ($featureEnabled) {
         $maxTotalLossBreached = $overallLossAmount < $maxTotalLossAmount;
         $overallLossPercent   = $startingBalance > 0 ? round(($overallLossAmount / $startingBalance) * 100, 2) : 0;
 
-        // -------- Profitable Day (≥ 0.5% of initial capital) --------
-        $profitableDayThreshold = $initialCapital * 0.005; // 0.5%
-        $profitableDays = $dailyPnL->filter(fn ($pnl) => $pnl >= $profitableDayThreshold);
-        $currentProfitableDays = $profitableDays->count();
+        // -------- Profitable Day --------
         $requiredProfitableDays = $phaseRules['min_profitable_days'] ?? 3;
-        $hasProfitableDay = $currentProfitableDays >= $requiredProfitableDays;
+        $profitableDayRule = $analytics->profitableDayRule($journals, $requiredProfitableDays);
 
         // // -------- Consistency Rule --------
         // $consistencyLimit    = 750; // adjust per your policy
@@ -402,12 +411,17 @@ if ($featureEnabled) {
             'net_pnl'          => round($pnlSum, 2),
 
             'consistency' => [
-        'biggest_winning_day' => round($biggestWinningDay, 2),
-    'total_profit'        => round($currentTotalProfit, 2),
-    'score_percent'       => $consistencyPercent,
-    'passed'              => $consistencyPassed,
-    'grade'               => $consistencyGrade,
+                'limit_percent'       => $bestDayRule['limit_percent'],
+                'biggest_winning_day' => round($biggestWinningDay, 2),
+                'total_profit'        => round($currentTotalProfit, 2),
+                'score_percent'       => $consistencyPercent,
+                'required_total_profit' => $bestDayRule['required_total_profit'],
+                'additional_profit_needed' => $bestDayRule['additional_profit_needed'],
+                'passed'              => $consistencyPassed,
+                'grade'               => $consistencyGrade,
             ],
+
+            'gross_profit_rule' => $grossProfitRule,
 
             'profit_target' => [
                 'target_amount'           => round($targetAmount, 2),
@@ -432,12 +446,12 @@ if ($featureEnabled) {
                 'overall_loss_pct' => $overallLossPercent,
             ],
 
-            'profitable_day' => [
-                'threshold'          => round($profitableDayThreshold, 2),
-                'profitable_days'    => $profitableDays->count(),
-                'required_days'      => $requiredProfitableDays,
-                'has_profitable_day' => (bool) $hasProfitableDay,
-                'status_label'       => $hasProfitableDay ? '✅ Achieved' : '⏳ Pending',
+            'profitable_day' => $profitableDayRule,
+
+            'time' => [
+                'days_passed' => $daysPassed,
+                'max_days'    => (int) $phaseRules['max_days'],
+                'within_time' => (bool) $withinTimeLimit,
             ],
         ];
 
@@ -445,46 +459,50 @@ if ($featureEnabled) {
         if ($journals->count() === 0 || $startingBalance <= 0) {
             $evaluation['status'] = 'PENDING';
 
-        } elseif ($evaluation['max_daily_loss']['breached'] || $evaluation['max_total_loss']['breached']) {
-            $evaluation['status'] = 'FAIL';
+        } elseif ($evaluation['max_total_loss']['breached']) {
+            $evaluation['status'] = 'UNDER_REVIEW';
+            $evaluation['message'] = 'Total loss limit is breached. Your account remains active while administration reviews the breach.';
 
-            // ✅ Determine the breach reason
-            $breachReason = 'Prop Firm evaluation breach';
-            if ($evaluation['max_daily_loss']['breached']) {
-                $breachReason = 'Daily Loss Limit Breached';
-            } elseif ($evaluation['max_total_loss']['breached']) {
-                $breachReason = 'Total Loss Limit Breached';
+            if ((string) ($currentUser->prop_firm_review_status ?? 'none') === 'total_loss_allowed') {
+                $evaluation['status'] = 'REVIEWED';
+                $evaluation['message'] = 'Total loss limit is breached and has already been reviewed by administration. Your account remains active.';
             }
 
-            // ✅ Send FAIL email
-            $details = [
-                'subject'          => '⚠️ Prop Firm Breach Alert',
-                'user_name'        => $currentUser->name,
-                'status'           => 'FAIL',
-                'account_number'   => $currentUser->username,
-                'breach_rule'      => $breachReason,
-                'violated_at'      => now()->format('F d, Y H:i'),
-                'max_allowed_risk' => $evaluation['max_daily_loss']['limit_amount'],
-                'max_open_risk'    => $evaluation['max_daily_loss']['worst_day_pnl'],
-                'url'              => url('/login'),
-            ];
+            $this->queueTotalLossReview($currentUser, $evaluation, (int) $currentPhase);
 
-            try {
-                Mail::to($currentUser->email)->send(new PropFirmNotificationMail($details));
-            } catch (\Exception $e) {
-                // \Log::error('FAIL Mail send failed: ' . $e->getMessage());
+        } elseif ($evaluation['max_daily_loss']['breached']) {
+            $evaluation['status'] = 'UNDER_REVIEW';
+            $evaluation['message'] = 'Daily loss limit is breached. Your account remains active while administration reviews the breach.';
+
+            if ((string) ($currentUser->prop_firm_review_status ?? 'none') === 'daily_loss_allowed') {
+                $evaluation['status'] = 'REVIEWED';
+                $evaluation['message'] = 'Daily loss limit is breached and has already been reviewed by administration. Your account remains active.';
             }
 
-            $currentUser->status = 0;
-            $currentUser->save();
-            auth()->logout();
+            $this->queueDailyLossReview($currentUser, $evaluation, (int) $currentPhase);
 
-            return redirect()->route('login')
-                ->with('error', '⚠️ Your account has been terminated due to ' . $breachReason . '.');
+        } elseif ($this->needsPhaseOneProfitTargetDecision($evaluation, (int) $currentPhase)) {
+            $reviewStatus = (string) ($currentUser->prop_firm_review_status ?? 'none');
+
+            if ($reviewStatus === self::REVIEW_PHASE1_PROFITABLE_DAYS_REQUIRED) {
+                $evaluation['status'] = 'PENDING';
+                $evaluation['message'] = 'Phase 1 profit target is reached. Administration requires 3 profitable days before Phase 2 approval.';
+            } elseif (in_array($reviewStatus, ['question_required', 'suspended', 'rejected'], true)) {
+                $evaluation['status'] = 'UNDER_REVIEW';
+                $evaluation['message'] = 'Phase 1 profit target is reached, but your account is already under administration review.';
+            } else {
+                if ($reviewStatus !== self::REVIEW_PHASE1_PROFIT_TARGET) {
+                    $this->queuePhaseOneProfitTargetReview($currentUser, $evaluation, (float) $currentEvalBal);
+                }
+
+                $evaluation['status'] = 'UNDER_REVIEW';
+                $evaluation['message'] = 'Phase 1 profit target reached. Trading is locked while administration decides whether to require 3 profitable days or approve Phase 2 now.';
+            }
 
         } elseif (
             ($evaluation['profit_target']['passed'] ?? false) &&
-            ($evaluation['profitable_day']['has_profitable_day'] ?? false)
+            ($evaluation['profitable_day']['has_profitable_day'] ?? false) &&
+            ($evaluation['gross_profit_rule']['passed'] ?? false)
         ) {
             $evaluation['status'] = 'PASS';
 
@@ -569,6 +587,46 @@ if ($featureEnabled) {
     ];
 }
 
+$scoreEvaluationProfile = $this->buildJournalScoreEvaluationProfile([
+    'total_trades' => $totalTrades,
+    'win_rate' => $winRate,
+    'winning_trades' => $winTrades->count(),
+    'closed_trades' => $totalWithoutBreakEven,
+    'win_rate_points' => $winRatePoints,
+    'win_rate_grade' => $winRateGrade,
+    'risk_reward' => $averageRRR,
+    'risk_reward_points' => $rrrPoints,
+    'risk_reward_grade' => $rrrGrade,
+    'total_profit' => $totalProfit,
+    'total_loss' => $totalLoss,
+    'net_pl' => $netPL,
+    'initial_capital' => $initialCapital,
+    'growth_percent' => $growthPercent,
+    'growth_points' => $growthPoints,
+    'growth_grade' => $growthGrade,
+    'recovery_factor' => $recoveryFactor,
+    'recovery_points' => $recoveryPoints,
+    'recovery_grade' => $recoveryGrade,
+    'max_drawdown_amount' => $maxDrawdownAmount,
+    'consistency_percent' => $consistencyPercent,
+    'consistency_points' => $consistencyPoints,
+    'consistency_grade' => $consistencyGrade,
+    'best_day_rule' => $bestDayRule,
+    'expectancy' => $expectancy,
+    'expectancy_points' => $expectancyPoints,
+    'expectancy_grade' => $expectancyGrade,
+    'average_win' => $averageWin,
+    'average_loss' => $averageLoss,
+    'drawdown_percent' => $drawdownPercent,
+    'drawdown_penalty' => $drawdownPenalty,
+    'drawdown_grade' => $drawdownGrade,
+    'total_score' => $totalScore,
+    'behavior_score_penalty' => $behaviorScorePenalty,
+    'rating' => $rating,
+    'performance_meaning' => $performanceMeaning,
+    'evaluation' => $evaluation,
+]);
+
         // Breadcrumb
         $breadcrumbData = [['label' => 'Trading Journal', 'url' => route('all.trading.journals')]];
 
@@ -590,11 +648,13 @@ return view('admin.trading_journals.journal_all', compact(
     'winRatePoints',
     'rrrPoints',
     'growthPoints',
+    'recoveryPoints',
     'drawdownPenalty',
     'totalScore',
     'winRateGrade',
     'rrrGrade',
     'growthGrade',
+    'recoveryGrade',
     'drawdownGrade',
     'consistencyPoints',
     'consistencyGrade',
@@ -603,10 +663,219 @@ return view('admin.trading_journals.journal_all', compact(
     'expectancyGrade',
     'featureEnabled',
     'consistencyPercent',
+    'bestDayRule',
+    'grossProfitRule',
+    'hedgingProfile',
+    'positionProfile',
+    'durationProfile',
+    'traderStyleProfile',
+    'behaviorScorePenalty',
+    'behaviorWeeklyProfile',
+    'scoreEvaluationProfile',
     'propFirmLockMessage',
     'pendingEvaluationQuestions',
+    'selectedTimeView',
+    'selectedTimeViewOffset',
     'evaluation' // <-- pass the whole evaluation array to Blade
-));
+ ));
+    }
+
+    private function buildJournalScoreEvaluationProfile(array $data): array
+    {
+        $totalTrades = (int) ($data['total_trades'] ?? 0);
+        $hasTrades = $totalTrades > 0;
+        $netPl = (float) ($data['net_pl'] ?? 0);
+        $maxDrawdownAmount = (float) ($data['max_drawdown_amount'] ?? 0);
+        $recoveryFactor = $data['recovery_factor'] ?? 'N/A';
+        $recoveryDisplay = is_numeric($recoveryFactor) ? number_format((float) $recoveryFactor, 2) : (string) $recoveryFactor;
+        $recoveryProgress = $this->clampJournalProgress(is_numeric($recoveryFactor) ? ((float) $recoveryFactor / 3) * 100 : ($recoveryDisplay === 'No Drawdown' ? 100 : 0));
+        $bestDayRule = $data['best_day_rule'] ?? [];
+        $riskReward = $data['risk_reward'] ?? 'N/A';
+        $riskRewardDisplay = is_numeric($riskReward) ? number_format((float) $riskReward, 2) : (string) $riskReward;
+        $drawdownPenalty = abs((float) ($data['drawdown_penalty'] ?? 0));
+        $expectancy = (float) ($data['expectancy'] ?? 0);
+        $score = $hasTrades ? (float) ($data['total_score'] ?? 0) : 0;
+        $rating = $hasTrades ? (string) ($data['rating'] ?? 'N/A') : 'N/A';
+        $behaviorPenalty = (array) ($data['behavior_score_penalty'] ?? []);
+        $behaviorPenaltyPercent = $hasTrades ? (float) data_get($behaviorPenalty, 'percent', 0) : 0.0;
+        $behaviorPenaltyPoints = $hasTrades ? abs((float) data_get($behaviorPenalty, 'points', 0)) : 0.0;
+        $behaviorBaseScore = $hasTrades ? (float) data_get($behaviorPenalty, 'base_score', $score) : 0.0;
+        $behaviorPenaltyTone = (string) data_get($behaviorPenalty, 'tone', 'success');
+        $behaviorPenaltyBadge = match ($behaviorPenaltyTone) {
+            'danger' => 'bg-danger',
+            'warning' => 'bg-warning text-dark',
+            'primary' => 'bg-primary',
+            'success' => 'bg-success',
+            default => 'bg-secondary',
+        };
+
+        return [
+            'score' => $score,
+            'base_score' => $behaviorBaseScore,
+            'behavior_score_penalty' => $behaviorPenalty,
+            'rating' => $rating,
+            'meaning' => $data['performance_meaning'] ?? 'No score meaning available yet.',
+            'formula' => 'Win Rate + Risk Reward + Recovery Factor + Best Day Consistency + Expectancy - Drawdown Penalty - Behaviour Tier Penalty',
+            'max_positive_points' => 100,
+            'recovery_factor' => $recoveryDisplay,
+            'recovery_factor_progress' => $recoveryProgress,
+            'components' => [
+                [
+                    'metric' => 'Win Rate',
+                    'value' => number_format((float) ($data['win_rate'] ?? 0), 2) . '%',
+                    'points' => (float) ($data['win_rate_points'] ?? 0),
+                    'grade' => $data['win_rate_grade'] ?? 'N/A',
+                    'max_points' => 30,
+                    'badge_class' => ((float) ($data['win_rate_points'] ?? 0)) >= 20 ? 'bg-success' : (((float) ($data['win_rate_points'] ?? 0)) > 0 ? 'bg-warning text-dark' : 'bg-secondary'),
+                    'status' => $hasTrades ? 'Evaluated' : 'No Data',
+                    'formula' => 'Winning trades divided by closed winning plus losing trades.',
+                    'calculation' => (int) ($data['winning_trades'] ?? 0) . ' wins / ' . (int) ($data['closed_trades'] ?? 0) . ' closed trades',
+                ],
+                [
+                    'metric' => 'Risk Reward',
+                    'value' => $riskRewardDisplay,
+                    'points' => (float) ($data['risk_reward_points'] ?? 0),
+                    'grade' => $data['risk_reward_grade'] ?? 'N/A',
+                    'max_points' => 30,
+                    'badge_class' => ((float) ($data['risk_reward_points'] ?? 0)) >= 20 ? 'bg-success' : (((float) ($data['risk_reward_points'] ?? 0)) > 0 ? 'bg-warning text-dark' : 'bg-secondary'),
+                    'status' => $riskRewardDisplay === 'N/A' ? 'No Data' : 'Evaluated',
+                    'formula' => 'Total winning P/L divided by total losing P/L.',
+                    'calculation' => number_format((float) ($data['total_profit'] ?? 0), 2) . 'u profit / ' . number_format((float) ($data['total_loss'] ?? 0), 2) . 'u loss',
+                ],
+                [
+                    'metric' => 'Recovery Factor',
+                    'value' => $recoveryDisplay,
+                    'points' => (float) ($data['recovery_points'] ?? 0),
+                    'grade' => $data['recovery_grade'] ?? 'N/A',
+                    'max_points' => 15,
+                    'badge_class' => ((float) ($data['recovery_points'] ?? 0)) >= 10 ? 'bg-success' : (((float) ($data['recovery_points'] ?? 0)) > 0 ? 'bg-warning text-dark' : 'bg-secondary'),
+                    'status' => ! $hasTrades ? 'No Data' : (((float) ($data['recovery_points'] ?? 0)) >= 10 ? 'Strong' : (((float) ($data['recovery_points'] ?? 0)) > 0 ? 'Developing' : 'Weak')),
+                    'formula' => 'Net P/L divided by maximum drawdown. Higher means profit was earned with less equity stress.',
+                    'calculation' => number_format($netPl, 2) . 'u / ' . number_format($maxDrawdownAmount, 2) . 'u drawdown',
+                ],
+                [
+                    'metric' => 'Best Day Consistency',
+                    'value' => number_format((float) ($data['consistency_percent'] ?? 0), 2) . '%',
+                    'points' => (float) ($data['consistency_points'] ?? 0),
+                    'grade' => $data['consistency_grade'] ?? 'N/A',
+                    'max_points' => 15,
+                    'badge_class' => data_get($bestDayRule, 'passed', false) ? 'bg-success' : (((float) ($data['consistency_points'] ?? 0)) > 0 ? 'bg-warning text-dark' : 'bg-secondary'),
+                    'status' => (string) data_get($bestDayRule, 'status', 'N/A'),
+                    'formula' => 'Biggest winning day divided by total generated profit. Lower concentration is better.',
+                    'calculation' => number_format((float) data_get($bestDayRule, 'best_winning_day', 0), 2) . 'u / ' . number_format((float) data_get($bestDayRule, 'total_generated_profit', 0), 2) . 'u',
+                ],
+                [
+                    'metric' => 'Expectancy',
+                    'value' => number_format($expectancy, 2) . 'u',
+                    'points' => (float) ($data['expectancy_points'] ?? 0),
+                    'grade' => $data['expectancy_grade'] ?? 'N/A',
+                    'max_points' => 10,
+                    'badge_class' => $expectancy > 0 ? 'bg-success' : ($expectancy < 0 ? 'bg-danger' : 'bg-secondary'),
+                    'status' => $expectancy > 0 ? 'Positive' : ($expectancy < 0 ? 'Negative' : 'Flat'),
+                    'formula' => '(Win rate x average win) - (loss rate x average loss).',
+                    'calculation' => number_format((float) ($data['average_win'] ?? 0), 2) . 'u avg win / ' . number_format((float) ($data['average_loss'] ?? 0), 2) . 'u avg loss',
+                ],
+                [
+                    'metric' => 'Drawdown Penalty',
+                    'value' => number_format((float) ($data['drawdown_percent'] ?? 0), 2) . '%',
+                    'points' => -$drawdownPenalty,
+                    'grade' => $data['drawdown_grade'] ?? 'N/A',
+                    'max_points' => 0,
+                    'badge_class' => $drawdownPenalty > 0 ? 'bg-danger' : 'bg-success',
+                    'status' => $drawdownPenalty > 0 ? 'Penalty' : 'No Penalty',
+                    'formula' => 'Drawdown percentage creates penalty points that are subtracted from total score.',
+                    'calculation' => number_format($drawdownPenalty, 2) . ' point penalty',
+                ],
+                [
+                    'metric' => 'Behaviour Tier Penalty',
+                    'value' => number_format($behaviorPenaltyPercent, 0) . '%',
+                    'points' => -$behaviorPenaltyPoints,
+                    'grade' => data_get($behaviorPenalty, 'tier_label', 'Clear'),
+                    'max_points' => 0,
+                    'badge_class' => $behaviorPenaltyBadge,
+                    'status' => data_get($behaviorPenalty, 'status', 'No Behaviour Penalty'),
+                    'formula' => 'Medium revenge/gambling tier subtracts 5% from the base score. High tier subtracts 10%. Low tier has no score penalty.',
+                    'calculation' => 'Base ' . number_format($behaviorBaseScore, 2) . ' pts x ' . number_format($behaviorPenaltyPercent, 0) . '% | ' . data_get($behaviorPenalty, 'trigger_label', 'Clear or low revenge/gambling tier'),
+                ],
+            ],
+            'criteria_bands' => $this->journalScoreCriteriaBands(),
+            'grade_ranking' => $this->journalScoreGradeRanking(),
+        ];
+    }
+
+    private function calculateJournalMaxDrawdownAmount($journals): float
+    {
+        $runningProfit = 0.0;
+        $peakProfit = 0.0;
+        $maxDrawdown = 0.0;
+
+        foreach ($journals->sortBy(fn ($journal) => $journal->close_date ?? $journal->open_date ?? $journal->created_at) as $journal) {
+            $runningProfit += (float) ($journal->profit_loss ?? 0);
+            $peakProfit = max($peakProfit, $runningProfit);
+            $maxDrawdown = max($maxDrawdown, $peakProfit - $runningProfit);
+        }
+
+        return round($maxDrawdown, 2);
+    }
+
+    private function journalRecoveryFactorScore($recoveryFactor, float $netProfitLoss, float $maxDrawdownAmount, bool $hasTrades): array
+    {
+        if (! $hasTrades) {
+            return [0, 'N/A'];
+        }
+
+        if ($netProfitLoss <= 0) {
+            return [0, 'F'];
+        }
+
+        if ($maxDrawdownAmount <= 0) {
+            return [15, 'A+'];
+        }
+
+        $recoveryFactor = is_numeric($recoveryFactor)
+            ? (float) $recoveryFactor
+            : $netProfitLoss / $maxDrawdownAmount;
+
+        return match (true) {
+            $recoveryFactor >= 3.00 => [15, 'A+'],
+            $recoveryFactor >= 2.00 => [12, 'A'],
+            $recoveryFactor >= 1.50 => [10, 'B'],
+            $recoveryFactor >= 1.00 => [7, 'C'],
+            $recoveryFactor >= 0.50 => [4, 'D'],
+            $recoveryFactor > 0 => [2, 'E'],
+            default => [0, 'F'],
+        };
+    }
+
+    private function clampJournalProgress(float $value): float
+    {
+        return max(0, min(100, round($value, 2)));
+    }
+
+    private function journalScoreCriteriaBands(): array
+    {
+        return [
+            ['metric' => 'Win Rate', 'max_points' => '30 pts', 'bands' => '75%+ = 30 A; 65%+ = 25 B+; 60%+ = 25 B; 55%+ = 20 C+; 50%+ = 17 C; 45%+ = 15 D+; 35%+ = 10 D; above 0% = 5 E.'],
+            ['metric' => 'Risk Reward', 'max_points' => '30 pts', 'bands' => 'Perfect or 5.75+ = 30 A+; 3.45+ = 25 A; 2.30+ = 20 B; 1.73+ = 15 C; 1.15+ = 10 D; above 0.50 = 5 E.'],
+            ['metric' => 'Recovery Factor', 'max_points' => '15 pts', 'bands' => 'No drawdown or 3.00+ = 15 A+; 2.00+ = 12 A; 1.50+ = 10 B; 1.00+ = 7 C; 0.50+ = 4 D; positive = 2 E; no recovery = 0 F.'],
+            ['metric' => 'Best Day Consistency', 'max_points' => '15 pts', 'bands' => 'Best day <=20% of generated profit = 15 S; <=30% = 12 A; <=40% = 10 B; <=50% = 6 C; <=65% = 3 D; above 65% = 0 F.'],
+            ['metric' => 'Expectancy', 'max_points' => '10 pts', 'bands' => '40+ = 10 A+; 20+ = 7 B; 10+ = 5 C; 0+ = 0 N/A; -10+ = -1 F; -20+ = -2 F.'],
+            ['metric' => 'Drawdown Penalty', 'max_points' => 'Penalty', 'bands' => '>90% = -35 F; >80% = -20 F; >60% = -15 F; >40% = -10 F; >30% = -8 E; >20% = -6 D; >10% = -4 C; >5% = -2 B; >2% = -1 A; otherwise 0 A+.'],
+            ['metric' => 'Behaviour Tier Penalty', 'max_points' => 'Penalty', 'bands' => 'Clear/Low revenge and gambling tiers = 0; any Medium tier = -5% of base score; any High tier = -10% of base score. The highest tier applies once.'],
+        ];
+    }
+
+    private function journalScoreGradeRanking(): array
+    {
+        return [
+            ['grade' => 'S', 'range' => '95+', 'description' => 'Elite score across win rate, risk reward, recovery quality, consistency, expectancy, and drawdown control.'],
+            ['grade' => 'A+', 'range' => '90 - 94.99', 'description' => 'Excellent performance with very strong metric alignment.'],
+            ['grade' => 'A', 'range' => '85 - 89.99', 'description' => 'Strong account quality with only small scoring gaps.'],
+            ['grade' => 'B', 'range' => '70 - 84.99', 'description' => 'Good trading foundation with a few improvement areas.'],
+            ['grade' => 'C', 'range' => '50 - 69.99', 'description' => 'Developing performance. Review weaker components before scaling.'],
+            ['grade' => 'D/E', 'range' => '30 - 49.99', 'description' => 'Weak score. Profitability or risk control needs attention.'],
+            ['grade' => 'F', 'range' => 'Below 30', 'description' => 'High review priority. Score is not yet aligned with desk requirements.'],
+        ];
     }
 
 
@@ -630,8 +899,10 @@ public function StoreTradingJournal(Request $request)
     $balance = $this->getUserCapitalBalance(Auth::id());
 
     $validated = $request->validate([
+        'time_input_timezone' => 'nullable|in:malaysia,mt5',
+        'time_input_offset_minutes' => 'nullable|integer|in:120,180',
         'open_date'      => 'required|date',
-        'close_date'     => 'required|date|after_or_equal:open_date',
+        'close_date'     => 'required|date|after:open_date',
         'pair'           => 'required|string|max:255',
         'direction'      => 'required|in:1,2',
         'entry_price'    => 'required|numeric',
@@ -643,11 +914,13 @@ public function StoreTradingJournal(Request $request)
         'notes'          => 'nullable|string',
         'duplicate_count'=> 'nullable|integer|min:1|max:500',
     ], [
-        'close_date.after_or_equal' => 'The close trade time must be the same as or after the open trade time.',
+        'close_date.after' => 'The close trade time must be after the open trade time. Same date is allowed when the close time is later.',
     ]);
 
     $count   = $validated['duplicate_count'] ?? 1;
     $userId  = Auth::id();
+    $timeInputTimezone = $this->journalTimeService()->normalizeMode($validated['time_input_timezone'] ?? null);
+    $timeInputOffsetMinutes = $this->journalTimeService()->normalizeOffset($validated['time_input_offset_minutes'] ?? null, $timeInputTimezone);
 
     if ($balance <= 0) {
         return redirect()->back()->withInput()->withErrors(['error' => 'You cannot record a trade without any available capital.']);
@@ -662,8 +935,8 @@ public function StoreTradingJournal(Request $request)
     $pips = abs($validated['exit_price'] - $validated['entry_price']) / $pipFactor;
     $pips = round($pips, (int) ($tradingPair->pip_decimal ?? 0));
     $profitLoss = $this->calculateJournalProfitLoss($pips, (float) $validated['lot_size'], $validated['result'] ?? null, $validated['profit_loss'] ?? 0);
-    $openDate = Carbon::parse($validated['open_date'])->format('Y-m-d H:i:s');
-    $closeDate = Carbon::parse($validated['close_date'])->format('Y-m-d H:i:s');
+    $openDate = $this->journalTimeService()->toMalaysiaDatabase($validated['open_date'], $timeInputTimezone, $timeInputOffsetMinutes);
+    $closeDate = $this->journalTimeService()->toMalaysiaDatabase($validated['close_date'], $timeInputTimezone, $timeInputOffsetMinutes);
 
     $skipped = 0;
 
@@ -678,6 +951,8 @@ public function StoreTradingJournal(Request $request)
         TradingJournal::create([
             'user_id'      => $userId,
             'type'         => 'trade',
+            'time_input_timezone' => $timeInputTimezone,
+            'time_input_offset_minutes' => $timeInputOffsetMinutes,
             'open_date'    => $openDate,
             'close_date'   => $closeDate,
             'pair'         => $tradingPair->symbol,
@@ -741,8 +1016,10 @@ public function UpdateTradingJournal(Request $request, $id)
     $journal = TradingJournal::where('user_id', Auth::id())->findOrFail($id);
 
     $validated = $request->validate([
+        'time_input_timezone' => 'nullable|in:malaysia,mt5',
+        'time_input_offset_minutes' => 'nullable|integer|in:120,180',
         'open_date'      => 'required|date',
-        'close_date'     => 'required|date|after_or_equal:open_date',
+        'close_date'     => 'required|date|after:open_date',
         'pair'           => 'required|string|max:255',
         'direction'      => 'required|in:1,2',
         'entry_price'    => 'required|numeric',
@@ -753,7 +1030,7 @@ public function UpdateTradingJournal(Request $request, $id)
         'result'         => 'nullable|in:1,2,3',
         'notes'          => 'nullable|string',
     ], [
-        'close_date.after_or_equal' => 'The close trade time must be the same as or after the open trade time.',
+        'close_date.after' => 'The close trade time must be after the open trade time. Same date is allowed when the close time is later.',
     ]);
 
     $tradingPair = TradingPair::whereRaw('UPPER(symbol) = ?', [strtoupper($validated['pair'])])->first();
@@ -765,6 +1042,8 @@ public function UpdateTradingJournal(Request $request, $id)
     $pips = abs($validated['exit_price'] - $validated['entry_price']) / $pipFactor;
     $pips = round($pips, (int) ($tradingPair->pip_decimal ?? 0));
     $profitLoss = $this->calculateJournalProfitLoss($pips, (float) $validated['lot_size'], $validated['result'] ?? null, $validated['profit_loss'] ?? 0);
+    $timeInputTimezone = $this->journalTimeService()->normalizeMode($validated['time_input_timezone'] ?? null);
+    $timeInputOffsetMinutes = $this->journalTimeService()->normalizeOffset($validated['time_input_offset_minutes'] ?? null, $timeInputTimezone);
     $balanceExcludingTrade = $this->getUserCapitalBalance(Auth::id()) - (float) $journal->profit_loss;
 
     if (($balanceExcludingTrade + $profitLoss) < 0) {
@@ -774,8 +1053,10 @@ public function UpdateTradingJournal(Request $request, $id)
     }
 
     $journal->update([
-        'open_date'    => Carbon::parse($validated['open_date'])->format('Y-m-d H:i:s'),
-        'close_date'   => Carbon::parse($validated['close_date'])->format('Y-m-d H:i:s'),
+        'time_input_timezone' => $timeInputTimezone,
+        'time_input_offset_minutes' => $timeInputOffsetMinutes,
+        'open_date'    => $this->journalTimeService()->toMalaysiaDatabase($validated['open_date'], $timeInputTimezone, $timeInputOffsetMinutes),
+        'close_date'   => $this->journalTimeService()->toMalaysiaDatabase($validated['close_date'], $timeInputTimezone, $timeInputOffsetMinutes),
         'pair'         => $tradingPair->symbol,
         'direction'    => $validated['direction'],
         'entry_price'  => $validated['entry_price'],
@@ -793,12 +1074,14 @@ public function UpdateTradingJournal(Request $request, $id)
     ]);
 }
 
-public function TradingJournalDetails($id)
+public function TradingJournalDetails(Request $request, $id)
 {
     $journal = TradingJournal::where('user_id', Auth::id())->findOrFail($id);
     $tradingPair = TradingPair::whereRaw('UPPER(symbol) = ?', [strtoupper($journal->pair)])->first();
+    $selectedTimeView = $this->journalTimeService()->normalizeMode($request->input('time_view'));
+    $selectedTimeViewOffset = $this->journalTimeService()->normalizeOffset($request->input('mt5_offset_minutes', $journal->time_input_offset_minutes), $selectedTimeView);
 
-    return view('admin.trading_journals.journal_view', compact('journal', 'tradingPair'));
+    return view('admin.trading_journals.journal_view', compact('journal', 'tradingPair', 'selectedTimeView', 'selectedTimeViewOffset'));
 }
 
 public function DeleteTradingJournal($id)
@@ -831,6 +1114,8 @@ private function getUserCapitalBalance($userId)
 
 public function tradersJournals(Request $request)
 {
+    return app(TradersPerformancesController::class)->tradersJournals($request);
+
 $selectedMonth = $request->input('month');
 $selectedYear = $request->input('year');
     $selectedTraderId = $request->input('user_id');
@@ -1201,6 +1486,11 @@ public function DownloadTemplate()
     return Excel::download(new TradesTemplateExport, $fileName);
 }
 
+private function journalTimeService(): TradingJournalTimeService
+{
+    return app(TradingJournalTimeService::class);
+}
+
 private function isPropFirmReviewPending(?User $user): bool
 {
     if (! $user) {
@@ -1208,9 +1498,189 @@ private function isPropFirmReviewPending(?User $user): bool
     }
 
     return in_array((string) ($user->prop_firm_review_status ?? 'none'), [
+        self::REVIEW_PHASE1_PROFIT_TARGET,
         'pending_phase2',
         'pending_funded',
     ], true);
+}
+
+private function needsPhaseOneProfitTargetDecision(array $evaluation, int $phase): bool
+{
+    return $phase === 1
+        && (bool) data_get($evaluation, 'profit_target.passed', false)
+        && ! (bool) data_get($evaluation, 'profitable_day.has_profitable_day', false)
+        && (bool) data_get($evaluation, 'gross_profit_rule.passed', false);
+}
+
+private function queuePhaseOneProfitTargetReview(User $user, array $evaluation, float $phaseTwoStartBalance): void
+{
+    $reviewStatus = (string) ($user->prop_firm_review_status ?? 'none');
+
+    if (in_array($reviewStatus, [
+        self::REVIEW_PHASE1_PROFIT_TARGET,
+        self::REVIEW_PHASE1_PROFITABLE_DAYS_REQUIRED,
+        'daily_loss_review',
+        'total_loss_review',
+        'pending_phase2',
+        'pending_funded',
+        'question_required',
+        'suspended',
+        'rejected',
+    ], true)) {
+        return;
+    }
+
+    $profitableDays = (int) data_get($evaluation, 'profitable_day.profitable_days', 0);
+    $requiredDays = (int) data_get($evaluation, 'profitable_day.required_days', 3);
+    $remainingDays = max(0, $requiredDays - $profitableDays);
+
+    if (Schema::hasColumn('users', 'phase2_start_balance')) {
+        $user->phase2_start_balance = $phaseTwoStartBalance;
+    }
+
+    $user->prop_firm_review_status = self::REVIEW_PHASE1_PROFIT_TARGET;
+    $user->prop_firm_review_phase = 1;
+    $user->prop_firm_trade_locked = true;
+    $user->prop_firm_review_note = sprintf(
+        'Phase 1 profit target reached, but profitable days are %d/%d. Administration must decide whether to approve Phase 2 now, reject the review, or require %d more profitable day(s).',
+        $profitableDays,
+        $requiredDays,
+        $remainingDays
+    );
+    $user->prop_firm_review_requested_at = now();
+    $user->prop_firm_review_approved_at = null;
+    $user->save();
+
+    try {
+        AppNotificationService::notifyAdmins(
+            'Phase 1 profit target review required',
+            sprintf(
+                '%s reached the Phase 1 profit target with %d/%d profitable days. Decide whether to approve Phase 2 now, reject the review, or require %d more profitable day(s).',
+                $user->name ?: $user->username,
+                $profitableDays,
+                $requiredDays,
+                $remainingDays
+            ),
+            route('admin.funded_traders.index'),
+            'prop_firm'
+        );
+    } catch (\Throwable $exception) {
+        // Notification failure should not block the review gate.
+    }
+}
+
+private function queueDailyLossReview(User $user, array $evaluation, int $phase): void
+{
+    $reviewStatus = (string) ($user->prop_firm_review_status ?? 'none');
+
+    if (in_array($reviewStatus, [
+        'daily_loss_allowed',
+        'daily_loss_banned',
+        'total_loss_review',
+        'total_loss_allowed',
+        'total_loss_banned',
+        self::REVIEW_PHASE1_PROFIT_TARGET,
+        'pending_phase2',
+        'pending_funded',
+        'question_required',
+        'suspended',
+        'rejected',
+    ], true)) {
+        return;
+    }
+
+    if ($reviewStatus === 'daily_loss_review') {
+        if ((bool) ($user->prop_firm_trade_locked ?? false)) {
+            $user->prop_firm_trade_locked = false;
+            $user->save();
+        }
+
+        return;
+    }
+
+    $note = sprintf(
+        'Daily loss limit breached. Worst day P/L: %s. Allowed limit: %s. Account remains active until administration decides otherwise.',
+        number_format((float) data_get($evaluation, 'max_daily_loss.worst_day_pnl', 0), 2),
+        number_format((float) data_get($evaluation, 'max_daily_loss.limit_amount', 0), 2)
+    );
+
+    $user->prop_firm_review_status = 'daily_loss_review';
+    $user->prop_firm_review_phase = $phase;
+    $user->prop_firm_trade_locked = false;
+    $user->prop_firm_review_note = $note;
+    $user->prop_firm_review_requested_at = now();
+    $user->prop_firm_review_approved_at = null;
+    $user->save();
+
+    try {
+        AppNotificationService::notifyAdmins(
+            'Daily loss breach review required',
+            sprintf(
+                '%s breached the daily loss limit. Account access remains active until an admin decides to keep active or ban.',
+                $user->name ?: $user->username
+            ),
+            route('admin.funded_traders.index'),
+            'prop_firm'
+        );
+    } catch (\Throwable $exception) {
+        // Notification failure should not block trader access.
+    }
+}
+
+private function queueTotalLossReview(User $user, array $evaluation, int $phase): void
+{
+    $reviewStatus = (string) ($user->prop_firm_review_status ?? 'none');
+
+    if (in_array($reviewStatus, [
+        'total_loss_allowed',
+        'total_loss_banned',
+        'daily_loss_banned',
+        self::REVIEW_PHASE1_PROFIT_TARGET,
+        'pending_phase2',
+        'pending_funded',
+        'question_required',
+        'suspended',
+        'rejected',
+    ], true)) {
+        return;
+    }
+
+    if ($reviewStatus === 'total_loss_review') {
+        if ((bool) ($user->prop_firm_trade_locked ?? false)) {
+            $user->prop_firm_trade_locked = false;
+            $user->save();
+        }
+
+        return;
+    }
+
+    $note = sprintf(
+        'Total loss limit breached. Overall P/L: %s. Allowed limit: %s. Account remains active until administration decides otherwise.',
+        number_format((float) data_get($evaluation, 'max_total_loss.overall_pnl', 0), 2),
+        number_format((float) data_get($evaluation, 'max_total_loss.limit_amount', 0), 2)
+    );
+
+    $user->prop_firm_review_status = 'total_loss_review';
+    $user->prop_firm_review_phase = $phase;
+    $user->prop_firm_trade_locked = false;
+    $user->prop_firm_review_note = $note;
+    $user->prop_firm_review_requested_at = now();
+    $user->prop_firm_review_approved_at = null;
+    $user->save();
+
+    try {
+        AppNotificationService::notifyAdmins(
+            'Total loss breach review required',
+            sprintf(
+                '%s breached the total loss limit. Account access remains active until an admin decides to keep active or ban.',
+                $user->name ?: $user->username
+            ),
+            route('admin.funded_traders.index'),
+            'prop_firm'
+        );
+    } catch (\Throwable $exception) {
+        // Notification failure should not block trader access.
+    }
 }
 
 private function propFirmLockMessage(?User $user): ?string
@@ -1223,6 +1693,10 @@ private function propFirmLockMessage(?User $user): ?string
 
     if ($status === 'pending_phase2') {
         return 'Phase 1 has passed and your account is under administration review. Trade recording, editing, deleting, and Excel import are locked until Phase 2 is approved.';
+    }
+
+    if ($status === self::REVIEW_PHASE1_PROFIT_TARGET) {
+        return 'Phase 1 profit target has been reached and your account is under administration review. Trade recording, editing, deleting, and Excel import are locked until administration decides whether to require 3 profitable days or approve Phase 2 now.';
     }
 
     if ($status === 'pending_funded') {

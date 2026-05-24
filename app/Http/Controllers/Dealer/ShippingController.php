@@ -166,7 +166,7 @@ class ShippingController extends Controller
                 // Get shipping orders for the seller's products with order items and product details
                 $shippingorders = orders::whereIn('id', function ($query) use ($sellerProductIds) {
                     $query->select('order_id')->from('order_items')->whereIn('product_id', $sellerProductIds);
-                })->with('orderItems.product')->latest()->get();
+                })->with('orderItems.product')->withSum('orderItems', 'quantity')->latest()->get();
 
                 $shippingordersCount = $shippingorders->count();
 
@@ -563,4 +563,3 @@ public function UpdateDealerShippingDeliveryStatus($id)
 
 
         }
-

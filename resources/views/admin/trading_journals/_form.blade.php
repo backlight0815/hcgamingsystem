@@ -4,8 +4,17 @@
     $selectedPair = old('pair', $journal->pair ?? '');
     $selectedDirection = old('direction', $journal->direction ?? '');
     $selectedResult = old('result', $journal->result ?? '');
-    $formatDateTimeLocal = function ($value) {
-        return $value ? \Carbon\Carbon::parse($value)->format('Y-m-d\TH:i') : '';
+    $journalTime = app(\App\Services\TradingJournalTimeService::class);
+    $timeModes = $journalTime->modes();
+    $timeInputTimezone = $journalTime->normalizeMode(old('time_input_timezone', $journal->time_input_timezone ?? null));
+    $rawTimeInputOffsetMinutes = old('time_input_offset_minutes', $journal->time_input_offset_minutes ?? null);
+    $timeInputOffsetMinutes = $journalTime->normalizeOffset($rawTimeInputOffsetMinutes, $timeInputTimezone);
+    $selectedMt5OffsetMinutes = in_array((int) $rawTimeInputOffsetMinutes, array_keys($journalTime->mt5OffsetOptions()), true)
+        ? (int) $rawTimeInputOffsetMinutes
+        : $journalTime->normalizeOffset(null, \App\Services\TradingJournalTimeService::TIMEZONE_MT5);
+    $mt5OffsetOptions = $journalTime->mt5OffsetOptions();
+    $formatDateTimeLocal = function ($value) use ($journalTime, $timeInputTimezone, $timeInputOffsetMinutes) {
+        return $journalTime->formatForInput($value, $timeInputTimezone, $timeInputOffsetMinutes);
     };
 @endphp
 
@@ -92,6 +101,10 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
+    .journal-time-segment {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     .journal-segment input {
         position: absolute;
         opacity: 0;
@@ -167,6 +180,34 @@
         text-align: right;
     }
 
+    .journal-time-preview {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-top: 6px;
+    }
+
+    .journal-time-preview-item {
+        border: 1px solid #edf0f4;
+        border-radius: 8px;
+        background: #fbfcfe;
+        padding: 12px;
+    }
+
+    .journal-time-preview-item > span {
+        color: #6b7280;
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .journal-time-preview-item strong {
+        color: #111827;
+        display: block;
+        font-size: 13px;
+    }
+
     .journal-actions {
         display: flex;
         justify-content: flex-end;
@@ -191,6 +232,11 @@
         .journal-result-segment {
             grid-template-columns: 1fr;
         }
+
+        .journal-time-segment,
+        .journal-time-preview {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 
@@ -204,6 +250,37 @@
                     <h5>Trade Timeline</h5>
                 </div>
                 <div class="journal-panel-body">
+                    <div class="journal-field">
+                        <label>Time Entered As</label>
+                        <div class="journal-segment journal-time-segment">
+                            @foreach($timeModes as $value => $mode)
+                                <input type="radio" name="time_input_timezone" id="time_input_timezone_{{ $value }}" value="{{ $value }}" {{ $timeInputTimezone === $value ? 'checked' : '' }}>
+                                <label class="journal-choice" for="time_input_timezone_{{ $value }}">
+                                    <i class="mdi mdi-clock-outline"></i> {{ $mode['label'] }}
+                                </label>
+                            @endforeach
+                        </div>
+                        <div class="small text-muted mt-2">MT5 platform time is converted with the selected server offset; saved journal time stays in Malaysia Time (UTC+8).</div>
+                        @error('time_input_timezone')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="journal-field" data-mt5-offset-wrap>
+                        <label for="time_input_offset_minutes">MT5 Server Offset</label>
+                        <select id="time_input_offset_minutes" name="time_input_offset_minutes" class="form-control @error('time_input_offset_minutes') is-invalid @enderror">
+                            @foreach($mt5OffsetOptions as $offset => $label)
+                                <option value="{{ $offset }}" {{ (int) $selectedMt5OffsetMinutes === (int) $offset ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <div class="small text-muted mt-2">Choose the offset shown by your MT5 broker server. Malaysia Time is UTC+8.</div>
+                        @error('time_input_offset_minutes')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <div class="row">
                         <div class="col-md-6 journal-field">
                             <label for="open_date">Open Trade Time</label>
@@ -219,6 +296,19 @@
                             @error('close_date')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
+                        </div>
+                    </div>
+
+                    <div class="journal-time-preview">
+                        <div class="journal-time-preview-item">
+                            <span>Malaysia Time</span>
+                            <strong>Open: <span data-preview-open-malaysia>-</span></strong>
+                            <strong>Close: <span data-preview-close-malaysia>-</span></strong>
+                        </div>
+                        <div class="journal-time-preview-item">
+                            <span>MT5 Platform Time</span>
+                            <strong>Open: <span data-preview-open-mt5>-</span></strong>
+                            <strong>Close: <span data-preview-close-mt5>-</span></strong>
                         </div>
                     </div>
                 </div>
@@ -357,6 +447,10 @@
                         <span class="journal-summary-value" data-summary-direction>-</span>
                     </div>
                     <div class="journal-summary-row">
+                        <span class="journal-summary-label">Time Source</span>
+                        <span class="journal-summary-value" data-summary-time-source>{{ $journalTime->shortLabel($timeInputTimezone, $timeInputOffsetMinutes) }}</span>
+                    </div>
+                    <div class="journal-summary-row">
                         <span class="journal-summary-label">Pips</span>
                         <span class="journal-summary-value" data-summary-pips>{{ old('pips', $journal->pips ?? '-') }}</span>
                     </div>
@@ -402,10 +496,20 @@ document.addEventListener('DOMContentLoaded', function () {
     var profit = form.querySelector('[name="profit_loss"]');
     var openDate = form.querySelector('[name="open_date"]');
     var closeDate = form.querySelector('[name="close_date"]');
+    var timeModeInputs = form.querySelectorAll('[name="time_input_timezone"]');
+    var mt5Offset = form.querySelector('[name="time_input_offset_minutes"]');
+    var mt5OffsetWrap = form.querySelector('[data-mt5-offset-wrap]');
     var summaryPair = form.querySelector('[data-summary-pair]');
     var summaryDirection = form.querySelector('[data-summary-direction]');
+    var summaryTimeSource = form.querySelector('[data-summary-time-source]');
     var summaryPips = form.querySelector('[data-summary-pips]');
     var summaryProfit = form.querySelector('[data-summary-profit]');
+    var previewOpenMalaysia = form.querySelector('[data-preview-open-malaysia]');
+    var previewCloseMalaysia = form.querySelector('[data-preview-close-malaysia]');
+    var previewOpenMt5 = form.querySelector('[data-preview-open-mt5]');
+    var previewCloseMt5 = form.querySelector('[data-preview-close-mt5]');
+    var activeTimeMode = selectedTimeMode();
+    var activeTimeOffset = selectedTimeOffset();
 
     function selectedPairData() {
         var option = pair.options[pair.selectedIndex];
@@ -425,6 +529,121 @@ document.addEventListener('DOMContentLoaded', function () {
         var input = form.querySelector('[name="direction"]:checked');
         if (!input) return '-';
         return input.value === '1' ? 'Buy' : 'Sell';
+    }
+
+    function selectedTimeMode() {
+        var input = form.querySelector('[name="time_input_timezone"]:checked');
+        return input ? input.value : 'malaysia';
+    }
+
+    function selectedTimeSourceLabel() {
+        return selectedTimeMode() === 'mt5' ? 'MT5 ' + selectedOffsetLabel() : 'MYT';
+    }
+
+    function selectedMt5Offset() {
+        return mt5Offset ? parseInt(mt5Offset.value, 10) || 180 : 180;
+    }
+
+    function selectedTimeOffset() {
+        if (selectedTimeMode() === 'malaysia') {
+            return 480;
+        }
+
+        return selectedMt5Offset();
+    }
+
+    function selectedOffsetLabel() {
+        var minutes = selectedMt5Offset();
+        var sign = minutes >= 0 ? '+' : '-';
+        var absoluteMinutes = Math.abs(minutes);
+        var hours = Math.floor(absoluteMinutes / 60);
+        var remainder = absoluteMinutes % 60;
+
+        return 'UTC' + sign + hours + (remainder ? ':' + pad(remainder) : '');
+    }
+
+    function parseDateTimeLocal(value) {
+        if (!value) return null;
+        var parts = value.split('T');
+        if (parts.length !== 2) return null;
+        var dateParts = parts[0].split('-').map(Number);
+        var timeParts = parts[1].split(':').map(Number);
+        if (dateParts.length < 3 || timeParts.length < 2) return null;
+
+        return new Date(
+            dateParts[0],
+            dateParts[1] - 1,
+            dateParts[2],
+            timeParts[0],
+            timeParts[1]
+        );
+    }
+
+    function addMinutes(date, minutes) {
+        return new Date(date.getTime() + (minutes * 60000));
+    }
+
+    function pad(value) {
+        return String(value).padStart(2, '0');
+    }
+
+    function formatDisplayDate(date) {
+        if (!date) return '-';
+
+        return date.getFullYear()
+            + '-' + pad(date.getMonth() + 1)
+            + '-' + pad(date.getDate())
+            + ' ' + pad(date.getHours())
+            + ':' + pad(date.getMinutes());
+    }
+
+    function formatInputDate(date) {
+        if (!date) return '';
+
+        return date.getFullYear()
+            + '-' + pad(date.getMonth() + 1)
+            + '-' + pad(date.getDate())
+            + 'T' + pad(date.getHours())
+            + ':' + pad(date.getMinutes());
+    }
+
+    function modeOffset(mode, fallbackOffset) {
+        return mode === 'mt5' ? (fallbackOffset || 180) : 480;
+    }
+
+    function convertDateBetween(value, sourceMode, targetMode, sourceOffset, targetOffset) {
+        var parsed = parseDateTimeLocal(value);
+
+        if (!parsed || sourceMode === targetMode) {
+            if (sourceMode === targetMode && modeOffset(sourceMode, sourceOffset) !== modeOffset(targetMode, targetOffset)) {
+                // Continue below so changing MT5 UTC+2 <-> UTC+3 preserves the same moment.
+            } else {
+                return parsed;
+            }
+        }
+
+        return addMinutes(parsed, modeOffset(targetMode, targetOffset) - modeOffset(sourceMode, sourceOffset));
+    }
+
+    function convertInputDate(value, targetMode) {
+        var targetOffset = targetMode === 'mt5' ? selectedMt5Offset() : 480;
+
+        return convertDateBetween(value, selectedTimeMode(), targetMode, selectedTimeOffset(), targetOffset);
+    }
+
+    function updateTimePreview() {
+        previewOpenMalaysia.textContent = formatDisplayDate(convertInputDate(openDate.value, 'malaysia'));
+        previewCloseMalaysia.textContent = formatDisplayDate(convertInputDate(closeDate.value, 'malaysia'));
+        previewOpenMt5.textContent = formatDisplayDate(convertInputDate(openDate.value, 'mt5'));
+        previewCloseMt5.textContent = formatDisplayDate(convertInputDate(closeDate.value, 'mt5'));
+
+        if (summaryTimeSource) {
+            summaryTimeSource.textContent = selectedTimeSourceLabel();
+        }
+
+        if (mt5OffsetWrap) {
+            mt5OffsetWrap.style.display = selectedTimeMode() === 'mt5' ? '' : 'none';
+        }
     }
 
     function calculate() {
@@ -458,6 +677,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         summaryPair.textContent = pairData.symbol;
         summaryDirection.textContent = selectedDirection();
+        updateTimePreview();
         summaryPips.textContent = pips.value || '-';
         summaryProfit.textContent = profit.value || '-';
         summaryProfit.classList.toggle('text-success', parseFloat(profit.value) > 0);
@@ -470,10 +690,29 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function validateTradeTimeline() {
+        closeDate.setCustomValidity('');
+
+        if (!openDate.value || !closeDate.value) {
+            return;
+        }
+
+        var openedAt = new Date(openDate.value);
+        var closedAt = new Date(closeDate.value);
+
+        if (closedAt <= openedAt) {
+            closeDate.setCustomValidity('Close trade time must be after the open trade time. Same date is allowed when the close time is later.');
+        }
+    }
+
     [pair, entry, exit, lot, openDate, closeDate].forEach(function (field) {
-        field.addEventListener('input', calculate);
+        field.addEventListener('input', function () {
+            validateTradeTimeline();
+            calculate();
+        });
         field.addEventListener('change', function () {
             syncCloseMinimum();
+            validateTradeTimeline();
             calculate();
         });
     });
@@ -482,7 +721,45 @@ document.addEventListener('DOMContentLoaded', function () {
         field.addEventListener('change', calculate);
     });
 
+    timeModeInputs.forEach(function (field) {
+        field.addEventListener('change', function () {
+            var newMode = selectedTimeMode();
+            var newOffset = selectedTimeOffset();
+
+            if (newMode !== activeTimeMode || newOffset !== activeTimeOffset) {
+                openDate.value = formatInputDate(convertDateBetween(openDate.value, activeTimeMode, newMode, activeTimeOffset, newOffset));
+                closeDate.value = formatInputDate(convertDateBetween(closeDate.value, activeTimeMode, newMode, activeTimeOffset, newOffset));
+                activeTimeMode = newMode;
+                activeTimeOffset = newOffset;
+            }
+
+            syncCloseMinimum();
+            validateTradeTimeline();
+            calculate();
+        });
+    });
+
+    if (mt5Offset) {
+        mt5Offset.addEventListener('change', function () {
+            var newMode = selectedTimeMode();
+            var newOffset = selectedTimeOffset();
+
+            if (newMode !== activeTimeMode || newOffset !== activeTimeOffset) {
+                openDate.value = formatInputDate(convertDateBetween(openDate.value, activeTimeMode, newMode, activeTimeOffset, newOffset));
+                closeDate.value = formatInputDate(convertDateBetween(closeDate.value, activeTimeMode, newMode, activeTimeOffset, newOffset));
+                activeTimeMode = newMode;
+                activeTimeOffset = newOffset;
+            }
+
+            syncCloseMinimum();
+            validateTradeTimeline();
+            calculate();
+        });
+    }
+
     syncCloseMinimum();
+    validateTradeTimeline();
+    updateTimePreview();
     calculate();
 });
 </script>

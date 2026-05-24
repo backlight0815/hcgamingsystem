@@ -1,260 +1,203 @@
 @extends('admin.admin_master')
 @section('admin')
-<head>
-      <!-- Add the Bootstrap CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
-
-</head>
-    <style>
-.empty-cart-btn {
-        background-color: black;
-        color: white;
-        float: right;
-        margin-right:15px;
-    }
-
-    @media screen and (max-width: 768px) {
-     .table-responsive {
-         overflow-x: auto;
-     }
- }
- .table-container {
-        overflow-x: auto; /* Enable horizontal scrolling */
-        max-width: 100%; /* Ensure the container takes full width of the parent */
-    }
-
-    /* Ensure table cells don't wrap and add padding for better readability */
-    #datatable th,
-    #datatable td {
-        white-space: nowrap;
-        padding: 8px;
-    }
-
-
-        </style>
+@include('admin.ecommerce._styles')
 <title>Customer Management | HC Gaming Studio</title>
 
+@php
+    $registeredThisMonth = $customerUsers->filter(function ($item) {
+        return $item->created_at && $item->created_at->isCurrentMonth();
+    })->count();
+@endphp
+
 <div class="page-content">
-    <div class="container-fluid">
+    <div class="container-fluid commerce-page">
+        @include('admin.ecommerce._breadcrumbs')
 
-    <!-- start page title -->
-    <div class="row">
-        <div class="col-12">
-            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">Customer Management</h4>
-                                         @if(feature_enabled('referral_customer'))
+        <section class="commerce-hero">
+            <div>
+                <div class="commerce-hero__label">Recruitment Centre</div>
+                <h1>Customer Management</h1>
+                <p>Manage customers recruited under your dealership network, review account status, and share your customer registration link.</p>
+            </div>
+            <div class="commerce-hero__actions">
+                @if(feature_enabled('referral_customer'))
+                    <button type="button" class="btn btn-info" id="openInviteModal">
+                        <i class="fas fa-user-plus"></i>
+                        Invite Customer
+                    </button>
+                @else
+                    <button type="button" class="btn btn-secondary" disabled title="Feature Disabled">
+                        <i class="fas fa-lock"></i>
+                        Invite Customer Disabled
+                    </button>
+                @endif
+            </div>
+        </section>
 
-                <a href="#" class="btn btn-danger btn-rounded waves-effect waves-light empty-cart-btn">Invite New Customer</a>
-                   @else
-@endif
-                <button class="btn btn-danger btn-rounded empty-cart-btn" disabled title="Feature Disabled">
+        <input type="hidden" id="dynamicReferralCode" value="{{ Auth::user()->customer_referral_code ?? '' }}">
 
+        <div class="commerce-stats">
+            <div class="commerce-stat">
+                <span>Total Customers</span>
+                <strong>{{ number_format((int) $CustomerCount) }}</strong>
+                <small>Direct customer accounts</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Active Customers</span>
+                <strong>{{ number_format((int) $activeCustomer) }}</strong>
+                <small>Currently active accounts</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Inactive Customers</span>
+                <strong>{{ number_format((int) $inactiveCustomer) }}</strong>
+                <small>Accounts requiring follow-up</small>
+            </div>
+            <div class="commerce-stat">
+                <span>New This Month</span>
+                <strong>{{ number_format((int) $registeredThisMonth) }}</strong>
+                <small>Customer registrations this month</small>
             </div>
         </div>
-    </div>
-    <!-- end page title -->
-    <div class="breadcrumb">
-        @foreach ($breadcrumbData as $breadcrumb)
-            <a href="{{ $breadcrumb['url'] }}">{{ $breadcrumb['label'] }}</a>
-            @if (!$loop->last)
-                <span> / </span>
-            @endif
-        @endforeach
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
 
-                    <h4 class="card-title mb-2" > All Customer Data</h4>
-
-                    <div class="row text-center " >
-                        <div class="row">
-
-                            <div class="col-md-4 col-sm-12 border border-dark pt-3 mb-3">
-                                <h5 class="mb-0">{{ $CustomerCount }}</h5>
-                            <p class="text-muted text-truncate">Total of Customer</p>
-                        </div>
-                        <div class="col-md-4 col-sm-12 border border-dark pt-3 mb-3">
-                            <h5 class="mb-0">{{ $activeCustomer }}</h5>
-                            <p class="text-muted text-truncate">No Active Customer</p>
-                        </div>
-                        <div class="col-md-4 col-sm-12 border border-dark pt-3 mb-3">
-                            <h5 class="mb-0">{{ $inactiveCustomer }}</h5>
-                            <p class="text-muted text-truncate">No Inactive Customer</p>
-                        </div>
-
-
-                    </div>
-
-                    </div>
-
-
-<div class="table-responsive">
-                    <table id="datatable" class="table table-bordered" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-
-                        <input type="hidden" id="dynamicReferralCode" value="{{ Auth::user()->customer_referral_code ?? '' }}">
-                        <thead>
-                        <tr>
-                            <th>SI</th>
-                            <th>Username</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Upline</th>
-                            <th>Registered At</th>
-                            <th>Status</th>
-
-                        </tr>
-                        </thead>
-
-
-
-                        <tbody>
-                            @php($i=1)
-                            @foreach($customerUsers as $item)
-                        <tr>
-                            <td>{{ $i++ }}</td>
-                            <td>{{ $item->agent->username }}</td>
-                            <td>{{ $item->agent->name }}</td>
-
-                            <td>{{ $item->agent->email }} </td>
-                            <td>
-                                @if ($item->agent->upline)
-                                    {{ $item->agent->upline->username }}
-                                @else
-                                    HC Gaming Sdn Bhd
-                                @endif
-                            </td>
-                            <td>{{$item->created_at}}</td>
-                            @if($item->agent->status==1)
-                            <td style="color:green"> Active </td>
-                            @elseif($item->agent->status==0)
-                            <td style="color:red"> Inactive </td>
-                            @endif
-                            {{-- <td>{{ $item->status }}</td> --}}
-
-
-                        </tr>
-    @endforeach
-                        </tbody>
-                    </table>
-
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
+        <section class="commerce-panel">
+            <div class="commerce-panel__header">
+                <div>
+                    <h2 class="commerce-panel__title">Customer Directory</h2>
+                    <p class="commerce-panel__subtitle">Track customer ownership, contact information, registration timing, and current account status.</p>
                 </div>
             </div>
-        </div> <!-- end col -->
-    </div> <!-- end row -->
 
-    </div> <!-- container-fluid -->
+            <div class="table-responsive">
+                <table id="customerRecruitmentTable" class="table commerce-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Customer</th>
+                            <th>Contact</th>
+                            <th>Upline</th>
+                            <th>Registered</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($customerUsers as $item)
+                            @php
+                                $customer = $item->agent;
+                                $status = (int) optional($customer)->status === 1
+                                    ? ['label' => 'Active', 'class' => 'status-approved']
+                                    : ['label' => 'Inactive', 'class' => 'status-rejected'];
+                                $upline = optional(optional($customer)->upline)->username ?: 'HC Gaming Sdn Bhd';
+                            @endphp
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <th>
+                                    <div class="commerce-product-name">{{ optional($customer)->username ?? 'Unknown customer' }}</div>
+                                    <div class="commerce-muted">{{ optional($customer)->name ?: 'No name provided' }}</div>
+                                </th>
+                                <td>
+                                    <div>{{ optional($customer)->email ?: 'No email available' }}</div>
+                                    <div class="commerce-muted">User ID: {{ optional($customer)->id ?: '-' }}</div>
+                                </td>
+                                <td>{{ $upline }}</td>
+                                <td data-order="{{ $item->created_at ? $item->created_at->timestamp : 0 }}">
+                                    {{ optional($item->created_at)->format('Y-m-d H:i') ?? 'N/A' }}
+                                </td>
+                                <td><span class="commerce-status {{ $status['class'] }}">{{ $status['label'] }}</span></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </div>
+</div>
 
-
-    <!-- Modal -->
-<!-- The modal for inviting a new member -->
 <div class="modal fade" id="inviteModal" tabindex="-1" aria-labelledby="inviteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="inviteModalLabel">Invite New Customer</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="inviteModalLabel">Invite New Customer</h5>
+                <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label class="commerce-muted" for="registrationLink">Customer registration link</label>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="registrationLink" readonly>
+                    <div class="input-group-append">
+                        <button class="btn btn-info" type="button" id="copyLinkBtn">
+                            <i class="fas fa-copy"></i>
+                            Copy
+                        </button>
+                    </div>
+                </div>
+                <p class="commerce-muted mb-0">This link uses your customer referral code and will connect the new customer under your dealership network.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
+            </div>
         </div>
-        <div class="modal-body">
-          <p>Share this link with the new customer:</p>
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" id="registrationLink" readonly>
-            <button class="btn btn-outline-secondary" type="button" id="copyLinkBtn">Copy Link</button>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
-      </div>
     </div>
-  </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-      $(document).ready(function() {
-          // Function to get URL parameters by name
-          function getURLParameter(name) {
-              const urlParams = new URLSearchParams(window.location.search);
-              return urlParams.get(name);
-          }
+</div>
 
-          // Check if referral_code parameter exists in the URL
-          const referralCodeParam = getURLParameter('referral_code');
+<script>
+    window.addEventListener('load', function () {
+        if (window.jQuery && jQuery.fn.DataTable) {
+            jQuery('#customerRecruitmentTable').DataTable({
+                order: [[4, 'desc']],
+                columnDefs: [{ orderable: false, targets: [5] }]
+            });
+        }
 
-          if (referralCodeParam) {
-              // If referral_code parameter is present, pre-fill the referral code field with its value
-              const referralCodeInput = document.getElementById('referral_code');
-              referralCodeInput.value = referralCodeParam;
+        const inviteButton = document.getElementById('openInviteModal');
+        const copyButton = document.getElementById('copyLinkBtn');
+        const linkInput = document.getElementById('registrationLink');
+        const referralInput = document.getElementById('dynamicReferralCode');
+        const registerUrl = @json(route('register'));
 
-              // Disable the referral code field since it's pre-filled
-              referralCodeInput.disabled = true;
-          }
+        function invitationLink() {
+            const separator = registerUrl.indexOf('?') === -1 ? '?' : '&';
+            return registerUrl + separator + 'referral_code=' + encodeURIComponent(referralInput ? referralInput.value : '');
+        }
 
-          // Show the modal when the "Invite New Member" button is clicked
-          $('.empty-cart-btn').on('click', function() {
-              // Open the modal
-              $('#inviteModal').modal('show');
+        function showInviteModal() {
+            linkInput.value = invitationLink();
 
-              // Get the dynamic referral code from the hidden input field
-              const dynamicReferralCode = $('#dynamicReferralCode').val();
+            if (window.bootstrap && bootstrap.Modal) {
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('inviteModal')).show();
+                return;
+            }
 
-              // Display the dynamic referral code in the modal content
-              $('#referralCodeModal').text(dynamicReferralCode);
+            if (window.jQuery && typeof jQuery.fn.modal === 'function') {
+                jQuery('#inviteModal').modal('show');
+            }
+        }
 
-              const registrationLink = 'http://127.0.0.1:8000/register?referral_code=' + encodeURIComponent(dynamicReferralCode);
+        if (inviteButton) {
+            inviteButton.addEventListener('click', showInviteModal);
+        }
 
-              // Set the value of the input field to the registration link
-              $('#registrationLink').val(registrationLink);
+        if (copyButton) {
+            copyButton.addEventListener('click', function () {
+                linkInput.select();
 
-              // Hide the referral code field and label after copying the link
-              $('#referralCodeField').hide();
-              $('#referralCodeLabel').hide();
-          });
+                const copied = function () {
+                    if (window.toastr) {
+                        toastr.success('Customer invitation link copied.');
+                    } else {
+                        alert('Link copied to clipboard!');
+                    }
+                };
 
-          // Copy the link to the clipboard when the "Copy Link" button is clicked
-          $('#copyLinkBtn').on('click', function() {
-              // Select the text inside the input field
-              $('#registrationLink').select();
-
-              try {
-                  // Copy the text to the clipboard
-                  document.execCommand('copy');
-
-                  // Optionally, show a success message to the user
-                  alert('Link copied to clipboard!');
-
-                  // Hide the referral code field and label after copying the link
-                  $('#referralCodeField').hide();
-                  $('#referralCodeLabel').hide();
-              } catch (err) {
-                  // If copying to clipboard fails, you can handle the error here
-                  alert('Failed to copy link to clipboard. Please copy it manually.');
-
-                  // Show the referral code field and label again in case of an error
-                  $('#referralCodeField').show();
-                  $('#referralCodeLabel').show();
-              }
-          });
-
-          // Show the referral code field and label again if the user cancels the copy action
-          $('#registrationLink').on('input', function() {
-              $('#referralCodeField').show();
-              $('#referralCodeLabel').show();
-          });
-      });
-  </script>
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(linkInput.value).then(copied);
+                } else {
+                    document.execCommand('copy');
+                    copied();
+                }
+            });
+        }
+    });
+</script>
 @endsection

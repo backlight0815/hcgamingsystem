@@ -1,90 +1,96 @@
 @extends('admin.admin_master')
 @section('admin')
-
-<style>
-    .btn {
-        float: right;
-        padding: 10px;
-    }
-</style>
-
+@include('admin.ecommerce._styles')
 <title>Product Category Management | HC Gaming Studio</title>
 
 <div class="page-content">
-<div class="container-fluid">
+    <div class="container-fluid commerce-page">
+        @include('admin.ecommerce._breadcrumbs')
 
-<!-- start page title -->
+        <section class="commerce-hero">
+            <div>
+                <div class="commerce-hero__label">Product Centre</div>
+                <h1>Product Categories</h1>
+                <p>Maintain platform product categories so administrators and dealers can classify ecommerce listings cleanly.</p>
+            </div>
+            <div class="commerce-hero__actions">
+                <a href="{{ route('add.product.category') }}" class="btn btn-info">
+                    <i class="fas fa-plus-circle"></i>
+                    Add Category
+                </a>
+                <a href="{{ route('all.product') }}" class="btn btn-outline-light">
+                    <i class="fas fa-boxes"></i>
+                    Products
+                </a>
+            </div>
+        </section>
 
-
-<div class="row">
-    <div class="col-12">
-        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-            <h4 class="mb-sm-0">All Product Category</h4>
-
-
-
-        </div>
-    </div>
-</div>
-<!-- end page title -->
-<div class="breadcrumb">
-    @foreach ($breadcrumbData as $breadcrumb)
-        <a href="{{ $breadcrumb['url'] }}">{{ $breadcrumb['label'] }}</a>
-        @if (!$loop->last)
-            <span> / </span>
-        @endif
-    @endforeach
-</div>
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <button class="btn btn-success waves-effect waves-light btn" type="submit" onclick="redirectToPage()">Add New Product Category</button>
-
-                <h4 class="card-title">Product Category Data</h4>
-
-
-                <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                    <thead>
-                    <tr>
-                        <th>SI</th>
-                        <th>Product Category Name</th>
-                        <th>Action</th>
-
-                    </tr>
-                    </thead>
-
-
-                    <tbody>
-                        @php($i=1)
-                        @foreach($productcategory as $key=> $item)
-                    <tr>
-                        <td>{{ $key+1 }}</td>
-                        <td>{{ $item->product_category }}</td>
-
-                        <td>
-                            <a href="{{ route('edit.product.category',$item->id) }}" class="btn btn-info sm" title="Edit Data"><i class="fas fa-edit"></i>   </a>
-                   <a href="{{ route('delete.product.category',$item->id) }}" class="btn btn-danger sm" title="Delete Data" id="delete"><i class="fas fa-trash-alt"></i>   </a>
-
-
-
-                        </td>
-
-                    </tr>
-@endforeach
-                    </tbody>
-                </table>
-
+        <div class="commerce-stats three">
+            <div class="commerce-stat">
+                <span>Total Categories</span>
+                <strong>{{ $productcategory->count() }}</strong>
+                <small>Available for product assignment</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Owner</span>
+                <strong>Platform</strong>
+                <small>Administration catalogue control</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Usage</span>
+                <strong>Products</strong>
+                <small>Shown in product management and catalogue</small>
             </div>
         </div>
-    </div> <!-- end col -->
-</div> <!-- end row -->
 
-</div> <!-- container-fluid -->
+        <section class="commerce-panel">
+            <div class="commerce-panel__header">
+                <div>
+                    <h2 class="commerce-panel__title">Category Records</h2>
+                    <p class="commerce-panel__subtitle">Keep category names short and consistent for cleaner catalogue filtering.</p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table id="productCategoryTable" class="table commerce-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Category Name</th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($productcategory as $item)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <th>{{ $item->product_category }}</th>
+                                <td>
+                                    <div class="commerce-actions">
+                                        <a href="{{ route('edit.product.category', $item->id) }}" class="btn btn-info commerce-icon-btn" title="Edit category">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{{ route('delete.product.category', $item->id) }}" class="btn btn-danger commerce-icon-btn" title="Delete category" id="delete">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
 </div>
+
 <script>
-    function redirectToPage() {
-        window.location.href = "{{ route('add.product.category') }}";
-    }
+    window.addEventListener('load', function () {
+        if (window.jQuery && $.fn.DataTable) {
+            $('#productCategoryTable').DataTable({
+                columnDefs: [{ orderable: false, targets: [2] }]
+            });
+        }
+    });
 </script>
 @endsection

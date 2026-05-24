@@ -1,113 +1,91 @@
 @extends('admin.admin_master')
 @section('admin')
-<style>
-@media screen and (max-width: 768px) {
-    .table-responsive {
-        overflow-x: auto;
-    }
-}
-</style>
-<head>
-    <!-- Add the Bootstrap CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
-
-<!-- Add jQuery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
-<!-- Add the Bootstrap JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.min.js"></script>
-
-</head>
-<title>My E-Wallet History |HC Gaming</title>
+@include('admin.ecommerce._styles')
+<title>My E-Wallet History | HC Gaming Studio</title>
 
 <div class="page-content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">My E Wallet History</h4>
-                    <button class="btn btn-success waves-effect waves-light" type="submit" onclick="redirectToPage()">Top Up </button>
+    <div class="container-fluid commerce-page">
+        @include('admin.ecommerce._breadcrumbs')
 
-                </div>
+        <section class="commerce-hero">
+            <div>
+                <div class="commerce-hero__label">Wallet Ledger</div>
+                <h1>My E-Wallet History</h1>
+                <p>Audit every wallet credit and debit movement with remarks for reconciliation.</p>
+            </div>
+            <div class="commerce-hero__actions">
+                <a href="{{ route('add.wallet') }}" class="btn btn-info">
+                    <i class="fas fa-plus-circle"></i>
+                    Top Up
+                </a>
+                <a href="{{ route('My.Wallet') }}" class="btn btn-outline-light">
+                    <i class="fas fa-wallet"></i>
+                    Wallet
+                </a>
+            </div>
+        </section>
+
+        <div class="commerce-stats three">
+            <div class="commerce-stat">
+                <span>Total Credit</span>
+                <strong>RM {{ number_format((float) $totalCreditAmount, 2) }}</strong>
+                <small>Incoming wallet value</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Total Debit</span>
+                <strong>RM {{ number_format((float) $totalDebitAmount, 2) }}</strong>
+                <small>Outgoing wallet usage</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Current Balance</span>
+                <strong>RM {{ number_format((float) $currentBalance, 2) }}</strong>
+                <small>Latest available amount</small>
             </div>
         </div>
-        <!-- end page title -->
 
-    <div class="breadcrumb">
-        @foreach ($breadcrumbData as $breadcrumb)
-            <a href="{{ $breadcrumb['url'] }}">{{ $breadcrumb['label'] }}</a>
-            @if (!$loop->last)
-                <span> / </span>
-            @endif
-        @endforeach
-    </div>
-
-
-    <div class="row text-center " >
-        <div class="row">
-            <div class="col-md-4 col-sm-12 border border-dark pt-3 mb-3">
-                <h5 class="mb-0">RM {{ $totalCreditAmount }}</h5>
-                <p class="text-muted text-truncate">Total Credit (RM)</p>
+        <section class="commerce-panel">
+            <div class="commerce-panel__header">
+                <div>
+                    <h2 class="commerce-panel__title">Wallet Ledger</h2>
+                    <p class="commerce-panel__subtitle">A chronological record of credits, debits, and system remarks.</p>
+                </div>
             </div>
 
-            <div class="col-md-4 col-sm-12 border border-dark pt-3 mb-3">
-                <h5 class="mb-0">RM {{ $totalDebitAmount }}</h5>
-            <p class="text-muted text-truncate">Total Debit (RM)</p>
-        </div>
-
-        <div class="col-md-4 col-sm-12 border border-dark pt-3 mb-3">
-            <h5 class="mb-0">RM{{ $currentBalance }}</h5>
-            <p class="text-muted text-truncate">Current Balance</p>
-        </div>
-
-    </div>
-
-    </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="myshippingorder" class="table table-bordered" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Amount</th>
-                                            <th>Type of Usage</th>
-                                            <th>Remarks</th>
-                                            <th>Transaction Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php($i=1)
-                                        @foreach($walletHistoryData as $item)
-                                        <tr>
-                                            <td>{{ $i++ }}</td>
-                                            <td>RM {{ $item->amount }}</td>
-                                            <td> {{ $item->type }}</td>
-                                            <td> {{ $item->remarks }}</td>
-                                            <td>{{ $item->created_at }}</td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-
-
-                    </div>
-                </div>
-            </div> <!-- end col -->
-        </div> <!-- end row -->
-
-
+            <div class="table-responsive">
+                <table id="walletHistoryTable" class="table commerce-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Amount</th>
+                            <th>Type</th>
+                            <th>Remarks</th>
+                            <th>Transaction Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($walletHistoryData as $item)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td><strong>RM {{ number_format((float) $item->amount, 2) }}</strong></td>
+                                <td>{{ $item->type }}</td>
+                                <td>{{ $item->remarks ?: 'No remarks' }}</td>
+                                <td>{{ optional($item->created_at)->format('Y-m-d H:i') ?? $item->created_at }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </div>
 </div>
 
-
 <script>
-    function redirectToPage() {
-        window.location.href = "{{ route('add.wallet') }}";
-    }
+    window.addEventListener('load', function () {
+        if (window.jQuery && $.fn.DataTable) {
+            $('#walletHistoryTable').DataTable({
+                order: [[4, 'desc']]
+            });
+        }
+    });
 </script>
 @endsection
-

@@ -1,230 +1,158 @@
 @extends('admin.admin_master')
 @section('admin')
-<style>
-
-#elm1 {
-        white-space: pre-wrap;
-    }
-
-    .category {
-    margin-left: 17%; /* Original margin for desktop view */
-}
-
-/* Media query for screens with a max-width of 769px */
-@media (max-width: 769px) {
-    .category {
-        margin-left: 10px; /* Adjusted margin for mobile view */
-        margin-right: auto; /* Clear the right margin for mobile view */
-    }
-}
-
-        </style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-<title>Product Management - Add | HC Gaming Studio</title>
+@include('admin.ecommerce._styles')
+<title>Add Product | HC Gaming Studio</title>
 
 <div class="page-content">
-    <div class="container-fluid">
+    <div class="container-fluid commerce-page">
+        <section class="commerce-hero">
+            <div>
+                <div class="commerce-hero__label">Product Centre</div>
+                <h1>Add Product</h1>
+                <p>Create a professional product listing with clean pricing, category, inventory, SKU, and product image details.</p>
+            </div>
+            <div class="commerce-hero__actions">
+                <a href="{{ route('all.product') }}" class="btn btn-outline-light">
+                    <i class="fas fa-boxes"></i>
+                    Product List
+                </a>
+                <a href="{{ route('add.product.category') }}" class="btn btn-info">
+                    <i class="fas fa-tag"></i>
+                    New Category
+                </a>
+            </div>
+        </section>
 
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
+        <section class="commerce-panel">
+            <div class="commerce-panel__header">
+                <div>
+                    <h2 class="commerce-panel__title">Product Information</h2>
+                    <p class="commerce-panel__subtitle">Fields marked by validation are required before the product can be published.</p>
+                </div>
+            </div>
 
-                        <h4 class="card-title">Product Page</h4>
+            <form method="POST" action="{{ route('store.product') }}" id="submitproduct" enctype="multipart/form-data" class="commerce-form-grid">
+                @csrf
 
+                <div class="commerce-form-section">
+                    <div>
+                        <label for="product_name">Product Name</label>
+                        <input name="product_name" class="form-control" type="text" id="product_name" value="{{ old('product_name') }}" required>
+                        @error('product_name')<span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
 
+                    <div>
+                        <label for="product_category">Product Category</label>
+                        <select name="product_category_id" class="form-select" id="product_category" required>
+                            <option value="">Select category</option>
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat->id }}" {{ old('product_category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->product_category }}</option>
+                            @endforeach
+                        </select>
+                        @error('product_category_id')<span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
 
-
-
-
-<form method="POST" action="{{ route('store.product') }}" id="submitproduct" enctype="multipart/form-data">
-    @csrf
-
-                        <div class="row mb-3">
-                            <label for="example-text-input" class="col-sm-2 col-form-label">Product Name</label>
-                            <div class="col-sm-10">
-                                <input name="product_name" class="form-control" type="text"  id="example-text-input">
-                        @error('product_name')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                            </div>
-
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="stock">Stock</label>
+                            <input class="form-control" type="number" min="0" id="stock" name="product_stock" value="{{ old('product_stock') }}" required>
+                            @error('product_stock')<span class="text-danger">{{ $message }}</span>@enderror
                         </div>
-                        <!-- end row -->
-
-<div class="category">
-                        <a href="{{ route('add.product.category') }}">Add New Category</a>
-</div>
-                   <div class="row mb-3">
-                    <label for="example-text-input" class="col-sm-2 col-form-label">Product Category</label>
-                <div class="col-sm-10">
-
-            <select name="product_category_id" class="form-select" id="product_category" aria-label="Default select example">
-                <option value="">--Open this select menu--</option>
-                @foreach($categories as $cat)
-                <option value="{{ $cat->id }}">{{ $cat->product_category }}</option>
-@endforeach
-                </select>
-
-                @error('product_category_id')
-                <div class="text-danger">{{ $message }}</div>
-            @enderror
-                </div>
-
-                </div>
-
-                <div class="row mb-3">
-                    <label for="example-text-input" class="col-sm-2 col-form-label">Stock</label>
-                    <div class="col-sm-10">
-                        <input class="form-control" type="number" value="" id="stock" name="product_stock">
-                        @error('product_stock')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-
+                        <div class="col-md-6 mb-3">
+                            <label for="weight">Weight (KG)</label>
+                            <input class="form-control" type="number" min="0" step="0.01" id="weight" name="weight" value="{{ old('weight') }}" required>
+                            @error('weight')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
                     </div>
 
-                </div>
-
-                <div class="row mb-3">
-                    <label for="example-text-input" class="col-sm-2 col-form-label">Weight (KG)</label>
-                    <div class="col-sm-10">
-                        <input class="form-control" type="number" value="" step="0.01" id="weight" name="weight">
-                        @error('weight')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-
+                    <div>
+                        <label for="elm1">Product Description</label>
+                        <textarea id="elm1" name="long_description" class="form-control" rows="8">{{ old('long_description') }}</textarea>
+                        @error('long_description')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
 
-                </div>
-                <!--end row-->
-                <div class="row mb-3">
-                    <label for="example-text-input" class="col-sm-2 col-form-label">Product Description</label>
-                    <div class="col-sm-10">
-                        <textarea id="elm1" name="long_description">
-
-
-
-                        </textarea>
-                        @error('long_description')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
+                    <div>
+                        <label for="sku">SKU</label>
+                        <input name="sku" class="form-control" type="text" id="sku" value="{{ old('sku') }}" required>
+                        @error('sku')<span class="text-danger">{{ $message }}</span>@enderror
                     </div>
 
-                </div>
-                <div class="row mb-3">
-                    <label for="example-text-input" class="col-sm-2 col-form-label">SKU
-
-                    </label>
-                    <div class="col-sm-10">
-                        <input name="sku" class="form-control" type="text"  id="example-text-input">
-
-                        {{-- <input class="form-control" type="number" value="" id="sku" name="sku"> --}}
-                        @error('sku')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="product_price">Dealer Price (RM)</label>
+                            <input class="form-control" type="number" min="0" step="0.01" id="product_price" name="product_price" value="{{ old('product_price') }}" required>
+                            @error('product_price')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="customer_price">Customer Price (RM)</label>
+                            <input class="form-control" type="number" min="0" step="0.01" id="customer_price" name="customer_price" value="{{ old('customer_price') }}" required>
+                            @error('customer_price')<span class="text-danger">{{ $message }}</span>@enderror
+                        </div>
                     </div>
 
-                </div>
-
-
-                <div class="row mb-3">
-                    <label for="example-text-input" class="col-sm-2 col-form-label">Price</label>
-                    <div class="col-sm-10">
-                        <input class="form-control" type="number" value="" id="price" name="product_price"  step="0.01" pattern="\d+(\.\d{1,2})?">
-                        @error('product_price')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-
-                    </div>
-
-                </div>
-
-                <!--end row-->
-
-                <div class="row mb-3">
-                    <label for="example-text-input" class="col-sm-2 col-form-label">Customer Price</label>
-                    <div class="col-sm-10">
-                        <input class="form-control" type="number" value="" id="price" name="customer_price"  step="0.01" pattern="\d+(\.\d{1,2})?">
-                        @error('customer_price')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-
-                    </div>
-
-                </div>
-
-                <!--end row-->
-
-
-                   <div class="row mb-3">
-                    <label for="example-text-input" class="col-sm-2 col-form-label">Product Image</label>
-                    <div class="col-sm-10">
+                    <div>
+                        <label for="image">Product Image</label>
                         <input name="product_image" class="form-control" type="file" id="image" accept="image/*">
-                        @error('product_image')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                      </div>
+                        @error('product_image')<span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
 
-                </div>
-                <!-- end row -->
-
-
-                        <!-- end row -->
-
-                        <div class="row mb-3">
-
-                            <label for="example-text-input" class="col-sm-2 col-form-label"></label>
-                            <div class="col-sm-10">
-                                <img id="showImages" class="rounded avatar-lg" src="{{url('upload/default.jpg')}}" alt="Card image cap">
-                            </div>
-                        </div>
-                        <!-- end row -->
-                        <input type="submit" class="btn btn-info waves-effect waves-light" value="Insert Product Data" id="submitButton" onclick="disableButton()">
-                    </form>
-
+                    <div>
+                        <button type="submit" class="btn btn-info" id="submitButton">
+                            <i class="fas fa-save"></i>
+                            Save Product
+                        </button>
                     </div>
                 </div>
-            </div> <!-- end col -->
-        </div>
+
+                <aside class="commerce-preview">
+                    <img id="showImages" class="commerce-preview__image" src="{{ asset('upload/default.jpg') }}" alt="Product preview">
+                    <div class="commerce-preview__body">
+                        <strong>Listing Preview</strong>
+                        <p class="commerce-muted mb-0">Use a square or high-resolution product image for the best catalogue presentation.</p>
+                    </div>
+                </aside>
+            </form>
+        </section>
     </div>
 </div>
 
-
-                        <script type="text/javascript">
-       var formSubmitted = false;
-    function disableButton() {
-        if (formSubmitted) {
-            return false;
-        }
+<script>
+    (function () {
+        var image = document.getElementById('image');
+        var preview = document.getElementById('showImages');
+        var form = document.getElementById('submitproduct');
         var submitButton = document.getElementById('submitButton');
-        submitButton.disabled = true;
-        submitButton.value = 'Submitting...'; // Show a loading text on the button
+        var submitted = false;
 
-        // Submit the form after a short delay (e.g., 0.5 seconds) to give the disabled visual effect
-        setTimeout(function () {
-            document.getElementById('submitproduct').submit();
-        }, 500);
+        if (image && preview) {
+            image.addEventListener('change', function (event) {
+                var file = event.target.files[0];
+                if (!file) return;
 
-        formSubmitted = true;
-        return true;
-    }
+                var reader = new FileReader();
+                reader.onload = function (readerEvent) {
+                    preview.src = readerEvent.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
 
-    $(document).ready(function(){
-        $('#image').change(function(e){
-            var reader = new FileReader();
-            reader.onload = function(e){
-                $('#showImages').attr('src', e.target.result);
-            }
-            reader.readAsDataURL(e.target.files['0']);
-        });
-    });
+        if (form) {
+            form.addEventListener('submit', function (event) {
+                if (window.tinymce) {
+                    tinymce.triggerSave();
+                }
 
+                if (submitted) {
+                    event.preventDefault();
+                    return;
+                }
 
-    function redirectToPage() {
-        window.location.href = "{{ route('add.product.category') }}";
-    }
-
-                            </script>
-                            @endsection
-
+                submitted = true;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            });
+        }
+    })();
+</script>
+@endsection

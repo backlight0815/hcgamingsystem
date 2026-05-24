@@ -84,6 +84,52 @@
     .status-label.danger { background: rgba(225, 29, 72, .16); color: #fda4af; }
     .status-label.secondary { background: rgba(148, 163, 184, .16); color: #cbd5e1; }
 
+    .trade-signal-icons {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+    }
+
+    .trade-signal-icon {
+        align-items: center;
+        border-radius: 7px;
+        display: inline-flex;
+        font-size: 15px;
+        height: 26px;
+        justify-content: center;
+        position: relative;
+        width: 26px;
+    }
+
+    .trade-signal-icon.hedge { background: #fef3c7; color: #92400e; }
+    .trade-signal-icon.revenge { background: #fee2e2; color: #991b1b; }
+    .trade-signal-icon.gambling { background: #ffedd5; color: #9a3412; }
+    .trade-signal-icon.layering { background: #e0e7ff; color: #3730a3; }
+    .trade-signal-icon.clear { background: #f1f5f9; color: #64748b; }
+
+    .trade-signal-icon[data-tier]::after {
+        align-items: center;
+        background: #ffffff;
+        border: 1px solid currentColor;
+        border-radius: 999px;
+        content: attr(data-tier);
+        display: inline-flex;
+        font-size: 8px;
+        font-weight: 900;
+        height: 13px;
+        justify-content: center;
+        line-height: 1;
+        position: absolute;
+        right: -5px;
+        top: -6px;
+        width: 13px;
+    }
+
+    .trade-signal-icon.tier-low { box-shadow: inset 0 0 0 1px rgba(37, 99, 235, .35); }
+    .trade-signal-icon.tier-medium { box-shadow: inset 0 0 0 1px rgba(217, 119, 6, .45); }
+    .trade-signal-icon.tier-high { box-shadow: inset 0 0 0 1px rgba(185, 28, 28, .55); }
+
     .hero-balance {
         color: #ffffff;
         font-size: 34px;
@@ -146,6 +192,12 @@
     .matrix-btn.primary {
         background: #0f766e;
         border: 1px solid #0f766e;
+        color: #ffffff;
+    }
+
+    .matrix-btn.danger {
+        background: #dc2626;
+        border: 1px solid #dc2626;
         color: #ffffff;
     }
 
@@ -662,6 +714,11 @@
         margin-top: 3px;
     }
 
+    .trader-resume-grid .reward-item strong {
+        font-size: 13px;
+        line-height: 1.45;
+    }
+
     .detail-grid {
         display: grid;
         gap: 18px;
@@ -816,13 +873,33 @@
     ]);
     $yearOptions = $availableYears->isNotEmpty() ? $availableYears : collect(range(now()->year, now()->year - 5));
     $displayName = $currentUser->name ?: ($currentUser->username ?: 'Trader');
+    $journalTime = app(\App\Services\TradingJournalTimeService::class);
+    $selectedTimeView = $journalTime->normalizeMode($selectedTimeView ?? request('time_view'));
+    $selectedTimeViewOffset = $journalTime->normalizeOffset($selectedTimeViewOffset ?? request('mt5_offset_minutes'), $selectedTimeView);
+    $selectedMt5ViewOffset = $journalTime->normalizeOffset(request('mt5_offset_minutes'), \App\Services\TradingJournalTimeService::TIMEZONE_MT5);
+    $timeModes = $journalTime->modes();
+    $mt5OffsetOptions = $journalTime->mt5OffsetOptions();
+    $revengeTradeMap = collect(data_get($traderStyleProfile, 'revenge.trade_map', []));
+    $gamblingTradeMap = collect(data_get($traderStyleProfile, 'gambling.trade_map', []));
+    $behaviorScorePenalty = data_get($scoreEvaluationProfile, 'behavior_score_penalty', []);
+    $behaviorWeeklyMetrics = collect(data_get($behaviorWeeklyProfile ?? [], 'metrics', []));
     $tone = $performanceProfile['tone'] ?? 'primary';
     $topPairs = $pairStats->take(5);
     $metricCells = [
         ['name' => 'Equity Balance', 'value' => number_format($summary['current_balance'], 2) . 'u', 'note' => 'Capital adjusted account value', 'tone' => $summary['current_balance'] >= 0 ? '' : 'danger'],
         ['name' => 'Net P/L', 'value' => number_format($summary['net_profit_loss'], 2) . 'u', 'note' => 'Growth ' . number_format($summary['growth_percent'], 2) . '%', 'tone' => $summary['net_profit_loss'] >= 0 ? '' : 'danger'],
+        ['name' => 'Recovery Factor', 'value' => is_numeric($summary['recovery_factor']) ? number_format($summary['recovery_factor'], 2) : $summary['recovery_factor'], 'note' => 'Net P/L per max drawdown', 'tone' => (is_numeric($summary['recovery_factor']) && $summary['recovery_factor'] < 1) ? 'warning' : 'indigo'],
         ['name' => 'Max Drawdown', 'value' => number_format($summary['max_drawdown_percent'], 2) . '%', 'note' => number_format($summary['max_drawdown_amount'], 2) . 'u peak-to-trough', 'tone' => $summary['max_drawdown_percent'] > 10 ? 'danger' : 'warning'],
-        ['name' => 'Consistency', 'value' => number_format($summary['consistency_percent'], 2) . '%', 'note' => 'Largest winning day share', 'tone' => 'indigo'],
+        ['name' => 'Best Day Rule', 'value' => number_format($summary['consistency_percent'], 2) . '%', 'note' => 'Limit ' . number_format($summary['best_day_rule']['limit_percent'], 0) . '% | Position score ' . number_format($positionProfile['score'], 2) . '/100', 'tone' => ($summary['best_day_rule']['passed'] ?? false) ? '' : 'warning'],
+        ['name' => '2% Gross Profit', 'value' => number_format($summary['gross_profit_rule']['achieved_percent'], 2) . '%', 'note' => number_format($summary['gross_profit_rule']['gross_profit'], 2) . 'u gross / ' . number_format($summary['gross_profit_rule']['required_amount'], 2) . 'u target', 'tone' => ($summary['gross_profit_rule']['passed'] ?? false) ? '' : 'warning'],
+        ['name' => 'Trader Style', 'value' => $traderStyleProfile['style_label'], 'note' => $traderStyleProfile['risk_level'] . ' | Risk ' . number_format($traderStyleProfile['risk_score'], 2) . '/100', 'tone' => $traderStyleProfile['tone']],
+        ['name' => 'Revenge Tier', 'value' => data_get($traderStyleProfile, 'revenge.status', 'N/A'), 'note' => number_format((float) data_get($traderStyleProfile, 'revenge.score', 0), 2) . '/100 | ' . number_format((float) data_get($traderStyleProfile, 'revenge.event_count', 0)) . ' event(s)', 'tone' => data_get($traderStyleProfile, 'revenge.tier_tone', data_get($traderStyleProfile, 'revenge.tone', 'secondary'))],
+        ['name' => 'Gambling Tier', 'value' => data_get($traderStyleProfile, 'gambling.status', 'N/A'), 'note' => number_format((float) data_get($traderStyleProfile, 'gambling.score', 0), 2) . '/100 | Margin ' . number_format((float) data_get($traderStyleProfile, 'gambling.max_margin_percent', 0), 2) . '% | Layers ' . number_format((float) data_get($traderStyleProfile, 'gambling.layering_exposure_event_count', 0)), 'tone' => data_get($traderStyleProfile, 'gambling.tier_tone', data_get($traderStyleProfile, 'gambling.tone', 'secondary'))],
+        ['name' => 'Behaviour Penalty', 'value' => '-' . number_format((float) data_get($behaviorScorePenalty, 'points', 0), 2) . ' pts', 'note' => number_format((float) data_get($behaviorScorePenalty, 'percent', 0), 0) . '% | ' . data_get($behaviorScorePenalty, 'trigger_label', 'Clear or low revenge/gambling tier'), 'tone' => data_get($behaviorScorePenalty, 'tone', 'success')],
+        ['name' => 'Layering', 'value' => $traderStyleProfile['layering']['status'], 'note' => number_format($traderStyleProfile['layering']['score'], 2) . '/100 | ' . number_format($traderStyleProfile['layering']['layered_trade_percent'], 2) . '% trades affected', 'tone' => $traderStyleProfile['layering']['tone']],
+        ['name' => 'Position Consistency', 'value' => number_format($positionProfile['score'], 2) . '/100', 'note' => $positionProfile['status'] . ' | CV ' . number_format($positionProfile['coefficient_of_variation'], 2) . '%', 'tone' => $positionProfile['is_dynamic'] ? 'warning' : 'slate'],
+        ['name' => 'Hedging', 'value' => $hedgingProfile['status'], 'note' => $hedgingProfile['total_overlaps'] . ' overlap(s), ' . number_format($hedgingProfile['hedged_trade_percent'], 2) . '% trades affected', 'tone' => $hedgingProfile['detected'] ? 'danger' : 'slate'],
+        ['name' => 'Avg Duration', 'value' => $durationProfile['average_label'], 'note' => 'Median ' . $durationProfile['median_label'] . ' | Max ' . $durationProfile['max_label'], 'tone' => 'indigo'],
         ['name' => 'Win Rate', 'value' => number_format($summary['win_rate'], 2) . '%', 'note' => $summary['winning_trades'] . 'W / ' . $summary['losing_trades'] . 'L', 'tone' => 'slate'],
         ['name' => 'Profit Factor', 'value' => is_numeric($summary['profit_factor']) ? number_format($summary['profit_factor'], 2) : $summary['profit_factor'], 'note' => 'Gross profit divided by gross loss', 'tone' => 'slate'],
     ];
@@ -885,8 +962,73 @@
                     </div>
                     <div>
                         <span>Avg Hold</span>
-                        <strong>{{ $summary['average_holding_minutes'] }}m</strong>
+                        <strong>{{ $durationProfile['average_label'] }}</strong>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="matrix-panel mb-3">
+            <div class="panel-head">
+                <h5>Trader Resume Summary</h5>
+                <span class="status-label {{ $traderResumeProfile['tone'] }}">{{ $traderResumeProfile['verdict'] }}</span>
+            </div>
+            <p class="metric-note mb-3">{{ $traderResumeProfile['paragraph'] }}</p>
+            <div class="reward-list mb-3">
+                <div class="reward-item">
+                    <span>Technical Skill</span>
+                    <strong>{{ $traderResumeProfile['technical_skill'] }}</strong>
+                </div>
+                <div class="reward-item">
+                    <span>Risk Profile</span>
+                    <strong>{{ $traderResumeProfile['risk_profile'] }}</strong>
+                </div>
+                <div class="reward-item">
+                    <span>Administration Action</span>
+                    <strong>{{ $traderResumeProfile['administration_action'] }}</strong>
+                </div>
+            </div>
+            @if($traderResumeProfile['badges']->isNotEmpty())
+                <div class="d-flex flex-wrap gap-2">
+                    @foreach($traderResumeProfile['badges'] as $badge)
+                        <span class="status-label {{ $traderResumeProfile['tone'] }}">{{ $badge }}</span>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+
+        <div class="subgrid trader-resume-grid">
+            <div class="matrix-panel">
+                <div class="panel-head">
+                    <h5>Confirmed Strengths</h5>
+                    <span>{{ $traderResumeProfile['technical_skill'] }}</span>
+                </div>
+                <div class="reward-list">
+                    @foreach($traderResumeProfile['strengths'] as $item)
+                        <div class="reward-item"><span>Strength</span><strong>{{ $item }}</strong></div>
+                    @endforeach
+                </div>
+            </div>
+            <div class="matrix-panel">
+                <div class="panel-head">
+                    <h5>Risk Notes</h5>
+                    <span>{{ $traderResumeProfile['risk_profile'] }}</span>
+                </div>
+                <div class="reward-list">
+                    @foreach($traderResumeProfile['risks'] as $item)
+                        <div class="reward-item"><span>Risk</span><strong>{{ $item }}</strong></div>
+                    @endforeach
+                </div>
+            </div>
+            <div class="matrix-panel">
+                <div class="panel-head">
+                    <h5>Coaching Focus</h5>
+                    <span>Next review points</span>
+                </div>
+                <div class="reward-list">
+                    @foreach($traderResumeProfile['coaching_focus'] as $item)
+                        <div class="reward-item"><span>Focus</span><strong>{{ $item }}</strong></div>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -897,7 +1039,9 @@
                     <div class="col-xl-3 col-md-6">
                         <label for="user_id" class="form-label">Trader</label>
                         <select name="user_id" id="user_id" class="form-select">
-                            <option value="all" {{ empty($selectedTraderId) ? 'selected' : '' }}>All Traders</option>
+                            @if($canViewGlobal)
+                                <option value="all" {{ empty($selectedTraderId) ? 'selected' : '' }}>All Traders</option>
+                            @endif
                             @foreach($traders as $trader)
                                 <option value="{{ $trader->id }}" {{ (int) $selectedTraderId === (int) $trader->id ? 'selected' : '' }}>
                                     {{ $trader->name ?: $trader->username }}
@@ -940,9 +1084,32 @@
                     </select>
                 </div>
 
-                <div class="col-xl-3 col-md-12 d-flex align-items-end gap-2">
+                <div class="col-xl-2 col-md-6">
+                    <label for="time_view" class="form-label">Time Display</label>
+                    <select name="time_view" id="time_view" class="form-select">
+                        @foreach($timeModes as $value => $mode)
+                            <option value="{{ $value }}" {{ $selectedTimeView === $value ? 'selected' : '' }}>
+                                {{ $mode['label'] }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-xl-2 col-md-6">
+                    <label for="mt5_offset_minutes" class="form-label">MT5 Offset</label>
+                    <select name="mt5_offset_minutes" id="mt5_offset_minutes" class="form-select">
+                        @foreach($mt5OffsetOptions as $offset => $label)
+                            <option value="{{ $offset }}" {{ (int) $selectedMt5ViewOffset === (int) $offset ? 'selected' : '' }}>
+                                {{ $label }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-xl-2 col-md-12 d-flex align-items-end gap-2">
                     <button type="submit" class="matrix-btn primary"><i class="ri-filter-3-line"></i>Apply</button>
                     <a href="{{ route('all.trading.statistics') }}" class="matrix-btn light"><i class="ri-refresh-line"></i>Reset</a>
+                    <a href="{{ route('all.trading.statistics.report.pdf', request()->query()) }}" class="matrix-btn danger"><i class="ri-file-pdf-line"></i>PDF</a>
                 </div>
             </form>
         </div>
@@ -961,7 +1128,7 @@
             <div class="matrix-panel">
                 <div class="panel-head">
                     <h5>Equity And Risk Timeline</h5>
-                    <span>{{ optional($summary['first_trade_date'])->format('M d, Y') ?? 'N/A' }} to {{ optional($summary['last_trade_date'])->format('M d, Y') ?? 'N/A' }}</span>
+                    <span>{{ $journalTime->formatForDisplay($summary['first_trade_date'], $selectedTimeView, $selectedTimeViewOffset) }} to {{ $journalTime->formatForDisplay($summary['last_trade_date'], $selectedTimeView, $selectedTimeViewOffset) }}</span>
                 </div>
                 <div class="timeline-layout">
                     <div class="chart-box">
@@ -1027,8 +1194,15 @@
 
             <div class="matrix-panel">
                 <div class="panel-head">
-                    <h5>Evaluation Rules</h5>
-                    <span>Prop firm guardrails</span>
+                    <div>
+                        <h5>Evaluation Rules</h5>
+                        <span>Prop firm guardrails</span>
+                    </div>
+                    @if($canViewScoreExplanation)
+                        <button type="button" class="matrix-btn light" data-bs-toggle="modal" data-bs-target="#scoreEvaluationModal">
+                            <i class="ri-calculator-line"></i>View Score Calculation
+                        </button>
+                    @endif
                 </div>
                 <div class="rule-stack">
                     @foreach($ruleMonitor as $rule)
@@ -1054,7 +1228,9 @@
             <div class="matrix-panel">
                 <div class="panel-head">
                     <h5>Behavior Profile</h5>
-                    <span>Long vs short exposure</span>
+                    <button type="button" class="matrix-btn light" data-bs-toggle="modal" data-bs-target="#behaviorDetectionModal">
+                        <i class="ri-brain-line"></i>Detection Detail
+                    </button>
                 </div>
                 <div class="bias-meter">
                     <div class="bias-node"><i class="ri-arrow-up-line"></i></div>
@@ -1068,6 +1244,53 @@
                     </div>
                     <div class="bias-node"><i class="ri-arrow-down-line"></i></div>
                 </div>
+                <div class="reward-list mt-3">
+                    <div class="reward-item">
+                        <span>Trading Style</span>
+                        <strong>{{ $traderStyleProfile['style_label'] }}</strong>
+                    </div>
+                    <div class="reward-item">
+                        <span>Behavior Risk</span>
+                        <strong class="text-{{ $traderStyleProfile['tone'] === 'danger' ? 'danger' : ($traderStyleProfile['tone'] === 'warning' ? 'warning' : 'success') }}">{{ number_format($traderStyleProfile['risk_score'], 2) }}/100</strong>
+                    </div>
+                    <div class="reward-item">
+                        <span>Revenge Trading</span>
+                        <strong>{{ data_get($traderStyleProfile, 'revenge.status', 'N/A') }} ({{ number_format((float) data_get($traderStyleProfile, 'revenge.score', 0), 2) }}/100)</strong>
+                        <div class="small text-muted mt-1">{{ data_get($traderStyleProfile, 'revenge.tier_description', '-') }}</div>
+                    </div>
+                    <div class="reward-item">
+                        <span>Gambling Behavior</span>
+                        <strong>{{ data_get($traderStyleProfile, 'gambling.status', 'N/A') }} ({{ number_format((float) data_get($traderStyleProfile, 'gambling.score', 0), 2) }}/100)</strong>
+                        <div class="small text-muted mt-1">{{ data_get($traderStyleProfile, 'gambling.tier_description', '-') }}</div>
+                    </div>
+                    <div class="reward-item">
+                        <span>Weekly Behaviour Change</span>
+                        <strong>{{ data_get($behaviorWeeklyMetrics->get('overall'), 'change_label', '0.00 pts') }} <span class="status-label {{ data_get($behaviorWeeklyMetrics->get('overall'), 'trend_tone', 'secondary') }}">{{ data_get($behaviorWeeklyMetrics->get('overall'), 'trend_label', 'N/A') }}</span></strong>
+                        <div class="small text-muted mt-1">{{ data_get($behaviorWeeklyMetrics->get('overall'), 'summary', 'No weekly behaviour comparison is available yet.') }}</div>
+                    </div>
+                    <div class="reward-item">
+                        <span>Revenge / Gambling Weekly</span>
+                        <strong>
+                            Revenge {{ data_get($behaviorWeeklyMetrics->get('revenge'), 'change_label', '0.00 pts') }}
+                            | Gambling {{ data_get($behaviorWeeklyMetrics->get('gambling'), 'change_label', '0.00 pts') }}
+                        </strong>
+                        <div class="small text-muted mt-1">
+                            {{ data_get($behaviorWeeklyProfile ?? [], 'current_period_label', 'Current week') }} vs {{ data_get($behaviorWeeklyProfile ?? [], 'previous_period_label', 'Previous week') }}
+                        </div>
+                    </div>
+                    <div class="reward-item">
+                        <span>Layering</span>
+                        <strong>{{ $traderStyleProfile['layering']['status'] }} ({{ number_format($traderStyleProfile['layering']['score'], 2) }}/100)</strong>
+                    </div>
+                </div>
+                <p class="metric-note mt-3">{{ $traderStyleProfile['summary'] }}</p>
+                @if($traderStyleProfile['style_tags']->isNotEmpty())
+                    <div class="d-flex flex-wrap gap-2 mt-2">
+                        @foreach($traderStyleProfile['style_tags'] as $tag)
+                            <span class="status-label {{ $traderStyleProfile['tone'] }}">{{ $tag }}</span>
+                        @endforeach
+                    </div>
+                @endif
             </div>
 
             <div class="matrix-panel">
@@ -1089,7 +1312,7 @@
             <div class="matrix-panel">
                 <div class="panel-head">
                     <h5>Session Efficiency</h5>
-                    <span>Win rate by close time</span>
+                    <span>Win rate by close time ({{ $journalTime->shortLabel($selectedTimeView, $selectedTimeViewOffset) }})</span>
                 </div>
                 <div class="session-list">
                     @foreach($sessionStats as $session)
@@ -1099,6 +1322,86 @@
                             <div class="session-rate">{{ number_format($session['win_rate'], 1) }}%</div>
                         </div>
                     @endforeach
+                </div>
+            </div>
+        </div>
+
+        <div class="subgrid">
+            <div class="matrix-panel">
+                <div class="panel-head">
+                    <h5>Hedging Monitor</h5>
+                    <span>Insight only | {{ $hedgingProfile['hedged_trade_count'] }} affected trades</span>
+                </div>
+                <div class="reward-list">
+                    <div class="reward-item">
+                        <span>Status</span>
+                        <strong class="{{ $hedgingProfile['detected'] ? 'text-loss' : 'text-profit' }}">{{ $hedgingProfile['status'] }}</strong>
+                    </div>
+                    <div class="reward-item">
+                        <span>Opposite Overlaps</span>
+                        <strong>{{ number_format($hedgingProfile['total_overlaps']) }}</strong>
+                    </div>
+                    <div class="reward-item">
+                        <span>Affected Pairs</span>
+                        <strong>{{ $hedgingProfile['affected_pairs']->isNotEmpty() ? $hedgingProfile['affected_pairs']->implode(', ') : 'None' }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="matrix-panel">
+                <div class="panel-head">
+                    <h5>Layering Monitor</h5>
+                    <span>Insight only | {{ $traderStyleProfile['layering']['layered_trade_count'] }} affected trades</span>
+                </div>
+                <div class="reward-list">
+                    <div class="reward-item">
+                        <span>Status</span>
+                        <strong class="{{ $traderStyleProfile['layering']['detected'] ? 'text-loss' : 'text-profit' }}">{{ $traderStyleProfile['layering']['status'] }}</strong>
+                    </div>
+                    <div class="reward-item">
+                        <span>Layering Events</span>
+                        <strong>{{ number_format($traderStyleProfile['layering']['event_count']) }}</strong>
+                    </div>
+                    <div class="reward-item">
+                        <span>Max Active Layers</span>
+                        <strong>{{ number_format($traderStyleProfile['layering']['max_active_layers']) }}</strong>
+                    </div>
+                    <div class="reward-item">
+                        <span>Affected Pairs</span>
+                        <strong>{{ $traderStyleProfile['layering']['affected_pairs']->isNotEmpty() ? $traderStyleProfile['layering']['affected_pairs']->implode(', ') : 'None' }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="matrix-panel">
+                <div class="panel-head">
+                    <h5>Position Consistency</h5>
+                    <button type="button" class="matrix-btn light" data-bs-toggle="modal" data-bs-target="#positionConsistencyModal">
+                        <i class="ri-bar-chart-box-line"></i>View Score Calculation
+                    </button>
+                </div>
+                <div class="reward-list">
+                    <div class="reward-item"><span>Consistency Score</span><strong>{{ number_format($positionProfile['score'], 2) }}/100</strong></div>
+                    <div class="reward-item"><span>Grade</span><strong>{{ $positionProfile['grade'] }}</strong></div>
+                    <div class="reward-item"><span>Status</span><strong>{{ $positionProfile['status'] }}</strong></div>
+                    <div class="reward-item"><span>Main Lot Size</span><strong>{{ number_format($positionProfile['anchor_lot'], 4) }} lots ({{ number_format($positionProfile['anchor_lot_share'], 2) }}%)</strong></div>
+                    <div class="reward-item"><span>Average / Median Lot</span><strong>{{ number_format($positionProfile['average_lot'], 4) }} / {{ number_format($positionProfile['median_lot'], 4) }}</strong></div>
+                    <div class="reward-item"><span>Lot Range</span><strong>{{ number_format($positionProfile['min_lot'], 4) }} - {{ number_format($positionProfile['max_lot'], 4) }}</strong></div>
+                    <div class="reward-item"><span>Variation</span><strong>{{ number_format($positionProfile['coefficient_of_variation'], 2) }}% CV</strong></div>
+                    <div class="reward-item"><span>Within 20% Of Average</span><strong>{{ number_format($positionProfile['within_20_percent'], 2) }}%</strong></div>
+                </div>
+                <p class="metric-note mt-3">{{ $positionProfile['description'] }}</p>
+            </div>
+
+            <div class="matrix-panel">
+                <div class="panel-head">
+                    <h5>Trade Duration</h5>
+                    <span>{{ number_format($durationProfile['trade_count']) }} timed trades</span>
+                </div>
+                <div class="reward-list">
+                    <div class="reward-item"><span>Average Holding</span><strong>{{ $durationProfile['average_label'] }}</strong></div>
+                    <div class="reward-item"><span>Median Holding</span><strong>{{ $durationProfile['median_label'] }}</strong></div>
+                    <div class="reward-item"><span>Shortest / Longest</span><strong>{{ $durationProfile['min_label'] }} / {{ $durationProfile['max_label'] }}</strong></div>
                 </div>
             </div>
         </div>
@@ -1162,7 +1465,7 @@
                 <div class="reward-list">
                     <div class="reward-item"><span>Won</span><strong class="text-profit">{{ number_format($summary['win_rate'], 2) }}% ({{ $summary['winning_trades'] }})</strong></div>
                     <div class="reward-item"><span>Lost</span><strong class="text-loss">{{ number_format($summary['loss_rate'], 2) }}% ({{ $summary['losing_trades'] }})</strong></div>
-                    <div class="reward-item"><span>Average Holding</span><strong>{{ $summary['average_holding_minutes'] }} minutes</strong></div>
+                    <div class="reward-item"><span>Average Holding</span><strong>{{ $durationProfile['average_label'] }}</strong></div>
                 </div>
             </div>
         </div>
@@ -1203,6 +1506,162 @@
 
             <div class="matrix-panel">
                 <div class="panel-head">
+                    <h5>Hedging Overlap Evidence</h5>
+                    <span>Latest detected overlaps</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table matrix-table">
+                        <thead>
+                            <tr>
+                                <th>Pair</th>
+                                <th>Buy Trade</th>
+                                <th>Sell Trade</th>
+                                <th>Overlap</th>
+                                <th>Started</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($hedgingProfile['examples'] as $hedge)
+                                <tr>
+                                    <td><strong>{{ $hedge['pair'] }}</strong></td>
+                                    <td>{{ $hedge['buy_trade_label'] }} / {{ number_format($hedge['buy_lot'], 4) }} lot</td>
+                                    <td>{{ $hedge['sell_trade_label'] }} / {{ number_format($hedge['sell_lot'], 4) }} lot</td>
+                                    <td>{{ $hedge['overlap_label'] }}</td>
+                                    <td>{{ $journalTime->formatForDisplay($hedge['started_at'], $selectedTimeView, $selectedTimeViewOffset) }}</td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="5" class="text-muted">No same-pair opposite-direction overlaps detected.</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="matrix-panel">
+                <div class="panel-head">
+                    <h5>Behavior Risk Evidence</h5>
+                    <span>Revenge, layering, and gambling-style signals</span>
+                </div>
+                <div class="reward-list mb-3">
+                    @foreach($traderStyleProfile['revenge']['checks'] as $check)
+                        <div class="reward-item">
+                            <span>{{ $check['name'] }}</span>
+                            <strong>{{ $check['value'] }} | {{ $check['status'] }}</strong>
+                            <div class="small text-muted mt-1">{{ $check['description'] }}</div>
+                        </div>
+                    @endforeach
+                    @foreach($traderStyleProfile['layering']['checks'] as $check)
+                        <div class="reward-item">
+                            <span>{{ $check['name'] }}</span>
+                            <strong>{{ $check['value'] }} | {{ $check['status'] }}</strong>
+                            <div class="small text-muted mt-1">{{ $check['description'] }}</div>
+                        </div>
+                    @endforeach
+                    @foreach($traderStyleProfile['gambling']['checks'] as $check)
+                        <div class="reward-item">
+                            <span>{{ $check['name'] }}</span>
+                            <strong>{{ $check['value'] }} | {{ number_format((float) $check['points'], 2) }}/{{ number_format((float) $check['max_points'], 0) }}</strong>
+                            <div class="small text-muted mt-1">{{ $check['description'] }}</div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="table-responsive">
+                    <table class="table matrix-table">
+                        <thead>
+                            <tr>
+                                <th>Tier</th>
+                                <th>Loss Trade</th>
+                                <th>Next Trade</th>
+                                <th>Pair</th>
+                                <th>Delay</th>
+                                <th>Lot Change</th>
+                                <th>Signals</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($traderStyleProfile['revenge']['examples'] as $event)
+                                <tr>
+                                    <td><span class="status-label {{ data_get($event, 'tier_tone', 'secondary') }}">{{ data_get($event, 'tier_label', 'N/A') }}</span></td>
+                                    <td>{{ $event['trigger_trade_label'] }} (-{{ number_format($event['loss_amount'], 2) }}u)</td>
+                                    <td>{{ $event['response_trade_label'] }} ({{ number_format($event['response_profit_loss'], 2) }}u)</td>
+                                    <td><strong>{{ $event['pair'] }}</strong></td>
+                                    <td>{{ $event['delay_label'] }}</td>
+                                    <td>{{ number_format($event['previous_lot'], 4) }} -> {{ number_format($event['response_lot'], 4) }} lot</td>
+                                    <td>{{ $event['signals']->implode(', ') }}</td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="7" class="text-muted">No revenge-trading evidence detected for the selected filters.</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-responsive mt-3">
+                    <table class="table matrix-table">
+                        <thead>
+                            <tr>
+                                <th>Tier</th>
+                                <th>Trade</th>
+                                <th>Pair</th>
+                                <th>Side</th>
+                                <th>Lot</th>
+                                <th>P/L</th>
+                                <th>Why Flagged</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($traderStyleProfile['gambling']['examples'] as $event)
+                                <tr>
+                                    <td><span class="status-label {{ data_get($event, 'tier_tone', 'secondary') }}">{{ data_get($event, 'tier_label', 'N/A') }}</span></td>
+                                    <td>{{ data_get($event, 'trade_label', 'N/A') }}</td>
+                                    <td><strong>{{ data_get($event, 'pair', 'N/A') }}</strong></td>
+                                    <td>{{ data_get($event, 'direction', 'N/A') }}</td>
+                                    <td>{{ number_format((float) data_get($event, 'lot_size', 0), 4) }}</td>
+                                    <td class="{{ (float) data_get($event, 'profit_loss', 0) >= 0 ? 'text-profit' : 'text-loss' }}">{{ number_format((float) data_get($event, 'profit_loss', 0), 2) }}u</td>
+                                    <td>
+                                        {{ data_get($event, 'reason', 'N/A') }}
+                                        <div class="small text-muted">{{ data_get($event, 'evidence_label', '-') }}</div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="7" class="text-muted">No gambling-tier evidence detected for the selected filters.</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-responsive mt-3">
+                    <table class="table matrix-table">
+                        <thead>
+                            <tr>
+                                <th>Base Trade</th>
+                                <th>Layer Trade</th>
+                                <th>Pair</th>
+                                <th>Side</th>
+                                <th>Delay</th>
+                                <th>Lot Change</th>
+                                <th>Signals</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($traderStyleProfile['layering']['examples'] as $event)
+                                <tr>
+                                    <td>{{ $event['base_trade_label'] }} ({{ number_format($event['base_profit_loss'], 2) }}u)</td>
+                                    <td>{{ $event['layer_trade_label'] }} ({{ number_format($event['layer_profit_loss'], 2) }}u)</td>
+                                    <td><strong>{{ $event['pair'] }}</strong></td>
+                                    <td>{{ $event['direction'] }}</td>
+                                    <td>{{ $event['delay_label'] }}</td>
+                                    <td>{{ number_format($event['base_lot'], 4) }} -> {{ number_format($event['layer_lot'], 4) }} lot</td>
+                                    <td>{{ $event['signals']->implode(', ') }}</td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="7" class="text-muted">No layering evidence detected for the selected filters.</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="matrix-panel">
+                <div class="panel-head">
                     <h5>Recent Trades Included</h5>
                     <span>Latest 15 records</span>
                 </div>
@@ -1210,28 +1669,307 @@
                     <table class="table matrix-table">
                         <thead>
                             <tr>
-                                <th>Close Date</th>
+                                <th>Close Date ({{ $journalTime->shortLabel($selectedTimeView, $selectedTimeViewOffset) }})</th>
                                 <th>Source</th>
                                 <th>Pair</th>
                                 <th>Direction</th>
+                                <th>Signals</th>
                                 <th>P/L</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($recentTrades as $trade)
+                                @php
+                                    $tradeKey = $trade['source'] . ':' . $trade['id'];
+                                    $hedgeInsight = ($hedgingProfile['trade_map'] ?? collect())->get($tradeKey);
+                                    $layeringInsight = data_get($traderStyleProfile, 'layering.trade_map', collect())->get($tradeKey);
+                                    $revengeInsight = $revengeTradeMap->get($tradeKey);
+                                    $gamblingInsight = $gamblingTradeMap->get($tradeKey);
+                                @endphp
                                 <tr>
-                                    <td>{{ optional($trade['closed_at'])->format('Y-m-d H:i') ?? 'N/A' }}</td>
+                                    <td>{{ $journalTime->formatForDisplay($trade['closed_at'], $selectedTimeView, $selectedTimeViewOffset) }}</td>
                                     <td>{{ $trade['source'] }}</td>
                                     <td><strong>{{ $trade['pair'] }}</strong></td>
                                     <td>{{ $trade['direction'] === 1 ? 'Buy' : ($trade['direction'] === 2 ? 'Sell' : 'N/A') }}</td>
+                                    <td>
+                                        <div class="trade-signal-icons">
+                                            @if($hedgeInsight)
+                                                <span class="trade-signal-icon hedge" title="Hedging signal" aria-label="Hedging signal"><i class="ri-swap-line"></i></span>
+                                            @endif
+                                            @if($revengeInsight)
+                                                <span class="trade-signal-icon revenge tier-{{ data_get($revengeInsight, 'tier', 'low') }}" data-tier="{{ data_get($revengeInsight, 'tier_short', 'L') }}" title="Normal setup flagged: {{ data_get($revengeInsight, 'status', 'Revenge trading tier') }} - {{ data_get($revengeInsight, 'reason_labels', 'Review post-loss reaction') }}" aria-label="{{ data_get($revengeInsight, 'status', 'Revenge trading tier') }}"><i class="ri-alarm-warning-line"></i></span>
+                                            @endif
+                                            @if($gamblingInsight)
+                                                <span class="trade-signal-icon gambling tier-{{ data_get($gamblingInsight, 'tier', 'low') }}" data-tier="{{ data_get($gamblingInsight, 'tier_short', 'L') }}" title="Normal setup flagged: {{ data_get($gamblingInsight, 'status', 'Gambling behavior tier') }} - {{ data_get($gamblingInsight, 'reason_labels', 'Review high-variance execution') }}" aria-label="{{ data_get($gamblingInsight, 'status', 'Gambling behavior tier') }}"><i class="fas fa-dice-five"></i></span>
+                                            @endif
+                                            @if($layeringInsight)
+                                                <span class="trade-signal-icon layering" title="Layering signal" aria-label="Layering signal"><i class="ri-stack-line"></i></span>
+                                            @endif
+                                            @if(! $hedgeInsight && ! $revengeInsight && ! $gamblingInsight && ! $layeringInsight)
+                                                <span class="trade-signal-icon clear" title="Normal setup / no behavior signal" aria-label="Normal setup / no behavior signal"><i class="ri-subtract-line"></i></span>
+                                            @endif
+                                        </div>
+                                    </td>
                                     <td class="{{ $trade['profit_loss'] >= 0 ? 'text-profit' : 'text-loss' }}">{{ number_format($trade['profit_loss'], 2) }}u</td>
                                 </tr>
                             @empty
-                                <tr><td colspan="5" class="text-muted">No trades matched the selected filters.</td></tr>
+                                <tr><td colspan="6" class="text-muted">No trades matched the selected filters.</td></tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@include('admin.trading_journals.partials.behavior_detection_modal', ['behaviorModalId' => 'behaviorDetectionModal'])
+
+@if($canViewScoreExplanation)
+<div class="modal fade" id="scoreEvaluationModal" tabindex="-1" aria-labelledby="scoreEvaluationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="scoreEvaluationModalLabel">Trading Score Calculation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="reward-item h-100"><span>Total Score</span><strong>{{ number_format($scoreEvaluationProfile['score'], 2) }} pts</strong></div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="reward-item h-100"><span>Behaviour Penalty</span><strong>-{{ number_format((float) data_get($scoreEvaluationProfile, 'behavior_score_penalty.points', 0), 2) }} pts</strong></div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="reward-item h-100"><span>Final Grade</span><strong>{{ $scoreEvaluationProfile['rating'] }}</strong></div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="reward-item h-100"><span>Max Positive Points</span><strong>{{ number_format($scoreEvaluationProfile['max_positive_points']) }} pts</strong></div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="reward-item h-100"><span>Recovery Factor</span><strong>{{ $scoreEvaluationProfile['recovery_factor'] }}</strong></div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>{{ $scoreEvaluationProfile['formula'] }}</strong>
+                    <div class="mt-1">{{ $scoreEvaluationProfile['meaning'] }}</div>
+                    <div class="mt-1">{{ data_get($scoreEvaluationProfile, 'behavior_score_penalty.summary', '') }}</div>
+                </div>
+
+                <div class="matrix-panel shadow-none mb-4">
+                    <div class="panel-head">
+                        <h5>Current Component Evaluation</h5>
+                        <span>Includes the active filters on this page</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table matrix-table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Value</th>
+                                    <th>Grade</th>
+                                    <th>Points</th>
+                                    <th>Max</th>
+                                    <th>Status</th>
+                                    <th>Calculation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($scoreEvaluationProfile['components'] as $component)
+                                    <tr>
+                                        <td>
+                                            <strong>{{ $component['metric'] }}</strong>
+                                            <div class="small text-muted">{{ $component['formula'] }}</div>
+                                        </td>
+                                        <td>{{ $component['value'] }}</td>
+                                        <td>{{ $component['grade'] }}</td>
+                                        <td class="{{ $component['points'] < 0 ? 'text-loss' : ($component['points'] > 0 ? 'text-profit' : '') }}">
+                                            {{ $component['points'] > 0 ? '+' : '' }}{{ number_format($component['points'], 2) }}
+                                        </td>
+                                        <td>{{ $component['is_penalty'] ? 'Penalty' : number_format($component['max_points']) }}</td>
+                                        <td><span class="status-label {{ $component['tone'] }}">{{ $component['status'] }}</span></td>
+                                        <td>{{ $component['calculation'] }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="detail-grid mb-4">
+                    <div class="matrix-panel shadow-none">
+                        <div class="panel-head">
+                            <h5>Score Bands</h5>
+                            <span>Points by metric</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table matrix-table">
+                                <thead>
+                                    <tr>
+                                        <th>Metric</th>
+                                        <th>Max</th>
+                                        <th>Evaluation Bands</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($scoreEvaluationProfile['criteria_bands'] as $criteria)
+                                        <tr>
+                                            <td><strong>{{ $criteria['metric'] }}</strong></td>
+                                            <td>{{ $criteria['max_points'] }}</td>
+                                            <td>{{ $criteria['bands'] }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="matrix-panel shadow-none">
+                        <div class="panel-head">
+                            <h5>Grade Ranking</h5>
+                            <span>Final score bands</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table matrix-table">
+                                <thead>
+                                    <tr>
+                                        <th>Grade</th>
+                                        <th>Score Range</th>
+                                        <th>Meaning</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($scoreEvaluationProfile['grade_ranking'] as $rank)
+                                        <tr class="{{ $rank['grade'] === $scoreEvaluationProfile['rating'] ? 'table-primary' : '' }}">
+                                            <td><strong>{{ $rank['grade'] }}</strong></td>
+                                            <td>{{ $rank['range'] }}</td>
+                                            <td>{{ $rank['description'] }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reward-list">
+                    <div class="reward-item">
+                        <span>Recovery Quality Progress</span>
+                        <strong>{{ number_format($scoreEvaluationProfile['recovery_factor_progress'], 2) }}% toward 3.00 recovery factor</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+
+<div class="modal fade" id="positionConsistencyModal" tabindex="-1" aria-labelledby="positionConsistencyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="positionConsistencyModalLabel">Position Consistency Score</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="reward-item h-100"><span>Score</span><strong>{{ number_format($positionProfile['score'], 2) }}/100</strong></div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="reward-item h-100"><span>Grade</span><strong>{{ $positionProfile['grade'] }}</strong></div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="reward-item h-100"><span>Main Lot</span><strong>{{ number_format($positionProfile['anchor_lot'], 4) }} lots</strong></div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="reward-item h-100"><span>Sample Size</span><strong>{{ number_format($positionProfile['trade_count']) }} trades</strong></div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    {{ $positionProfile['description'] }}
+                </div>
+
+                <div class="detail-grid mb-4">
+                    <div class="matrix-panel shadow-none">
+                        <div class="panel-head">
+                            <h5>Score Criteria</h5>
+                            <span>Current calculation</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table matrix-table">
+                                <thead>
+                                    <tr>
+                                        <th>Criteria</th>
+                                        <th>Points</th>
+                                        <th>Max</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($positionProfile['score_breakdown'] as $criteria)
+                                        <tr>
+                                            <td><strong>{{ $criteria['criteria'] }}</strong></td>
+                                            <td>{{ number_format($criteria['points'], 2) }}</td>
+                                            <td>{{ number_format($criteria['max_points'], 0) }}</td>
+                                            <td>{{ $criteria['description'] }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="matrix-panel shadow-none">
+                        <div class="panel-head">
+                            <h5>Current Lot Profile</h5>
+                            <span>{{ $positionProfile['status'] }}</span>
+                        </div>
+                        <div class="reward-list">
+                            <div class="reward-item"><span>Main Lot Usage</span><strong>{{ number_format($positionProfile['anchor_lot_share'], 2) }}% ({{ $positionProfile['anchor_lot_count'] }} trades)</strong></div>
+                            <div class="reward-item"><span>Near Main Lot</span><strong>{{ number_format($positionProfile['near_anchor_share'], 2) }}% within +/- {{ number_format($positionProfile['near_anchor_tolerance'], 4) }} lots</strong></div>
+                            <div class="reward-item"><span>Average / Median</span><strong>{{ number_format($positionProfile['average_lot'], 4) }} / {{ number_format($positionProfile['median_lot'], 4) }}</strong></div>
+                            <div class="reward-item"><span>Range Ratio</span><strong>{{ number_format($positionProfile['range_ratio'], 2) }}x</strong></div>
+                            <div class="reward-item"><span>Coefficient Of Variation</span><strong>{{ number_format($positionProfile['coefficient_of_variation'], 2) }}%</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="matrix-panel shadow-none">
+                    <div class="panel-head">
+                        <h5>Grade Ranking</h5>
+                        <span>Position consistency bands</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table matrix-table">
+                            <thead>
+                                <tr>
+                                    <th>Grade</th>
+                                    <th>Score Range</th>
+                                    <th>Meaning</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($positionProfile['grade_ranking'] as $rank)
+                                    <tr class="{{ $rank['grade'] === $positionProfile['grade'] ? 'table-primary' : '' }}">
+                                        <td><strong>{{ $rank['grade'] }}</strong></td>
+                                        <td>{{ $rank['range'] }}</td>
+                                        <td>{{ $rank['description'] }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

@@ -1,60 +1,58 @@
 @extends('admin.admin_master')
 @section('admin')
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-
-<title>Product Category Management - Edit | HC Gaming Studio</title>
+@include('admin.ecommerce._styles')
+<title>Edit Product Category | HC Gaming Studio</title>
 
 <div class="page-content">
-    <div class="container-fluid">
+    <div class="container-fluid commerce-page">
+        <section class="commerce-hero">
+            <div>
+                <div class="commerce-hero__label">Product Centre</div>
+                <h1>Edit Product Category</h1>
+                <p>Update a platform category name used by product management and ecommerce catalogue screens.</p>
+            </div>
+            <div class="commerce-hero__actions">
+                <a href="{{ route('all.product.category') }}" class="btn btn-outline-light">
+                    <i class="fas fa-tags"></i>
+                    Categories
+                </a>
+            </div>
+        </section>
 
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
+        <section class="commerce-panel">
+            <div class="commerce-panel__header">
+                <div>
+                    <h2 class="commerce-panel__title">{{ $productcategory->product_category }}</h2>
+                    <p class="commerce-panel__subtitle">Editing category #{{ $productcategory->id }}.</p>
+                </div>
+            </div>
 
-                        <h4 class="card-title">Edit Product Category Page</h4><br><br>
+            <form method="POST" action="{{ route('update.product.category', $productcategory->id) }}" class="commerce-form-grid">
+                @csrf
 
+                <div class="commerce-form-section">
+                    <div>
+                        <label for="product_category">Product Category Name</label>
+                        <input name="product_category" class="form-control" type="text" id="product_category" value="{{ old('product_category', $productcategory->product_category) }}" required>
+                        @error('product_category')<span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
 
-
-
-
-
-<form method="POST" action="{{ route('update.product.category',$productcategory->id) }}" >
-    @csrf
-
-
-                        <div class="row mb-3">
-                            <label for="example-text-input" class="col-sm-2 col-form-label">Product Category Name</label>
-                            <div class="col-sm-10">
-                                <input name="product_category" class="form-control" type="text"  id="example-text-input" value="{{ $productcategory->product_category }}">
-                        @error('product_category')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                            </div>
-
-                        </div>
-
-<input type="submit" class="btn btn-info waves-effect waves-light" value="Update  Product  Data">
-</form>
-
+                    <div>
+                        <button type="submit" class="btn btn-info">
+                            <i class="fas fa-save"></i>
+                            Update Category
+                        </button>
                     </div>
                 </div>
-            </div> <!-- end col -->
-        </div>
+
+                <aside class="commerce-preview">
+                    <div class="commerce-preview__body">
+                        <strong>Before Saving</strong>
+                        <p class="commerce-muted mb-0">Changing a category name affects how products assigned to this category are labelled.</p>
+                    </div>
+                </aside>
+            </form>
+        </section>
     </div>
 </div>
-
-<script type="text/javascript">
-
-$(document).ready(function(){
-    $('#image').change(function(e){
-        var reader = new FileReader();
-        reader.onload = function(e){
-            $('#showImages').attr('src',e.target.result);
-        }
-        reader.readAsDataURL(e.target.files['0']);
-    });
-});
-</script>
 @endsection

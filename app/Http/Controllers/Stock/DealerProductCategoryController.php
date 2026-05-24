@@ -77,4 +77,61 @@ class DealerProductCategoryController extends Controller
 
     }//End Method
 
+    public function EditDealerProductCategory($id)
+    {
+        $productcategory = DealerProductCategory::where('user_id', Auth::id())->findOrFail($id);
+
+        return view('agent.dealerstock_product_category.dealer_product_category_edit', compact('productcategory'));
+    }
+
+    public function UpdateDealerProductCategory(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ], [
+            'name.required' => 'Product Category Name is Required',
+        ]);
+
+        $productcategory = DealerProductCategory::where('user_id', Auth::id())->findOrFail($id);
+        $oldName = $productcategory->name;
+        $productcategory->update([
+            'name' => $request->name,
+        ]);
+
+        ProductCategory::where('user_id', Auth::id())
+            ->where('product_category', $oldName)
+            ->update([
+                'product_category' => $request->name,
+            ]);
+
+        $notification = [
+            'message' => 'Product Category Updated Successfully',
+            'alert-type' => 'success',
+        ];
+
+        return redirect()->route('all.dealer.product.category')->with($notification);
+    }
+
+    public function DeleteDealerProductCategory($id)
+    {
+        $productcategory = DealerProductCategory::where('user_id', Auth::id())->findOrFail($id);
+        $oldName = $productcategory->name;
+        $productcategory->delete();
+
+        $linkedCategory = ProductCategory::where('user_id', Auth::id())
+            ->where('product_category', $oldName)
+            ->first();
+
+        if ($linkedCategory) {
+            $linkedCategory->delete();
+        }
+
+        $notification = [
+            'message' => 'Product Category Deleted Successfully',
+            'alert-type' => 'success',
+        ];
+
+        return redirect()->route('all.dealer.product.category')->with($notification);
+    }
+
 }

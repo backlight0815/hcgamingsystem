@@ -3,19 +3,15 @@
 namespace App\Http\Controllers\Trading;
 
 use App\Http\Controllers\Controller;
+use App\Models\Community;
 use App\Models\News;
 use App\Models\NewsDiscord;
-
-use App\Models\Community;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 
 class NewsController extends Controller
 {
-    /**
-     * Display all news
-     */
     public function index()
     {
         $breadcrumbData = [
@@ -23,15 +19,24 @@ class NewsController extends Controller
             ['label' => 'News', 'url' => route('trading.news.index')],
         ];
 
-        $news = News::with('community')->orderBy('news_date', 'desc')->get();
-        $totalNews = News::count();
+        $news = News::with(['community', 'discordMessages'])
+            ->orderBy('news_date', 'desc')
+            ->latest('id')
+            ->get();
 
-        return view('admin.forex_news.news_all', compact('news', 'breadcrumbData', 'totalNews'));
+        $metrics = [
+            'total' => $news->count(),
+            'high' => $news->where('impact', 3)->count(),
+            'medium' => $news->where('impact', 2)->count(),
+            'low' => $news->where('impact', 1)->count(),
+            'discord' => $news->filter(fn (News $item): bool => $item->discordMessages->isNotEmpty())->count(),
+        ];
+
+        $totalNews = $metrics['total'];
+
+        return view('admin.forex_news.news_all', compact('news', 'breadcrumbData', 'totalNews', 'metrics'));
     }
 
-    /**
-     * Show create form
-     */
     public function create()
     {
         $breadcrumbData = [
@@ -40,94 +45,52 @@ class NewsController extends Controller
             ['label' => 'Add News', 'url' => route('trading.news.create')],
         ];
 
-        $communities = Community::where('status', 1)->get();
+        $communities = Community::where('status', 1)->orderBy('name')->get();
+        $news = new News([
+            'news_date' => now()->toDateString(),
+            'impact' => 2,
+        ]);
 
-        return view('admin.forex_news.news_add', compact('breadcrumbData', 'communities'));
+        return view('admin.forex_news.news_add', compact('breadcrumbData', 'communities', 'news'));
     }
 
-    /**
-     * Store new news
-     */
- public function store(Request $request)
-{
-    // Validate input
-    $data = $request->validate([
-        'news_date' => 'required|date',
-        'impact' => 'required|integer|in:1,2,3',
-        'community_id' => 'required|exists:communities,id',
-        'image' => 'nullable|image|max:2048',
-    ]);
+    public function store(Request $request)
+    {
+        $data = $this->validatedNews($request);
+        $imagePath = $this->storeImage($request);
 
-    $imagePath = null;
+        $news = News::create([
+            'content' => $this->buildNewsContent((int) $data['impact'], $data['news_date']),
+            'impact' => (int) $data['impact'],
+            'news_date' => $data['news_date'],
+            'image' => $imagePath,
+            'community_id' => $data['community_id'],
+        ]);
 
-    // Handle image upload
-    if ($request->hasFile('image')) {
-        $image = $request->file('image');
-        $imageName = time() . '_' . str_replace(' ', '_', $image->getClientOriginalName());
-        $destinationPath = public_path('upload/news');
-        if (!file_exists($destinationPath)) mkdir($destinationPath, 0755, true);
-        $image->move($destinationPath, $imageName);
-        $imagePath = 'upload/news/' . $imageName;
+        if (feature_enabled('DiscordIntegration')) {
+            $this->sendToDiscord($news);
+        }
+
+        return redirect()->route('trading.news.index')->with('success', 'Trading news briefing created successfully.');
     }
 
-    // Define professional guidance per impact level in Chinese
-    $impactGuidance = [
-        1 => [
-            'label' => '低',
-            'trader_action' => '市场波动较小，建议小仓位操作，避免过度杠杆。',
-            'momentum' => '行情动量有限，价格波动较缓慢。'
-        ],
-        2 => [
-            'label' => '中',
-            'trader_action' => '预期中等波动，关注关键支撑/阻力位，设置合理止损。',
-            'momentum' => '可能出现中等动量，需密切关注趋势方向。'
-        ],
-        3 => [
-            'label' => '高',
-            'trader_action' => '市场可能剧烈波动，重点关注重要价位，严格风险管理。',
-            'momentum' => '强劲动量可能出现，价格快速变动风险高。'
-        ]
-    ];
+    public function show($id)
+    {
+        $news = News::with(['community', 'discordMessages.community'])->findOrFail($id);
 
-    $impact = $data['impact'];
-    $impactText = $impactGuidance[$impact]['label'];
-    $traderAction = $impactGuidance[$impact]['trader_action'];
-    $momentum = $impactGuidance[$impact]['momentum'];
+        $breadcrumbData = [
+            ['label' => 'HC Gaming', 'url' => route('all.statistics')],
+            ['label' => 'News', 'url' => route('trading.news.index')],
+            ['label' => 'News Details', 'url' => route('trading.news.show', $news->id)],
+        ];
 
-    /// Auto-generate content in Chinese with additional warning
-$newsDate = date('Y-m-d', strtotime($data['news_date'])); // 格式化日期
-$content = "📅 **日期:** $newsDate\n\n"; // first line
-
-$content .= "📰 **新闻影响力:** $impactText\n";
-$content .= "💡 **交易建议:** $traderAction\n";
-$content .= "📈 **预期行情动量:** $momentum\n";
-$content .= "⚠️ **温馨提醒:** 做交易之前，请谨慎评估当天新闻，别因为新闻破坏交易计划，务必做好风险管理。\n";
-$content .= "---------------------------------- 分割线 ----------------------------------\n";
-
-    // Save to database
-    $news = News::create([
-        'content' => $content,
-        'impact' => $impact,
-        'news_date' => $data['news_date'],
-        'image' => $imagePath,
-        'community_id' => $data['community_id'],
-    ]);
-
-    // Send to Discord if integration enabled
-    if (feature_enabled('DiscordIntegration')) {
-        $this->sendToDiscord($news);
+        return view('admin.forex_news.news_show', compact('news', 'breadcrumbData'));
     }
 
-    return redirect()->route('trading.news.index')->with('success', '新闻已成功添加！');
-}
-
-    /**
-     * Show edit form
-     */
     public function edit($id)
     {
         $news = News::findOrFail($id);
-        $communities = Community::where('status', 1)->get();
+        $communities = Community::where('status', 1)->orderBy('name')->get();
 
         $breadcrumbData = [
             ['label' => 'HC Gaming', 'url' => route('all.statistics')],
@@ -138,150 +101,182 @@ $content .= "---------------------------------- 分割线 ----------------------
         return view('admin.forex_news.news_edit', compact('news', 'breadcrumbData', 'communities'));
     }
 
-    /**
-     * Update news
-     */
     public function update(Request $request, $id)
     {
         $news = News::findOrFail($id);
+        $data = $this->validatedNews($request);
 
-        $data = $request->validate([
-            'news_date' => 'required|date',
-            'impact' => 'required|integer|in:1,2,3',
-            'community_id' => 'required|exists:communities,id',
-            'image' => 'nullable|image|max:2048',
-        ]);
-
-        // Handle image upload
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '_' . str_replace(' ', '_', $image->getClientOriginalName());
-            $destinationPath = public_path('upload/news');
-            if (!file_exists($destinationPath)) mkdir($destinationPath, 0755, true);
-            $image->move($destinationPath, $imageName);
-
-            // Delete old image
-            if ($news->image && file_exists(public_path($news->image))) {
-                unlink(public_path($news->image));
-            }
-
-            $news->image = 'upload/news/' . $imageName;
+            $news->image = $this->storeImage($request, $news);
         }
 
-        // Update fields
-        $impactLabels = [1 => 'Low', 2 => 'Medium', 3 => 'High'];
-        $impactText = $impactLabels[$data['impact']];
-        $news->impact = $data['impact'];
+        $news->impact = (int) $data['impact'];
         $news->news_date = $data['news_date'];
         $news->community_id = $data['community_id'];
-        $news->content = "Hi guys, today have $impactText impact news for USD.";
+        $news->content = $this->buildNewsContent((int) $data['impact'], $data['news_date']);
         $news->save();
 
-        // Update Discord
         if (feature_enabled('DiscordIntegration')) {
             $this->sendToDiscord($news);
         }
 
-        return redirect()->route('trading.news.index')->with('success', 'News updated successfully!');
+        return redirect()->route('trading.news.show', $news->id)->with('success', 'Trading news briefing updated successfully.');
     }
 
-    /**
-     * Delete news
-     */
     public function destroy($id)
     {
         $news = News::findOrFail($id);
-
-        // Delete image if exists
-        if ($news->image && file_exists(public_path($news->image))) {
-            unlink(public_path($news->image));
-        }
-
+        $this->deleteImage($news->image);
         $news->delete();
 
-        return redirect()->route('trading.news.index')->with('success', 'News deleted successfully!');
+        return redirect()->route('trading.news.index')->with('success', 'Trading news briefing deleted successfully.');
     }
 
-    /**
-     * Send news to Discord (community webhook)
-     */
-    
-public function sendToDiscord(News $news)
-{
-    if (!feature_enabled('DiscordIntegration')) return;
+    public function sendToDiscord($news)
+    {
+        $manualRequest = ! $news instanceof News;
+        $news = $news instanceof News ? $news : News::findOrFail($news);
 
-    // Determine which communities to send
-    $communities = $news->community_id === 'all'
-        ? Community::where('status', 1)->get()
-        : Community::where('id', $news->community_id)->where('status', 1)->get();
-
-    if ($communities->isEmpty()) {
-        \Log::warning("No active communities found for News ID {$news->id}");
-        return;
-    }
-
-    $fileFullPath = $news->image ? public_path($news->image) : null;
-    $sentCount = 0;
-
-    foreach ($communities as $community) {
-
-        if (empty($community->discord_webhook_news)) {
-            \Log::warning("Skipping community (no webhook): {$community->name}");
-            continue;
+        if (! feature_enabled('DiscordIntegration')) {
+            return $manualRequest
+                ? back()->with('error', 'Discord integration is currently disabled.')
+                : null;
         }
 
-        // Check if Discord message already exists for this news & community
-        $discordMsg = NewsDiscord::where('news_id', $news->id)
-                                  ->where('community_id', $community->id)
-                                  ->first();
+        $communities = Community::where('id', $news->community_id)
+            ->where('status', 1)
+            ->get();
 
-        try {
-            if ($discordMsg && $discordMsg->message_id) {
-                // EDIT: existing message → PATCH content only
-                Http::patch($community->discord_webhook_news . "/messages/{$discordMsg->message_id}", [
-                    'content' => $news->content,
-                ]);
-            } else {
-                // NEW message → attach image if exists
-                if ($fileFullPath && file_exists($fileFullPath)) {
-                    $response = Http::attach(
-                        'file',
-                        file_get_contents($fileFullPath),
-                        basename($fileFullPath)
-                    )->post($community->discord_webhook_news . '?wait=true', [
+        if ($communities->isEmpty()) {
+            return $manualRequest
+                ? back()->with('error', 'No active community is linked to this news briefing.')
+                : null;
+        }
+
+        $fileFullPath = $news->image ? public_path($news->image) : null;
+        $sentCount = 0;
+
+        foreach ($communities as $community) {
+            if (blank($community->discord_webhook_news)) {
+                continue;
+            }
+
+            $discordMsg = NewsDiscord::where('news_id', $news->id)
+                ->where('community_id', $community->id)
+                ->first();
+
+            try {
+                if ($discordMsg && $discordMsg->message_id) {
+                    Http::patch($community->discord_webhook_news . "/messages/{$discordMsg->message_id}", [
                         'content' => $news->content,
                     ]);
-                } else {
-                    $response = Http::post($community->discord_webhook_news . '?wait=true', [
-                        'content' => $news->content,
-                    ]);
+
+                    $sentCount++;
+                    continue;
                 }
 
-                // Save Discord message info
-                if (isset($response) && $response->successful()) {
+                $response = ($fileFullPath && file_exists($fileFullPath))
+                    ? Http::attach('file', file_get_contents($fileFullPath), basename($fileFullPath))
+                        ->post($community->discord_webhook_news . '?wait=true', ['content' => $news->content])
+                    : Http::post($community->discord_webhook_news . '?wait=true', ['content' => $news->content]);
+
+                if ($response->successful()) {
                     $discordData = $response->json();
 
                     NewsDiscord::updateOrCreate(
                         ['news_id' => $news->id, 'community_id' => $community->id],
                         [
-                            'community'  => $community->name,
                             'message_id' => $discordData['id'] ?? null,
                             'channel_id' => $discordData['channel_id'] ?? null,
                         ]
                     );
-                }
-            }
 
-            $sentCount++;
-        } catch (\Exception $e) {
-            \Log::error("Discord send/update failed for News ID {$news->id}, Community {$community->name}", [
-                'error' => $e->getMessage()
-            ]);
+                    $sentCount++;
+                }
+            } catch (\Throwable $exception) {
+                report($exception);
+            }
+        }
+
+        return $manualRequest
+            ? back()->with($sentCount > 0 ? 'success' : 'error', $sentCount > 0 ? 'News briefing sent to Discord.' : 'No Discord message was sent. Please check the community webhook.')
+            : null;
+    }
+
+    private function validatedNews(Request $request): array
+    {
+        return $request->validate([
+            'news_date' => 'required|date',
+            'impact' => 'required|integer|in:1,2,3',
+            'community_id' => 'required|exists:communities,id',
+            'image' => 'nullable|image|max:4096',
+        ]);
+    }
+
+    private function storeImage(Request $request, ?News $existingNews = null): ?string
+    {
+        if (! $request->hasFile('image')) {
+            return $existingNews?->image;
+        }
+
+        $image = $request->file('image');
+        $imageName = now()->format('YmdHis') . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+        $destinationPath = public_path('upload/news');
+
+        if (! file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
+        }
+
+        $image->move($destinationPath, $imageName);
+
+        if ($existingNews) {
+            $this->deleteImage($existingNews->image);
+        }
+
+        return 'upload/news/' . $imageName;
+    }
+
+    private function deleteImage(?string $path): void
+    {
+        if ($path && file_exists(public_path($path))) {
+            unlink(public_path($path));
         }
     }
 
-    if ($sentCount > 0) {
-        $news->update(['discord_sent' => true]);
+    private function buildNewsContent(int $impact, string $date): string
+    {
+        $profile = $this->impactProfile($impact);
+        $newsDate = Carbon::parse($date)->format('D, d M Y');
+
+        return implode(PHP_EOL, [
+            'Market News Briefing',
+            'Date: ' . $newsDate,
+            'Impact Level: ' . $profile['label'],
+            'Primary Focus: USD-related scheduled news',
+            'Risk Guidance: ' . $profile['risk'],
+            'Execution Plan: ' . $profile['execution'],
+            'Reminder: Confirm your trading plan, position size, stop placement, and news risk before taking any trade.',
+        ]);
     }
-}
+
+    private function impactProfile(int $impact): array
+    {
+        return match ($impact) {
+            3 => [
+                'label' => 'High Impact',
+                'risk' => 'Expect fast repricing, wider spreads, and possible slippage around the release window.',
+                'execution' => 'Reduce exposure, avoid impulsive entries, and wait for post-news structure before committing risk.',
+            ],
+            2 => [
+                'label' => 'Medium Impact',
+                'risk' => 'Expect moderate volatility and possible short-term liquidity changes.',
+                'execution' => 'Use planned levels, keep stops logical, and avoid increasing size without confirmation.',
+            ],
+            default => [
+                'label' => 'Low Impact',
+                'risk' => 'Market movement is usually more contained, but risk controls still apply.',
+                'execution' => 'Trade only if the setup matches the plan and the reward-to-risk remains acceptable.',
+            ],
+        };
+    }
 }

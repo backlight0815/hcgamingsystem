@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Illuminate\Support\Collection;
 use Carbon\Carbon;
+use App\Services\TradingJournalTimeService;
 
 
 class TradingJournalExport implements FromCollection, WithTitle, WithHeadings, WithMapping, WithEvents, ShouldAutoSize, WithStyles
@@ -50,14 +51,20 @@ public function collection()
             'Profit/Loss',
             'Result',
             'Notes',
+            'Time Source',
+            'Open Date (MT5)',
+            'Close Date (MT5)',
         ];
     }
 
     public function map($journal): array
     {
+        $timeService = app(TradingJournalTimeService::class);
+        $timeInputOffsetMinutes = $journal->time_input_offset_minutes ?? null;
+
         return [
-            $journal->open_date,
-            $journal->close_date,
+            $timeService->formatForDisplay($journal->open_date, TradingJournalTimeService::TIMEZONE_MALAYSIA),
+            $timeService->formatForDisplay($journal->close_date, TradingJournalTimeService::TIMEZONE_MALAYSIA),
             strtoupper($journal->pair),
             $journal->direction == 1 ? 'Buy' : ($journal->direction == 2 ? 'Sell' : 'Unknown'),
             $journal->entry_price,
@@ -72,6 +79,9 @@ public function collection()
                 default => 'N/A'
             },
             $journal->notes,
+            $timeService->shortLabel($journal->time_input_timezone ?? null, $timeInputOffsetMinutes),
+            $timeService->formatForDisplay($journal->open_date, TradingJournalTimeService::TIMEZONE_MT5, $timeInputOffsetMinutes),
+            $timeService->formatForDisplay($journal->close_date, TradingJournalTimeService::TIMEZONE_MT5, $timeInputOffsetMinutes),
         ];
     }
 public function registerEvents(): array
@@ -397,7 +407,7 @@ private function calculateExpectancy(Collection $journals): float
     $summaryEnd = $summaryStart + 12;
 
     // 🔲 Border for main journal data
-    $sheet->getStyle("A{$dataStart}:K{$dataEnd}")->applyFromArray([
+    $sheet->getStyle("A{$dataStart}:N{$dataEnd}")->applyFromArray([
         'borders' => [
             'allBorders' => [
                 'borderStyle' => Border::BORDER_THIN,
@@ -417,7 +427,7 @@ private function calculateExpectancy(Collection $journals): float
     ]);
 
     // 🔠 Bold header for journal table
-    $sheet->getStyle("A1:K1")->getFont()->setBold(true);
+    $sheet->getStyle("A1:N1")->getFont()->setBold(true);
 
     // 🔠 Bold header row for summary section
     $sheet->getStyle("A{$summaryStart}:C{$summaryStart}")->getFont()->setBold(true);

@@ -12,6 +12,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use App\Models\TradingJournalBackup; // ✅ Import backup model
 use Illuminate\Support\Facades\Schema;
+use App\Services\TradingJournalAnalytics;
+use App\Services\TradingJournalTimeService;
+use Illuminate\Support\Collection;
 
 class TradersPerformancesController extends Controller
 {
@@ -41,25 +44,33 @@ $selectedMonth    = $month;
 $selectedYear     = $year;
 $selectedTraderId = $userId;
 $selectedTrader   = $selectedTraderId ? User::find($selectedTraderId) : null;
+$selectedTimeView = app(TradingJournalTimeService::class)->normalizeMode($request->input('time_view'));
+$selectedTimeViewOffset = app(TradingJournalTimeService::class)->normalizeOffset($request->input('mt5_offset_minutes'), $selectedTimeView);
+$journalSourceOptions = $this->journalSourceOptions();
+$selectedJournalSource = $this->normalizeJournalSource($request->input('journal_source'));
 
     $traders        = User::where('role_id', 750)->get(); // role_id 750 = Trader
     $breadcrumbData = [['label' => 'Trader Journals', 'url' => route('admin.trader.journals.index')]];
 
     $currentUser = auth()->user();
-    $isAdminView = $currentUser && ($currentUser->role_id == 1); // adjust if your admin role differs
+    $isAdminView = $currentUser && in_array((int) $currentUser->role_id, [1, 2], true);
 
     // Defaults
     $journals = collect();              // DISPLAY journals (may be from backup for admin)
     $capitals = collect();
     $totalTrades = $totalProfit = $totalLoss = $growthPercent = $drawdownPercent = $currentBalance = 0;
     $winRate = $averageRRR = $expectancy = $stdDeviation = $totalScore = 0;
-    $rating = $winRateGrade = $rrrGrade = $growthGrade = $drawdownGrade = $consistencyGrade = $expectancyGrade = 'N/A';
-    $winRatePoints = $rrrPoints = $growthPoints = $drawdownPenalty = $consistencyPoints = $expectancyPoints = 0;
+    $rating = $winRateGrade = $rrrGrade = $growthGrade = $recoveryGrade = $drawdownGrade = $consistencyGrade = $expectancyGrade = 'N/A';
+    $winRatePoints = $rrrPoints = $growthPoints = $recoveryPoints = $drawdownPenalty = $consistencyPoints = $expectancyPoints = 0;
     $totalDeposits = $totalWithdrawals = 0;
 
     $riskFlags = [];
-    $journalSource = 'current';
+    $journalSource = $selectedJournalSource;
+    $phaseArchiveComparison = [];
     $performanceMeaning = 'N/A';
+    $analytics = new TradingJournalAnalytics();
+    $traderStyleProfile = $analytics->behavioralRiskProfile(collect(), 0);
+    $hedgingProfile = $analytics->hedgingProfile(collect());
 
     $evaluation = [
         'status'  => 'N/A',
@@ -69,24 +80,35 @@ $selectedTrader   = $selectedTraderId ? User::find($selectedTraderId) : null;
 
     if ($selectedTrader) {
         // -----------------------------------------------------
-        // 1) DISPLAY JOURNALS (admin can fall back to backup)
+        // 1) DISPLAY JOURNALS
+        //    Admin can review current journals, archived Phase 1/2 journals,
+        //    or a combined view for comparison after phase transitions.
         // -----------------------------------------------------
-        $displayQuery = TradingJournal::where('user_id', $selectedTrader->id);
-        if ($selectedMonth && $selectedYear) {
-            $displayQuery->whereMonth('open_date', $selectedMonth)
-                         ->whereYear('open_date', $selectedYear);
-        }
-        $journals = $displayQuery->latest()->get();
+        $currentJournals = $this->loadCurrentJournals($selectedTrader, $selectedMonth, $selectedYear);
+        $archivePhase1Journals = $isAdminView ? $this->loadArchivedJournals($selectedTrader, 1, $selectedMonth, $selectedYear) : collect();
+        $archivePhase2Journals = $isAdminView ? $this->loadArchivedJournals($selectedTrader, 2, $selectedMonth, $selectedYear) : collect();
+        $archiveAllJournals = $isAdminView ? $this->loadArchivedJournals($selectedTrader, null, $selectedMonth, $selectedYear) : collect();
 
-        if ($journals->isEmpty() && $isAdminView) {
-            // Admin fallback to backup for VIEWING ONLY
-            $backupQuery = TradingJournalBackup::where('user_id', $selectedTrader->id);
-            if ($selectedMonth && $selectedYear) {
-                $backupQuery->whereMonth('open_date', $selectedMonth)
-                            ->whereYear('open_date', $selectedYear);
-            }
-            $journals = $backupQuery->latest()->get();
-            $journalSource = 'archived';
+        $phaseArchiveComparison = $this->buildPhaseArchiveComparison(
+            $selectedTrader,
+            $currentJournals,
+            $archivePhase1Journals,
+            $archivePhase2Journals,
+            $selectedMonth,
+            $selectedYear
+        );
+
+        $journals = match ($selectedJournalSource) {
+            'archive_phase1' => $archivePhase1Journals,
+            'archive_phase2' => $archivePhase2Journals,
+            'archive_all' => $archiveAllJournals,
+            'all' => $this->sortJournals($currentJournals->merge($archiveAllJournals)),
+            default => $currentJournals,
+        };
+
+        if ($selectedJournalSource === 'current' && $journals->isEmpty() && $archiveAllJournals->isNotEmpty()) {
+            $journals = $archiveAllJournals;
+            $journalSource = 'archive_all';
         }
 
         // -----------------------------------------------------
@@ -121,6 +143,11 @@ $selectedTrader   = $selectedTraderId ? User::find($selectedTraderId) : null;
 
         $drawdownPercent = $initialCapital > 0
             ? round((abs(min(0, $netPL)) / $initialCapital) * 100, 2) : 0;
+        $maxDrawdownAmount = $this->calculateJournalMaxDrawdownAmount($journals);
+        $recoveryFactor = $maxDrawdownAmount > 0 ? round($netPL / $maxDrawdownAmount, 2) : ($netPL > 0 ? 'No Drawdown' : 'N/A');
+        [$recoveryPoints, $recoveryGrade] = $this->journalRecoveryFactorScore($recoveryFactor, (float) $netPL, (float) $maxDrawdownAmount, $totalTrades > 0);
+        $traderStyleProfile = $analytics->behavioralRiskProfile($journals, (float) $initialCapital);
+        $hedgingProfile = $analytics->hedgingProfile($journals);
 
         // Expectancy
         $averageWin      = $winTrades->count()  > 0 ? $winTrades->avg('profit_loss') : 0;
@@ -155,8 +182,8 @@ $consistencyGrade = $consistencyPassed ? '✅ Passed' : '⏳ Pending (Keep Tradi
 
         // ----- Grading (DISPLAY) -----
         if ($totalTrades == 0) {
-            $winRateGrade = $rrrGrade = $growthGrade = $drawdownGrade = $consistencyGrade = $expectancyGrade = 'N/A';
-            $winRatePoints = $rrrPoints = $growthPoints = $drawdownPenalty = $consistencyPoints = $expectancyPoints = 0;
+            $winRateGrade = $rrrGrade = $growthGrade = $recoveryGrade = $drawdownGrade = $consistencyGrade = $expectancyGrade = 'N/A';
+            $winRatePoints = $rrrPoints = $growthPoints = $recoveryPoints = $drawdownPenalty = $consistencyPoints = $expectancyPoints = 0;
             $totalScore = 0;
             $rating = 'N/A';
         } else {
@@ -261,7 +288,7 @@ elseif ($consistencyPercent <= 15) {
 }
 
             // Final Score
-            $totalScore = $winRatePoints + $rrrPoints + $growthPoints + $consistencyPoints + $expectancyPoints - $drawdownPenalty;
+            $totalScore = $winRatePoints + $rrrPoints + $recoveryPoints + $consistencyPoints + $expectancyPoints - $drawdownPenalty;
             $rating = match (true) {
                 $totalScore >= 95 => 'S',
                 $totalScore >= 90 => 'A+',
@@ -423,13 +450,7 @@ $performanceMeaning = match (true) {
                     'breached'         => false,
                     'overall_loss_pct' => 0,
                 ],
-                'profitable_day' => [
-                    'threshold'          => round($initialCapital * 0.005, 2),
-                    'profitable_days'    => 0,
-                    'required_days'      => $phaseRules['min_profitable_days'],
-                    'has_profitable_day' => false,
-                    'status_label'       => '⏳ Pending',
-                ],
+                'profitable_day' => $analytics->profitableDayRule(collect(), $phaseRules['min_profitable_days']),
                 'time' => [
                     'days_passed' => 0,
                     'max_days'    => (int) $phaseRules['max_days'],
@@ -457,8 +478,7 @@ $performanceMeaning = match (true) {
             $targetProgressPct   = $targetAmount > 0 ? round(($pnlSum / $targetAmount) * 100, 2) : 0;
 
             // Daily PnL from EVAL journals
-            $dailyPnL = $evalJournals->groupBy(fn ($t) => \Carbon\Carbon::parse($t->close_date)->toDateString())
-                ->map(fn ($day) => (float) $day->sum('profit_loss'));
+            $dailyPnL = $analytics->dailyProfitLoss($evalJournals);
             $worstDayPnL          = $dailyPnL->count() ? min($dailyPnL->toArray()) : 0;
             $maxDailyLossAmount   = -1 * $evalStartingBalance * ($phaseRules['max_daily_loss'] / 100);
             $maxDailyLossBreached = $worstDayPnL < $maxDailyLossAmount;
@@ -470,11 +490,9 @@ $performanceMeaning = match (true) {
             $maxTotalLossBreached = $overallLossAmount < $maxTotalLossAmount;
             $overallLossPercent   = $evalStartingBalance > 0 ? round(($overallLossAmount / $evalStartingBalance) * 100, 2) : 0;
 
-            // Profitable days (threshold uses initial capital like your rule)
-            $profitableDayThreshold = $initialCapital * 0.005; // 0.5%
-            $profitableDays         = $dailyPnL->filter(fn ($pnl) => $pnl >= $profitableDayThreshold);
+            // Profitable days
             $requiredProfitableDays = $phaseRules['min_profitable_days'];
-            $hasProfitableDay       = $profitableDays->count() >= $requiredProfitableDays;
+            $profitableDayRule      = $analytics->profitableDayRule($evalJournals, $requiredProfitableDays);
 
             // // Consistency for EVAL journals
             // $evalProfits = $evalJournals->pluck('profit_loss')->toArray();
@@ -556,13 +574,7 @@ $performanceMeaning = match (true) {
                     'overall_loss_pct' => $overallLossPercent,
                 ],
 
-                'profitable_day' => [
-                    'threshold'          => round($profitableDayThreshold, 2),
-                    'profitable_days'    => $profitableDays->count(),
-                    'required_days'      => $requiredProfitableDays,
-                    'has_profitable_day' => (bool) $hasProfitableDay,
-                    'status_label'       => $hasProfitableDay ? '✅ Achieved' : '⏳ Pending',
-                ],
+                'profitable_day' => $profitableDayRule,
 
                 'time' => [
                     'days_passed' => $daysPassed,
@@ -574,10 +586,14 @@ $performanceMeaning = match (true) {
             // Status follows the account workflow for funded accounts, otherwise it follows evaluation rules.
             if ($phaseRules['phase'] === 3) {
                 $evaluation['status'] = $this->resolveEvaluationStatusFromWorkflow($selectedTrader);
-            } elseif ($evaluation['max_daily_loss']['breached'] ||
-                $evaluation['max_total_loss']['breached'] )
-                {
-                $evaluation['status'] = 'FAIL';
+            } elseif ($evaluation['max_total_loss']['breached']) {
+                $evaluation['status'] = (string) ($selectedTrader->prop_firm_review_status ?? 'none') === 'total_loss_allowed'
+                    ? 'REVIEWED'
+                    : 'UNDER_REVIEW';
+            } elseif ($evaluation['max_daily_loss']['breached']) {
+                $evaluation['status'] = (string) ($selectedTrader->prop_firm_review_status ?? 'none') === 'daily_loss_allowed'
+                    ? 'REVIEWED'
+                    : 'UNDER_REVIEW';
             } elseif (
                 ($evaluation['profit_target']['passed'] ?? false) &&
                 ($evaluation['profitable_day']['has_profitable_day'] ?? false) &&
@@ -607,6 +623,8 @@ $performanceMeaning = match (true) {
         'totalTrades',
         'selectedMonth',
         'selectedYear',
+        'selectedTimeView',
+        'selectedTimeViewOffset',
         'winRate',
         'drawdownPercent',
         'totalProfit',
@@ -620,6 +638,7 @@ $performanceMeaning = match (true) {
         'winRatePoints',
         'rrrPoints',
         'growthPoints',
+        'recoveryPoints',
         'drawdownPenalty',
         'totalScore',
         'winRateGrade',
@@ -627,6 +646,7 @@ $performanceMeaning = match (true) {
 
         'rrrGrade',
         'growthGrade',
+        'recoveryGrade',
         'drawdownGrade',
         'consistencyPoints',
         'consistencyGrade',
@@ -635,12 +655,183 @@ $performanceMeaning = match (true) {
         'expectancyGrade',
         'evaluation',
         'riskFlags',
+        'traderStyleProfile',
+        'hedgingProfile',
         'journalSource',
+        'selectedJournalSource',
+        'journalSourceOptions',
+        'phaseArchiveComparison',
         'performanceMeaning',
         'propFirmStage'
 
     ));
 }
+
+    private function journalSourceOptions(): array
+    {
+        return [
+            'current' => ['label' => 'Current Phase Journal', 'short_label' => 'Current'],
+            'archive_phase1' => ['label' => 'Phase 1 Archive', 'short_label' => 'Phase 1'],
+            'archive_phase2' => ['label' => 'Phase 2 Archive', 'short_label' => 'Phase 2'],
+            'archive_all' => ['label' => 'All Archived Phases', 'short_label' => 'Archived'],
+            'all' => ['label' => 'Current + Archived', 'short_label' => 'Combined'],
+        ];
+    }
+
+    private function normalizeJournalSource($source): string
+    {
+        $source = is_string($source) ? $source : 'current';
+
+        return array_key_exists($source, $this->journalSourceOptions()) ? $source : 'current';
+    }
+
+    private function loadCurrentJournals(User $trader, $month, $year): Collection
+    {
+        $query = TradingJournal::where('user_id', $trader->id);
+        $this->applyJournalDateFilters($query, $month, $year);
+
+        return $this->tagJournals($query->latest()->get(), 'current', (int) ($trader->prop_firm_phase ?? 1));
+    }
+
+    private function loadArchivedJournals(User $trader, ?int $phase, $month, $year): Collection
+    {
+        if (! Schema::hasTable('trading_journals_backup')) {
+            return collect();
+        }
+
+        if ($phase !== null && ! Schema::hasColumn('trading_journals_backup', 'prop_firm_phase')) {
+            return collect();
+        }
+
+        $query = TradingJournalBackup::where('user_id', $trader->id);
+        $this->applyJournalDateFilters($query, $month, $year);
+
+        if ($phase !== null) {
+            $query->where('prop_firm_phase', $phase);
+        }
+
+        $sourceKey = $phase === 1 ? 'archive_phase1' : ($phase === 2 ? 'archive_phase2' : 'archive_all');
+
+        return $this->tagJournals($query->latest()->get(), $sourceKey, $phase);
+    }
+
+    private function applyJournalDateFilters($query, $month, $year): void
+    {
+        if ($month && $year) {
+            $query->whereMonth('open_date', $month)
+                ->whereYear('open_date', $year);
+        }
+    }
+
+    private function tagJournals(Collection $journals, string $sourceKey, ?int $phase = null): Collection
+    {
+        return $journals->map(function ($journal) use ($sourceKey, $phase) {
+            $archivePhase = $phase ?? ($journal->prop_firm_phase ?? null);
+            $sourceLabel = match ($sourceKey) {
+                'current' => 'Current Phase',
+                'archive_phase1' => 'Phase 1 Archive',
+                'archive_phase2' => 'Phase 2 Archive',
+                default => $archivePhase ? 'Phase ' . $archivePhase . ' Archive' : 'Archived',
+            };
+
+            $journal->setAttribute('journal_source_key', $sourceKey);
+            $journal->setAttribute('journal_source_label', $sourceLabel);
+
+            return $journal;
+        });
+    }
+
+    private function sortJournals(Collection $journals): Collection
+    {
+        return $journals
+            ->sortByDesc(function ($journal): int {
+                $date = $journal->close_date ?? $journal->open_date ?? $journal->created_at;
+
+                return $date ? Carbon::parse($date)->timestamp : 0;
+            })
+            ->values();
+    }
+
+    private function buildPhaseArchiveComparison(User $trader, Collection $currentJournals, Collection $phase1Archive, Collection $phase2Archive, $month, $year): array
+    {
+        $currentPhase = (int) ($trader->prop_firm_phase ?? 1);
+        $sources = [
+            ['key' => 'archive_phase1', 'label' => 'Phase 1 Archive', 'journals' => $phase1Archive],
+            ['key' => 'archive_phase2', 'label' => 'Phase 2 Archive', 'journals' => $phase2Archive],
+            ['key' => 'current', 'label' => 'Current Phase ' . $currentPhase, 'journals' => $currentJournals],
+        ];
+
+        return collect($sources)->map(function (array $source) use ($trader, $month, $year): array {
+            $journals = $source['journals'];
+            $sortedJournals = $this->sortJournals($journals);
+            $winCount = $journals->where('profit_loss', '>', 0)->count();
+            $lossCount = $journals->where('profit_loss', '<', 0)->count();
+            $closedCount = $winCount + $lossCount;
+            $firstTrade = $sortedJournals->last();
+            $lastTrade = $sortedJournals->first();
+
+            return [
+                'key' => $source['key'],
+                'label' => $source['label'],
+                'trade_count' => $journals->count(),
+                'net_profit' => round((float) $journals->sum('profit_loss'), 2),
+                'win_rate' => $closedCount > 0 ? round(($winCount / $closedCount) * 100, 2) : 0,
+                'average_lot' => $journals->count() > 0 ? round((float) $journals->avg('lot_size'), 2) : 0,
+                'first_trade_date' => $firstTrade?->open_date,
+                'last_trade_date' => $lastTrade?->close_date ?? $lastTrade?->open_date,
+                'query' => [
+                    'user_id' => $trader->id,
+                    'month' => $month ?: null,
+                    'year' => $year ?: null,
+                    'journal_source' => $source['key'],
+                ],
+            ];
+        })->all();
+    }
+
+    private function calculateJournalMaxDrawdownAmount($journals): float
+    {
+        $runningProfit = 0.0;
+        $peakProfit = 0.0;
+        $maxDrawdown = 0.0;
+
+        foreach ($journals->sortBy(fn ($journal) => $journal->close_date ?? $journal->open_date ?? $journal->created_at) as $journal) {
+            $runningProfit += (float) ($journal->profit_loss ?? 0);
+            $peakProfit = max($peakProfit, $runningProfit);
+            $maxDrawdown = max($maxDrawdown, $peakProfit - $runningProfit);
+        }
+
+        return round($maxDrawdown, 2);
+    }
+
+    private function journalRecoveryFactorScore($recoveryFactor, float $netProfitLoss, float $maxDrawdownAmount, bool $hasTrades): array
+    {
+        if (! $hasTrades) {
+            return [0, 'N/A'];
+        }
+
+        if ($netProfitLoss <= 0) {
+            return [0, 'F'];
+        }
+
+        if ($maxDrawdownAmount <= 0) {
+            return [15, 'A+'];
+        }
+
+        $recoveryFactor = is_numeric($recoveryFactor)
+            ? (float) $recoveryFactor
+            : $netProfitLoss / $maxDrawdownAmount;
+
+        return match (true) {
+            $recoveryFactor >= 3.00 => [15, 'A+'],
+            $recoveryFactor >= 2.00 => [12, 'A'],
+            $recoveryFactor >= 1.50 => [10, 'B'],
+            $recoveryFactor >= 1.00 => [7, 'C'],
+            $recoveryFactor >= 0.50 => [4, 'D'],
+            $recoveryFactor > 0 => [2, 'E'],
+            default => [0, 'F'],
+        };
+    }
 
     private function resolvePropFirmStage(?User $trader, array $evaluation = []): array
     {
@@ -664,6 +855,12 @@ $performanceMeaning = match (true) {
         [$label, $phaseLabel, $badgeClass] = match ($reviewStatus) {
             'pending_phase2' => ['Phase 1 passed - admin review pending', 'Phase 1 review gate', 'warning'],
             'pending_funded' => ['Phase 2 passed - funded approval pending', 'Phase 2 review gate', 'warning'],
+            'daily_loss_review' => ['Daily loss breach - admin review', 'Risk review', 'warning'],
+            'daily_loss_allowed' => ['Daily loss breach reviewed - active', 'Risk reviewed', 'primary'],
+            'daily_loss_banned' => ['Banned after daily loss review', 'Closed review', 'danger'],
+            'total_loss_review' => ['Total loss breach - admin review', 'Risk review', 'danger'],
+            'total_loss_allowed' => ['Total loss breach reviewed - active', 'Risk reviewed', 'primary'],
+            'total_loss_banned' => ['Banned after total loss review', 'Closed review', 'danger'],
             'question_required' => ['Trader response required', 'Evaluation question', 'warning'],
             'suspended' => ['Suspended for review', 'Investigation', 'danger'],
             'rejected' => ['Review rejected', 'Closed review', 'danger'],
@@ -699,6 +896,12 @@ $performanceMeaning = match (true) {
         return match ($reviewStatus) {
             'funded_approved' => 'APPROVED',
             'pending_phase2', 'pending_funded' => 'UNDER_REVIEW',
+            'daily_loss_review' => 'UNDER_REVIEW',
+            'daily_loss_allowed' => 'REVIEWED',
+            'daily_loss_banned' => 'SUSPENDED',
+            'total_loss_review' => 'UNDER_REVIEW',
+            'total_loss_allowed' => 'REVIEWED',
+            'total_loss_banned' => 'SUSPENDED',
             'question_required' => 'QUESTION_REQUIRED',
             'suspended' => 'SUSPENDED',
             'rejected' => 'REJECTED',

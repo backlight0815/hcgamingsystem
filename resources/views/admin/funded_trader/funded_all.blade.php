@@ -40,7 +40,10 @@
     }
 
     .review-badge.phase2 { background: #dbeafe; color: #1d4ed8; }
+    .review-badge.profit-review { background: #ede9fe; color: #5b21b6; }
     .review-badge.funded { background: #dcfce7; color: #166534; }
+    .review-badge.daily { background: #fef3c7; color: #92400e; }
+    .review-badge.total { background: #fee2e2; color: #991b1b; }
     .review-badge.locked { background: #fee2e2; color: #991b1b; }
 
     .question-box {
@@ -68,7 +71,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h4 class="mb-1">Prop Firm Review Centre</h4>
-                        <p class="text-muted mb-0">Manual approval gates for Phase 2 and funded-account access.</p>
+                        <p class="text-muted mb-0">Manual approval gates for phase access and loss-breach reviews.</p>
                     </div>
                 </div>
             </div>
@@ -133,7 +136,13 @@
                             @forelse($reviewTraders as $trader)
                                 @php
                                     $reviewStatus = $trader->prop_firm_review_status;
+                                    $isProfitTargetReview = $reviewStatus === 'phase1_profit_target_review';
                                     $isPhase2Review = $reviewStatus === 'pending_phase2';
+                                    $isDailyLossReview = $reviewStatus === 'daily_loss_review';
+                                    $isTotalLossReview = $reviewStatus === 'total_loss_review';
+                                    $reviewBadgeClass = $isTotalLossReview ? 'total' : ($isDailyLossReview ? 'daily' : ($isProfitTargetReview ? 'profit-review' : ($isPhase2Review ? 'phase2' : 'funded')));
+                                    $reviewLabel = $isTotalLossReview ? 'Total Loss Review' : ($isDailyLossReview ? 'Daily Loss Review' : ($isProfitTargetReview ? 'Profit Target Review' : ($isPhase2Review ? 'Approve Phase 2' : 'Approve Funded Account')));
+                                    $profitableDayRule = $trader->phase1_profitable_day_rule ?? null;
                                 @endphp
                                 <tr>
                                     <td>
@@ -142,11 +151,17 @@
                                     </td>
                                     <td>Phase {{ $trader->prop_firm_phase ?? 1 }}</td>
                                     <td>
-                                        <span class="review-badge {{ $isPhase2Review ? 'phase2' : 'funded' }}">
-                                            {{ $isPhase2Review ? 'Approve Phase 2' : 'Approve Funded Account' }}
+                                        <span class="review-badge {{ $reviewBadgeClass }}">
+                                            {{ $reviewLabel }}
                                         </span>
                                         @if($trader->prop_firm_review_note)
                                             <div class="text-muted small mt-1">{{ $trader->prop_firm_review_note }}</div>
+                                        @endif
+                                        @if($isProfitTargetReview && $profitableDayRule)
+                                            <div class="small mt-1">
+                                                Profitable days:
+                                                <strong>{{ $profitableDayRule['profitable_days'] ?? 0 }}/{{ $profitableDayRule['required_days'] ?? 3 }}</strong>
+                                            </div>
                                         @endif
                                     </td>
                                     <td>
@@ -166,18 +181,65 @@
                                             <a href="{{ route('admin.trader.journals.index', ['user_id' => $trader->id]) }}" class="btn btn-outline-primary btn-sm">
                                                 Review Trades
                                             </a>
-                                        <form action="{{ route('admin.funded_traders.approve', $trader->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Approve this review gate?');">
-                                                Approve
-                                            </button>
-                                        </form>
-                                        <form action="{{ route('admin.funded_traders.reject', $trader->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Reject this prop firm review?');">
-                                                Reject
-                                            </button>
-                                        </form>
+                                        @if($isProfitTargetReview)
+                                            <form action="{{ route('admin.funded_traders.approve', $trader->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Approve Phase 2 now without waiting for 3 profitable days?');">
+                                                    Approve Phase 2 Now
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('admin.funded_traders.phase_one.require_profitable_days', $trader->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm" onclick="return confirm('Require this trader to complete 3 profitable days before Phase 2?');">
+                                                    Require 3 Days
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('admin.funded_traders.reject', $trader->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Reject this prop firm review?');">
+                                                    Reject
+                                                </button>
+                                            </form>
+                                        @elseif($isDailyLossReview)
+                                            <form action="{{ route('admin.funded_traders.daily_loss.keep_active', $trader->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Keep this trader active after daily loss review?');">
+                                                    Keep Active
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('admin.funded_traders.daily_loss.ban', $trader->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Ban this account after daily loss review?');">
+                                                    Ban Account
+                                                </button>
+                                            </form>
+                                        @elseif($isTotalLossReview)
+                                            <form action="{{ route('admin.funded_traders.total_loss.keep_active', $trader->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Keep this trader active after total loss review?');">
+                                                    Keep Active
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('admin.funded_traders.total_loss.ban', $trader->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Ban this account after total loss review?');">
+                                                    Ban Account
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('admin.funded_traders.approve', $trader->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Approve this review gate?');">
+                                                    Approve
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('admin.funded_traders.reject', $trader->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Reject this prop firm review?');">
+                                                    Reject
+                                                </button>
+                                            </form>
+                                        @endif
                                         <button type="button" class="btn btn-outline-warning btn-sm question-toggle" data-target="question-{{ $trader->id }}">
                                             Ask Question
                                         </button>

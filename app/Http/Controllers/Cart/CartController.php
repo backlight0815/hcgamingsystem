@@ -20,8 +20,11 @@ use App\Models\orders;
 use App\Models\DealerOrder;
 use App\Models\order_items;
 use App\Models\transactions;
+use App\Models\TngQrCode;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log; // Import Log facade
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Http\UploadedFile;
 use Image;
 use Illuminate\Support\Carbon;
 class CartController extends Controller
@@ -295,7 +298,11 @@ class CartController extends Controller
             // Debugging: Log the merged cart items
             Log::info($allCartItems);
 
-            return view('admin.cart.cart_summary', compact('allCartItems'));
+            $paymentQrCode = Schema::hasTable('tng_qr_codes')
+                ? TngQrCode::latest()->first()
+                : null;
+
+            return view('admin.cart.cart_summary', compact('allCartItems', 'paymentQrCode'));
         } else {
             // Guest user
             if (!session()->has('guest_id')) {
@@ -335,11 +342,18 @@ class CartController extends Controller
     public function updateCartItem(Request $request, $cartItemId)
     {
         try {
-            $cartItem = Cart::findOrFail($cartItemId);
+            $cartType = $request->input('cart_type', 'product');
+            $cartItem = $cartType === 'dealer_stock'
+                ? DealerCart::with('dealerStock')->where('user_id', auth()->id())->findOrFail($cartItemId)
+                : Cart::with('product')->where('user_id', auth()->id())->findOrFail($cartItemId);
+
             $newQuantity = (int) $request->input('quantity');
+            $availableStock = $cartType === 'dealer_stock'
+                ? optional($cartItem->dealerStock)->product_stock
+                : optional($cartItem->product)->product_stock;
 
             // Check if the new quantity is within the product stock limit
-            if ($newQuantity <= $cartItem->product->product_stock) {
+            if ($newQuantity >= 1 && ($availableStock === null || $newQuantity <= $availableStock)) {
                 // Update the quantity of the cart item
                 $cartItem->quantity = $newQuantity;
                 $cartItem->save();
@@ -366,14 +380,19 @@ class CartController extends Controller
     }
 
 
-    public function RemoveCart($id) {
-        $cartItem = Cart::findOrFail($id);
+    public function RemoveCart(Request $request, $id) {
+        $cartType = $request->query('type', 'product');
+        $cartItem = $cartType === 'dealer_stock'
+            ? DealerCart::where('user_id', auth()->id())->findOrFail($id)
+            : Cart::where('user_id', auth()->id())->findOrFail($id);
 
-        $cartTotalBefore = Cart::where('user_id', auth()->user()->id)->sum('quantity');
+        $cartTotalBefore = Cart::where('user_id', auth()->user()->id)->sum('quantity')
+            + DealerCart::where('user_id', auth()->user()->id)->sum('quantity');
 
         $cartItem->delete();
 
-        $cartTotalAfter = Cart::where('user_id', auth()->user()->id)->sum('quantity');
+        $cartTotalAfter = Cart::where('user_id', auth()->user()->id)->sum('quantity')
+            + DealerCart::where('user_id', auth()->user()->id)->sum('quantity');
         $updatedCartTotal = max($cartTotalAfter, 0); // Ensure the cart total is not negative
         session()->put('cartTotal', $updatedCartTotal);
 
@@ -506,7 +525,6 @@ EWalletTransaction::create([
         $dealerStock->product_name = $product->product_name;
         $dealerStock->product_category_id = $product->product_category_id;
         $dealerStock->long_description = $product->long_description;
-        $dealerStock->grand_total = $product->product_price * $cartItem->quantity; // Calculate total price
         $dealerStock->product_price = $product->product_price;
         $dealerStock->customer_price = $product->customer_price;
         $dealerStock->product_stock = $cartItem->quantity;
@@ -655,7 +673,6 @@ $dealerStock->sku =$product->sku;
 $dealerStock->product_name = $product->product_name;
 $dealerStock->product_category_id = $product->product_category_id;
 $dealerStock->long_description = $product->long_description;
-$dealerStock->grand_total = $product->product_price * $cartItem->quantity; // Calculate total price
 $dealerStock->product_price = $product->product_price;
 $dealerStock->customer_price =$product->customer_price;
 $dealerStock->product_stock = $cartItem->quantity;
@@ -727,8 +744,8 @@ return redirect()->back()->with($notification);
     $userId = Auth::id();
 
     // Fetch cart items from both carts and dealer_carts
-    $cartItems = Cart::where('user_id', $userId)->get();
-    $dealerCartItems = DealerCart::where('user_id', $userId)->get();
+    $cartItems = Cart::where('user_id', $userId)->with('product')->get();
+    $dealerCartItems = DealerCart::where('user_id', $userId)->with('dealerStock')->get();
 
     // Merge both collections of cart items
     $allCartItems = $cartItems->merge($dealerCartItems);
@@ -744,28 +761,40 @@ return redirect()->back()->with($notification);
 
     // Validate the receipt file upload
     $request->validate([
-        'receipt' => 'file|mimes:jpeg,png,pdf|max:2048',
+        'payment_method' => 'required|in:qr_code,duitnow_id,fpx_demo',
+        'receipt' => 'required_unless:payment_method,fpx_demo|file|mimes:jpeg,jpg,png,pdf|max:2048',
     ], [
+        'payment_method.required' => 'Please select a payment method.',
+        'payment_method.in' => 'Please select a valid payment method.',
+        'receipt.required_unless' => 'Please upload your payment screenshot or receipt.',
         'receipt.file' => 'Please upload a valid file.',
-        'receipt.mimes' => 'The receipt file must be in JPEG, PNG, or PDF format.',
+        'receipt.mimes' => 'The receipt file must be in JPEG, PNG, JPG, or PDF format.',
         'receipt.max' => 'The receipt file size must not exceed 2048 KB.',
     ]);
 
+    if ($request->input('payment_method') === 'fpx_demo') {
+        $notification = [
+            'message' => 'FPX is currently shown for illustration only. Please choose QR Code or DuitNow ID transfer.',
+            'alert-type' => 'error'
+        ];
+        return redirect()->back()->with($notification);
+    }
+
     // Calculate the total amount
-    $totalAmount = $request->input('total_amount');
+    $totalAmount = $this->calculateCartTotal($cartItems, $dealerCartItems, Auth::user());
+    $paymentProofPath = $request->hasFile('receipt')
+        ? $this->storePaymentProof($request->file('receipt'), 'payment_proof')
+        : null;
+
+    try {
+        \DB::beginTransaction();
 
     // Create an order
     $order = new orders();
     $order->user_id = $userId;
     $order->total_amount = $totalAmount;
 
-    // Handle receipt file upload
-    if ($request->hasFile('receipt')) {
-        $image = $request->file('receipt');
-        $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
-        Image::make($image)->resize(1000, 1000)->save('upload/transactions/' . $name_gen);
-        $order->payment_proof = 'upload/transactions/' . $name_gen;
-    }
+    $order->payment_proof = $paymentProofPath;
 
     // Set order status and timestamp
     $order->status = 0; // Assuming status '0' means pending
@@ -776,31 +805,34 @@ return redirect()->back()->with($notification);
 
     // Loop through all cart items and create order items
     foreach ($allCartItems as $cartItem) {
+        $quantity = max(1, (int) $cartItem->quantity);
         $orderItem = new order_items();
         $orderItem->order_id = $order->id;
         $orderItem->user_id = $userId;
-        $orderItem->quantity = $cartItem->quantity;
+        $orderItem->quantity = $quantity;
 
         // Retrieve the product details
-        $product = Product::find($cartItem->product_id);
+        $product = $cartItem instanceof Cart
+            ? $cartItem->product
+            : Product::find(optional($cartItem->dealerStock)->product_id ?? $cartItem->product_id);
+
         if ($product) {
             // Deduct product stock for the ordered product
-            $product->product_stock -= $cartItem->quantity;
+            $product->product_stock -= $quantity;
             $product->save();
 
             // Create a new entry in the dealer stock for this order
             $dealerStock = new DealerStock();
             $dealerStock->user_id = $userId;
-            $dealerStock->product_id = $cartItem->product_id;
+            $dealerStock->product_id = $product->id;
             $dealerStock->order_id = $order->id; // Assign the order ID here
             $dealerStock->sku = $product->sku;
             $dealerStock->product_name = $product->product_name;
             $dealerStock->product_category_id = $product->product_category_id;
             $dealerStock->long_description = $product->long_description;
-            $dealerStock->grand_total = $product->product_price * $cartItem->quantity; // Calculate total price
             $dealerStock->product_price = $product->product_price;
             $dealerStock->customer_price = $product->customer_price;
-            $dealerStock->product_stock = $cartItem->quantity;
+            $dealerStock->product_stock = $quantity;
             $dealerStock->weight = $product->weight;
             $dealerStock->status = 0;
             $dealerStock->publish_status = 0;
@@ -844,7 +876,7 @@ return redirect()->back()->with($notification);
         } elseif ($cartItem instanceof DealerCart) {
             // For DealerStock items
             // $orderItem->dealer_stock_id = $cartItem->dealer_stock_id;
-            $orderItem->product_id = $dealerStock->product_id;
+            $orderItem->product_id = optional($product)->id ?? optional($cartItem->dealerStock)->product_id ?? $cartItem->product_id;
         }
 
         // Save the order_item
@@ -856,13 +888,7 @@ return redirect()->back()->with($notification);
     $transaction->order_id = $order->id;
     $transaction->user_id = $userId;
 
-    // Handle receipt file upload for transaction
-    if ($request->hasFile('receipt')) {
-        $image = $request->file('receipt');
-        $name_gen = hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
-        Image::make($image)->resize(1000, 1000)->save('upload/payment_proof/' . $name_gen);
-        $transaction->payment_proof = 'upload/payment_proof/' . $name_gen;
-    }
+    $transaction->payment_proof = $paymentProofPath;
 
     // Save transaction
     $transaction->save();
@@ -870,6 +896,23 @@ return redirect()->back()->with($notification);
     // Clear both cart types after successful checkout
     Cart::where('user_id', $userId)->delete();
     DealerCart::where('user_id', $userId)->delete();
+
+        \DB::commit();
+    } catch (\Throwable $e) {
+        \DB::rollBack();
+
+        Log::error('Checkout failed while creating order items.', [
+            'user_id' => $userId,
+            'message' => $e->getMessage(),
+        ]);
+
+        $notification = [
+            'message' => 'Unable to create the order. Please try checkout again.',
+            'alert-type' => 'error'
+        ];
+
+        return redirect()->back()->with($notification);
+    }
 
     // Set session variable for cart total
     session()->put('cartTotal', 0);
@@ -891,7 +934,7 @@ return redirect()->back()->with($notification);
             $user = Auth::user();
 
             // Check if the user has any cart items
-            if ($user->cartItems->isEmpty()) {
+            if (! $user->cartItems()->exists() && ! $user->DealerCartItems()->exists()) {
                 $notification = [
                     'message' => 'The cart is already empty.',
                     'alert-type' => 'error'
@@ -939,5 +982,58 @@ private function storeImage($image)
     } else {
         return $image; // If image is already a path, return it directly
     }
+}
+
+private function calculateCartTotal($cartItems, $dealerCartItems, $user): float
+{
+    $roleId = optional($user)->role_id;
+    $total = 0;
+
+    foreach ($cartItems as $cartItem) {
+        $product = $cartItem->product;
+        $price = $product
+            ? (($roleId == 700 && $product->customer_price) ? $product->customer_price : $product->product_price)
+            : 0;
+
+        $total += (float) $price * max(1, (int) $cartItem->quantity);
+    }
+
+    foreach ($dealerCartItems as $cartItem) {
+        $dealerStock = $cartItem->dealerStock;
+        $price = $dealerStock ? $dealerStock->product_price : 0;
+
+        $total += (float) $price * max(1, (int) $cartItem->quantity);
+    }
+
+    return round($total, 2);
+}
+
+private function storePaymentProof(UploadedFile $file, string $directory): string
+{
+    $extension = strtolower($file->getClientOriginalExtension());
+    $name = hexdec(uniqid()) . '.' . $extension;
+    $relativeDirectory = 'upload/' . trim($directory, '/');
+    $absoluteDirectory = public_path($relativeDirectory);
+
+    if (! is_dir($absoluteDirectory)) {
+        mkdir($absoluteDirectory, 0755, true);
+    }
+
+    $relativePath = $relativeDirectory . '/' . $name;
+
+    if (in_array($extension, ['jpg', 'jpeg', 'png'], true)) {
+        Image::make($file)
+            ->resize(1000, 1000, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            })
+            ->save(public_path($relativePath));
+
+        return $relativePath;
+    }
+
+    $file->move($absoluteDirectory, $name);
+
+    return $relativePath;
 }
 }

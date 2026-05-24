@@ -1,252 +1,185 @@
 @extends('admin.admin_master')
 @section('admin')
-<head>
-  <!-- Add the Bootstrap CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
-  <title>My Stock | HC Gaming Studio</title>
-</head>
-<style>
-    .clearfix:after {
-      content: "";
-      display: table;
-      clear: both;
-    }
-    .quantity {
-        display: inline-block;
-    }
-    .quantity .input-text.qty {
-        width: 60px;
-        height: 39px;
-        padding: 0 5px;
-        text-align: center;
-        background-color: transparent;
-        border: 1px solid black;
-    }
-    .quantity .minus,
-    .quantity .plus {
-        padding: 7px 10px 8px;
-        height: 41px;
-        background-color: #ffffff;
-        border: 1px solid #efefef;
-        cursor: pointer;
-    }
-    .quantity .minus {
-        border-right: 0;
-        font-size: 24px;
-    }
-    .quantity .plus {
-        border-left: 0;
-        font-size: 24px;
-    }
-    .quantity .minus:hover,
-    .quantity .plus:hover {
-        background: #eeeeee;
-    }
-    .card {
-        padding: 5%;
-    }
-    #add-to-cart-btn,
-    #buy-now-btn {
-        font-size: 18px;
-        margin-top: 15px;
-        margin-left: 50px;
-        width: 50%;
-    }
-    #cart-total {
-        font-size: 16px;
-        margin-bottom: 20px;
-    }
-    .out-of-stock {
-        background-color: red;
-        color: white;
-        padding: 5px;
-        position: absolute;
-        top: 0px;
-        left: 0px;
-    }
-    .message {
-        color: #888;
-        font-size: 24px;
-    }
-</style>
+@include('admin.ecommerce._styles')
+<title>Product Catalogue | HC Gaming Studio</title>
+
+@php
+    $visibleProducts = $mergedData->count();
+    $availableProducts = $mergedData->filter(function ($item) {
+        $stock = isset($item->product_stock) ? $item->product_stock : ($item->stock ?? 0);
+        return (int) $stock > 0;
+    })->count();
+@endphp
 
 <div class="page-content">
-    <div class="container-fluid">
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+    <div class="container-fluid commerce-page">
+        @if (isset($errors) && $errors->any())
+            <div class="alert alert-danger commerce-alert">
+                @foreach ($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
             </div>
         @endif
-        <!-- start page title -->
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">Product Catalogue</h4>
-                </div>
+
+        @include('admin.ecommerce._breadcrumbs')
+
+        <section class="commerce-hero">
+            <div>
+                <div class="commerce-hero__label">Product Catalogue</div>
+                <h1>Ecommerce Product Catalogue</h1>
+                <p>Browse available platform and dealer products, check seller details, and add items to cart with live stock limits.</p>
+            </div>
+            <div class="commerce-hero__actions">
+                <a href="{{ route('cart.summary') }}" class="btn btn-info">
+                    <i class="fas fa-shopping-cart"></i>
+                    Cart ({{ session('cartTotal', 0) }})
+                </a>
+            </div>
+        </section>
+
+        <div class="commerce-stats three">
+            <div class="commerce-stat">
+                <span>Catalogue Items</span>
+                <strong>{{ $visibleProducts }}</strong>
+                <small>Platform and dealer listings</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Available Now</span>
+                <strong>{{ $availableProducts }}</strong>
+                <small>Products with stock above zero</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Cart Items</span>
+                <strong>{{ session('cartTotal', 0) }}</strong>
+                <small>Items currently in cart</small>
             </div>
         </div>
-        <div class="breadcrumb">
-            @foreach ($breadcrumbData as $breadcrumb)
-                <a href="{{ $breadcrumb['url'] }}">{{ $breadcrumb['label'] }}</a>
-                @if (!$loop->last)
-                    <span> / </span>
-                @endif
-            @endforeach
-        </div>
 
-        <div id="cart-total" style="text-align: right;">
-            <a href="{{ route('cart.summary') }}" style="display: inline-block;">
-                <i class="fa fa-shopping-cart"></i> View items in cart
-            </a>
-            ({{ session('cartTotal', 0) }})
-        </div>
+        <section class="commerce-panel">
+            <div class="commerce-catalogue-toolbar">
+                <div>
+                    <h2 class="commerce-panel__title">Available Products</h2>
+                    <p class="commerce-panel__subtitle">Quantity controls are capped by live stock for each listing.</p>
+                </div>
+                <a href="{{ route('cart.summary') }}" class="commerce-cart-pill">
+                    <i class="fas fa-shopping-cart"></i>
+                    View Cart
+                </a>
+            </div>
 
-        <div class="container">
-            <div class="row">
-                @php
-                $allOutOfStock = true;
-                @endphp
+            @if ($mergedData->isEmpty())
+                <div class="commerce-empty">No products are available yet. Please check back after administration uploads the catalogue.</div>
+            @else
+                <div class="commerce-catalogue-grid">
+                    @foreach($mergedData as $item)
+                        @php
+                            $stock = isset($item->product_stock) ? $item->product_stock : ($item->stock ?? 0);
+                            $roleId = Auth::user()->role_id;
+                            $priceToShow = $roleId == 700 && $item->customer_price ? $item->customer_price : $item->product_price;
+                            $category = $item->productcategory ?? null;
+                            $seller = optional($item->user)->username ?? 'HC Gaming';
+                            $image = $item->product_image ? asset($item->product_image) : asset('upload/default.jpg');
+                        @endphp
 
-                @if ($mergedData->isEmpty())
-                    <div class="card" style="text-align:center">
-                        <div class="col-md-12 message">
-                            <h5 class="message">Waiting for admin to upload their product, Once uploaded, the product will be released.</h5>
-                        </div>
-                    </div>
-                @else
-                @foreach($mergedData as $item)
-                @php
-                $stock = isset($item->product_stock) ? $item->product_stock : $item->stock;
-                @endphp
-
-                @if ($stock > 0)
-                <div class="col-md-4">
-                    <div class="card">
-                        <a class="card" href="{{ url('product_details', $item->id) }}">
-                            @if ($item->product_image)
-                                <img src="{{ $item->product_image }}" alt="Product_Image" height="250px" width="250px">
-                            @else
-                                <img src="path/to/default/image.jpg" alt="Default_Image" height="250px" width="250px">
-                            @endif
-                            @if ($stock <= 0)
-                                <div class="out-of-stock">Out of Stock</div>
-                            @endif
-                        </a>
-                        <div class="card-body">
-                            <h5 style="font-size:14px">{{ $item->product_name }}</h5>
-                            @php
-                            $role_id = Auth::user()->role_id;
-                            $priceToShow = $role_id == 700 && $item->customer_price ? $item->customer_price : $item->product_price;
-                            @endphp
-                            @if ($role_id == 350 || $role_id == 700)
-                                <small>Price: RM {{ $priceToShow }}</small>
-                            @endif
-
-                            <small style="float:right;font-size:10px">
-                                @if ($item['productcategory'] && !$item['productcategory']->trashed())
-                                    {{ $item['productcategory']['product_category'] }}
-                                @else
-                                    {{-- Category Not Available --}}
+                        <article class="commerce-product-card">
+                            <a class="commerce-product-card__image" href="{{ url('product_details', $item->id) }}">
+                                <img src="{{ $image }}" alt="{{ $item->product_name }}">
+                                @if((int) $stock <= 0)
+                                    <span class="commerce-status status-out" style="position:absolute;top:12px;left:12px;">Out of Stock</span>
                                 @endif
-                            </small>
-                            <br>
-                            @if ($item->user)
-                                <small>Seller: {{ $item->user->username }}</small>
-                            @else
-                                <p>Dealer User: Unknown</p>
-                            @endif
-                        </div>
-                        <form action="{{ route('cart.add') }}" method="POST" id="buynow">
-                            @csrf
-                            <input type="hidden" name="submission_type" class="submission-type" value="buy-now-details">
-                            <input type="hidden" name="product_id" value="{{ isset($item->product_id) ? $item->product_id : '' }}">
-                            <input type="hidden" name="dealer_stock_id" value="{{ isset($item->dealer_stock_id) ? $item->dealer_stock_id : '' }}">
+                            </a>
 
-                            Quantity
-                            <div class="quantity">
-                                <input type="button" value="-" class="minus" data-product-id="{{ $item->id }}">
-                                <input type="number" step="1" min="1" max="{{ $stock }}" name="quantity" value="1" title="Qty" class="input-text qty" id="quantity_{{ $item->id }}" data-stock="{{ $stock }}">
-                                <input type="button" value="+" class="plus" data-product-id="{{ $item->id }}">
+                            <div class="commerce-product-card__body">
+                                <h3>{{ $item->product_name }}</h3>
+                                <div class="commerce-product-meta">
+                                    <span>{{ $category && ! $category->trashed() ? $category->product_category : 'Uncategorised' }}</span>
+                                    <span>{{ $seller }}</span>
+                                    <span>{{ number_format((int) $stock) }} units</span>
+                                </div>
+
+                                @if ($roleId == 350 || $roleId == 700)
+                                    <div>
+                                        <div class="commerce-muted">Price</div>
+                                        <strong>RM {{ number_format((float) $priceToShow, 2) }}</strong>
+                                    </div>
+                                @endif
+
+                                <form action="{{ route('cart.add') }}" method="POST" class="mt-auto catalogue-cart-form">
+                                    @csrf
+                                    <input type="hidden" name="submission_type" class="submission-type" value="buy-now-details">
+                                    <input type="hidden" name="product_id" value="{{ isset($item->product_id) ? $item->product_id : '' }}">
+                                    <input type="hidden" name="dealer_stock_id" value="{{ isset($item->dealer_stock_id) ? $item->dealer_stock_id : '' }}">
+
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <span class="commerce-muted font-weight-bold">Quantity</span>
+                                        <div class="quantity-control">
+                                            <button type="button" class="minus" data-target="quantity_{{ $item->type }}_{{ $item->id }}">-</button>
+                                            <input type="number" step="1" min="1" max="{{ max((int) $stock, 1) }}" name="quantity" value="1" id="quantity_{{ $item->type }}_{{ $item->id }}" data-stock="{{ max((int) $stock, 1) }}">
+                                            <button type="button" class="plus" data-target="quantity_{{ $item->type }}_{{ $item->id }}">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-grid" style="display:grid;gap:8px;">
+                                        @if ((int) $stock <= 0)
+                                            <button type="button" class="btn btn-secondary" disabled>Out of Stock</button>
+                                            <button type="button" class="btn btn-light" disabled>Unavailable</button>
+                                        @else
+                                            <button type="submit" name="submission_type" value="add-to-cart" class="btn btn-warning add-to-cart-btn">
+                                                <i class="fas fa-cart-plus"></i>
+                                                Add to Cart
+                                            </button>
+                                            <input type="hidden" name="redirect" value="summary">
+                                            <button type="submit" name="submission_type" value="buy-now-details" class="btn btn-info buy-now-btn">
+                                                <i class="fas fa-bolt"></i>
+                                                Buy Now
+                                            </button>
+                                        @endif
+                                    </div>
+                                </form>
                             </div>
-
-                            @if ($stock <= 0)
-                                <button type="submit" id="add-to-cart-btn" class="btn btn-warning btn-rounded waves-effect waves-light" disabled>Out of Stock</button>
-                                <input type="hidden" name="redirect" value="summary">
-                                <button type="button" id="buy-now-btn" class="btn btn-secondary btn-rounded waves-effect waves-light mt-2" style="margin-left: 65px; width: 130px" disabled>Out Of Stock</button>
-                            @else
-                                <button type="submit" name="submission_type" value="add-to-cart" id="add-to-cart-btn" class="btn btn-warning btn-rounded waves-effect waves-light add-to-cart-btn" style="margin-left: 70px;">Add to Cart</button>
-                                <input type="hidden" name="redirect" value="summary">
-                                <button type="submit" name="submission_type" value="buy-now-details" id="buy-now-btn" class="btn btn-secondary btn-rounded waves-effect waves-light mt-3 buy-now-btn" style="width: 180px;">Buy Now</button>
-                            @endif
-                        </form>
-
-
-
-                    </div>
+                        </article>
+                    @endforeach
                 </div>
-                @endif
-            @endforeach
-
-
-                    @if ($allOutOfStock && count($mergedData) < 0)
-                        <div class="card" style="text-align:center">
-                            <div class="col-md-12 message">
-                                <h5 class="message">All products are currently out of stock. Please check back later.</h5>
-                            </div>
-                        </div>
-                    @endif
-                @endif
-            </div>
-        </div>
+            @endif
+        </section>
     </div>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    $(document).ready(function() {
-        $('.plus').click(function() {
-            var productId = $(this).data('product-id');
-            var quantity = parseInt($('#quantity_' + productId).val());
-            var maxStock = parseInt($('#quantity_' + productId).data('stock'));
-            if (quantity < maxStock) {
-                $('#quantity_' + productId).val(quantity + 1);
-            }
+    (function () {
+        document.querySelectorAll('.plus').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var input = document.getElementById(button.dataset.target);
+                var maxStock = parseInt(input.dataset.stock, 10);
+                var quantity = parseInt(input.value || 1, 10);
+                if (quantity < maxStock) {
+                    input.value = quantity + 1;
+                }
+            });
         });
 
-        $('.minus').click(function() {
-            var productId = $(this).data('product-id');
-            var quantity = parseInt($('#quantity_' + productId).val());
-            if (quantity > 1) {
-                $('#quantity_' + productId).val(quantity - 1);
-            }
+        document.querySelectorAll('.minus').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var input = document.getElementById(button.dataset.target);
+                var quantity = parseInt(input.value || 1, 10);
+                if (quantity > 1) {
+                    input.value = quantity - 1;
+                }
+            });
         });
 
-        // Handle form submission for Buy Now and Add to Cart buttons
-        $('.buy-now-btn, .add-to-cart-btn').click(function(event) {
-            event.preventDefault(); // Prevent default form submission
-
-            var button = $(this);
-            var form = button.closest('form');
-            var productId = form.find('input[name="product_id"]').val();
-            var dealerStockId = form.find('input[name="dealer_stock_id"]').val();
-            var quantity = form.find('input[name="quantity"]').val();
-            var submissionType = button.val(); // Get the value of the clicked button
-
-            // Set the submission type in a hidden input field
-            form.find('.submission-type').val(submissionType);
-
-            button.prop('disabled', true).text('Processing...');
-
-            setTimeout(function() {
-                form.submit();
-            }, 500);
+        document.querySelectorAll('.buy-now-btn, .add-to-cart-btn').forEach(function (button) {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                var form = button.closest('form');
+                form.querySelector('.submission-type').value = button.value;
+                button.disabled = true;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                setTimeout(function () {
+                    form.submit();
+                }, 300);
+            });
         });
-    });
+    })();
 </script>
-
 @endsection

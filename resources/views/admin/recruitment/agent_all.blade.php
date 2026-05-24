@@ -1,266 +1,210 @@
 @extends('admin.admin_master')
 @section('admin')
-<head>
-        <!-- DataTables CSS -->
- <link rel="stylesheet" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.min.css">
-
- <!-- Add the Bootstrap CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
-
-</head>
-<script src="assets/libs/pdfmake/build/pdfmake.min.js"></script>
+@include('admin.ecommerce._styles')
 <title>Agent Management | HC Gaming Studio</title>
-    <style>
-.empty-cart-btn {
-        background-color: black;
-        color: white;
-        float: right;
-        margin-right:15px;
-    }
 
-    @media screen and (max-width: 768px) {
-     .table-responsive {
-         overflow-x: auto;
-     }
- }
- .table-container {
-        overflow-x: auto; /* Enable horizontal scrolling */
-        max-width: 100%; /* Ensure the container takes full width of the parent */
-    }
+@php
+    $totalCommission = $userData->sum(function ($item) {
+        return (float) ($item->commission_earned ?? 0);
+    });
+    $registeredThisMonth = $userData->filter(function ($item) {
+        return $item->created_at && $item->created_at->isCurrentMonth();
+    })->count();
+@endphp
 
-    /* Ensure table cells don't wrap and add padding for better readability */
-    #datatable th,
-    #datatable td {
-        white-space: nowrap;
-        padding: 8px;
-
-    }
-
-    #datatable th {
-        font-weight: bold;
-    }
-        </style>
 <div class="page-content">
-    <div class="container-fluid">
+    <div class="container-fluid commerce-page">
+        @include('admin.ecommerce._breadcrumbs')
 
-    <!-- start page title -->
-    <div class="row">
-        <div class="col-12">
-            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                <h4 class="mb-sm-0">Agent Management</h4>
-                         @if(feature_enabled('referral_dealer'))
-                <a href="#" class="btn btn-danger btn-rounded waves-effect waves-light empty-cart-btn" data-bs-toggle="modal" data-bs-target="#inviteModal">
-                    Invite New Member
-                </a>
-            @else
-                <button class="btn btn-danger btn-rounded empty-cart-btn" disabled title="Feature Disabled">
-                    Invite New Member (Disabled)
-                </button>
-            @endif
+        <section class="commerce-hero">
+            <div>
+                <div class="commerce-hero__label">Recruitment Centre</div>
+                <h1>Dealer Agent Management</h1>
+                <p>Monitor recruited dealers, account status, commission contribution, upline ownership, and registration activity from one professional workspace.</p>
+            </div>
+            <div class="commerce-hero__actions">
+                @if(feature_enabled('referral_dealer'))
+                    <button type="button" class="btn btn-info" id="openInviteModal">
+                        <i class="fas fa-user-plus"></i>
+                        Invite Dealer
+                    </button>
+                @else
+                    <button type="button" class="btn btn-secondary" disabled title="Feature Disabled">
+                        <i class="fas fa-lock"></i>
+                        Invite Dealer Disabled
+                    </button>
+                @endif
+            </div>
+        </section>
+
+        <input type="hidden" id="dynamicReferralCode" value="{{ Auth::user()->referral_code ?? '' }}">
+
+        <div class="commerce-stats">
+            <div class="commerce-stat">
+                <span>Total Dealers</span>
+                <strong>{{ number_format((int) $AgentCount) }}</strong>
+                <small>Direct recruited dealer accounts</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Active Dealers</span>
+                <strong>{{ number_format((int) $activeAgent) }}</strong>
+                <small>Currently active accounts</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Inactive Dealers</span>
+                <strong>{{ number_format((int) $inactiveCount) }}</strong>
+                <small>Accounts requiring follow-up</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Commission Points</span>
+                <strong>{{ number_format($totalCommission, 2) }}</strong>
+                <small>{{ $registeredThisMonth }} dealer(s) joined this month</small>
             </div>
         </div>
-    </div>
-    <!-- end page title -->
-    <div class="breadcrumb">
-        @foreach ($breadcrumbData as $breadcrumb)
-            <a href="{{ $breadcrumb['url'] }}">{{ $breadcrumb['label'] }}</a>
-            @if (!$loop->last)
-                <span> / </span>
-            @endif
-        @endforeach
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
 
-                    <h4 class="card-title mb-2" > All Agent Data</h4>
-
-                    <div class="row text-center " >
-                            <div class="col-md-4 col-sm-12 border border-dark pt-3 mb-3">
-                            <h5 class="mb-0">{{ $AgentCount }}</h5>
-                            <p class="text-muted text-truncate">Total of Agent</p>
-                        </div>
-                            <div class="col-md-4 col-sm-12 border border-dark pt-3 mb-3">
-                            <h5 class="mb-0">{{ $activeAgent }}</h5>
-                            <p class="text-muted text-truncate">No Active Agent</p>
-                        </div>
-                            <div class="col-md-4 col-sm-12 border border-dark pt-3 mb-3">
-                            <h5 class="mb-0">{{ $inactiveCount }}</h5>
-                            <p class="text-muted text-truncate">No Inactive Agent</p>
-                        </div>
-                    </div>
-
-
-<div class="table-responsive">
-                    <table id="datatable" class="table table-bordered" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-
-                        <input type="hidden" id="dynamicReferralCode" value="{{ Auth::user()->referral_code ?? '' }}">
-                        <thead>
-                        <tr>
-                            <th style="font-weight: bold;">SI</th>
-                            <th>Username</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Commision Earn</th>
-                            <th>Upline</th>
-                            <th>Registered At</th>
-                            <th>Status</th>
-
-                        </tr>
-                        </thead>
-
-
-
-                        <tbody>
-                            @php($i=1)
-                            @foreach($userData as $item)
-                        <tr>
-                            <td>{{ $i++ }}</td>
-                            <td>{{ $item->agent->username }}</td>
-                            <td>{{ $item->agent->name }}</td>
-
-                            <td>{{ $item->agent->email }} </td>
-                            <td>
-                                @if ($item->agent->commissions->isNotEmpty())
-                                {{ $item->agent->commissions->sum('commission_amount') }}
-                            @else
-                                0
-                            @endif
-                            </td>
-                            <td>
-                                @if ($item->agent->upline)
-                                    {{ $item->agent->upline->username }}
-                                @else
-                                    HC Gaming Sdn Bhd
-                                @endif
-                            </td>
-                            <td>{{$item->created_at}}</td>
-                            @if($item->agent->status==1)
-                            <td style="color:green"> Active </td>
-                            @elseif($item->agent->status==0)
-                            <td style="color:red"> Inactive </td>
-                            @endif
-                            {{-- <td>{{ $item->status }}</td> --}}
-
-
-                        </tr>
-    @endforeach
-                        </tbody>
-                    </table>
-
-
-</div>
-
-
-
-
-
-
-
-
+        <section class="commerce-panel">
+            <div class="commerce-panel__header">
+                <div>
+                    <h2 class="commerce-panel__title">Dealer Directory</h2>
+                    <p class="commerce-panel__subtitle">Review direct dealer recruitment performance, contact information, and account status.</p>
                 </div>
             </div>
-        </div> <!-- end col -->
-    </div> <!-- end row -->
 
-    </div> <!-- container-fluid -->
+            <div class="table-responsive">
+                <table id="dealerRecruitmentTable" class="table commerce-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Dealer</th>
+                            <th>Contact</th>
+                            <th>Commission Earned</th>
+                            <th>Upline</th>
+                            <th>Registered</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($userData as $item)
+                            @php
+                                $agent = $item->agent;
+                                $status = (int) optional($agent)->status === 1
+                                    ? ['label' => 'Active', 'class' => 'status-approved']
+                                    : ['label' => 'Inactive', 'class' => 'status-rejected'];
+                                $upline = optional(optional($agent)->upline)->username ?: 'HC Gaming Sdn Bhd';
+                            @endphp
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <th>
+                                    <div class="commerce-product-name">{{ optional($agent)->username ?? 'Unknown dealer' }}</div>
+                                    <div class="commerce-muted">{{ optional($agent)->name ?: 'No name provided' }}</div>
+                                </th>
+                                <td>
+                                    <div>{{ optional($agent)->email ?: 'No email available' }}</div>
+                                    <div class="commerce-muted">User ID: {{ optional($agent)->id ?: '-' }}</div>
+                                </td>
+                                <td data-order="{{ (float) ($item->commission_earned ?? 0) }}">
+                                    <strong>{{ number_format((float) ($item->commission_earned ?? 0), 2) }} pts</strong>
+                                </td>
+                                <td>{{ $upline }}</td>
+                                <td data-order="{{ $item->created_at ? $item->created_at->timestamp : 0 }}">
+                                    {{ optional($item->created_at)->format('Y-m-d H:i') ?? 'N/A' }}
+                                </td>
+                                <td><span class="commerce-status {{ $status['class'] }}">{{ $status['label'] }}</span></td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </div>
+</div>
 
-    <!-- Modal -->
-<!-- The modal for inviting a new member -->
 <div class="modal fade" id="inviteModal" tabindex="-1" aria-labelledby="inviteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="inviteModalLabel">Invite New Member</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="inviteModalLabel">Invite New Dealer</h5>
+                <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label class="commerce-muted" for="registrationLink">Dealer registration link</label>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="registrationLink" readonly>
+                    <div class="input-group-append">
+                        <button class="btn btn-info" type="button" id="copyLinkBtn">
+                            <i class="fas fa-copy"></i>
+                            Copy
+                        </button>
+                    </div>
+                </div>
+                <p class="commerce-muted mb-0">This link uses your dealer referral code and will connect the new dealer under your recruitment network.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal">Close</button>
+            </div>
         </div>
-        <div class="modal-body">
-          <p>Share this link with the new member:</p>
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" id="registrationLink" readonly>
-            <button class="btn btn-outline-secondary" type="button" id="copyLinkBtn">Copy Link</button>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
-      </div>
     </div>
-  </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-      $(document).ready(function() {
-          // Function to get URL parameters by name
-          function getURLParameter(name) {
-              const urlParams = new URLSearchParams(window.location.search);
-              return urlParams.get(name);
-          }
+</div>
 
-          // Check if referral_code parameter exists in the URL
-          const referralCodeParam = getURLParameter('referral_code');
+<script>
+    window.addEventListener('load', function () {
+        if (window.jQuery && jQuery.fn.DataTable) {
+            jQuery('#dealerRecruitmentTable').DataTable({
+                order: [[5, 'desc']],
+                columnDefs: [{ orderable: false, targets: [6] }]
+            });
+        }
 
-          if (referralCodeParam) {
-              // If referral_code parameter is present, pre-fill the referral code field with its value
-              const referralCodeInput = document.getElementById('referral_code');
-              referralCodeInput.value = referralCodeParam;
+        const inviteButton = document.getElementById('openInviteModal');
+        const copyButton = document.getElementById('copyLinkBtn');
+        const linkInput = document.getElementById('registrationLink');
+        const referralInput = document.getElementById('dynamicReferralCode');
+        const registerUrl = @json(route('register'));
 
-              // Disable the referral code field since it's pre-filled
-              referralCodeInput.disabled = true;
-          }
+        function invitationLink() {
+            const separator = registerUrl.indexOf('?') === -1 ? '?' : '&';
+            return registerUrl + separator + 'referral_code=' + encodeURIComponent(referralInput ? referralInput.value : '');
+        }
 
-          // Show the modal when the "Invite New Member" button is clicked
-          $('.empty-cart-btn').on('click', function() {
-              // Open the modal
-              $('#inviteModal').modal('show');
+        function showInviteModal() {
+            linkInput.value = invitationLink();
 
-              // Get the dynamic referral code from the hidden input field
-              const dynamicReferralCode = $('#dynamicReferralCode').val();
+            if (window.bootstrap && bootstrap.Modal) {
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('inviteModal')).show();
+                return;
+            }
 
-              // Display the dynamic referral code in the modal content
-              $('#referralCodeModal').text(dynamicReferralCode);
+            if (window.jQuery && typeof jQuery.fn.modal === 'function') {
+                jQuery('#inviteModal').modal('show');
+            }
+        }
 
-              const registrationLink = 'http://127.0.0.1:8000/register?referral_code=' + encodeURIComponent(dynamicReferralCode);
+        if (inviteButton) {
+            inviteButton.addEventListener('click', showInviteModal);
+        }
 
-              // Set the value of the input field to the registration link
-              $('#registrationLink').val(registrationLink);
+        if (copyButton) {
+            copyButton.addEventListener('click', function () {
+                linkInput.select();
 
-              // Hide the referral code field and label after copying the link
-              $('#referralCodeField').hide();
-              $('#referralCodeLabel').hide();
-          });
+                const copied = function () {
+                    if (window.toastr) {
+                        toastr.success('Dealer invitation link copied.');
+                    } else {
+                        alert('Link copied to clipboard!');
+                    }
+                };
 
-          // Copy the link to the clipboard when the "Copy Link" button is clicked
-          $('#copyLinkBtn').on('click', function() {
-              // Select the text inside the input field
-              $('#registrationLink').select();
-
-              try {
-                  // Copy the text to the clipboard
-                  document.execCommand('copy');
-
-                  // Optionally, show a success message to the user
-                  alert('Link copied to clipboard!');
-
-                  // Hide the referral code field and label after copying the link
-                  $('#referralCodeField').hide();
-                  $('#referralCodeLabel').hide();
-              } catch (err) {
-                  // If copying to clipboard fails, you can handle the error here
-                  alert('Failed to copy link to clipboard. Please copy it manually.');
-
-                  // Show the referral code field and label again in case of an error
-                  $('#referralCodeField').show();
-                  $('#referralCodeLabel').show();
-              }
-          });
-
-          // Show the referral code field and label again if the user cancels the copy action
-          $('#registrationLink').on('input', function() {
-              $('#referralCodeField').show();
-              $('#referralCodeLabel').show();
-          });
-      });
-  </script>
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(linkInput.value).then(copied);
+                } else {
+                    document.execCommand('copy');
+                    copied();
+                }
+            });
+        }
+    });
+</script>
 @endsection

@@ -15,6 +15,13 @@ class TradingJournalBackup extends Model
     protected $fillable = [
                'type',          // ✅ 'trade' or 'deposit'
         'user_id',       // ✅ track owner
+        'original_journal_id',
+        'prop_firm_phase',
+        'archive_batch_uuid',
+        'archive_reason',
+        'archived_at',
+        'time_input_timezone',
+        'time_input_offset_minutes',
         'open_date',
         'close_date',
         'pair',
@@ -32,6 +39,7 @@ class TradingJournalBackup extends Model
     protected $casts = [
         'open_date' => 'datetime',
         'close_date' => 'datetime',
+        'archived_at' => 'datetime',
     ];
 
     public function user()

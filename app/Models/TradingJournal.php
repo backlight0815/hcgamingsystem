@@ -14,6 +14,8 @@ class TradingJournal extends Model
     protected $fillable = [
         'type',
         'user_id',
+        'time_input_timezone',
+        'time_input_offset_minutes',
         'open_date',
         'close_date',
         'pair',

@@ -1,423 +1,162 @@
 @extends('admin.admin_master')
 @section('admin')
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@include('admin.ecommerce._styles')
+<title>Dealer Product Details | HC Gaming Studio</title>
 
-</head>
-<style>
+@php
+    $stock = (int) $product->product_stock;
+    $roleId = Auth::user()->role_id;
+    $priceToShow = $roleId == 700 && $product->customer_price ? $product->customer_price : $product->product_price;
+    $dealerCategory = $product->dealerproductcategory;
+    $categoryName = $dealerCategory && ! $dealerCategory->trashed() ? $dealerCategory->name : 'Uncategorised';
+@endphp
 
-/* Additional styles for mobile responsiveness */
-@media (max-width: 767px) {
-    .column {
-        width: 100%;
-    }
-
-    .out-of-stock {
-        left: 0;
-        right: 0;
-        text-align: center;
-        top: 10px;
-    }
-
-    #add-to-cart-btn,
-    #buy-now-btn {
-        margin-left: 0;
-        width: 100%;
-    }
-}
-.quantity {
-    display: inline-block;
-    /* margin-left:40%; */
-    /* border:solid; */
-
-}
-
-.quantity .input-text.qty {
-    width: 60px;
-    height: 39px;
-    padding: 0 5px;
-    margin-bottom:10px;
-    text-align: center;
-    background-color: transparent;
-    border: 1px solid black;
-    /* margin-left:40%; */
-
-
-}
-
-.quantity .minus,
-.quantity .plus {
-    padding: 7px 10px 8px;
-    height: 41px;
-    /* background-color: #ffffff; */
-    border: 1px solid #efefef;
-    cursor: pointer;
-    /* margin-left:40%; */
-
-}
-
-.quantity .minus {
-    border-right: 0;
-    font-size:24px;
-    /* margin-left:40%; */
-
-}
-
-.quantity .plus {
-    border-left: 0;
-    font-size:24px;
-    /* margin-left:40%; */
-
-
-}
-
-.quantity .minus:hover,
-.quantity .plus:hover {
-    background: #eeeeee;
-}
-/* Style the tab */
-.tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-  margin-top:10px;
-}
-
-/* Style the buttons inside the tab */
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-  font-size: 17px;
-}
-
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid black;
-  border-top: none;
-}
-
-
-
-* {
-  box-sizing: border-box;
-}
-
-/* Create two equal columns that floats next to each other */
-.column{
-  float: left;
-  width: 50%;
-  padding: 10px;
-  box-sizing: border-box;
-  font-size:16px;
-  color:black;
-}
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-#add-to-cart-btn{
-text-align:center;
-margin-top:20px;
-margin-left:40%;
-font-size:24px;
-width:100%;
-
-}
-#buy-now-btn{
-text-align:center;
-margin-top:20px;
-margin-left:40%;
-font-size:24px;
-width:100%;
-
-}
-
-
-.out-of-stock {
-        background-color: red;
-        color: white;
-        padding: 15px;
-        position: absolute;
-        top: 0px;
-        left: 10px;
-    }
-
-
-    @media (max-width: 768px) {
-        #add-to-cart-btn {
-
-        }
-
-        .text-left.with-margin {
-    margin-right: 100px;
-}
-
-img {
-        /* Adjust the height for mobile view */
-        height: 250px;
-        weight:250px;/* or any specific height you prefer */
-    }
-
-    /* Additional styles for mobile view */
-    .out-of-stock {
-        font-size: 12px;
-        width:60%;
-        padding: 10px;
-        position: absolute;
-        top: 10px;
-        left: 10px;
-
-    }
-    }
-
-
-
-    </style>
-         {{-- <div class="breadcrumb">
-            @foreach ($breadcrumbData as $breadcrumb)
-                <a href="{{ $breadcrumb['url'] }}">{{ $breadcrumb['label'] }}</a>
-                @if (!$loop->last)
-                    <span> / </span>
-                @endif
-            @endforeach
-        </div> --}}
 <div class="page-content">
-    <div class="container-fluid">
-        @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
+    <div class="container-fluid commerce-page">
+        @if (isset($errors) && $errors->any())
+            <div class="alert alert-danger commerce-alert">
                 @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                    <div>{{ $error }}</div>
                 @endforeach
-            </ul>
-        </div>
-      @endif
-        <div class="row">
-            <div class="column" >
-                <img src="{{ asset($product->product_image) }}" alt="Product Image" style="width: 100%">
-                @if ($product->product_stock <= 0)
-
-                <div class="out-of-stock">Out of Stock
-
-
-                </div>
-                @endif
             </div>
+        @endif
 
-              <div class="column">
-                <p class="inline"><strong>Product Name:</strong> {{ $product->product_name }}</p>
-                <p class="inline"><strong>Product Category:</strong>
+        <section class="commerce-hero">
+            <div>
+                <div class="commerce-hero__label">Dealer Catalogue</div>
+                <h1>{{ $product->product_name }}</h1>
+                <p>Review dealer product details, stock, price, specification, and description before checkout.</p>
+            </div>
+            <div class="commerce-hero__actions">
+                <a href="{{ route('my.stock') }}" class="btn btn-outline-light">
+                    <i class="fas fa-arrow-left"></i>
+                    Catalogue
+                </a>
+                <a href="{{ route('cart.summary') }}" class="btn btn-info">
+                    <i class="fas fa-shopping-cart"></i>
+                    Cart
+                </a>
+            </div>
+        </section>
 
-
-                    @if ($product['dealerproductcategory'] && !$product['dealerproductcategory']->trashed())
-                    {{ $product['dealerproductcategory']['product_category'] }}
-                @else
-                    {{-- Category Not Available --}}
-                @endif
-                </p>
-                <p class="inline"><strong>Stock Available:</strong> {{ $product->product_stock }} Units</p>
-                @php
-                $role_id = Auth::user()->role_id; // Assuming you have access to the user's role_id
-                $priceToShow = $role_id == 700 && $product->customer_price ? $product->customer_price : $product->product_price;
-
-            @endphp
-
-            @if ($role_id == 350 || $role_id == 700)
-            <p><strong>Price:</strong> RM {{ $priceToShow}}</p></b>
-            @endif
-                <div class="column">
-                    <form action="{{ route('cart.add') }}" method="POST" id="buynow">
-                        @csrf
-                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        <input type="hidden" name="submission_type" id="submission-type" value=""> <!-- Keep this hidden input -->
-
-                        Quantity
-                        <div class="quantity">
-                            <input type="button" value="-" class="minus" data-product-id="{{ $product->id }}">
-                            <input type="number" step="1" min="1" max="" name="quantity" value="1" title="Qty" class="input-text qty" id="quantity_{{ $product->id }}">
-                            <input type="button" value="+" class="plus" data-product-id="{{ $product->id }}">
-                        </div>
-                        <div class="text-left with-margin">
-                            @if ($product->product_stock <= 0)
-                                <!-- Out of Stock Buttons -->
-                                <button type="submit" id="carts" class="btn btn-warning btn-rounded waves-effect waves-light" style="width: 150px;" disabled>Out Of Stock</button>
-                                <button type="submit" name="buy-now-details" class="btn btn-secondary btn-rounded waves-effect waves-light mt-3" style="width:180px" disabled>Out Of Stock</button>
-                                <input type="hidden" name="redirect" value="summary">
-                            @else
-                                <!-- Add to Cart and Buy Now Buttons -->
-                                <button type="submit" id="add-to-cart-btn" class="btn btn-warning btn-rounded waves-effect waves-light" style="width: 160px;">Add to Cart</button>
-                                <button type="submit" name="buy-now-details" id="buy-now-btn" class="btn btn-secondary btn-rounded waves-effect waves-light mt-3" style="width:160px">Buy Now</button>
-                                <input type="hidden" name="redirect" value="summary">
-                            @endif
-                        </div>
-                    </form>
+        <section class="commerce-panel">
+            <div class="commerce-form-grid">
+                <div style="position:relative;">
+                    <img src="{{ asset($product->product_image ?: 'upload/default.jpg') }}" alt="{{ $product->product_name }}" class="commerce-preview__image" style="border-radius:8px;border:1px solid #dbe3ef;">
+                    @if ($stock <= 0)
+                        <span class="commerce-status status-out" style="position:absolute;top:14px;left:14px;">Out of Stock</span>
+                    @endif
                 </div>
 
-  </div>
-</div>
+                <aside class="commerce-preview">
+                    <div class="commerce-preview__body commerce-form-section">
+                        <div>
+                            <span class="commerce-muted">Product</span>
+                            <strong>{{ $product->product_name }}</strong>
+                        </div>
 
-</div>
+                        <div class="commerce-product-meta">
+                            <span>{{ $categoryName }}</span>
+                            <span>{{ optional($product->user)->username ?? 'Dealer' }}</span>
+                            <span>{{ number_format($stock) }} units</span>
+                        </div>
 
-        <div class="row">
-            <div class="col-12"> <!-- Use col-12 to make the column span the full width on all screen sizes -->
-                <div class="tab">
-                    <button class="tablinks" onclick="openCity(event, 'Specification')">Specification</button>
-                    <button class="tablinks" onclick="openCity(event, 'Description')">Product Description</button>
-                </div>
+                        @if ($roleId == 350 || $roleId == 700)
+                            <div>
+                                <span class="commerce-muted">Price</span>
+                                <strong>RM {{ number_format((float) $priceToShow, 2) }}</strong>
+                            </div>
+                        @endif
+
+                        <form action="{{ route('cart.add') }}" method="POST" id="dealerProductDetailsCartForm">
+                            @csrf
+                            <input type="hidden" name="product_id" value="">
+                            <input type="hidden" name="dealer_stock_id" value="{{ $product->id }}">
+                            <input type="hidden" name="submission_type" class="submission-type" value="add-to-cart">
+                            <input type="hidden" name="redirect" value="summary">
+
+                            <label for="quantity_{{ $product->id }}">Quantity</label>
+                            <div class="quantity-control mb-3">
+                                <button type="button" class="minus" data-target="quantity_{{ $product->id }}">-</button>
+                                <input type="number" step="1" min="1" max="{{ max($stock, 1) }}" name="quantity" value="1" id="quantity_{{ $product->id }}" data-stock="{{ max($stock, 1) }}">
+                                <button type="button" class="plus" data-target="quantity_{{ $product->id }}">+</button>
+                            </div>
+
+                            <div style="display:grid;gap:8px;">
+                                @if ($stock <= 0)
+                                    <button type="button" class="btn btn-secondary" disabled>Out of Stock</button>
+                                @else
+                                    <button type="submit" value="add-to-cart" class="btn btn-warning product-action-btn">
+                                        <i class="fas fa-cart-plus"></i>
+                                        Add to Cart
+                                    </button>
+                                    <button type="submit" value="buy-now-details" class="btn btn-info product-action-btn">
+                                        <i class="fas fa-bolt"></i>
+                                        Buy Now
+                                    </button>
+                                @endif
+                            </div>
+                        </form>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <div class="commerce-stats three">
+            <div class="commerce-stat">
+                <span>Stock Availability</span>
+                <strong>{{ number_format($stock) }}</strong>
+                <small>Units currently available</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Weight</span>
+                <strong>{{ $product->weight }} KG</strong>
+                <small>Shipping weight</small>
+            </div>
+            <div class="commerce-stat">
+                <span>SKU</span>
+                <strong>{{ $product->sku ?: 'N/A' }}</strong>
+                <small>Dealer stock keeping unit</small>
             </div>
         </div>
 
-  <div id="Specification" class="tabcontent">
-    <p class="inline"><strong>Stock Availability:</strong> {{ $product->product_stock }} Units</p>
-    <p>Weight : {{ $product->weight }} KG</p>
-    <p>SKU:{{ $product->sku }}</p>
-
-  </div>
-
-
-  <div id="Description" class="tabcontent">
-    <p>{!! $product->long_description !!}</p>
-  </div>
-
+        <section class="commerce-panel">
+            <div class="commerce-panel__header">
+                <div>
+                    <h2 class="commerce-panel__title">Product Description</h2>
+                    <p class="commerce-panel__subtitle">Detailed information provided by the dealer.</p>
+                </div>
+            </div>
+            <div class="commerce-muted" style="font-size:15px;line-height:1.75;">
+                {!! $product->long_description ?: 'No description available.' !!}
+            </div>
+        </section>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script>
-function openCity(evt, cityName) {
-  var i, tabcontent, tablinks;
-  tabcontent = document.getElementsByClassName("tabcontent");
-  for (i = 0; i < tabcontent.length; i++) {
-    tabcontent[i].style.display = "none";
-  }
-  tablinks = document.getElementsByClassName("tablinks");
-  for (i = 0; i < tablinks.length; i++) {
-    tablinks[i].className = tablinks[i].className.replace(" active", "");
-  }
-  document.getElementById(cityName).style.display = "block";
-  evt.currentTarget.className += " active";
-}
-
-
-//Quantity Javascript
-$(document).ready(function() {
-        $('.plus').click(function() {
-            var productId = $(this).data('product-id');
-            var inputField = $('#quantity_' + productId);
-            var quantity = parseInt(inputField.val());
-            var maxStock = parseInt(inputField.attr('max'));
-
-            if (isNaN(quantity)) {
-                quantity = 1;
-            }
-
-            if (!maxStock || quantity < maxStock) {
-                inputField.val(quantity + 1);
-            }
+<script>
+    (function () {
+        document.querySelectorAll('.plus, .minus').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var input = document.getElementById(button.dataset.target);
+                var current = parseInt(input.value || 1, 10);
+                var max = parseInt(input.dataset.stock || 1, 10);
+                input.value = button.classList.contains('plus') ? Math.min(current + 1, max) : Math.max(current - 1, 1);
+            });
         });
 
-        $('.minus').click(function() {
-            var productId = $(this).data('product-id');
-            var inputField = $('#quantity_' + productId);
-            var quantity = parseInt(inputField.val());
-
-            if (isNaN(quantity)) {
-                quantity = 1;
-            }
-
-            if (quantity > 1) {
-                inputField.val(quantity - 1);
-            }
+        document.querySelectorAll('.product-action-btn').forEach(function (button) {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                var form = document.getElementById('dealerProductDetailsCartForm');
+                form.querySelector('.submission-type').value = button.value;
+                button.disabled = true;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                setTimeout(function () {
+                    form.submit();
+                }, 300);
+            });
         });
-
-        $('.input-text.qty').on('change', function() {
-            var inputField = $(this);
-            var currentValue = parseInt(inputField.val());
-            var maxStock = parseInt(inputField.attr('max'));
-
-            if (isNaN(currentValue)) {
-                currentValue = 1;
-            }
-
-            if (currentValue > maxStock && maxStock) {
-                alert('Quantity cannot exceed product stock!');
-                inputField.val(maxStock);
-            }
-        });
-    });
-
-
-    $(document).ready(function() {
-  function updateCartTotal() {
-    $.get('/cart-total', function(data) {
-      $('#cart-total').text(data.total);
-    });
-  }
-
-  // Call this function whenever an item is added, updated, or removed from the cart
-  updateCartTotal();
-});
-$(document).ready(function() {
-  var formSubmitted = false;
-
-  // Disable Buy Now button on click
-  $('#buy-now-btn').click(function(event) {
-    if (formSubmitted) {
-      event.preventDefault();
-      return false;
-    }
-
-    var buyNowButton = $(this);
-    buyNowButton.prop('disabled', true).text('Buy Now...');
-    $('#submission-type').val('buy-now-details'); // Set the submission type
-
-    setTimeout(function() {
-      formSubmitted = true;
-      $('#buynow').submit();
-    }, 500);
-  });
-
-  // Disable Add to Cart button on click
-  $('#add-to-cart-btn').click(function(event) {
-    if (formSubmitted) {
-      event.preventDefault();
-      return false;
-    }
-
-    var addToCartButton = $(this);
-    addToCartButton.prop('disabled', true).text('Adding to...');
-    $('#submission-type').val('add-to-cart'); // Set the submission type
-
-    setTimeout(function() {
-      formSubmitted = true;
-      $('#buynow').submit();
-    }, 500);
-  });
-});
+    })();
 </script>
-
-
-
-
-
 @endsection

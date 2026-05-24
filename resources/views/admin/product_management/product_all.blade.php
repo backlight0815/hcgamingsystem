@@ -1,140 +1,122 @@
 @extends('admin.admin_master')
 @section('admin')
-<style>
-    .btn {
-        float: right;
-        padding: 10px;
-    }
-
-    #datatable {
-        table-layout: fixed;
-    }
-
-
-.long {
-    overflow-x:hidden;
-    width:150px;
-}
-
-.long:hover {
-   position:absolute;
-   z-index:10;
-   top:0;
-   left:0;
-   width:200px;
-   background-color:#c0c0c0;
-   border:1px solid #000000;
-   overflow-x:visible
-}
-
-
-</style>
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
-</head>
+@include('admin.ecommerce._styles')
 <title>Product Management | HC Gaming Studio</title>
 
+@php
+    $totalStock = $product->sum('product_stock');
+    $lowStockCount = $product->filter(function ($item) {
+        return (int) $item->product_stock <= 5;
+    })->count();
+@endphp
+
 <div class="page-content">
-    <div class="container-fluid">
-        <!-- start page title -->
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">Product Management</h4>
-                    <button class="btn btn-success waves-effect waves-light" type="submit" onclick="redirectToPage()">Add New Product</button>
+    <div class="container-fluid commerce-page">
+        @include('admin.ecommerce._breadcrumbs')
 
-                </div>
+        <section class="commerce-hero">
+            <div>
+                <div class="commerce-hero__label">Product Centre</div>
+                <h1>Product Management</h1>
+                <p>Create and maintain the platform product catalogue, pricing, stock, category, SKU, and product imagery.</p>
+            </div>
+            <div class="commerce-hero__actions">
+                <a href="{{ route('add.product') }}" class="btn btn-info">
+                    <i class="fas fa-plus-circle"></i>
+                    Add Product
+                </a>
+                <a href="{{ route('all.product.category') }}" class="btn btn-outline-light">
+                    <i class="fas fa-tags"></i>
+                    Categories
+                </a>
+            </div>
+        </section>
+
+        <div class="commerce-stats three">
+            <div class="commerce-stat">
+                <span>Total Products</span>
+                <strong>{{ $product_index }}</strong>
+                <small>Active catalogue records</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Total Stock</span>
+                <strong>{{ number_format((int) $totalStock) }}</strong>
+                <small>Units available across products</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Low Stock</span>
+                <strong>{{ $lowStockCount }}</strong>
+                <small>Products at 5 units or below</small>
             </div>
         </div>
-        <!-- end page title -->
-        <div class="breadcrumb">
-            @foreach ($breadcrumbData as $breadcrumb)
-                <a href="{{ $breadcrumb['url'] }}">{{ $breadcrumb['label'] }}</a>
-                @if (!$loop->last)
-                    <span> / </span>
-                @endif
-            @endforeach
-        </div>
 
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <script src="assets/libs/pdfmake/build/pdfmake.min.js"></script>
+        <section class="commerce-panel">
+            <div class="commerce-panel__header">
+                <div>
+                    <h2 class="commerce-panel__title">Catalogue Records</h2>
+                    <p class="commerce-panel__subtitle">Use edit for product content or delete only when a product should be removed from the catalogue.</p>
+                </div>
+            </div>
 
-                        <h4 class="card-title mb-2">Manage Product</h4>
-
-                        <div class="row text-center">
-                            <div class="col-12 col-sm-6 col-md-4 border border-dark pt-3 mb-3">
-
-                            {{-- <div class="col-4 border border-dark pt-3"> --}}
-                                <h5 class="mb-0">{{ $product_index }}</h5>
-                                <p class="text-muted text-truncate">Number of Product</p>
-                            </div>
-                        </div>
-
-                        {{-- <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; "> --}}
-
-                            <table id="datatable" class="table table-bordered dt-responsive nowrap" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                <thead>
-                                <tr>
-                                    <th width="7%">SI</th>
-                                    <th width="12%">Image</th>
-                                    <th width="20%">Name</th>
-                                    <th width="15%">Category</th>
-                                    <th width="10%">Stock</th>
-                                    <th width="15%">Price (RM)</th>
-                                    <!--<th width="15%">Customer Price (RM)</th>-->
-
-                                    <th width="15%">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php($i=1)
-                                @foreach($product as $key=>$item)
-                                <tr>
-                                    <td width="7%">{{ $key+1 }}</td>
-                                    <td width="12%">
-
-                                        <a href="{{ asset($item->product_image) }}" data-lightbox="product-images">
-                                            <img src="{{ asset($item->product_image) }}" style="width: 60px; height: 60px;">
-                                        </a>
-                                            <td width="25%">
-                                    <div class="long">{{ $item->product_name }}</div>
-                                    </td>34
-                                    <td width="15%">
-                                        <!--<div class="longcategory">-->
-                                        @if ($item['productcategory'] && !$item['productcategory']->trashed())
-                                        {{ $item['productcategory']['product_category'] }}
-                                        <!--</div>-->
-                                    @else
-                                        {{-- Category Not Available --}}
-                                    @endif
-
+            <div class="table-responsive">
+                <table id="productTable" class="table commerce-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Image</th>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Stock</th>
+                            <th>Dealer Price</th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($product as $item)
+                            @php
+                                $category = $item->productcategory;
+                            @endphp
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>
+                                    <a href="{{ asset($item->product_image ?: 'upload/default.jpg') }}" target="_blank" rel="noopener">
+                                        <img src="{{ asset($item->product_image ?: 'upload/default.jpg') }}" class="commerce-thumb" alt="{{ $item->product_name }}">
+                                    </a>
                                 </td>
-                                    <td width="10%">{{ $item->product_stock }}</td>
-                                    <td width="15%">RM {{ $item->product_price }}</td>
-                                    <!--<td width="15%">RM {{ $item->customer_price }}</td>-->
-
-                                    <td width="10%">
-                                        <a href="{{ route('edit.product', $item->id) }}" class="btn btn-info sm" title="Edit Data"><i class="fas fa-edit"></i></a>
-                                        <a href="{{ route('delete.product', $item->id) }}" class="btn btn-danger sm" title="Delete Data" id="delete"><i class="fas fa-trash-alt"></i></a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                                <th>
+                                    <div class="commerce-product-name">{{ $item->product_name }}</div>
+                                    <div class="commerce-muted">SKU: {{ $item->sku ?: 'N/A' }}</div>
+                                </th>
+                                <td>{{ $category && ! $category->trashed() ? $category->product_category : 'Uncategorised' }}</td>
+                                <td><strong>{{ number_format((int) $item->product_stock) }}</strong></td>
+                                <td><strong>RM {{ number_format((float) $item->product_price, 2) }}</strong></td>
+                                <td>
+                                    <div class="commerce-actions">
+                                        <a href="{{ route('edit.product', $item->id) }}" class="btn btn-info commerce-icon-btn" title="Edit product">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{{ route('delete.product', $item->id) }}" class="btn btn-danger commerce-icon-btn" title="Delete product" id="delete">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-        </div> <!-- end col -->
-    </div> <!-- end row -->
-</div> <!-- container-fluid -->
+        </section>
+    </div>
+</div>
+
 <script>
-    function redirectToPage() {
-        window.location.href = "{{ route('add.product') }}";
-    }
+    window.addEventListener('load', function () {
+        if (window.jQuery && $.fn.DataTable) {
+            $('#productTable').DataTable({
+                order: [[0, 'asc']],
+                columnDefs: [{ orderable: false, targets: [1, 6] }]
+            });
+        }
+    });
 </script>
 @endsection
-

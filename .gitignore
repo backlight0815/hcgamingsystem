@@ -21,4 +21,5 @@ yarn-error.log
 
 database_backup*.sql
 hcgaming.sql
+/HC Trader Club System/backup_*/
 *.zip

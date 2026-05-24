@@ -1,64 +1,78 @@
 @extends('admin.admin_master')
 @section('admin')
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-<title>Product Category Management - Add | HC Gaming Studio</title>
-
+@include('admin.ecommerce._styles')
+<title>Add Product Category | HC Gaming Studio</title>
 
 <div class="page-content">
-    <div class="container-fluid">
+    <div class="container-fluid commerce-page">
+        <section class="commerce-hero">
+            <div>
+                <div class="commerce-hero__label">Product Centre</div>
+                <h1>Add Product Category</h1>
+                <p>Create a platform category for product management, stock setup, and catalogue display.</p>
+            </div>
+            <div class="commerce-hero__actions">
+                <a href="{{ route('all.product.category') }}" class="btn btn-outline-light">
+                    <i class="fas fa-tags"></i>
+                    Categories
+                </a>
+            </div>
+        </section>
 
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
+        <section class="commerce-panel">
+            <div class="commerce-panel__header">
+                <div>
+                    <h2 class="commerce-panel__title">Category Details</h2>
+                    <p class="commerce-panel__subtitle">Use a concise name that administrators and dealers can recognise quickly.</p>
+                </div>
+            </div>
 
-                        <h4 class="card-title">Add Product Category Page</h4><br><br>
+            <form method="POST" id="submitproductcategory" action="{{ route('store.product.category') }}" class="commerce-form-grid">
+                @csrf
 
+                <div class="commerce-form-section">
+                    <div>
+                        <label for="product_category">Product Category Name</label>
+                        <input name="product_category" class="form-control" type="text" id="product_category" value="{{ old('product_category') }}" required>
+                        @error('product_category')<span class="text-danger">{{ $message }}</span>@enderror
+                    </div>
 
-
-<form method="POST" id="submitproductcategory" action="{{ route('store.product.category') }}" >
-    @csrf
-
-                        <div class="row mb-3">
-                            <label for="example-text-input" class="col-sm-3 col-form-label">Product Category Name</label>
-                            <div class="col-sm-9">
-                                <input name="product_category" class="form-control" type="text"  id="example-text-input">
-                        @error('product_category')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                            </div>
-
-                        </div>
-
-<input type="submit" class="btn btn-info waves-effect waves-light" id="submitButton"value="Insert  Product Category  Data" onclick="disableButton()">
-</form>
-
+                    <div>
+                        <button type="submit" class="btn btn-info" id="submitButton">
+                            <i class="fas fa-save"></i>
+                            Save Category
+                        </button>
                     </div>
                 </div>
-            </div> <!-- end col -->
-        </div>
+
+                <aside class="commerce-preview">
+                    <div class="commerce-preview__body">
+                        <strong>Category Standard</strong>
+                        <p class="commerce-muted mb-0">Example: Trading Books, Merchandise, Account Tools, Training Materials.</p>
+                    </div>
+                </aside>
+            </form>
+        </section>
     </div>
 </div>
+
 <script>
+    (function () {
+        var form = document.getElementById('submitproductcategory');
+        var button = document.getElementById('submitButton');
+        var submitted = false;
 
-var formSubmitted = false;
-    function disableButton() {
-        if (formSubmitted) {
-            return false;
+        if (form) {
+            form.addEventListener('submit', function (event) {
+                if (submitted) {
+                    event.preventDefault();
+                    return;
+                }
+                submitted = true;
+                button.disabled = true;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            });
         }
-        var submitButton = document.getElementById('submitButton');
-        submitButton.disabled = true;
-        submitButton.value = 'Submitting...'; // Show a loading text on the button
-
-        // Submit the form after a short delay (e.g., 0.5 seconds) to give the disabled visual effect
-        setTimeout(function () {
-            document.getElementById('submitproductcategory').submit();
-        }, 500);
-
-        formSubmitted = true;
-        return true;
-    }
-    </script>
-
+    })();
+</script>
 @endsection

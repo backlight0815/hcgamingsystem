@@ -274,6 +274,9 @@ Route::controller(NewsController::class)->group(function () {
     // Store new news
     Route::post('/news/store', 'store')->name('trading.news.store');
 
+    // View news details
+    Route::get('/news/{id}', 'show')->name('trading.news.show');
+
     // Show edit form
     Route::get('/news/{id}/edit', 'edit')->name('trading.news.edit');
 
@@ -801,6 +804,9 @@ Route::controller(EventController::class)->group(function(): void{
 
 // ✅ Trading Statistics Routes
 Route::get('/statistics', [TradingStatisticsController::class, 'index'])->name('statistics.index');
+Route::get('/trading-journal/report/pdf', [TradingStatisticsController::class, 'exportPdf'])
+    ->middleware(['auth'])
+    ->name('trading-journal.report.pdf');
 Route::middleware(['auth'])->group(function (): void {
     Route::get('/trading/backtest', [TradingBacktestController::class, 'index'])->name('trading.backtest.index');
     Route::post('/trading/backtest/upload', [TradingBacktestController::class, 'upload'])->name('trading.backtest.upload');
@@ -974,9 +980,24 @@ Route::middleware(['auth'])->controller(FundedTraderController::class)->group(fu
     Route::post('/admin/funded-traders/{id}/approve', 'approve')
         ->name('admin.funded_traders.approve');
 
+    Route::post('/admin/funded-traders/{id}/phase-one/require-profitable-days', 'requirePhaseOneProfitableDays')
+        ->name('admin.funded_traders.phase_one.require_profitable_days');
+
     // Reject funded trader (POST)
     Route::post('/admin/funded-traders/{id}/reject', 'reject')
         ->name('admin.funded_traders.reject');
+
+    Route::post('/admin/funded-traders/{id}/daily-loss/keep-active', 'keepActiveAfterDailyLoss')
+        ->name('admin.funded_traders.daily_loss.keep_active');
+
+    Route::post('/admin/funded-traders/{id}/daily-loss/ban', 'banAfterDailyLoss')
+        ->name('admin.funded_traders.daily_loss.ban');
+
+    Route::post('/admin/funded-traders/{id}/total-loss/keep-active', 'keepActiveAfterTotalLoss')
+        ->name('admin.funded_traders.total_loss.keep_active');
+
+    Route::post('/admin/funded-traders/{id}/total-loss/ban', 'banAfterTotalLoss')
+        ->name('admin.funded_traders.total_loss.ban');
 
     // Suspend funded trader (POST)
     Route::post('/admin/funded-traders/{id}/suspend', 'suspend')
@@ -1088,6 +1109,9 @@ Route::controller(DashboardController::class)->middleware(['auth'])->group(funct
 });
 
 Route::get('/all/dashboard/trading-statistics', [TradingStatisticsController::class, 'index'])->name('all.trading.statistics');
+Route::get('/all/dashboard/trading-statistics/report/pdf', [TradingStatisticsController::class, 'exportPdf'])
+    ->middleware(['auth'])
+    ->name('all.trading.statistics.report.pdf');
 
 
 

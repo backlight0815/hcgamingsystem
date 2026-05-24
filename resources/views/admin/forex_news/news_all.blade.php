@@ -1,161 +1,159 @@
 @extends('admin.admin_master')
 @section('admin')
 
-<head>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+@php
+    $impactLabels = [1 => 'Low Impact', 2 => 'Medium Impact', 3 => 'High Impact'];
+    $impactClasses = [1 => 'impact-low', 2 => 'impact-medium', 3 => 'impact-high'];
+@endphp
 
-    <style>
-        /* Professional table design */
-        .table thead th {
-            background-color: #343a40;
-            color: #fff;
-            font-weight: 600;
-            text-align: center;
-        }
+<title>Trading News | HC Gaming Studio</title>
 
-        .table tbody td {
-            vertical-align: middle;
-            text-align: center;
-        }
+@include('admin.forex_news._styles')
 
-        .badge-impact {
-            padding: 0.5em 0.75em;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .breadcrumb a {
-            text-decoration: none;
-            color: #0d6efd;
-            transition: color 0.2s;
-        }
-
-        .breadcrumb a:hover {
-            color: #0a58ca;
-        }
-
-        .card-header-custom {
-            background-color: #0d6efd;
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .img-thumb {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 6px;
-            border: 1px solid #ddd;
-        }
-
-        .action-btns .btn {
-            margin: 2px;
-        }
-    </style>
-</head>
-
-<div class="page-content">
+<div class="page-content news-admin">
     <div class="container-fluid">
-
-        <!-- Page Title -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <h3 class="fw-bold">News Management</h3>
+        <div class="news-hero mb-4">
+            <div>
+                <div class="eyebrow">Trading News Desk</div>
+                <h1>Market News Briefings</h1>
+                <p>Publish structured trading news notices for community channels with clear impact levels and risk guidance.</p>
             </div>
-            <div class="col-md-6 text-md-end">
-                <a href="{{ route('trading.news.create') }}" class="btn btn-success btn-lg">
-                    <i class="fas fa-plus"></i> Add News
-                </a>
+            <a href="{{ route('trading.news.create') }}" class="btn btn-light">
+                <i class="ri-add-line"></i> Add News
+            </a>
+        </div>
+
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+        @endif
+
+        <div class="row mb-4">
+            <div class="col-md-3 mb-3">
+                <div class="news-stat">
+                    <span>Total Briefings</span>
+                    <strong>{{ $metrics['total'] ?? $totalNews }}</strong>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="news-stat">
+                    <span>High Impact</span>
+                    <strong>{{ $metrics['high'] ?? 0 }}</strong>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="news-stat">
+                    <span>Medium / Low</span>
+                    <strong>{{ ($metrics['medium'] ?? 0) + ($metrics['low'] ?? 0) }}</strong>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="news-stat">
+                    <span>Discord Records</span>
+                    <strong>{{ $metrics['discord'] ?? 0 }}</strong>
+                </div>
             </div>
         </div>
 
-        <!-- Breadcrumb -->
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-light p-2 rounded">
-                @foreach ($breadcrumbData as $breadcrumb)
-                    <li class="breadcrumb-item">
-                        <a href="{{ $breadcrumb['url'] }}">{{ $breadcrumb['label'] }}</a>
-                    </li>
-                @endforeach
-            </ol>
-        </nav>
-<div class="row">
-    <!-- Row 1: Signals, TP, SL -->
-    <div class="col-md-4 mb-3">
-        <div class="card bg-primary text-white p-3 text-center">
-            <h5>No News</h5>
-            <h2>{{ $totalNews }}</h2>
-        </div>
-    </div>
-        <!-- Table Card -->
-        <div class="card shadow-sm border-0 mt-3">
-            <div class="card-header card-header-custom">
-                <h5 class="mb-0">All News</h5>
+        <div class="news-panel">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                <div>
+                    <h5 class="mb-1">News Library</h5>
+                    <div class="news-muted">Latest market briefings are shown first.</div>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover align-middle">
-                        <thead>
+
+            <div class="table-responsive">
+                <table class="table news-table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Community</th>
+                            <th>Impact</th>
+                            <th>Briefing</th>
+                            <th>Image</th>
+                            <th>Discord</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($news as $item)
+                            @php
+                                $impactLabel = $impactLabels[$item->impact] ?? 'Not Rated';
+                                $impactClass = $impactClasses[$item->impact] ?? 'status-draft';
+                                $plainContent = trim(preg_replace('/\s+/', ' ', (string) $item->content));
+                            @endphp
                             <tr>
-                                <th>#</th>
-                                <th>Date</th>
-                                <th>Impact</th>
-                                <th>Content</th>
-                                <th>Image</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($news as $key => $item)
-                                <tr>
-                                    <td>{{ $key + 1 }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->news_date)->format('d M Y') }}</td>
-                                    <td>
-                                        @php
-                                            $impactLabels = [1 => 'Low', 2 => 'Medium', 3 => 'High'];
-                                            $impactColors = [1 => 'success', 2 => 'warning', 3 => 'danger'];
-                                        @endphp
-                                        <span class="badge badge-impact bg-{{ $impactColors[$item->impact] ?? 'secondary' }}">
-                                            {{ $impactLabels[$item->impact] ?? 'N/A' }}
-                                        </span>
-                                    </td>
-                                    <td class="text-start">{{ $item->content }}</td>
-                                    <td>
+                                <td>
+                                    <strong>{{ $item->news_date?->format('d M Y') }}</strong>
+                                    <div class="news-muted">{{ $item->news_date?->format('D') }}</div>
+                                </td>
+                                <td>
+                                    <strong>{{ $item->community?->name ?? 'No Community' }}</strong>
+                                    <div class="news-muted">Trading channel</div>
+                                </td>
+                                <td>
+                                    <span class="impact-pill {{ $impactClass }}">{{ $impactLabel }}</span>
+                                </td>
+                                <td class="news-brief">
+                                    <strong>{{ $impactLabel }} Market News</strong>
+                                    <p>{{ \Illuminate\Support\Str::limit($plainContent, 165) }}</p>
+                                </td>
+                                <td>
+                                    <span class="news-thumb">
                                         @if($item->image)
-                                            <img src="{{ asset($item->image) }}" alt="News Image" class="img-thumb">
+                                            <img src="{{ asset($item->image) }}" alt="Trading news image">
                                         @else
-                                            N/A
+                                            <i class="ri-image-line"></i>
                                         @endif
-                                    </td>
-                                    <td class="action-btns">
-                                        <a href="{{ route('trading.news.edit', $item->id) }}" class="btn btn-info btn-sm" title="Edit">
-                                            <i class="fas fa-edit"></i>
+                                    </span>
+                                </td>
+                                <td>
+                                    @if($item->discordMessages->isNotEmpty())
+                                        <span class="status-pill status-live">Sent</span>
+                                    @else
+                                        <span class="status-pill status-draft">Not Sent</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="news-actions">
+                                        <a href="{{ route('trading.news.show', $item->id) }}" class="btn btn-outline-primary btn-sm">
+                                            <i class="ri-eye-line"></i> View
                                         </a>
-
-                                        <form action="{{ route('trading.news.destroy', $item->id) }}" method="POST" style="display:inline-block;">
+                                        <a href="{{ route('trading.news.edit', $item->id) }}" class="btn btn-outline-secondary btn-sm">
+                                            <i class="ri-edit-line"></i> Edit
+                                        </a>
+                                        <form action="{{ route('trading.news.sendDiscord', $item->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-outline-info btn-sm">
+                                                <i class="ri-send-plane-line"></i> Discord
+                                            </button>
+                                        </form>
+                                        <form action="{{ route('trading.news.destroy', $item->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" title="Delete" onclick="return confirm('Are you sure you want to delete this news?')">
-                                                <i class="fas fa-trash-alt"></i>
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Delete this trading news briefing?');">
+                                                <i class="ri-delete-bin-line"></i> Delete
                                             </button>
                                         </form>
-
-                                        <form action="{{ route('trading.news.sendDiscord', $item->id) }}" method="POST" style="display:inline-block;">
-                                            @csrf
-                                            <button type="submit" class="btn btn-primary btn-sm" title="Send to Discord">
-                                                <i class="fab fa-discord"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="mt-2 text-end">
-                    <strong>Total News: {{ $totalNews }}</strong>
-                </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7">
+                                    <div class="news-empty">
+                                        <h5 class="mb-1">No trading news yet</h5>
+                                        <div>Create the first market briefing for your community.</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

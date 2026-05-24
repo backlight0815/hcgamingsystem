@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Capital;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Capital;
+use App\Models\TradingJournal;
+use App\Services\TradingJournalAnalytics;
 use Illuminate\Support\Facades\Auth;
 
 class CapitalController extends Controller
@@ -40,6 +42,14 @@ class CapitalController extends Controller
                     ->withErrors(['depositAmount' => 'Withdrawal failed: insufficient balance.'])
                     ->withInput();
             }
+
+            $eligibility = $this->withdrawalEligibility(Auth::id());
+            if (! $eligibility['eligible']) {
+                return redirect()->back()
+                    ->withErrors(['depositAmount' => $eligibility['message']])
+                    ->withInput();
+            }
+
             $amount = -$amount; // Make withdrawal negative
         }
 
@@ -65,6 +75,52 @@ class CapitalController extends Controller
     $tradingProfit = \App\Models\TradingJournal::where('user_id', $userId)->sum('profit_loss');
     return $capitalSum + $tradingProfit;
 }
+
+    private function withdrawalEligibility($userId): array
+    {
+        $analytics = new TradingJournalAnalytics();
+        $trades = TradingJournal::where('user_id', $userId)
+            ->where(function ($query) {
+                $query->where('type', 'trade')->orWhereNull('type');
+            })
+            ->orderBy('close_date')
+            ->get();
+        $accountBalance = (float) Capital::where('user_id', $userId)
+            ->where('type', 1)
+            ->sum('amount');
+
+        $bestDayRule = $analytics->bestDayRule($trades);
+        $grossProfitRule = $analytics->grossProfitRule($trades, $accountBalance);
+
+        if (($bestDayRule['passed'] ?? false) && ($grossProfitRule['passed'] ?? false)) {
+            return [
+                'eligible' => true,
+                'message' => '',
+            ];
+        }
+
+        $messages = [];
+        if (! ($bestDayRule['passed'] ?? false)) {
+            $messages[] = '40% Best Day Rule pending (best day is '
+                . number_format((float) $bestDayRule['score_percent'], 2)
+                . '%; need '
+                . number_format((float) $bestDayRule['additional_profit_needed'], 2)
+                . 'u more generated profit).';
+        }
+
+        if (! ($grossProfitRule['passed'] ?? false)) {
+            $messages[] = '2% gross profit rule pending ('
+                . number_format((float) $grossProfitRule['gross_profit'], 2)
+                . 'u / '
+                . number_format((float) $grossProfitRule['required_amount'], 2)
+                . 'u).';
+        }
+
+        return [
+            'eligible' => false,
+            'message' => 'Withdrawal failed: ' . implode(' ', $messages),
+        ];
+    }
 
 
     public function update(Request $request, $id)

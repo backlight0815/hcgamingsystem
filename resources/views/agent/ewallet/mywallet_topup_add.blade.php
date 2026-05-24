@@ -1,84 +1,118 @@
 @extends('admin.admin_master')
 @section('admin')
-
-<head>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
-</head>
-
+@include('admin.ecommerce._styles')
 <title>E-Wallet Top Up | HC Gaming Studio</title>
 
 <div class="page-content">
-    <div class="container-fluid">
+    <div class="container-fluid commerce-page">
+        <section class="commerce-hero">
+            <div>
+                <div class="commerce-hero__label">Wallet Centre</div>
+                <h1>Top Up E-Wallet</h1>
+                <p>Submit your payment amount and receipt. Administration will verify the proof before the balance is credited.</p>
+            </div>
+            <div class="commerce-hero__actions">
+                <a href="{{ route('My.Wallet') }}" class="btn btn-outline-light">
+                    <i class="fas fa-wallet"></i>
+                    Back to Wallet
+                </a>
+            </div>
+        </section>
 
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
+        @if(!$featureEnabled)
+            <div class="alert alert-warning commerce-alert">
+                E-Wallet top up is currently disabled. You can prepare the request, but submission will be blocked until administration enables this feature.
+            </div>
+        @endif
 
-                        <h4 class="card-title">My E-wallet Top Up</h4>
+        <section class="commerce-panel">
+            <div class="commerce-panel__header">
+                <div>
+                    <h2 class="commerce-panel__title">Top-Up Request</h2>
+                    <p class="commerce-panel__subtitle">Use a clear receipt image so the finance team can review faster.</p>
+                </div>
+            </div>
 
-                        <form method="POST" action="{{ route('store.wallet') }}" id="topupForm" enctype="multipart/form-data">
-                            @csrf
+            <form method="POST" action="{{ route('store.wallet') }}" id="topupForm" enctype="multipart/form-data" class="commerce-form-grid">
+                @csrf
 
-                            <div class="row mb-3">
-                                <label for="amount" class="col-sm-2 col-form-label">Top-up Amount</label>
-                                <div class="col-sm-10">
-                                    <input name="amount" class="form-control" type="number" min="0" step="0.01" id="amount" required>
-                                    @error('amount')
-                                    <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
+                <div class="commerce-form-section">
+                    <div>
+                        <label for="amount">Top-Up Amount</label>
+                        <input name="amount" class="form-control" type="number" min="0" step="0.01" id="amount" value="{{ old('amount') }}" required>
+                        @error('amount')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-                            <div class="row mb-3">
-                                <label for="receipt" class="col-sm-2 col-form-label">Payment Proof</label>
-                                <div class="col-sm-10">
-                                    <input name="receipt" class="form-control" type="file" id="receipt" accept="image/*" required>
-                                    @error('receipt')
-                                    <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
+                    <div>
+                        <label for="receipt">Payment Proof</label>
+                        <input name="receipt" class="form-control" type="file" id="receipt" accept="image/*" required>
+                        @error('receipt')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-                            <input type="submit" class="btn btn-info waves-effect waves-light" id="submitButton" value="Top-up E-Wallet" onclick="return disableButton()">
-                        </form>
-
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="submit" class="btn btn-info" id="submitButton">
+                            <i class="fas fa-paper-plane"></i>
+                            Submit Top-Up
+                        </button>
                     </div>
                 </div>
-            </div> <!-- end col -->
-        </div>
+
+                <aside class="commerce-preview">
+                    <img id="receiptPreview" class="commerce-preview__image" src="{{ asset('upload/default.jpg') }}" alt="Receipt preview">
+                    <div class="commerce-preview__body">
+                        <strong>Receipt Preview</strong>
+                        <p class="commerce-muted mb-0">Accepted image upload: JPG, PNG, or GIF depending on platform validation.</p>
+                    </div>
+                </aside>
+            </form>
+        </section>
     </div>
 </div>
+
 <script>
-    // Pass PHP boolean to JS
-    var featureEnabled = @json($featureEnabled);
-
-    var formSubmitted = false;
-
-    function disableButton() {
-        if (!featureEnabled) {
-            alert('E-Wallet Top Up feature is currently disabled.');
-            return false; // Prevent form submission
-        }
-
-        if (formSubmitted) {
-            return false; // Prevent multiple submits
-        }
-
+    (function () {
+        var featureEnabled = @json($featureEnabled);
+        var formSubmitted = false;
+        var form = document.getElementById('topupForm');
         var submitButton = document.getElementById('submitButton');
-        submitButton.disabled = true;
-        submitButton.value = 'Submitting...'; // Show loading text
+        var receipt = document.getElementById('receipt');
+        var preview = document.getElementById('receiptPreview');
 
-        // Delay submit to show disabled effect
-        setTimeout(function () {
-            document.getElementById('topupForm').submit();
-        }, 500);
+        if (receipt && preview) {
+            receipt.addEventListener('change', function (event) {
+                var file = event.target.files[0];
+                if (!file) return;
 
-        formSubmitted = true;
-        return true;
-    }
+                var reader = new FileReader();
+                reader.onload = function (readerEvent) {
+                    preview.src = readerEvent.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        if (form) {
+            form.addEventListener('submit', function (event) {
+                if (!featureEnabled) {
+                    event.preventDefault();
+                    alert('E-Wallet Top Up feature is currently disabled.');
+                    return;
+                }
+
+                if (formSubmitted) {
+                    event.preventDefault();
+                    return;
+                }
+
+                formSubmitted = true;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            });
+        }
+    })();
 </script>
-
-
 @endsection

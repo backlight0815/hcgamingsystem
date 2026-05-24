@@ -197,22 +197,22 @@
             ];
         }
 
-        if ($roleIn([1, 2, 750, 760, 770])) {
+        if ($roleIn([1, 2, 201, 202, 501, 502, 750, 760, 770])) {
             $menus[] = [
                 'label' => 'Trader Centre',
                 'icon' => 'ri-funds-line',
                 'children' => $visibleItems([
-                    ['label' => 'Trading Journal', 'url' => $routeUrl('all.trading.journals')],
+                    $roleIn([1, 2, 750, 760, 770]) ? ['label' => 'Trading Journal', 'url' => $routeUrl('all.trading.journals')] : null,
                     $roleIn([750, 760, 770]) ? ['label' => 'Readiness Checklist', 'url' => $routeUrl('trader.readiness.index')] : null,
                     ['label' => 'Trading Statistics', 'url' => $routeUrl('all.trading.statistics')],
-                    ['label' => 'Backtest Lab', 'url' => $routeUrl('trading.backtest.index')],
+                    $roleIn([1, 2, 750, 760, 770]) ? ['label' => 'Backtest Lab', 'url' => $routeUrl('trading.backtest.index')] : null,
                     $roleIn([750, 760, 770]) ? ['label' => 'Position Centre', 'url' => $routeUrl('trading.positions.index')] : null,
-                    ['label' => 'Market Analyst', 'url' => $routeUrl('trading.market-analyst.index')],
+                    $roleIn([1, 2, 501, 750, 760, 770]) ? ['label' => 'Market Analyst', 'url' => $routeUrl('trading.market-analyst.index')] : null,
                     $roleId === 760 ? ['label' => 'Upload Recording Classes', 'url' => $routeUrl('admin.trading.recordings.index')] : null,
-                    $roleIn([1, 2]) ? ['label' => 'Recording Classes', 'url' => $routeUrl('admin.trading.recordings.index')] : ['label' => 'Recording Classes', 'url' => $routeUrl('trading.recordings.index')],
+                    $roleIn([1, 2, 750, 760, 770]) ? ($roleIn([1, 2]) ? ['label' => 'Recording Classes', 'url' => $routeUrl('admin.trading.recordings.index')] : ['label' => 'Recording Classes', 'url' => $routeUrl('trading.recordings.index')]) : null,
                     $roleIn([750, 760, 770]) ? ['label' => 'Knowledge Centre', 'url' => $routeUrl('trading.knowledge.centre.index')] : null,
-                    $roleIn([1, 2]) ? ['label' => 'Trading Blog', 'url' => $routeUrl('admin.trading.blogs.index')] : ['label' => 'Trading Blog', 'url' => $routeUrl('trading.blogs.index')],
-                    ['label' => 'Trading Pair', 'url' => $routeUrl('all.trading.pairs')],
+                    $roleIn([1, 2, 750, 760, 770]) ? ($roleIn([1, 2]) ? ['label' => 'Trading Blog', 'url' => $routeUrl('admin.trading.blogs.index')] : ['label' => 'Trading Blog', 'url' => $routeUrl('trading.blogs.index')]) : null,
+                    $roleIn([1, 2, 750, 760, 770]) ? ['label' => 'Trading Pair', 'url' => $routeUrl('all.trading.pairs')] : null,
                     $roleIn([1, 2]) ? ['label' => 'Traders Performance', 'url' => $routeUrl('admin.trader.journals.index')] : null,
                     $roleIn([1, 2]) ? ['label' => 'Funded Traders', 'url' => $routeUrl('admin.funded_traders.index')] : null,
                 ]),

@@ -1,254 +1,136 @@
 @extends('admin.admin_master')
 @section('admin')
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+@include('admin.ecommerce._styles')
+<title>Dealer Shipping Orders | HC Gaming Studio</title>
 
-    <!-- DataTables CSS -->
- <link rel="stylesheet" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.min.css">
-
- <!-- jQuery -->
- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
-
- <!-- DataTables JS -->
- <script src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.min.js"></script>
-
-  <!-- Add the Bootstrap CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
-
-<!-- Add the Bootstrap JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.min.js"></script>
- </head>
-
- <style>
- @media screen and (max-width: 768px) {
-     .table-responsive {
-         overflow-x: auto;
-     }
- }
- </style>
-
- <title>Shipping Order |HC Gaming</title>
 <div class="page-content">
-    <div class="container-fluid">
-        <!-- start page title -->
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0">All Buyer Shipping Orders</h4>
-                </div>
+    <div class="container-fluid commerce-page">
+        @include('admin.ecommerce._breadcrumbs')
+
+        <section class="commerce-hero">
+            <div>
+                <div class="commerce-hero__label">Dealer Fulfilment</div>
+                <h1>Buyer Shipping Orders</h1>
+                <p>Manage orders placed against your dealer stock, confirm payment proof, and update delivery progress.</p>
+            </div>
+        </section>
+
+        <div class="commerce-stats">
+            <div class="commerce-stat">
+                <span>Total Orders</span>
+                <strong>{{ $orderCount }}</strong>
+                <small>Buyer orders assigned to you</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Confirmed</span>
+                <strong>{{ $ApproveCount }}</strong>
+                <small>Approved for fulfilment</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Delivery</span>
+                <strong>{{ $DeliveryCount }}</strong>
+                <small>Delivery stage orders</small>
+            </div>
+            <div class="commerce-stat">
+                <span>Completed</span>
+                <strong>{{ $CompleteCount }}</strong>
+                <small>Closed buyer orders</small>
             </div>
         </div>
-        <!-- end page title -->
-        <div class="breadcrumb">
-            @foreach ($breadcrumbData as $breadcrumb)
-                <a href="{{ $breadcrumb['url'] }}">{{ $breadcrumb['label'] }}</a>
-                @if (!$loop->last)
-                    <span> / </span>
-                @endif
-            @endforeach
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title mb-2"> All Shipping Order Data</h4>
-                        <div class="row text-center " >
-                            <div class="col-md-3 col-sm-6 border border-dark pt-3 mb-3">
-                                <h5 class="mb-0">{{ $orderCount }}</h5>
-                                <p class="text-muted text-truncate">Total Order</p>
-                            </div>
 
-                            <div class="col-md-3 col-sm-6 border border-dark pt-3 mb-3">
-                                <h5 class="mb-0">{{ $ApproveCount }}</h5>
-                                <p class="text-muted text-truncate">No Confirmed Order</p>
-                            </div>
-                            <div class="col-md-3 col-sm-6 border border-dark pt-3 mb-3">
-                                <h5 class="mb-0">{{ $DeliveryCount }}</h5>
-                                <p class="text-muted text-truncate">No Delivery Order</p>
-                            </div>
-                            <div class="col-md-3 col-sm-6 border border-dark pt-3 mb-3">
-                                <h5 class="mb-0">{{ $CompleteCount }}</h5>
-                                <p class="text-muted text-truncate">No Complete Order</p>
-                            </div>
-                        </div>
+        <section class="commerce-panel">
+            <div class="commerce-panel__header">
+                <div>
+                    <h2 class="commerce-panel__title">Dealer Fulfilment Queue</h2>
+                    <p class="commerce-panel__subtitle">Approve valid orders, reject problematic submissions, and keep buyers updated through status changes.</p>
+                </div>
+            </div>
 
-<div class="table-responsive">
-                    <table id="myshippingorder" class="table table-bordered" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    {{-- <th>Product ID</th> --}}
-                                    <th>Username</th>
-                                    <th>Grand Total</th>
-                                    <th>Stocks</th>
-                                    <th>Status</th>
-                                    <th>Payment Proof</th>
-
-                                    <th>Transaction Date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php($i=1)
-                                @foreach($shippingData as $item)
-                                <tr>
-                                    <td>{{ $item->id }}</td>
-{{-- <td>
-                                    @foreach ($dealerStocks as $dealerStock)
-                                    <p>P{{ $dealerStock->id }}</p>
-                                    <!-- Display other dealer_stock fields as needed -->
-                                @endforeach
-</td> --}}
-
-                                    <td>{{ $item->user->username }}</td>
-                                    <td>RM {{ $item->total_amount }}</td>
-                                    <td>{{ $item->orderItems->sum('quantity') }}</td>
-                                    @if($item->status==0)
-                                    <td style="color:grey"> Processing </td>
-                                    @elseif($item->status==1)
-                                    <td style="color:orange"> Confirmed </td>
-                                    @elseif($item->status==2)
-                                    <td style="color:darkblue"> Delivery </td>
-                                    @elseif($item->status==3)
-                                    <td style="color:green"> Completed </td>
-                                    @elseif($item->status==-1)
-                                    <td style="color:red"> Rejected </td>
-
+            <div class="table-responsive">
+                <table id="dealersShippingOrder" class="table commerce-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Buyer</th>
+                            <th>Grand Total</th>
+                            <th>Items</th>
+                            <th>Status</th>
+                            <th>Payment Proof</th>
+                            <th>Transaction Date</th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($shippingData as $item)
+                            @php
+                                $orderStatus = [
+                                    '0' => ['label' => 'Processing', 'class' => 'status-processing'],
+                                    '1' => ['label' => 'Confirmed', 'class' => 'status-confirmed'],
+                                    '2' => ['label' => 'Delivery', 'class' => 'status-delivery'],
+                                    '3' => ['label' => 'Completed', 'class' => 'status-completed'],
+                                    '-1' => ['label' => 'Rejected', 'class' => 'status-rejected'],
+                                ][(string) $item->status] ?? ['label' => 'Unknown', 'class' => 'status-pending'];
+                                $itemQuantity = (int) ($item->order_items_sum_quantity ?? $item->orderItems->sum('quantity'));
+                            @endphp
+                            <tr>
+                                <td>#{{ $item->id }}</td>
+                                <th>{{ optional($item->user)->username ?? 'Unknown buyer' }}</th>
+                                <td><strong>RM {{ number_format((float) $item->total_amount, 2) }}</strong></td>
+                                <td>
+                                    @if($itemQuantity > 0)
+                                        {{ $itemQuantity }}
+                                    @else
+                                        <span class="commerce-status status-pending">Pending sync</span>
                                     @endif
-                                    <td>
-                                        <a href="{{ asset($item->payment_proof) }}" data-lightbox="image" data-title="Payment Proof">
-                                            <img src="{{ asset($item->payment_proof) }}" style="width: 120px; height: 120px;" alt="Payment Proof">
-                                        </a>
-                                    </td>
-                                    <td>{{ $item->created_at }}</td>
-
-                                    <td>
-                                        @if($item->status === '0')
-
-                                        <a href="{{ route('update.dealer.shipping.to.approve.status', $item->id) }}" class="btn btn-info sm" title="Approve Order" onclick="return confirm('Do you want to proceed with approving this order?')">
-                                            <i class="fas fa-check"></i>
-                                        </a>
-                                            <a href="{{ route('update.dealer.shipping.to.reject.status', $item->id) }}" class="btn btn-danger sm" title="Reject Order" onclick="return confirm('Do you want to proceed with rejecting this order?')">
+                                </td>
+                                <td><span class="commerce-status {{ $orderStatus['class'] }}">{{ $orderStatus['label'] }}</span></td>
+                                <td>
+                                    @include('admin.ecommerce._payment_proof_thumb', ['proofPath' => $item->payment_proof])
+                                </td>
+                                <td>{{ optional($item->created_at)->format('Y-m-d H:i') ?? $item->created_at }}</td>
+                                <td>
+                                    <div class="commerce-actions">
+                                        @if((string) $item->status === '0')
+                                            <a href="{{ route('update.dealer.shipping.to.approve.status', $item->id) }}" class="btn btn-success commerce-icon-btn" title="Approve order" onclick="return confirm('Do you want to approve this order?')">
+                                                <i class="fas fa-check"></i>
+                                            </a>
+                                            <a href="{{ route('update.dealer.shipping.to.reject.status', $item->id) }}" class="btn btn-danger commerce-icon-btn" title="Reject order" onclick="return confirm('Do you want to reject this order?')">
                                                 <i class="fas fa-times"></i>
                                             </a>
-                                            @elseif($item->status === '1')
-                                            <a href="{{ route('update.dealer.shipping.to.delivery.status', $item->id) }}" class="btn btn-info sm" title="Delivery Order" onclick="return confirm('Do you want to proceed with marking this order as delivered?')">
+                                        @elseif((string) $item->status === '1')
+                                            <a href="{{ route('update.dealer.shipping.to.delivery.status', $item->id) }}" class="btn btn-primary commerce-icon-btn" title="Send to delivery" onclick="return confirm('Do you want to mark this order as delivery?')">
                                                 <i class="fas fa-truck"></i>
                                             </a>
-                                        @elseif($item->status === '2')
-                                            <a href="{{ route('update.dealer.shipping.to.complete.status', $item->id) }}" class="btn btn-info sm" title="Complete Order" onclick="return confirm('Do you want to proceed with marking this order as completed?')">
+                                        @elseif((string) $item->status === '2')
+                                            <a href="{{ route('update.dealer.shipping.to.complete.status', $item->id) }}" class="btn btn-success commerce-icon-btn" title="Complete order" onclick="return confirm('Do you want to complete this order?')">
                                                 <i class="fas fa-check-circle"></i>
                                             </a>
                                         @endif
 
-                                           <!-- View Details Button -->
-   <a href="javascript:void(0);" class="btn btn-info sm view-order-details" title="View Order Details" data-id="{{ $item->id }}">
-    <i class="fas fa-eye"></i>
-</a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    </div>
-                </div>
-            </div> <!-- end col -->
-        </div> <!-- end row -->
-
-        <div id="orderDetailsModal" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Order Details</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body" id="orderDetailsContent">
-                  <!-- Order details will be populated here -->
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-              </div>
+                                        <button type="button" class="btn btn-info commerce-icon-btn view-order-details" title="View order details" data-id="{{ $item->id }}">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-          </div>
+        </section>
 
-
-
-
-          
+        @include('admin.ecommerce._order_details_modal')
     </div>
 </div>
+
 <script>
-    $(document).ready(function() {
-          $('#myshippingorder').DataTable({
-              // Other DataTable options...
-            "columnDefs": [
-            { "orderable": false, "targets": [1, 4] } // Disable sorting for columns 3 (index 2) and 5 (index 6)
-        ]
-          });
-      });
-
-      // Handle view order details button click
-$(document).on('click', '.view-order-details', function() {
-  var orderId = $(this).data('id');
-
-  // Make an AJAX request to fetch order details
-  $.ajax({
-    url: '/order-items/' + orderId,
-    method: 'GET',
-    success: function(response) {
-      // Construct the HTML for the order details
-      var htmlContent = '';
-      htmlContent += '<p>Order ID: ' + response.id + '</p>';
-      htmlContent += '<h5>Product Items</h5>';
-      htmlContent += '<ul>';
-
-      response.order_items.forEach(function(orderItem) {
-        var productImage = "{{ asset('') }}" + orderItem.product.product_image;
-        htmlContent += '<li>';
-        htmlContent += '<img src="' + productImage + '" class="rounded avatar-lg" height="150px" width="150px" alt="Product image">';
-        htmlContent += '<br>';
-
-        htmlContent += 'Product: ' + orderItem.product.product_name + '<br>';
-        htmlContent += 'Quantity: ' + orderItem.quantity + '<br>';
-        htmlContent += '</li><br>'; // Add a break after each product
-      });
-
-      htmlContent += '</ul>';
-
-      // Populate the modal with the order details
-      $('#orderDetailsContent').html(htmlContent);
-      // Show the modal
-      $('#orderDetailsModal').modal('show');
-    },
-    error: function(error) {
-      console.error(error);
-      alert('An error occurred while fetching order details.');
-    }
-  });
-});
-
-
-  // Close modal when the modal close button is clicked
-  $('#orderDetailsModal .close').on('click', function() {
-    $('#orderDetailsModal').modal('hide');
-  });
-
-  // Close modal when close button in modal footer is clicked
-  $('#orderDetailsModal .modal-footer button').on('click', function() {
-    $('#orderDetailsModal').modal('hide');
-  });
-
-  // Close modal when clicking outside the modal
-  $(document).on('click', function(event) {
-    if ($(event.target).hasClass('modal')) {
-      $('#orderDetailsModal').modal('hide');
-    }
-  });
-
-      </script>
+    window.addEventListener('load', function () {
+        if (window.jQuery && $.fn.DataTable) {
+            $('#dealersShippingOrder').DataTable({
+                order: [[6, 'desc']],
+                columnDefs: [{ orderable: false, targets: [5, 7] }]
+            });
+        }
+    });
+</script>
 @endsection

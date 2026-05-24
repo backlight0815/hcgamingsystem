@@ -20,6 +20,8 @@ class TradesTemplateExport implements FromArray, WithHeadings
             [
                 '2025-08-31 10:00', // open_date
                 '2025-08-31 12:00', // close_date
+                'malaysia',          // time_input_timezone: malaysia or mt5
+                '180',               // time_input_offset_minutes: 180=UTC+3, 120=UTC+2 (used when timezone is mt5)
                 'XAUUSD',           // pair
                 '1',                // direction 1=Buy, 2=Sell
                 '1950.00',          // entry_price
@@ -43,6 +45,8 @@ class TradesTemplateExport implements FromArray, WithHeadings
         return [
             'open_date',
             'close_date',
+            'time_input_timezone',
+            'time_input_offset_minutes',
             'pair',
             'direction',
             'entry_price',

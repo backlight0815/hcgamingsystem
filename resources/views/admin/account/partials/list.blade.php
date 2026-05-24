@@ -488,10 +488,14 @@
 @endif
 
 <script>
-    $(function () {
-        const table = $('#accountManagementTable');
+    window.addEventListener('load', function () {
+        if (! window.jQuery) {
+            return;
+        }
 
-        if (table.find('tbody tr').length && table.find('tbody .empty-state').length === 0) {
+        const table = jQuery('#accountManagementTable');
+
+        if (jQuery.fn.DataTable && table.find('tbody tr').length && table.find('tbody .empty-state').length === 0) {
             table.DataTable({
                 order: [[0, 'asc']],
                 pageLength: 25,
@@ -504,15 +508,23 @@
             });
         }
 
-        $('#openInviteModal').on('click', function () {
+        jQuery('#openInviteModal').on('click', function () {
             const referralCode = @json($inviteReferralCode);
             const registerUrl = @json(route('register'));
             const separator = registerUrl.includes('?') ? '&' : '?';
-            $('#registrationLink').val(registerUrl + separator + 'referral_code=' + encodeURIComponent(referralCode || ''));
-            $('#inviteModal').modal('show');
+            jQuery('#registrationLink').val(registerUrl + separator + 'referral_code=' + encodeURIComponent(referralCode || ''));
+
+            if (window.bootstrap && bootstrap.Modal) {
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('inviteModal')).show();
+                return;
+            }
+
+            if (typeof jQuery.fn.modal === 'function') {
+                jQuery('#inviteModal').modal('show');
+            }
         });
 
-        $('#copyLinkBtn').on('click', function () {
+        jQuery('#copyLinkBtn').on('click', function () {
             const input = document.getElementById('registrationLink');
             input.select();
 

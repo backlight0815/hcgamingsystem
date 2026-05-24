@@ -62,49 +62,13 @@ class StockController extends Controller
 
 
                 public function StockDetails($id) {
-                    // Attempt to find the stock in the Product table
-                    $productStock = Product::find($id);
+                    $stock = Product::with('productcategory')->find($id);
 
-                    // Attempt to find the stock in the DealerStock table if not found in Product table
-                    if (!$productStock) {
-                        $dealerStock = DealerStock::find($id);
-                    } else {
-                        $dealerStock = null; // Set to null to handle scenarios where only product stock is found
+                    if (!$stock) {
+                        return redirect()->route('home.product')->with('error', 'Stock not found.');
                     }
 
-                    // If neither found, redirect to an error page or show a 404 error
-                    if (!$productStock && !$dealerStock) {
-                        return redirect()->route('my.stock')->with('error', 'Stock not found.');
-                    }
-
-                    // Normalize the properties to a standard structure
-                    $normalizedStock = [];
-
-                    // If product stock exists, normalize its properties
-                    if ($productStock) {
-                        $normalizedStock[] = [
-                            'type' => 'product',
-                            'name' => $productStock->product_name,
-                            'image' => $productStock->product_image,
-                            'price' => $productStock->product_price,
-                            'stock' => $productStock->product_stock,
-                            'user' => $productStock->user->username ?? 'Unknown'
-                        ];
-                    }
-
-                    // If dealer stock exists, normalize its properties
-                    if ($dealerStock) {
-                        $normalizedStock[] = [
-                            'type' => 'dealer',
-                            'name' => $dealerStock->dealer_product_name,
-                            'image' => $dealerStock->dealer_product_image,
-                            'price' => $dealerStock->dealer_price,
-                            'stock' => $dealerStock->stock,
-                            'user' => $dealerStock->user->username ?? 'Unknown'
-                        ];
-                    }
-
-                    return view('frontend.stock_details_estore', compact('normalizedStock'));
+                    return view('frontend.stock_details_estore', compact('stock'));
                 }
 
 

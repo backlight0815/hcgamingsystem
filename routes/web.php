@@ -894,6 +894,7 @@ Route::middleware(['auth'])->controller(AppNotificationController::class)->group
 // AI Assistant
 Route::middleware(['auth'])->controller(GeminiAssistantController::class)->group(function (): void {
     Route::get('/ai-assistant', 'index')->name('ai.assistant.index');
+    Route::get('/ai-assistant/status', 'status')->name('ai.assistant.status');
     Route::post('/ai-assistant/ask', 'ask')->middleware('throttle:15,1')->name('ai.assistant.ask');
     Route::get('/ai-assistant/conversations', 'conversations')->name('ai.assistant.conversations');
     Route::post('/ai-assistant/conversations', 'createConversation')->name('ai.assistant.conversations.create');
@@ -911,6 +912,20 @@ Route::middleware(['auth'])->controller(GeminiAssistantController::class)->group
 Route::middleware(['auth'])->controller(\App\Http\Controllers\AI\TradingAiSettingsController::class)->group(function (): void {
     Route::get('/admin/ai-settings', 'index')->name('admin.ai_settings.index');
     Route::put('/admin/ai-settings', 'update')->name('admin.ai_settings.update');
+});
+
+Route::middleware(['auth'])->controller(\App\Http\Controllers\AI\TradingAiTrainingController::class)->group(function (): void {
+    Route::get('/admin/ai-training', 'index')->name('admin.ai_training.index');
+    Route::get('/admin/ai-training/create', 'create')->name('admin.ai_training.create');
+    Route::post('/admin/ai-training', 'store')->name('admin.ai_training.store');
+    Route::post('/admin/ai-training/test', 'test')->name('admin.ai_training.test');
+    Route::get('/admin/ai-training/export', 'export')->name('admin.ai_training.export');
+    Route::post('/admin/ai-training/unanswered/{question}/archive', 'archiveUnanswered')->name('admin.ai_training.unanswered.archive');
+    Route::get('/admin/ai-training/{entry}/edit', 'edit')->name('admin.ai_training.edit');
+    Route::put('/admin/ai-training/{entry}', 'update')->name('admin.ai_training.update');
+    Route::post('/admin/ai-training/{entry}/transition', 'transition')->name('admin.ai_training.transition');
+    Route::post('/admin/ai-training/{entry}/duplicate', 'duplicate')->name('admin.ai_training.duplicate');
+    Route::post('/admin/ai-training/{entry}/rollback/{version}', 'rollback')->name('admin.ai_training.rollback');
 });
 
 Route::middleware(['auth'])->controller(AiKnowledgeBaseController::class)->group(function (): void {

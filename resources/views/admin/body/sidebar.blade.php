@@ -93,6 +93,7 @@
                 'icon' => 'ri-robot-line',
                 'children' => $visibleItems([
                     ['label' => 'AI Assistant', 'url' => $routeUrl('ai.assistant.index')],
+                    $roleIn([1, 2]) ? ['label' => 'AI Training', 'url' => $routeUrl('admin.ai_training.index')] : null,
                     $roleIn([1, 2]) ? ['label' => 'AI Knowledge Base', 'url' => $routeUrl('admin.ai_knowledge_base.index')] : null,
                 ]),
             ];

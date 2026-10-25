@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\TradingAiProviderException;
 use App\Models\AiKnowledgeBase;
 use App\Models\User;
 use App\Support\TradingAiSettings;
@@ -11,7 +12,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
-use RuntimeException;
 
 class GeminiAssistantService
 {
@@ -158,12 +158,12 @@ PROMPT;
         $apiKey = trim((string) config('services.gemini.key'));
 
         if ($apiKey === '') {
-            throw new RuntimeException('Gemini API key is not configured. Please add GEMINI_API_KEY to your .env file.');
+            throw new TradingAiProviderException('not_configured');
         }
 
         $model = trim(TradingAiSettings::get()['model']);
         if (! in_array($model, config('services.gemini.allowed_models', []), true)) {
-            throw new RuntimeException('The configured AI model is not permitted.');
+            throw new TradingAiProviderException('model_not_permitted');
         }
         $modelPath = Str::startsWith($model, 'models/') ? $model : 'models/'.$model;
         $baseUrl = rtrim((string) config('services.gemini.base_url'), '/');
@@ -192,10 +192,10 @@ PROMPT;
                 ]);
         } catch (ConnectionException $exception) {
             Log::warning('Gemini assistant timeout or connection failure.', [
-                'message' => $exception->getMessage(),
+                'failure_code' => str_contains(strtolower($exception->getMessage()), 'timed out') ? 'timeout' : 'connection',
             ]);
 
-            throw new RuntimeException('AI assistant request timed out. Please try again.');
+            throw new TradingAiProviderException(str_contains(strtolower($exception->getMessage()), 'timed out') ? 'timeout' : 'connection');
         }
 
         if ($response->failed()) {
@@ -203,7 +203,12 @@ PROMPT;
                 'status' => $response->status(),
             ]);
 
-            throw new RuntimeException('AI assistant is unavailable right now. Please try again later.');
+            throw new TradingAiProviderException(match (true) {
+                in_array($response->status(), [401, 403], true) => 'authentication',
+                $response->status() === 429 => 'rate_limited',
+                $response->status() >= 500 => 'provider_server',
+                default => 'provider_request',
+            }, $response->status());
         }
 
         $answer = $this->extractText($response->json());
@@ -214,7 +219,7 @@ PROMPT;
                 'response_id' => data_get($response->json(), 'responseId'),
             ]);
 
-            throw new RuntimeException('AI assistant returned an empty response. Please try again.');
+            throw new TradingAiProviderException('empty_response');
         }
 
         return $answer;

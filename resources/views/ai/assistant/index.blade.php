@@ -12,6 +12,7 @@
 .coach-context { background:#fbfcfd;border-left:1px solid var(--line);padding:21px;overflow:auto }.coach-context h2 { font-size:14px;color:var(--ink);margin:0 0 16px }.coach-context h3 { font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:22px 0 10px }.coach-context label { display:block;font-size:11px;font-weight:700;color:var(--muted);margin:11px 0 4px }.coach-context input,.coach-context select { width:100%;padding:8px;border:1px solid var(--line);background:#fff;border-radius:7px;color:var(--ink) }.coach-context button { margin-top:12px;border:1px solid var(--navy);background:#fff;color:var(--navy);padding:8px 11px;border-radius:8px;font-weight:700 }.coach-context .coach-facts { display:grid;gap:8px }.coach-fact { padding:10px;border:1px solid var(--line);background:#fff;border-radius:8px;font-size:12px }.coach-fact strong { display:block;margin-bottom:3px }.coach-muted { font-size:11px;color:var(--muted);line-height:1.5 }.coach-risk-result { margin-top:10px;white-space:pre-wrap;font-size:12px;line-height:1.5 }
 @media(max-width:1199px) { .coach-shell { grid-template-columns:220px minmax(0,1fr) }.coach-top #coachContextButton { display:inline-block;border:1px solid var(--line);border-radius:8px;padding:6px 9px;background:#fff;color:var(--ink) }.coach-context { display:none }.coach-context.open { display:block;position:absolute;z-index:21;right:12px;top:100px;width:min(340px,calc(100vw - 24px));max-height:75dvh;border:1px solid var(--line);border-radius:12px;box-shadow:0 16px 40px #14253a30 } }
 @media(max-width:767px) { .coach { padding:0 0 20px }.coach-shell { display:block;border-radius:0;min-height:calc(100dvh - 92px);max-height:none }.coach-sidebar { display:none;position:absolute;z-index:20;left:12px;right:12px;top:90px;max-height:70dvh;border:1px solid var(--line);border-radius:12px;box-shadow:0 16px 40px #14253a30 }.coach-sidebar.open { display:block }.coach-main { height:calc(100dvh - 93px);min-height:560px }.coach-top { padding:13px 16px }.coach-mobile-history { display:inline-block;border:1px solid var(--line);border-radius:8px;padding:6px 9px;background:#fff;color:var(--ink) }.coach-top h1 { font-size:15px }.coach-scroll { padding:18px 15px }.coach-welcome { margin-top:3% }.coach-quick { grid-template-columns:1fr 1fr;gap:7px }.coach-quick button { min-height:76px;padding:10px;font-size:12px }.coach-composer { padding:10px 13px max(13px,env(safe-area-inset-bottom)) }.coach-form { gap:6px }.coach-primary { padding:10px }.coach-badge { display:none } }
+@media(max-width:767px){.coach-shell{min-height:0}.coach-main{min-height:0;height:calc(100dvh - 93px)}.coach-scroll{min-height:0}}
 </style>
 <div class="page-content coach"><div class="container-fluid"><div class="coach-shell">
     <aside id="coachSidebar" class="coach-sidebar" aria-label="Conversations">
@@ -21,7 +22,7 @@
         <div class="coach-side-label">Your conversations</div><div id="coachList" class="coach-list"></div>
         <button id="coachMore" class="coach-more" type="button" hidden>Load more</button>
     </aside>
-    <main class="coach-main"><header class="coach-top"><div><h1><button id="coachHistory" class="coach-mobile-history" type="button" aria-label="Show conversation history">☰</button> HC TradingHub AI</h1><p>Your Trading Knowledge & Market Structure Assistant</p></div><button id="coachContextButton" class="coach-mobile-history" type="button" aria-label="Show trading context and preferences">Context</button><span class="coach-badge">EDUCATIONAL ASSISTANT</span></header>
+    <main class="coach-main"><header class="coach-top"><div><h1><button id="coachHistory" class="coach-mobile-history" type="button" aria-label="Show conversation history">☰</button> HC TradingHub AI</h1><p>Your Trading Knowledge & Market Structure Assistant</p></div><button id="coachContextButton" class="coach-mobile-history" type="button" aria-label="Show trading context and preferences">Context</button><span id="coachMode" class="coach-badge">CHECKING KNOWLEDGE</span></header>
         <div id="coachScroll" class="coach-scroll" role="log" aria-live="polite"></div>
         <div class="coach-composer"><div id="coachStatus" class="coach-status" role="alert"></div><form id="coachForm" class="coach-form"><textarea id="coachInput" class="coach-input" maxlength="2000" placeholder="Ask about structure, risk, TP / SL, psychology…" aria-label="Message" required></textarea><button id="coachSend" class="coach-primary" type="submit">Send</button><button id="coachStop" class="coach-primary" type="button" hidden>Stop</button></form><p class="coach-form-note">Enter to send · Shift+Enter for a new line · Historical outlooks are labeled with their source and date.</p></div>
     </main>
@@ -48,13 +49,95 @@
     async function loadList(append=false) {const q=encodeURIComponent(el('coachSearch').value.trim());const page=append&&nextPage?nextPage:1;try{const data=await api('/conversations?search='+q+'&page='+page);if(!append)el('coachList').replaceChildren();const labels=el('coachList').querySelectorAll('.coach-side-label');let lastDate=labels.length?labels[labels.length-1].dataset.date:null;data.data.forEach(item=>{const date=new Date(item.updated_at).toLocaleDateString();if(date!==lastDate){const label=document.createElement('div');label.className='coach-side-label';label.dataset.date=date;label.textContent=date;el('coachList').append(label);lastDate=date}const row=document.createElement('div');row.className='coach-item'+(item.id===current?' active':'');const title=document.createElement('button');title.className='coach-item-title';title.textContent=item.title;title.addEventListener('click',()=>openConversation(item.id));const rename=document.createElement('button');rename.className='coach-item-action';rename.title='Rename';rename.textContent='✎';rename.addEventListener('click',async()=>{const name=prompt('Conversation title',item.title);if(!name?.trim())return;try{await api('/conversations/'+item.id,{method:'PATCH',body:JSON.stringify({title:name.trim()})});loadList()}catch(e){status(e.message)}});const del=document.createElement('button');del.className='coach-item-action';del.title='Delete';del.textContent='×';del.addEventListener('click',async()=>{if(!confirm('Delete this conversation?'))return;try{await api('/conversations/'+item.id,{method:'DELETE'});if(current===item.id){current=null;welcome()}loadList()}catch(e){status(e.message)}});row.append(title,rename,del);el('coachList').append(row)});nextPage=data.next_page_url?data.current_page+1:null;el('coachMore').hidden=!nextPage}catch(e){status(e.message)}}
     async function loadOlder(){if(!messagePage||!current)return;const scroll=el('coachScroll');const height=scroll.scrollHeight;try{const data=await api('/conversations/'+current+'/messages?page='+messagePage);scroll.querySelector('.coach-older')?.remove();data.data.forEach(m=>{const article=message(m.content,m.role,m.sources?JSON.parse(m.sources):[],m.created_at,m.id);scroll.prepend(article)});messagePage=data.next_page_url?data.current_page+1:null;if(messagePage){const button=document.createElement('button');button.type='button';button.className='coach-more coach-older';button.textContent='Load older messages';button.addEventListener('click',loadOlder);scroll.prepend(button)}scroll.scrollTop=scroll.scrollHeight-height}catch(e){status(e.message)}}
     async function openConversation(id){current=id;status();try{const data=await api('/conversations/'+id+'/messages');el('coachScroll').replaceChildren();data.data.slice().reverse().forEach(m=>message(m.content,m.role,m.sources?JSON.parse(m.sources):[],m.created_at,m.id));messagePage=data.next_page_url?data.current_page+1:null;if(messagePage){const button=document.createElement('button');button.type='button';button.className='coach-more coach-older';button.textContent='Load older messages';button.addEventListener('click',loadOlder);el('coachScroll').prepend(button)}if(!data.data.length)welcome();el('coachSidebar').classList.remove('open');loadList()}catch(e){status(e.message)}}
-    async function send(question){if(activeRequest)return;const text=question.trim();if(text.length<2){status('Please enter at least two characters.');return}status();lastQuestion=text;lastFailed=false;el('coachInput').value='';el('coachScroll').querySelector('.coach-welcome')?.remove();message(text,'user');const loading=message('Analyzing your question…','assistant');activeRequest=new AbortController();el('coachSend').disabled=true;el('coachStop').hidden=false;try{const response=await fetch(base+'/ask',{method:'POST',headers,signal:activeRequest.signal,body:JSON.stringify({message:text,conversation_id:current})});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.message||'AI assistant is unavailable.');loading.remove();current=data.conversation_id;message(data.answer,'assistant',data.sources,null,data.message_id);if(data.market){el('coachMarket').textContent='Historical '+data.market.symbol+' outlook · '+(data.market.published_at?new Date(data.market.published_at).toLocaleString():'date unavailable')}if(data.insight){el('coachMarket').textContent='Verified REAL snapshots · '+data.insight.symbol+' · '+Object.entries(data.insight.timeframes).map(([tf,v])=>tf+': '+v.status).join(' · ')}loadList()}catch(e){loading.remove();if(e.name!=='AbortError'){lastFailed=true;status(e.message);const retry=message('Request failed. Your question was not saved.','error');const b=document.createElement('button');b.type='button';b.textContent='Retry';b.className='coach-more';b.addEventListener('click',()=>{retry.remove();send(text)});retry.append(b)}else status('Generation stopped in this browser.')}finally{activeRequest=null;el('coachSend').disabled=false;el('coachStop').hidden=true;el('coachInput').focus()}}
+    function newClientId() {
+        if (globalThis.crypto?.randomUUID) return crypto.randomUUID();
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, character => {
+            const random = Math.floor(Math.random() * 16);
+            return (character === 'x' ? random : (random & 3 | 8)).toString(16);
+        });
+    }
+    function retryNotice(text, clientId, saved) {
+        const notice = message(saved ? 'Your question is saved. The answer is still being processed or could not be displayed.' : 'The question could not be submitted. Your text is ready to retry.', 'error');
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'coach-more';
+        button.textContent = 'Retry';
+        button.addEventListener('click', () => { notice.remove(); send(text, clientId, false); });
+        notice.append(button);
+    }
+    async function send(question, clientId = newClientId(), renderQuestion = true) {
+        if (activeRequest) return;
+        const text = question.trim();
+        if (text.length < 2) { status('Please enter at least two characters.'); return; }
+        status();
+        lastQuestion = text;
+        lastFailed = false;
+        el('coachInput').value = '';
+        el('coachScroll').querySelector('.coach-welcome')?.remove();
+        if (renderQuestion) message(text, 'user');
+        const loading = message('Checking approved knowledge…', 'assistant');
+        activeRequest = new AbortController();
+        el('coachSend').disabled = true;
+        el('coachStop').hidden = false;
+        try {
+            const response = await fetch(base + '/ask', {
+                method: 'POST', headers, signal: activeRequest.signal,
+                body: JSON.stringify({message: text, conversation_id: current, client_message_id: clientId})
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                const failure = new Error(data.message || 'Request failed. Please retry.');
+                failure.saved = Boolean(data.question_id);
+                failure.conversationId = data.conversation_id;
+                throw failure;
+            }
+            loading.remove();
+            current = data.conversation_id || current;
+            if (response.status === 202) {
+                status(data.message || 'Question saved and still processing.');
+                retryNotice(text, clientId, true);
+                loadList();
+                return;
+            }
+            message(data.answer, 'assistant', data.sources, null, data.message_id);
+            if (data.unanswered) status('Question saved for review. You can continue using approved knowledge.');
+            if (data.market) el('coachMarket').textContent = 'Historical ' + data.market.symbol + ' outlook · ' + (data.market.published_at ? new Date(data.market.published_at).toLocaleString() : 'date unavailable');
+            if (data.insight) el('coachMarket').textContent = 'Verified REAL snapshots · ' + data.insight.symbol + ' · ' + Object.entries(data.insight.timeframes).map(([tf, frame]) => tf + ': ' + frame.status).join(' · ');
+            loadList();
+        } catch (error) {
+            loading.remove();
+            lastFailed = true;
+            if (error.name === 'AbortError') {
+                status('Request stopped in this browser. The question may have been saved; refresh history or retry.');
+                retryNotice(text, clientId, true);
+            } else {
+                if (error.conversationId) current = error.conversationId;
+                if (!error.saved) el('coachInput').value = text;
+                status(error.message);
+                retryNotice(text, clientId, Boolean(error.saved));
+            }
+        } finally {
+            activeRequest = null;
+            el('coachSend').disabled = false;
+            el('coachStop').hidden = true;
+            el('coachInput').focus();
+        }
+    }
+    async function loadStatus() {
+        try {
+            const data = await api('/status');
+            el('coachMode').textContent = data.knowledge_available ? 'KNOWLEDGE READY' : 'ASK OR REQUEST REVIEW';
+            el('coachMode').title = data.external_generation_enabled ? 'Approved knowledge first; external AI is available for other questions.' : 'Approved knowledge and safe fallback are available.';
+        } catch (error) {
+            el('coachMode').textContent = 'ASSISTANT STATUS UNKNOWN';
+        }
+    }
     el('coachForm').addEventListener('submit',e=>{e.preventDefault();send(el('coachInput').value)});el('coachInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();el('coachForm').requestSubmit()}});el('coachInput').addEventListener('input',e=>{e.target.style.height='auto';e.target.style.height=Math.min(e.target.scrollHeight,160)+'px'});el('coachStop').addEventListener('click',()=>activeRequest?.abort());el('coachNew').addEventListener('click',async()=>{try{const data=await api('/conversations',{method:'POST',body:'{}'});current=data.id;welcome();loadList();el('coachSidebar').classList.remove('open')}catch(e){status(e.message)}});el('coachHistory').addEventListener('click',()=>el('coachSidebar').classList.toggle('open'));el('coachContextButton').addEventListener('click',()=>document.querySelector('.coach-context').classList.toggle('open'));el('coachSearch').addEventListener('input',()=>loadList());el('coachMore').addEventListener('click',()=>loadList(true));
     async function loadPrefs(){try{const p=await api('/preferences');el('prefExperience').value=p.experience;el('prefStyle').value=p.style;el('prefTimeframe').value=p.timeframe;el('prefRisk').value=p.risk_percent;el('prefMaxRisk').value=p.maximum_risk_percent;el('prefRr').value=p.preferred_rr;el('prefInstruments').value=p.preferred_instruments;el('prefLanguage').value=p.language;el('prefDetail').value=p.answer_detail}catch(e){status(e.message)}}el('coachPrefs').addEventListener('submit',async e=>{e.preventDefault();try{await api('/preferences',{method:'PUT',body:JSON.stringify({experience:el('prefExperience').value,style:el('prefStyle').value,timeframe:el('prefTimeframe').value,risk_percent:el('prefRisk').value,maximum_risk_percent:el('prefMaxRisk').value,preferred_rr:el('prefRr').value,preferred_instruments:el('prefInstruments').value,language:el('prefLanguage').value,answer_detail:el('prefDetail').value})});status('Preferences saved.')}catch(error){status(error.message)}});
     el('coachRisk').addEventListener('submit',async e=>{e.preventDefault();const fields={equity:'riskEquity',risk_percent:'prefRisk',existing_idea_risk:'riskExisting',side:'riskSide',entry:'riskEntry',stop:'riskStop',opposing_level:'riskTarget',tick_size:'riskTickSize',tick_value:'riskTickValue',contract_size:'riskContract',currency_conversion:'riskConversion',cost_per_unit:'riskCost',volume_step:'riskStep',minimum_volume:'riskMin'};const body={};Object.entries(fields).forEach(([key,id])=>{if(el(id).value!=='')body[key]=el(id).value});try{const r=await api('/risk',{method:'POST',body:JSON.stringify(body)});el('coachRiskResult').textContent='Risk budget: '+r.risk_budget+' · Classification: '+r.classification+(r.reward_ratio!==null?' · R:R 1:'+r.reward_ratio:'')+(r.position_size!==null?' · Size: '+r.position_size:'')+'\n'+r.warnings.join('\n')}catch(error){el('coachRiskResult').textContent=error.message}});
     el('coachBe').addEventListener('submit',async e=>{e.preventDefault();try{const r=await api('/break-even',{method:'POST',body:JSON.stringify({entry:el('beEntry').value,side:el('riskSide').value,total_costs:el('beCosts').value,units:el('beUnits').value,value_per_price_unit:el('beValue').value})});el('coachBeResult').textContent='Nominal BE: '+r.nominal_break_even+' · Cost-adjusted BE: '+r.cost_adjusted_break_even+'\n'+r.warning}catch(error){el('coachBeResult').textContent=error.message}});
     el('coachStructure').addEventListener('submit',async e=>{e.preventDefault();try{const r=await api('/structure',{method:'POST',body:JSON.stringify({h4:el('structureH4').value,h1:el('structureH1').value,m15:el('structureM15').value,h1_invalidated:el('structureInvalid').checked,at_h1_zone:el('structureZone').checked,m15_reaction_confirmed:el('structureReaction').checked,range_middle:el('structureRange').checked})});el('coachStructureResult').textContent=r.classification+'\n'+r.explanation+(r.warnings.length?'\n'+r.warnings.join('\n'):'')}catch(error){el('coachStructureResult').textContent=error.message}});
-    welcome();loadList();loadPrefs();
+    welcome();loadList();loadPrefs();loadStatus();
 })();
 </script>
 @endsection

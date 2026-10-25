@@ -40,9 +40,20 @@ class TradingAiSettingsController extends Controller
             'retrieval_limit' => ['required', 'integer', 'min:1', 'max:8'],
             'retention_days' => ['required', 'integer', 'min:7', 'max:3650'],
             'model' => ['required', Rule::in(config('services.gemini.allowed_models', []))],
+            'operation_mode' => ['sometimes', 'required', Rule::in(['knowledge_only', 'hybrid', 'generative'])],
+            'external_enabled' => ['sometimes', 'required', 'boolean'],
+            'ai_name' => ['sometimes', 'required', 'string', 'max:100'],
+            'ai_role' => ['sometimes', 'required', 'string', 'max:200'],
+            'tone' => ['sometimes', 'required', Rule::in(['professional', 'friendly', 'educational', 'technical'])],
+            'response_length' => ['sometimes', 'required', Rule::in(['short', 'balanced', 'detailed'])],
+            'language_fallback' => ['sometimes', 'required', Rule::in(['en', 'none'])],
+            'response_rules' => ['sometimes', 'required', 'string', 'max:4000'],
         ]);
         foreach ($data as $key => $value) {
-            DB::table('ai_chat_settings')->updateOrInsert(['key' => $key], [
+            $table = in_array($key, ['operation_mode', 'external_enabled', 'ai_name', 'ai_role', 'tone',
+                'response_length', 'language_fallback', 'response_rules'], true)
+                ? 'ai_chat_response_settings' : 'ai_chat_settings';
+            DB::table($table)->updateOrInsert(['key' => $key], [
                 'value' => (string) $value, 'created_at' => now(), 'updated_at' => now(),
             ]);
         }

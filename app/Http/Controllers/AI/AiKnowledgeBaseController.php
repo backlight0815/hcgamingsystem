@@ -17,7 +17,7 @@ class AiKnowledgeBaseController extends Controller
     {
         $this->ensureAdmin();
 
-        $query = AiKnowledgeBase::query()->latest();
+        $query = AiKnowledgeBase::query()->where('entry_type', 'article')->latest();
 
         if ($request->filled('module') && array_key_exists($request->module, AiKnowledgeBase::modules())) {
             $query->where('module', $request->module);
@@ -57,7 +57,9 @@ class AiKnowledgeBaseController extends Controller
     {
         $this->ensureAdmin();
 
-        AiKnowledgeBase::create($this->validatedKnowledgeBase($request));
+        AiKnowledgeBase::create($this->validatedKnowledgeBase($request) + [
+            'entry_type' => 'article', 'created_by' => auth()->id(), 'updated_by' => auth()->id(),
+        ]);
 
         return redirect()
             ->route('admin.ai_knowledge_base.index')
@@ -67,6 +69,7 @@ class AiKnowledgeBaseController extends Controller
     public function edit(AiKnowledgeBase $knowledgeBase)
     {
         $this->ensureAdmin();
+        abort_unless($knowledgeBase->entry_type === 'article', 404);
 
         $modules = AiKnowledgeBase::modules();
         $statuses = AiKnowledgeBase::statuses();
@@ -79,6 +82,7 @@ class AiKnowledgeBaseController extends Controller
     public function update(Request $request, AiKnowledgeBase $knowledgeBase)
     {
         $this->ensureAdmin();
+        abort_unless($knowledgeBase->entry_type === 'article', 404);
 
         $data = $this->validatedKnowledgeBase($request);
         DB::transaction(function () use ($knowledgeBase, $data): void {
@@ -89,7 +93,7 @@ class AiKnowledgeBaseController extends Controller
                 'source' => $knowledgeBase->source, 'status' => $knowledgeBase->status,
                 'changed_by' => auth()->id(), 'created_at' => now(), 'updated_at' => now(),
             ]);
-            $knowledgeBase->update($data + ['version' => $knowledgeBase->version + 1]);
+            $knowledgeBase->update($data + ['version' => $knowledgeBase->version + 1, 'updated_by' => auth()->id()]);
         });
 
         return redirect()
@@ -100,6 +104,7 @@ class AiKnowledgeBaseController extends Controller
     public function destroy(AiKnowledgeBase $knowledgeBase)
     {
         $this->ensureAdmin();
+        abort_unless($knowledgeBase->entry_type === 'article', 404);
 
         $knowledgeBase->update(['status' => AiKnowledgeBase::STATUS_INACTIVE]);
 

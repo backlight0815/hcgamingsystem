@@ -11,6 +11,8 @@ use App\Support\TradingAiSettings;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use InvalidArgumentException;
 use RuntimeException;
@@ -29,10 +31,23 @@ class GeminiAssistantController extends Controller
         return view('ai.assistant.index');
     }
 
+    public function status(Request $request): JsonResponse
+    {
+        $this->authorized($request);
+        $settings = TradingAiSettings::get();
+        return response()->json([
+            'build' => $settings['build'],
+            'mode' => $settings['operation_mode'],
+            'knowledge_available' => \App\Models\AiKnowledgeBase::query()->active()->exists(),
+            'external_generation_enabled' => $settings['external_enabled'] && $settings['operation_mode'] !== 'knowledge_only',
+        ])->header('Cache-Control', 'private, no-store');
+    }
+
     public function conversations(Request $request): JsonResponse
     {
         $this->authorized($request);
-        $query = DB::table('ai_chat_conversations')->where('user_id', $request->user()->id);
+        $query = DB::table('ai_chat_conversations')->where('user_id', $request->user()->id)
+            ->where('module', 'tradinghub');
         if ($request->filled('search')) {
             $term = mb_substr(trim((string) $request->query('search')), 0, 80);
             $query->where('title', 'like', '%'.$term.'%');
@@ -44,7 +59,7 @@ class GeminiAssistantController extends Controller
     {
         $this->authorized($request);
         $id = DB::table('ai_chat_conversations')->insertGetId([
-            'user_id' => $request->user()->id, 'title' => 'New conversation',
+            'user_id' => $request->user()->id, 'module' => 'tradinghub', 'title' => 'New conversation',
             'created_at' => now(), 'updated_at' => now(),
         ]);
         return response()->json(['id' => $id, 'title' => 'New conversation'], 201);
@@ -156,10 +171,35 @@ class GeminiAssistantController extends Controller
         $data = $request->validate([
             'message' => ['required', 'string', 'min:2', 'max:2000'],
             'conversation_id' => ['nullable', 'integer'],
+            'client_message_id' => ['nullable', 'uuid'],
             'idea' => ['nullable', 'array'],
         ]);
+        $question = trim(strip_tags($data['message']));
+        if (mb_strlen($question) < 2) return response()->json(['message' => 'Please enter a question.'], 422);
         $conversationId = $data['conversation_id'] ?? null;
         if ($conversationId) $this->owned($request, $conversationId);
+        $clientId = $data['client_message_id'] ?? (string) Str::uuid();
+        $existing = DB::table('ai_chat_messages')->join('ai_chat_conversations',
+            'ai_chat_conversations.id', '=', 'ai_chat_messages.conversation_id')
+            ->where('ai_chat_messages.client_message_id', $clientId)
+            ->where('ai_chat_messages.role', 'user')
+            ->select('ai_chat_messages.*', 'ai_chat_conversations.user_id', 'ai_chat_conversations.module')->first();
+        if ($existing) {
+            abort_unless((int) $existing->user_id === (int) $request->user()->id && $existing->module === 'tradinghub', 409);
+            if ($existing->content !== $question || ($conversationId && (int) $existing->conversation_id !== (int) $conversationId)) {
+                return response()->json(['message' => 'This message identifier was already used for a different question.'], 409);
+            }
+            $reply = DB::table('ai_chat_messages')->where('reply_to_message_id', $existing->id)->first();
+            if ($reply) return response()->json([
+                'answer' => $reply->content, 'sources' => json_decode($reply->sources ?? '[]', true) ?: [],
+                'response_source' => $reply->response_source, 'unanswered' => in_array($reply->status, ['unanswered', 'failed'], true),
+                'conversation_id' => $existing->conversation_id, 'question_id' => $existing->id,
+                'message_id' => $reply->id, 'duplicate' => true,
+            ])->header('Cache-Control', 'private, no-store');
+            return response()->json(['message' => 'Your question is saved and still being processed.',
+                'conversation_id' => $existing->conversation_id, 'question_id' => $existing->id,
+                'status' => 'pending'], 202);
+        }
         $idea = null;
         if (isset($data['idea'])) {
             $idea = validator($data['idea'], $this->riskRules())->validate();
@@ -172,41 +212,113 @@ class GeminiAssistantController extends Controller
             ->where('created_at', '>=', now()->startOfDay())->count() >= $limit) {
             return response()->json(['message' => 'Daily AI request limit reached. Please try again tomorrow.'], 429);
         }
-        $usageId = DB::table('ai_chat_usage')->insertGetId(['user_id' => $request->user()->id,
-            'status' => 'started', 'created_at' => now(), 'updated_at' => now()]);
+        $preferences = $this->getPreferences($request);
         try {
-            $result = $assistant->answer(trim(strip_tags($data['message'])), $request->user(),
-                $this->getPreferences($request), $history, $idea);
-            if (! $conversationId) {
-                $conversationId = DB::table('ai_chat_conversations')->insertGetId([
-                    'user_id' => $request->user()->id, 'title' => mb_substr(trim(strip_tags($data['message'])), 0, 90),
+            [$conversationId, $questionId, $usageId] = DB::transaction(function () use ($request, $conversationId, $question, $clientId, $preferences): array {
+                if (! $conversationId) {
+                    $conversationId = DB::table('ai_chat_conversations')->insertGetId([
+                        'user_id' => $request->user()->id, 'module' => 'tradinghub',
+                        'title' => mb_substr($question, 0, 90), 'created_at' => now(), 'updated_at' => now(),
+                    ]);
+                }
+                $questionId = DB::table('ai_chat_messages')->insertGetId([
+                    'conversation_id' => $conversationId, 'role' => 'user', 'content' => $question,
+                    'client_message_id' => $clientId, 'status' => 'pending',
+                    'language' => $preferences['language'], 'created_at' => now(), 'updated_at' => now(),
+                ]);
+                $usageId = DB::table('ai_chat_usage')->insertGetId(['user_id' => $request->user()->id,
+                    'status' => 'started', 'created_at' => now(), 'updated_at' => now()]);
+                return [$conversationId, $questionId, $usageId];
+            });
+        } catch (\Illuminate\Database\UniqueConstraintViolationException $exception) {
+            return response()->json(['message' => 'This question is already being processed. Please refresh the conversation.'], 409);
+        } catch (Throwable $exception) {
+            report($exception);
+            return response()->json(['message' => 'Your question could not be saved. Please retry.'], 503);
+        }
+        $started = microtime(true);
+        try {
+            $result = $assistant->answer($question, $request->user(), $preferences, $history, $idea);
+        } catch (Throwable $exception) {
+            report($exception);
+            $result = ['answer' => "I don't have enough verified information to answer that question accurately yet.",
+                'sources' => [], 'response_source' => 'fallback', 'unanswered' => true,
+                'provider_failure_code' => 'internal_error', 'intent' => 'unanswered'];
+        }
+        $unansweredRecorded = false;
+        if ($result['unanswered'] ?? false) {
+            try {
+                $this->recordUnanswered($question, ($result['provider_failure_code'] ?? null) === 'internal_error' ? 'failed' : 'unanswered');
+                $unansweredRecorded = true;
+            } catch (Throwable $exception) {
+                Log::error('TradingHub AI unanswered question aggregation failed', ['exception' => get_class($exception)]);
+            }
+            $result['answer'] .= $unansweredRecorded
+                ? ' Your question has been recorded for our team to review.'
+                : ' Your question is saved in this conversation, but the review queue could not be updated. Please retry later or contact support.';
+        }
+        $elapsedMs = (int) round((microtime(true) - $started) * 1000);
+        $source = $result['response_source'] ?? (($result['guarded'] ?? false) ? 'fallback' : 'external_ai');
+        $status = ($result['provider_failure_code'] ?? null) === 'internal_error'
+            ? 'failed' : (($result['unanswered'] ?? false) ? 'unanswered' : 'answered');
+        try {
+            $assistantMessageId = DB::transaction(function () use ($conversationId, $questionId, $result, $source, $status, $elapsedMs, $preferences, $usageId, $question): int {
+                $assistantMessageId = DB::table('ai_chat_messages')->insertGetId([
+                    'conversation_id' => $conversationId, 'role' => 'assistant', 'content' => $result['answer'],
+                    'sources' => empty($result['sources']) ? null : json_encode($result['sources']),
+                    'reply_to_message_id' => $questionId, 'status' => $status,
+                    'response_source' => $source, 'language' => $preferences['language'],
+                    'response_time_ms' => $elapsedMs,
+                    'provider_failure_code' => $result['provider_failure_code'] ?? null,
                     'created_at' => now(), 'updated_at' => now(),
                 ]);
-            }
-            $assistantMessageId = null;
-            foreach ([['user', $data['message'], null], ['assistant', $result['answer'], $result['sources']]] as [$role, $content, $sources]) {
-                $messageId = DB::table('ai_chat_messages')->insertGetId(['conversation_id' => $conversationId, 'role' => $role,
-                    'content' => $content, 'sources' => $sources ? json_encode($sources) : null,
-                    'created_at' => now(), 'updated_at' => now()]);
-                if ($role === 'assistant') $assistantMessageId = $messageId;
-            }
+                DB::table('ai_chat_messages')->where('id', $questionId)->update(['status' => $status, 'updated_at' => now()]);
+                DB::table('ai_chat_usage')->where('id', $usageId)->update(['status' => $status === 'answered' ? 'completed' : $status,
+                    'response_source' => $source, 'provider_failure_code' => $result['provider_failure_code'] ?? null,
+                    'response_time_ms' => $elapsedMs, 'updated_at' => now()]);
             if (DB::table('ai_chat_conversations')->where('id', $conversationId)->value('title') === 'New conversation') {
-                DB::table('ai_chat_conversations')->where('id', $conversationId)->update(['title' => mb_substr(trim(strip_tags($data['message'])), 0, 90)]);
-            }
-            DB::table('ai_chat_conversations')->where('id', $conversationId)->update(['updated_at' => now()]);
-            DB::table('ai_chat_usage')->where('id', $usageId)->update(['status' => 'completed', 'updated_at' => now()]);
-            return response()->json($result + ['conversation_id' => $conversationId, 'message_id' => $assistantMessageId])->header('Cache-Control', 'private, no-store');
-        } catch (InvalidArgumentException $e) {
-            DB::table('ai_chat_usage')->where('id', $usageId)->update(['status' => 'rejected', 'updated_at' => now()]);
-            return response()->json(['message' => $e->getMessage()], 422);
-        } catch (RuntimeException $e) {
+                    DB::table('ai_chat_conversations')->where('id', $conversationId)->update(['title' => mb_substr($question, 0, 90)]);
+                }
+                DB::table('ai_chat_conversations')->where('id', $conversationId)->update(['updated_at' => now()]);
+                return $assistantMessageId;
+            });
+        } catch (Throwable $exception) {
+            report($exception);
+            DB::table('ai_chat_messages')->where('id', $questionId)->update(['status' => 'failed', 'updated_at' => now()]);
             DB::table('ai_chat_usage')->where('id', $usageId)->update(['status' => 'failed', 'updated_at' => now()]);
-            return response()->json(['message' => $e->getMessage()], 503);
-        } catch (Throwable $e) {
-            DB::table('ai_chat_usage')->where('id', $usageId)->update(['status' => 'failed', 'updated_at' => now()]);
-            report($e);
-            return response()->json(['message' => 'AI assistant is unavailable. Please retry.'], 500);
+            return response()->json(['message' => 'Your question was saved, but the response could not be saved. Please refresh the conversation.',
+                'conversation_id' => $conversationId, 'question_id' => $questionId], 503);
         }
+        return response()->json($result + ['conversation_id' => $conversationId,
+            'question_id' => $questionId, 'message_id' => $assistantMessageId])
+            ->header('Cache-Control', 'private, no-store');
+    }
+
+    private function recordUnanswered(string $question, string $aiStatus): void
+    {
+        $normalized = \App\Models\AiKnowledgeBase::normalizeQuestion($question);
+        $hash = hash('sha256', $normalized);
+        $redacted = preg_replace('/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}/', '[email removed]', $question);
+        $redacted = preg_replace('/\b(?:\+?\d[\d\s()-]{8,}\d)\b/', '[number removed]', $redacted);
+        DB::table('ai_unanswered_questions')->insertOrIgnore([
+            'question_hash' => $hash, 'question' => mb_substr($redacted, 0, 2000),
+            'category' => $this->questionCategory($question), 'ai_status' => $aiStatus,
+            'frequency' => 0, 'status' => 'pending', 'last_asked_at' => now(),
+            'created_at' => now(), 'updated_at' => now(),
+        ]);
+        DB::table('ai_unanswered_questions')->where('question_hash', $hash)
+            ->increment('frequency', 1, ['ai_status' => $aiStatus, 'last_asked_at' => now(), 'updated_at' => now()]);
+    }
+
+    private function questionCategory(string $question): string
+    {
+        return match (true) {
+            (bool) preg_match('/\b(?:break.even|stop.loss|take.profit|position|trailing|partial)\b/i', $question) => 'trade_management',
+            (bool) preg_match('/\b(?:risk|size|equity|drawdown|leverage)\b/i', $question) => 'risk_management',
+            (bool) preg_match('/\b(?:structure|trend|support|resistance|bos|choch)\b/i', $question) => 'market_structure',
+            (bool) preg_match('/\b(?:fomo|revenge|emotion|discipline)\b/i', $question) => 'trading_psychology',
+            default => 'general',
+        };
     }
 
     public function feedback(Request $request): JsonResponse
@@ -220,7 +332,8 @@ class GeminiAssistantController extends Controller
         $owned = DB::table('ai_chat_messages')->join('ai_chat_conversations',
             'ai_chat_conversations.id', '=', 'ai_chat_messages.conversation_id')
             ->where('ai_chat_messages.id', $data['message_id'])->where('ai_chat_messages.role', 'assistant')
-            ->where('ai_chat_conversations.user_id', $request->user()->id)->exists();
+            ->where('ai_chat_conversations.user_id', $request->user()->id)
+            ->where('ai_chat_conversations.module', 'tradinghub')->exists();
         abort_unless($owned, 404);
         DB::table('ai_chat_feedback')->updateOrInsert(['user_id' => $request->user()->id,
             'message_id' => $data['message_id']], ['rating' => $data['rating'],
@@ -232,7 +345,7 @@ class GeminiAssistantController extends Controller
     {
         $this->authorized($request);
         abort_unless(DB::table('ai_chat_conversations')->where('id', $id)
-            ->where('user_id', $request->user()->id)->exists(), 404);
+            ->where('user_id', $request->user()->id)->where('module', 'tradinghub')->exists(), 404);
     }
 
     private function getPreferences(Request $request): array

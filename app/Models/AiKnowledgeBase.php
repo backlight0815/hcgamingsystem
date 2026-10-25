@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class AiKnowledgeBase extends Model
 {
@@ -13,6 +14,11 @@ class AiKnowledgeBase extends Model
     public const STATUS_ACTIVE = 'active';
 
     public const STATUS_INACTIVE = 'inactive';
+    public const STATUS_DRAFT = 'draft';
+    public const STATUS_PENDING_REVIEW = 'pending_review';
+    public const STATUS_APPROVED = 'approved';
+    public const STATUS_PUBLISHED = 'published';
+    public const STATUS_ARCHIVED = 'archived';
 
     public const MODULE_TRADING_JOURNAL = 'trading_journal';
 
@@ -37,7 +43,22 @@ class AiKnowledgeBase extends Model
         'content',
         'status',
         'difficulty', 'source', 'language', 'version', 'reviewed_at',
+        'entry_type', 'normalized_question', 'alternative_questions', 'alternative_normalized', 'keywords', 'priority',
+        'effective_at', 'approved_at', 'published_at', 'last_tested_at',
+        'created_by', 'updated_by', 'approved_by',
     ];
+
+    protected $casts = [
+        'alternative_questions' => 'array', 'alternative_normalized' => 'array', 'keywords' => 'array',
+        'effective_at' => 'datetime', 'approved_at' => 'datetime',
+        'published_at' => 'datetime', 'last_tested_at' => 'datetime',
+    ];
+
+    public static function normalizeQuestion(string $question): string
+    {
+        $question = mb_strtolower(Str::squish($question));
+        return trim((string) preg_replace('/[^\p{L}\p{N}]+/u', ' ', $question));
+    }
 
     public static function modules(): array
     {
@@ -66,7 +87,17 @@ class AiKnowledgeBase extends Model
 
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where('status', self::STATUS_ACTIVE);
+        return $query->where(function (Builder $builder): void {
+            $builder->where(function (Builder $articles): void {
+                $articles->where('entry_type', 'article')->where('status', self::STATUS_ACTIVE);
+            })->orWhere(function (Builder $faqs): void {
+                $faqs->where('entry_type', 'faq')->where('status', self::STATUS_PUBLISHED)
+                    ->whereNotNull('approved_at')
+                    ->where(function (Builder $effective): void {
+                        $effective->whereNull('effective_at')->orWhere('effective_at', '<=', now());
+                    });
+            });
+        });
     }
 
     public function getModuleLabelAttribute(): string

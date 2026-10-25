@@ -13,7 +13,7 @@ final class TradingSubmodules
     private const MODULES = [
         'marketing_resources' => ['Marketing Resources', ['admin.marketing.resources.*', 'marketing.resources.*', 'api.mobile.v1.marketing_resources.*']],
         'support_tickets' => ['Support Tickets', ['support.tickets.*']],
-        'ai_assistant' => ['AI Assistant', ['ai.assistant.*', 'admin.ai_knowledge_base.*', 'admin.ai_settings.*']],
+        'ai_assistant' => ['AI Assistant', ['ai.assistant.*', 'admin.ai_knowledge_base.*', 'admin.ai_training.*', 'admin.ai_settings.*']],
         'appointments' => ['Appointments', ['trading.appointments.*', 'admin.trading.appointments.*']],
         'trading_exams' => ['Trading Exams', ['trading.exams.*', 'admin.trading.exams.*', 'final_exam.*', 'admin.final_exam.*', 'api.mobile.v1.exam.*', 'api.mobile.v1.final_exam.*']],
         'notifications' => ['Notifications', ['notifications.*', 'admin.notifications.*']],

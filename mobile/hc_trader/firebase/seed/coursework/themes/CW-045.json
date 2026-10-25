@@ -1,0 +1,637 @@
+{
+  "theme": {
+    "id": "CW-045",
+    "code": "CW-045",
+    "title": {
+      "en": "Using EMA 52 to Assess Intermediate Trend Rhythm",
+      "zh": "使用EMA 52评估中期趋势节奏"
+    },
+    "shortTitle": {
+      "en": "EMA 52",
+      "zh": "使用EMA 52评估中期趋势节奏"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates using ema 52 to assess intermediate trend rhythm using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示使用EMA 52评估中期趋势节奏。"
+    },
+    "categoryId": "trend_indicators",
+    "categoryName": {
+      "en": "Trend, Momentum and Indicators",
+      "zh": "趋势、动量与指标"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind using ema 52 to assess intermediate trend rhythm.",
+        "Apply using ema 52 to assess intermediate trend rhythm to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释使用EMA 52评估中期趋势节奏背后的核心决策规则。",
+        "将使用EMA 52评估中期趋势节奏应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "EMA 52",
+      "trend rhythm",
+      "pullback",
+      "GBPUSD",
+      "Trend, Momentum and Indicators"
+    ],
+    "searchTokens": [
+      "cw-045",
+      "CW-045",
+      "trend_indicators",
+      "trend, momentum and indicators",
+      "趋势、动量与指标",
+      "using",
+      "ema",
+      "52",
+      "to",
+      "assess",
+      "intermediate",
+      "trend",
+      "rhythm",
+      "使用EMA 52评估中期趋势节奏",
+      "pullback",
+      "gbpusd",
+      "trend,",
+      "momentum",
+      "and",
+      "indicators"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 45,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "662b406e2880ba66e7a2111150fdef3672f77817127f46f145d9b94a450a2841"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-045",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for EMA 52",
+        "zh": "使用EMA 52评估中期趋势节奏的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which observation provides the strongest objective basis for using ema 52 to assess intermediate trend rhythm?",
+        "zh": "哪项观察为使用EMA 52评估中期趋势节奏提供最强的客观依据？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing using ema 52 to assess intermediate trend rhythm.",
+            "zh": "评估使用EMA 52评估中期趋势节奏时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "6cedcc5f278a35395128b7f7930aba2bf25d3f7cd3172667962abadc16dc61ab"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-045",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying EMA 52 Under Uncertainty",
+        "zh": "在不确定性下应用使用EMA 52评估中期趋势节奏"
+      },
+      "prompt": {
+        "en": "A previous example of using ema 52 to assess intermediate trend rhythm was profitable, but current evidence is incomplete. What is the sound conclusion?",
+        "zh": "之前的使用EMA 52评估中期趋势节奏案例曾盈利，但当前证据不完整。合理结论是什么？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "fed0dc1eca07ed058f57a2d0af1e673523b2b12a0fe6b1613fd8be4ac307d92f"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-045",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "GBPUSD Chart Interpretation for EMA 52",
+        "zh": "GBPUSD图表中的使用EMA 52评估中期趋势节奏解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational GBPUSD H1 chart. Which labelled zone is the strongest decision area for evaluating using ema 52 to assess intermediate trend rhythm while keeping invalidation visible?",
+        "zh": "研究合成教学用GBPUSD H1图表。哪个标记区域最适合评估使用EMA 52评估中期趋势节奏，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "GBPUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 1.28726,
+            "high": 1.28819,
+            "low": 1.28396,
+            "close": 1.28605
+          },
+          {
+            "timeIndex": 1,
+            "open": 1.28605,
+            "high": 1.28797,
+            "low": 1.28181,
+            "close": 1.28355
+          },
+          {
+            "timeIndex": 2,
+            "open": 1.28355,
+            "high": 1.28568,
+            "low": 1.28027,
+            "close": 1.28119
+          },
+          {
+            "timeIndex": 3,
+            "open": 1.28119,
+            "high": 1.28258,
+            "low": 1.27873,
+            "close": 1.28045
+          },
+          {
+            "timeIndex": 4,
+            "open": 1.28045,
+            "high": 1.28319,
+            "low": 1.27836,
+            "close": 1.28166
+          },
+          {
+            "timeIndex": 5,
+            "open": 1.28166,
+            "high": 1.28603,
+            "low": 1.27987,
+            "close": 1.28387
+          },
+          {
+            "timeIndex": 6,
+            "open": 1.28387,
+            "high": 1.28767,
+            "low": 1.28288,
+            "close": 1.28585
+          },
+          {
+            "timeIndex": 7,
+            "open": 1.28585,
+            "high": 1.28815,
+            "low": 1.28419,
+            "close": 1.28712
+          },
+          {
+            "timeIndex": 8,
+            "open": 1.28712,
+            "high": 1.28979,
+            "low": 1.28503,
+            "close": 1.28781
+          },
+          {
+            "timeIndex": 9,
+            "open": 1.28781,
+            "high": 1.29004,
+            "low": 1.28597,
+            "close": 1.28795
+          },
+          {
+            "timeIndex": 10,
+            "open": 1.28795,
+            "high": 1.28923,
+            "low": 1.28606,
+            "close": 1.28712
+          },
+          {
+            "timeIndex": 11,
+            "open": 1.28712,
+            "high": 1.28875,
+            "low": 1.28355,
+            "close": 1.28516
+          },
+          {
+            "timeIndex": 12,
+            "open": 1.28516,
+            "high": 1.28733,
+            "low": 1.28075,
+            "close": 1.28283
+          },
+          {
+            "timeIndex": 13,
+            "open": 1.28283,
+            "high": 1.28456,
+            "low": 1.27971,
+            "close": 1.28159
+          },
+          {
+            "timeIndex": 14,
+            "open": 1.28159,
+            "high": 1.28355,
+            "low": 1.28045,
+            "close": 1.28241
+          },
+          {
+            "timeIndex": 15,
+            "open": 1.28241,
+            "high": 1.28687,
+            "low": 1.28086,
+            "close": 1.28483
+          },
+          {
+            "timeIndex": 16,
+            "open": 1.28483,
+            "high": 1.28946,
+            "low": 1.28277,
+            "close": 1.28741
+          },
+          {
+            "timeIndex": 17,
+            "open": 1.28741,
+            "high": 1.29009,
+            "low": 1.28549,
+            "close": 1.28891
+          },
+          {
+            "timeIndex": 18,
+            "open": 1.28891,
+            "high": 1.2909,
+            "low": 1.28771,
+            "close": 1.28919
+          },
+          {
+            "timeIndex": 19,
+            "open": 1.28919,
+            "high": 1.29136,
+            "low": 1.28725,
+            "close": 1.28873
+          },
+          {
+            "timeIndex": 20,
+            "open": 1.28873,
+            "high": 1.29038,
+            "low": 1.28579,
+            "close": 1.28784
+          },
+          {
+            "timeIndex": 21,
+            "open": 1.28784,
+            "high": 1.28909,
+            "low": 1.28443,
+            "close": 1.28639
+          },
+          {
+            "timeIndex": 22,
+            "open": 1.28639,
+            "high": 1.28847,
+            "low": 1.28325,
+            "close": 1.28452
+          },
+          {
+            "timeIndex": 23,
+            "open": 1.28452,
+            "high": 1.28652,
+            "low": 1.28174,
+            "close": 1.28315
+          },
+          {
+            "timeIndex": 24,
+            "open": 1.28315,
+            "high": 1.2845,
+            "low": 1.28114,
+            "close": 1.28343
+          },
+          {
+            "timeIndex": 25,
+            "open": 1.28343,
+            "high": 1.28738,
+            "low": 1.28144,
+            "close": 1.28559
+          },
+          {
+            "timeIndex": 26,
+            "open": 1.28559,
+            "high": 1.29068,
+            "low": 1.28424,
+            "close": 1.28852
+          },
+          {
+            "timeIndex": 27,
+            "open": 1.28852,
+            "high": 1.29213,
+            "low": 1.28717,
+            "close": 1.29057
+          },
+          {
+            "timeIndex": 28,
+            "open": 1.29057,
+            "high": 1.29226,
+            "low": 1.28858,
+            "close": 1.2909
+          },
+          {
+            "timeIndex": 29,
+            "open": 1.2909,
+            "high": 1.29302,
+            "low": 1.2879,
+            "close": 1.28991
+          },
+          {
+            "timeIndex": 30,
+            "open": 1.28991,
+            "high": 1.29185,
+            "low": 1.2871,
+            "close": 1.28852
+          },
+          {
+            "timeIndex": 31,
+            "open": 1.28852,
+            "high": 1.28948,
+            "low": 1.28591,
+            "close": 1.28719
+          },
+          {
+            "timeIndex": 32,
+            "open": 1.28719,
+            "high": 1.28906,
+            "low": 1.28397,
+            "close": 1.28592
+          },
+          {
+            "timeIndex": 33,
+            "open": 1.28592,
+            "high": 1.28807,
+            "low": 1.28287,
+            "close": 1.28491
+          },
+          {
+            "timeIndex": 34,
+            "open": 1.28491,
+            "high": 1.28638,
+            "low": 1.28342,
+            "close": 1.28489
+          },
+          {
+            "timeIndex": 35,
+            "open": 1.28489,
+            "high": 1.28796,
+            "low": 1.28368,
+            "close": 1.2865
+          },
+          {
+            "timeIndex": 36,
+            "open": 1.2865,
+            "high": 1.29146,
+            "low": 1.28458,
+            "close": 1.28931
+          },
+          {
+            "timeIndex": 37,
+            "open": 1.28931,
+            "high": 1.2937,
+            "low": 1.28725,
+            "close": 1.29182
+          },
+          {
+            "timeIndex": 38,
+            "open": 1.29182,
+            "high": 1.29357,
+            "low": 1.29028,
+            "close": 1.29261
+          },
+          {
+            "timeIndex": 39,
+            "open": 1.29261,
+            "high": 1.29455,
+            "low": 1.29036,
+            "close": 1.2915
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 1.27901,
+            "maximumPrice": 1.28127,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 1.28289,
+            "maximumPrice": 1.28516,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 1.28775,
+            "maximumPrice": 1.29002,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 1.29164,
+            "maximumPrice": 1.2939,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "ac52f9aa9050cb02d02ee680b6c7a6ebafb45245b8630f526fd7995a48669a3c"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-045",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: EMA 52",
+        "zh": "独立情境分析：使用EMA 52评估中期趋势节奏"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of using ema 52 to assess intermediate trend rhythm using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析使用EMA 52评估中期趋势节奏的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "4a446cb9a0838a015664c0dea5c8e99842af413953d40f87c3f4efe7f60a8fc7"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-045",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: EMA 52",
+        "zh": "实践展示：使用EMA 52评估中期趋势节奏"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate using ema 52 to assess intermediate trend rhythm. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示使用EMA 52评估中期趋势节奏。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "f72a4312c39c6d4ae73d9af03d0d8052ae8fdecde9e0938ad6c0f85b5de16e9a"
+    }
+  ]
+}

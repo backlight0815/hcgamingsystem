@@ -10,6 +10,9 @@
     $layeringExamples = collect(data_get($behaviorProfile, 'layering.examples', []))->take(6);
     $gamblingChecks = collect(data_get($behaviorProfile, 'gambling.checks', []));
     $gamblingExamples = collect(data_get($behaviorProfile, 'gambling.examples', []))->take(6);
+    $behaviorRecovery = data_get($behaviorProfile, 'behavior_recovery', []);
+    $behaviorRecoveryBlocks = collect(data_get($behaviorRecovery, 'blocks', []));
+    $behaviorRecoveryApplied = (float) data_get($behaviorRecovery, 'total_reduction_percent', 0) > 0;
     $badgeClass = function ($tone) {
         return match ($tone) {
             'danger' => 'bg-danger',
@@ -66,13 +69,13 @@
             <div class="modal-header">
                 <div>
                     <h5 class="modal-title" id="{{ $behaviorModalId }}Label">Behavior Detection Explanation</h5>
-                    <div class="text-muted small">Tiered revenge trading, layering, and gambling-style signals from the selected journal records.</div>
+                    <div class="text-muted small">Professional tiered revenge and gambling scores from the selected journal records.</div>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-info">
-                    These results are coaching indicators, not accusations. The system now tiers revenge and gambling-style behavior as Low, Medium, or High based on how many risk markers stack together in timing, lot sizing, trade frequency, losses, and holding period.
+                    These results are coaching indicators, not accusations. Gambling and revenge are scored separately from 0 to 100, then final behaviour score is max(gambling, revenge). Order count, two layers, position count, and holding time do not classify a trade by themselves. After a behavior event, every completed {{ number_format((int) data_get($behaviorRecovery, 'block_size', 8)) }}-trade block can reduce the behavior score when the latest block shows improvement.
                 </div>
 
                 <div class="row g-3 mb-4">
@@ -85,7 +88,25 @@
                     <div class="col-md-3">
                         <div class="journal-modal-row h-100">
                             <span>Behavior Risk</span>
-                            <strong>{{ number_format((float) data_get($behaviorProfile, 'risk_score', 0), 2) }}/100</strong>
+                            <strong>{{ number_format((float) data_get($behaviorProfile, 'final_score', data_get($behaviorProfile, 'risk_score', 0)), 2) }}/100</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="journal-modal-row h-100">
+                            <span>Raw Behavior Risk</span>
+                            <strong>{{ number_format((float) data_get($behaviorProfile, 'raw_risk_score', data_get($behaviorProfile, 'final_score', 0)), 2) }}/100</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="journal-modal-row h-100">
+                            <span>8-Trade Recovery</span>
+                            <strong>{{ $behaviorRecoveryApplied ? '-' . number_format((float) data_get($behaviorRecovery, 'total_reduction_percent', 0), 2) . '%' : data_get($behaviorRecovery, 'status', 'No Recovery') }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="journal-modal-row h-100">
+                            <span>Tier</span>
+                            <strong>{{ data_get($behaviorProfile, 'tier_label', 'Normal') }}</strong>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -98,6 +119,12 @@
                         <div class="journal-modal-row h-100">
                             <span>Gambling Behavior</span>
                             <strong>{{ data_get($behaviorProfile, 'gambling.status', 'N/A') }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="journal-modal-row h-100">
+                            <span>Confidence</span>
+                            <strong>{{ number_format((float) data_get($behaviorProfile, 'confidence_score', 0), 2) }}/100</strong>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -121,6 +148,66 @@
                 </div>
 
                 <div class="mb-4">
+                    <h6 class="mb-2">8-Trade Behavior Recovery Rule</h6>
+                    <div class="alert {{ $behaviorRecoveryApplied ? 'alert-success' : 'alert-light' }}">
+                        {{ data_get($behaviorRecovery, 'summary', 'No behavior recovery adjustment is available yet.') }}
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-lg-6">
+                            <div class="table-responsive">
+                                <table class="table journal-table align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Block Tier</th>
+                                            <th>Reduction Rule</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach(data_get($behaviorRecovery, 'rules', []) as $ruleKey => $ruleText)
+                                            @if($ruleKey !== 'block_size')
+                                                <tr>
+                                                    <td><strong>{{ ucfirst($ruleKey) }}</strong></td>
+                                                    <td>{{ $ruleText }}</td>
+                                                </tr>
+                                            @endif
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="table-responsive">
+                                <table class="table journal-table align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Completed Block</th>
+                                            <th>Tier</th>
+                                            <th>Reduction</th>
+                                            <th>Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($behaviorRecoveryBlocks as $block)
+                                            <tr>
+                                                <td>
+                                                    <strong>#{{ data_get($block, 'block_number') }}</strong>
+                                                    <div class="small text-muted">{{ data_get($block, 'first_trade_label') }} - {{ data_get($block, 'last_trade_label') }}</div>
+                                                </td>
+                                                <td><span class="badge {{ $badgeClass(data_get($block, 'tier_tone', 'secondary')) }}">{{ data_get($block, 'tier_label', 'N/A') }}</span></td>
+                                                <td>{{ number_format((float) data_get($block, 'reduction_percent', 0), 2) }}%</td>
+                                                <td>{{ number_format((float) data_get($block, 'score_before', 0), 2) }} -> {{ number_format((float) data_get($block, 'score_after', 0), 2) }}</td>
+                                            </tr>
+                                        @empty
+                                            <tr><td colspan="4" class="text-muted">No completed recovery block yet.</td></tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
                     <h6 class="mb-2">Gambling Behaviour Tier Rules</h6>
                     <div class="table-responsive">
                         <table class="table journal-table align-middle">
@@ -132,26 +219,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><span class="badge bg-primary">Low</span></td>
-                                    <td>Mild high-variance evidence only, without clear oversized exposure.</td>
-                                    <td>Rapid entry within 10 minutes while lot size is same/reduced, or a small same-direction layer without large active risk.</td>
-                                </tr>
-                                <tr>
-                                    <td><span class="badge bg-warning text-dark">Medium</span></td>
-                                    <td>Multiple gambling-style markers combine, lot size increases meaningfully above the trader's recent or account-average baseline, or the trade idea is already using too much of the account risk budget.</td>
-                                    <td>Lot size 1.5x+ above normal sizing, XAUUSD margin pressure at 1:30 leverage, layered exposure, oversized realized loss, rapid entry plus size increase, or a much shorter hold than the account normally shows.</td>
-                                </tr>
-                                <tr>
-                                    <td><span class="badge bg-danger">High</span></td>
-                                    <td>Stacked pressure where active lot/layer exposure uses high XAUUSD margin, lot size is far above the account average, or larger sizing combines with speed/short holding/oversized realized loss.</td>
-                                    <td>3+ same-direction layers, high XAUUSD active margin use at 1:30 leverage, lot size 2x+ above the account average/median, lot size doubled above baseline with speed/overtrading, or oversized loss combined with rapid entry.</td>
-                                </tr>
+                                <tr><td><span class="badge bg-success">Normal</span></td><td>0-24 score. Controlled risk evidence or no strong gambling evidence.</td><td>Planned layer within risk, safe margin, valid stop loss, setup risk within plan.</td></tr>
+                                <tr><td><span class="badge bg-primary">Low</span></td><td>25-44 score. Mild discipline warning.</td><td>Minor plan or execution warning without dangerous risk stacking.</td></tr>
+                                <tr><td><span class="badge bg-warning text-dark">Mid</span></td><td>45-64 score. Meaningful discipline warnings.</td><td>Missing plan details, poor RR, overtrading, or risk pressure begins to stack.</td></tr>
+                                <tr><td><span class="badge bg-danger">High</span></td><td>65-79 score. Strong discipline break evidence.</td><td>No stop loss with high risk, setup risk breach, dangerous margin, or random trading markers.</td></tr>
+                                <tr><td><span class="badge bg-danger">Critical</span></td><td>80-100 score. Severe account-risk evidence.</td><td>Daily loss breach, extreme risk above plan, or dangerous exposure with missing controls.</td></tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="small text-muted">
-                        Overall gambling tier can also rise when several lower-tier gambling examples repeat across the selected journal records.
+                        A planned layer can reduce gambling score only when it follows the setup, risk, stop-loss, margin, and daily-loss rules.
                     </div>
                 </div>
 
@@ -167,33 +244,23 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><span class="badge bg-primary">Low</span></td>
-                                    <td>Quick re-entry after a losing trade, but without meaningful lot increase or stacked emotional markers.</td>
-                                    <td>New order opened within 60 minutes after a loss, with same/reduced lot size and limited extra signals.</td>
-                                </tr>
-                                <tr>
-                                    <td><span class="badge bg-warning text-dark">Medium</span></td>
-                                    <td>Post-loss reaction has stronger evidence but is not the most aggressive pattern.</td>
-                                    <td>Lot size up 1.5x, immediate re-entry on the same pair, direction flip after loss, or reaction after a loss streak.</td>
-                                </tr>
-                                <tr>
-                                    <td><span class="badge bg-danger">High</span></td>
-                                    <td>Aggressive post-loss reaction where speed and larger sizing or repeated loss pressure appear together.</td>
-                                    <td>Re-entry within 15 minutes with 1.5x+ lot increase, lot size doubled, or loss-streak pressure followed by fast larger sizing.</td>
-                                </tr>
+                                <tr><td><span class="badge bg-success">Normal</span></td><td>0-24 score. No loss-chasing evidence.</td><td>Another order alone is not revenge trading.</td></tr>
+                                <tr><td><span class="badge bg-primary">Low</span></td><td>25-44 score. Mild post-loss warning.</td><td>Previous loss evidence with limited follow-through.</td></tr>
+                                <tr><td><span class="badge bg-warning text-dark">Mid</span></td><td>45-64 score. Meaningful revenge markers.</td><td>Cooldown pressure, same-symbol chasing, emotional tag, or loss streak pressure.</td></tr>
+                                <tr><td><span class="badge bg-danger">High</span></td><td>65-79 score. Strong post-loss escalation.</td><td>Opened immediately after loss with bigger lot or increased risk.</td></tr>
+                                <tr><td><span class="badge bg-danger">Critical</span></td><td>80-100 score. Severe account-risk evidence.</td><td>Daily loss limit exceeded or severe loss-chasing risk escalation.</td></tr>
                             </tbody>
                         </table>
                     </div>
                     <div class="small text-muted">
-                        Overall revenge tier can also rise when repeated post-loss reactions appear across the selected journal records.
+                        Revenge trading requires post-loss evidence such as cooldown breach, risk increase, lot increase, daily-loss breach, or loss-streak pressure.
                     </div>
                 </div>
 
                 <div class="mb-4">
                     <h6 class="mb-2">How Revenge Trading Is Detected</h6>
                     <p class="text-muted mb-3">
-                        The system checks what happens after a losing trade. Low tier usually means quick re-entry without clear lot escalation. Medium tier adds stronger evidence such as lot increase, same-pair pressure, direction flip, or loss streak reaction. High tier appears when fast post-loss reaction stacks with aggressive lot sizing or repeated loss pressure.
+                        The system checks whether the trader is chasing losses. It does not classify a trade as revenge only because it is another order or another layer.
                     </p>
                     <div class="table-responsive">
                         <table class="table journal-table align-middle">

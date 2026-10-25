@@ -1,0 +1,287 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function activeAccount() {
+      return signedIn()
+        && firestore.exists(/databases/(default)/documents/users/$(request.auth.uid))
+        && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.get('is_suspended', false) != true
+        && !(firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.get('account_status', 'active') in [
+          'inactive', 'disabled', 'suspended', 'revoked', 'deleted',
+          'deletionInProgress', 'deletion_in_progress'
+        ]);
+    }
+
+    function isAdmin() {
+      return activeAccount()
+        && (
+          firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.is_admin == true
+          || firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role_id in [1, 2, 3, '1', '2', '3']
+          || (
+            firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.get('role_ids', []) is list
+            && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.get('role_ids', []).hasAny([1, 2, 3, '1', '2', '3'])
+          )
+        );
+    }
+
+    function isSuperAdmin() {
+      return activeAccount()
+        && (
+          firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role_id in [1, '1']
+          || (
+            firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.get('role_ids', []) is list
+            && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.get('role_ids', []).hasAny([1, '1'])
+          )
+        );
+    }
+
+    function hasRole(roleIds) {
+      return signedIn()
+        && firestore.exists(/databases/(default)/documents/users/$(request.auth.uid))
+        && (
+          firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role_id in roleIds
+          || (
+            firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.get('role_ids', []) is list
+            && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.get('role_ids', []).hasAny(roleIds)
+          )
+        );
+    }
+
+    function hasPermissionOverride(permission, expectedValue) {
+      let user = firestore.get(
+        /databases/(default)/documents/users/$(request.auth.uid)
+      ).data;
+      return signedIn()
+        && firestore.exists(/databases/(default)/documents/users/$(request.auth.uid))
+        && (
+          (
+            'permission_overrides' in user
+            &&
+            user.permission_overrides is map
+            && user.permission_overrides.get(permission, null) == expectedValue
+          ) || (
+            'permissionOverrides' in user
+            &&
+            user.permissionOverrides is map
+            && user.permissionOverrides.get(permission, null) == expectedValue
+          )
+        );
+    }
+
+    function activePublisher() {
+      return activeAccount();
+    }
+
+    function isMarketPublisher() {
+      return activePublisher()
+        && !hasPermissionOverride('marketAnalysis.publishOwn', false)
+        && !hasPermissionOverride('market_analyst.create', false)
+        && (
+          isSuperAdmin()
+          || hasRole([3, 501, '3', '501'])
+          || hasPermissionOverride('marketAnalysis.publishOwn', true)
+          || hasPermissionOverride('market_analyst.create', true)
+        );
+    }
+
+    function isSignalPublisher() {
+      return activePublisher()
+        && !hasPermissionOverride('signals.publishOwn', false)
+        && !hasPermissionOverride('trading_signal.create', false)
+        && (
+          isSuperAdmin()
+          || hasRole([3, 201, 202, 502, '3', '201', '202', '502'])
+          || hasPermissionOverride('signals.publishOwn', true)
+          || hasPermissionOverride('trading_signal.create', true)
+        );
+    }
+
+    function validContentImage() {
+      return request.resource.size < 8 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp|gif)');
+    }
+
+    function validImageOrPdf() {
+      return request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType.matches(
+          'image/(jpeg|png|webp|gif)|application/pdf'
+        );
+    }
+
+    function validManagedContent() {
+      return request.resource.size < 100 * 1024 * 1024
+        && request.resource.contentType.matches(
+          'image/(jpeg|png|webp)|application/pdf|application/msword|application/vnd.openxmlformats-officedocument.wordprocessingml.document|video/mp4'
+        );
+    }
+
+    function validQuizScreenshot(userId, quizId, attemptId) {
+      return request.resource.size > 0
+        && request.resource.size < 8 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)')
+        && request.resource.metadata.ownerUid == userId
+        && request.resource.metadata.quizId == quizId
+        && request.resource.metadata.attemptId == attemptId
+        && request.resource.metadata.source == 'daily_quiz';
+    }
+
+    function canReviewCoursework() {
+      return isAdmin() || (
+        signedIn()
+        && firestore.exists(/databases/(default)/documents/users/$(request.auth.uid))
+        && (
+          firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role_id in [501, '501']
+          || (
+            firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.permission_overrides is map
+            && firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.permission_overrides['coursework.viewAssignedSubmissions'] == true
+          )
+        )
+      );
+    }
+
+    function editableCourseworkAttempt(userId, attemptId) {
+      return signedIn()
+        && request.auth.uid == userId
+        && firestore.exists(/databases/(default)/documents/coursework_attempts/$(attemptId))
+        && firestore.get(/databases/(default)/documents/coursework_attempts/$(attemptId)).data.user_id == userId
+        && firestore.get(/databases/(default)/documents/coursework_attempts/$(attemptId)).data.status in [
+          'notStarted', 'inProgress', 'draft', 'revisionRequested'
+        ];
+    }
+
+    function validCourseworkEvidence(userId, attemptId, questionId) {
+      return request.resource.size > 0
+        && request.resource.size < 8 * 1024 * 1024
+        && request.resource.contentType.matches('image/(jpeg|png|webp)')
+        && request.resource.metadata.ownerUid == userId
+        && request.resource.metadata.attemptId == attemptId
+        && request.resource.metadata.questionId == questionId
+        && request.resource.metadata.checksum is string
+        && request.resource.metadata.checksum.size() == 64
+        && request.resource.metadata.source == 'coursework';
+    }
+
+    match /coursework_submissions/{userId}/{attemptId}/{questionId}/{fileName} {
+      allow read: if signedIn()
+        && (request.auth.uid == userId || canReviewCoursework());
+      allow create: if editableCourseworkAttempt(userId, attemptId)
+        && validCourseworkEvidence(userId, attemptId, questionId);
+      allow update: if false;
+      allow delete: if editableCourseworkAttempt(userId, attemptId)
+        || canReviewCoursework();
+    }
+
+    match /quiz_submissions/{quizId}/{userId}/{attemptId}/{fileName} {
+      allow read: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow create: if signedIn()
+        && request.auth.uid == userId
+        && validQuizScreenshot(userId, quizId, attemptId);
+      allow update: if false;
+      allow delete: if signedIn() && (request.auth.uid == userId || isAdmin());
+    }
+
+    match /users/{userId}/{allPaths=**} {
+      allow read: if signedIn() && (request.auth.uid == userId || isAdmin());
+      allow create, update: if signedIn()
+        && (request.auth.uid == userId || isAdmin())
+        && request.resource.size < 10 * 1024 * 1024;
+      allow delete: if signedIn() && (request.auth.uid == userId || isAdmin());
+    }
+
+    match /market_analyses/{userId}/{allPaths=**} {
+      allow read: if signedIn();
+      allow create, update: if signedIn()
+        && (
+          (request.auth.uid == userId && isMarketPublisher())
+          || isSuperAdmin()
+        )
+        && validContentImage();
+      allow delete: if signedIn()
+        && (
+          (request.auth.uid == userId && isMarketPublisher())
+          || isSuperAdmin()
+        );
+    }
+
+    match /trading_signals/{userId}/{allPaths=**} {
+      allow read: if signedIn();
+      allow create, update: if signedIn()
+        && (
+          (request.auth.uid == userId && isSignalPublisher())
+          || isSuperAdmin()
+        )
+        && validContentImage();
+      allow delete: if signedIn()
+        && (
+          (request.auth.uid == userId && isSignalPublisher())
+          || isSuperAdmin()
+        );
+    }
+
+    match /knowledge_centre/{userId}/{allPaths=**} {
+      allow read: if signedIn();
+      allow create, update: if signedIn()
+        && request.auth.uid == userId
+        && isAdmin()
+        && validImageOrPdf();
+      allow delete: if signedIn()
+        && request.auth.uid == userId
+        && isAdmin();
+    }
+
+    match /profile_images/{userId}/{allPaths=**} {
+      allow read: if signedIn();
+      allow create, update: if signedIn()
+        && request.auth.uid == userId
+        && validContentImage();
+      allow delete: if signedIn() && request.auth.uid == userId;
+    }
+
+    match /community_documents/{userId}/{allPaths=**} {
+      allow read: if signedIn();
+      allow create, update: if signedIn()
+        && request.auth.uid == userId
+        && isAdmin()
+        && validImageOrPdf();
+      allow delete: if signedIn()
+        && request.auth.uid == userId
+        && isAdmin();
+    }
+
+    match /recording_materials/{userId}/{allPaths=**} {
+      allow read: if signedIn();
+      allow create, update: if signedIn()
+        && request.auth.uid == userId
+        && isAdmin()
+        && validImageOrPdf();
+      allow delete: if signedIn()
+        && request.auth.uid == userId
+        && isAdmin();
+    }
+
+    match /support_tickets/{userId}/{allPaths=**} {
+      allow read: if signedIn()
+        && (request.auth.uid == userId || isAdmin());
+      allow create, update: if signedIn()
+        && (request.auth.uid == userId || isAdmin())
+        && validImageOrPdf();
+      allow delete: if signedIn()
+        && (request.auth.uid == userId || isAdmin());
+    }
+
+    match /admin_assets/{userId}/{allPaths=**} {
+      allow read: if signedIn();
+      allow create, update: if signedIn()
+        && request.auth.uid == userId
+        && isAdmin()
+        && validManagedContent();
+      allow delete: if signedIn()
+        && request.auth.uid == userId
+        && isAdmin();
+    }
+  }
+}

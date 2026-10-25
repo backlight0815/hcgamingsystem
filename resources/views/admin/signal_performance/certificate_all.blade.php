@@ -127,8 +127,12 @@
                     <select name="user_id" id="user_id" class="form-select">
                         <option value="">All Recipients</option>
                         @foreach($users as $user)
+                            @php
+                                $recipientName = $user->name ?: ($user->username ?: $user->email);
+                                $showUsername = $user->username && strcasecmp($recipientName, $user->username) !== 0;
+                            @endphp
                             <option value="{{ $user->id }}" {{ request('user_id') == $user->id ? 'selected' : '' }}>
-                                {{ $user->name ?: $user->username }}
+                                {{ $recipientName }}@if($showUsername) ({{ $user->username }})@endif - Role {{ $user->role_id }}
                             </option>
                         @endforeach
                     </select>

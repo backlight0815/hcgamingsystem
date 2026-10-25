@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'pms' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
     ],
 
     /*
@@ -63,6 +67,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+        'project_management_users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\ProjectManagementUser::class,
         ],
 
         // 'users' => [
@@ -94,6 +102,12 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'project_management_users' => [
+            'provider' => 'project_management_users',
+            'table' => 'pms_password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
         ],

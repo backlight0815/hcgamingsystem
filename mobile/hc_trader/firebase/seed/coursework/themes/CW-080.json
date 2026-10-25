@@ -1,0 +1,637 @@
+{
+  "theme": {
+    "id": "CW-080",
+    "code": "CW-080",
+    "title": {
+      "en": "Reviewing Execution Quality After the Trade Is Closed",
+      "zh": "交易结束后复盘执行质量"
+    },
+    "shortTitle": {
+      "en": "execution review",
+      "zh": "交易结束后复盘执行质量"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates reviewing execution quality after the trade is closed using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示交易结束后复盘执行质量。"
+    },
+    "categoryId": "trade_execution",
+    "categoryName": {
+      "en": "Trade Planning and Execution",
+      "zh": "交易计划与执行"
+    },
+    "difficulty": "advanced",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind reviewing execution quality after the trade is closed.",
+        "Apply reviewing execution quality after the trade is closed to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释交易结束后复盘执行质量背后的核心决策规则。",
+        "将交易结束后复盘执行质量应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "execution review",
+      "slippage",
+      "process",
+      "GBPUSD",
+      "Trade Planning and Execution"
+    ],
+    "searchTokens": [
+      "cw-080",
+      "CW-080",
+      "trade_execution",
+      "trade planning and execution",
+      "交易计划与执行",
+      "reviewing",
+      "execution",
+      "quality",
+      "after",
+      "the",
+      "trade",
+      "is",
+      "closed",
+      "交易结束后复盘执行质量",
+      "review",
+      "slippage",
+      "process",
+      "gbpusd",
+      "planning",
+      "and"
+    ],
+    "difficultyOrder": 3,
+    "estimatedMinutes": 90,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 80,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "3fd0cbcdf9cb63747a4193bd58c00d5c5d3286f5a162d0a785b0d64e8589a7dd"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-080",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for execution review",
+        "zh": "交易结束后复盘执行质量的核心决策规则"
+      },
+      "prompt": {
+        "en": "What distinguishes professional analysis of reviewing execution quality after the trade is closed from signal chasing?",
+        "zh": "对交易结束后复盘执行质量的专业分析与追逐信号有何区别？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing reviewing execution quality after the trade is closed.",
+            "zh": "评估交易结束后复盘执行质量时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "4557daf532addf1d0ad9379d773825de21154085ff1a213e15c1aa6dd40deb92"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-080",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying execution review Under Uncertainty",
+        "zh": "在不确定性下应用交易结束后复盘执行质量"
+      },
+      "prompt": {
+        "en": "A trader cannot explain the risk boundary for reviewing execution quality after the trade is closed. What does this imply about readiness to enter?",
+        "zh": "交易者无法解释交易结束后复盘执行质量的风险边界。这说明入场准备程度如何？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "a671cd8d6d7052d766827ee67d7b4d220db565eb66bfdce07795efd44c445c14"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-080",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "GBPUSD Chart Interpretation for execution review",
+        "zh": "GBPUSD图表中的交易结束后复盘执行质量解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational GBPUSD H1 chart. Which labelled zone is the strongest decision area for evaluating reviewing execution quality after the trade is closed while keeping invalidation visible?",
+        "zh": "研究合成教学用GBPUSD H1图表。哪个标记区域最适合评估交易结束后复盘执行质量，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "GBPUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 1.28345,
+            "high": 1.28491,
+            "low": 1.2814,
+            "close": 1.28336
+          },
+          {
+            "timeIndex": 1,
+            "open": 1.28336,
+            "high": 1.28746,
+            "low": 1.28206,
+            "close": 1.28532
+          },
+          {
+            "timeIndex": 2,
+            "open": 1.28532,
+            "high": 1.29034,
+            "low": 1.28392,
+            "close": 1.28847
+          },
+          {
+            "timeIndex": 3,
+            "open": 1.28847,
+            "high": 1.29245,
+            "low": 1.28646,
+            "close": 1.29149
+          },
+          {
+            "timeIndex": 4,
+            "open": 1.29149,
+            "high": 1.2956,
+            "low": 1.28949,
+            "close": 1.29366
+          },
+          {
+            "timeIndex": 5,
+            "open": 1.29366,
+            "high": 1.2972,
+            "low": 1.29229,
+            "close": 1.29509
+          },
+          {
+            "timeIndex": 6,
+            "open": 1.29509,
+            "high": 1.29732,
+            "low": 1.29376,
+            "close": 1.29597
+          },
+          {
+            "timeIndex": 7,
+            "open": 1.29597,
+            "high": 1.29763,
+            "low": 1.29399,
+            "close": 1.29607
+          },
+          {
+            "timeIndex": 8,
+            "open": 1.29607,
+            "high": 1.29823,
+            "low": 1.29312,
+            "close": 1.29514
+          },
+          {
+            "timeIndex": 9,
+            "open": 1.29514,
+            "high": 1.29694,
+            "low": 1.29232,
+            "close": 1.29375
+          },
+          {
+            "timeIndex": 10,
+            "open": 1.29375,
+            "high": 1.29483,
+            "low": 1.29199,
+            "close": 1.29325
+          },
+          {
+            "timeIndex": 11,
+            "open": 1.29325,
+            "high": 1.29672,
+            "low": 1.2913,
+            "close": 1.29472
+          },
+          {
+            "timeIndex": 12,
+            "open": 1.29472,
+            "high": 1.30003,
+            "low": 1.29267,
+            "close": 1.29795
+          },
+          {
+            "timeIndex": 13,
+            "open": 1.29795,
+            "high": 1.30278,
+            "low": 1.29645,
+            "close": 1.30153
+          },
+          {
+            "timeIndex": 14,
+            "open": 1.30153,
+            "high": 1.30572,
+            "low": 1.30034,
+            "close": 1.30406
+          },
+          {
+            "timeIndex": 15,
+            "open": 1.30406,
+            "high": 1.30737,
+            "low": 1.30215,
+            "close": 1.3052
+          },
+          {
+            "timeIndex": 16,
+            "open": 1.3052,
+            "high": 1.30717,
+            "low": 1.30314,
+            "close": 1.30546
+          },
+          {
+            "timeIndex": 17,
+            "open": 1.30546,
+            "high": 1.30664,
+            "low": 1.30378,
+            "close": 1.30534
+          },
+          {
+            "timeIndex": 18,
+            "open": 1.30534,
+            "high": 1.30739,
+            "low": 1.30373,
+            "close": 1.30484
+          },
+          {
+            "timeIndex": 19,
+            "open": 1.30484,
+            "high": 1.30688,
+            "low": 1.30213,
+            "close": 1.304
+          },
+          {
+            "timeIndex": 20,
+            "open": 1.304,
+            "high": 1.30515,
+            "low": 1.30144,
+            "close": 1.30352
+          },
+          {
+            "timeIndex": 21,
+            "open": 1.30352,
+            "high": 1.30622,
+            "low": 1.3019,
+            "close": 1.30448
+          },
+          {
+            "timeIndex": 22,
+            "open": 1.30448,
+            "high": 1.30949,
+            "low": 1.30343,
+            "close": 1.30732
+          },
+          {
+            "timeIndex": 23,
+            "open": 1.30732,
+            "high": 1.31275,
+            "low": 1.3055,
+            "close": 1.31113
+          },
+          {
+            "timeIndex": 24,
+            "open": 1.31113,
+            "high": 1.31552,
+            "low": 1.30904,
+            "close": 1.31423
+          },
+          {
+            "timeIndex": 25,
+            "open": 1.31423,
+            "high": 1.31766,
+            "low": 1.31255,
+            "close": 1.31557
+          },
+          {
+            "timeIndex": 26,
+            "open": 1.31557,
+            "high": 1.31755,
+            "low": 1.31442,
+            "close": 1.31539
+          },
+          {
+            "timeIndex": 27,
+            "open": 1.31539,
+            "high": 1.31642,
+            "low": 1.31292,
+            "close": 1.3147
+          },
+          {
+            "timeIndex": 28,
+            "open": 1.3147,
+            "high": 1.31652,
+            "low": 1.31208,
+            "close": 1.31417
+          },
+          {
+            "timeIndex": 29,
+            "open": 1.31417,
+            "high": 1.31633,
+            "low": 1.31215,
+            "close": 1.31388
+          },
+          {
+            "timeIndex": 30,
+            "open": 1.31388,
+            "high": 1.31541,
+            "low": 1.31296,
+            "close": 1.31386
+          },
+          {
+            "timeIndex": 31,
+            "open": 1.31386,
+            "high": 1.31607,
+            "low": 1.31214,
+            "close": 1.31467
+          },
+          {
+            "timeIndex": 32,
+            "open": 1.31467,
+            "high": 1.31909,
+            "low": 1.31258,
+            "close": 1.31696
+          },
+          {
+            "timeIndex": 33,
+            "open": 1.31696,
+            "high": 1.32242,
+            "low": 1.31518,
+            "close": 1.3205
+          },
+          {
+            "timeIndex": 34,
+            "open": 1.3205,
+            "high": 1.32488,
+            "low": 1.31952,
+            "close": 1.32396
+          },
+          {
+            "timeIndex": 35,
+            "open": 1.32396,
+            "high": 1.32771,
+            "low": 1.32228,
+            "close": 1.32582
+          },
+          {
+            "timeIndex": 36,
+            "open": 1.32582,
+            "high": 1.32796,
+            "low": 1.32358,
+            "close": 1.32567
+          },
+          {
+            "timeIndex": 37,
+            "open": 1.32567,
+            "high": 1.3271,
+            "low": 1.32261,
+            "close": 1.32444
+          },
+          {
+            "timeIndex": 38,
+            "open": 1.32444,
+            "high": 1.32593,
+            "low": 1.32241,
+            "close": 1.32346
+          },
+          {
+            "timeIndex": 39,
+            "open": 1.32346,
+            "high": 1.32561,
+            "low": 1.32172,
+            "close": 1.32334
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 1.28326,
+            "maximumPrice": 1.28978,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 1.29444,
+            "maximumPrice": 1.30096,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 1.3084,
+            "maximumPrice": 1.31492,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 1.31958,
+            "maximumPrice": 1.3261,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "ca93a7feaf46e0268a4ed567e333a0c910ad01370b043ddc3a37abd09bfe5452"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-080",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: execution review",
+        "zh": "独立情境分析：交易结束后复盘执行质量"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of reviewing execution quality after the trade is closed using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析交易结束后复盘执行质量的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "1b3d4ac4347cd07ef47c44ca53bdb101ad8f8a19db247dbd3db05061f264c98d"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-080",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: execution review",
+        "zh": "实践展示：交易结束后复盘执行质量"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate reviewing execution quality after the trade is closed. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示交易结束后复盘执行质量。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "2cea96c4b6a5e8c8638e37e2aa269b6aecbc63bd51058114805555f5d6d3aaff"
+    }
+  ]
+}

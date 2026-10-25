@@ -4,6 +4,7 @@
     $adminData = $user;
     $tradingEnabled = module_enabled('trading');
     $ecommerceEnabled = module_enabled('dealership_ecommerce');
+    $pmsEnabled = module_enabled('project_management');
     $traderOnboardingLocked = false;
     $traderOnboardingApplication = null;
 
@@ -36,11 +37,13 @@
         $menus[] = [
             'label' => 'Company Setting',
             'icon' => 'ri-toggle-line',
-            'children' => [
+            'children' => $visibleItems([
                 ['label' => 'Module & Feature Config', 'url' => $routeUrl('admin.features.index')],
+                $user->isGlobalSuperAdmin() ? ['label' => 'TradingHub Module Management', 'url' => $routeUrl('admin.trading-modules.index')] : null,
                 ['label' => 'Manage Feature', 'url' => $routeUrl('all.features')],
                 ['label' => 'Manage Role', 'url' => $routeUrl('all.roles')],
-            ],
+                $user->isGlobalSuperAdmin() ? ['label' => 'Administrative Audit', 'url' => $routeUrl('admin.system_audit')] : null,
+            ]),
         ];
 
         $menus[] = [
@@ -86,6 +89,17 @@
 
         if ($roleIn([1, 2, 201, 202, 501, 502, 750, 760, 770])) {
             $menus[] = [
+                'label' => 'AI Assistant',
+                'icon' => 'ri-robot-line',
+                'children' => $visibleItems([
+                    ['label' => 'AI Assistant', 'url' => $routeUrl('ai.assistant.index')],
+                    $roleIn([1, 2]) ? ['label' => 'AI Knowledge Base', 'url' => $routeUrl('admin.ai_knowledge_base.index')] : null,
+                ]),
+            ];
+        }
+
+        if ($roleIn([1, 2, 201, 202, 501, 502, 750, 760, 770])) {
+            $menus[] = [
                 'label' => 'Appointments',
                 'icon' => 'ri-calendar-check-line',
                 'children' => $visibleItems([
@@ -100,8 +114,12 @@
                 'label' => 'Trading Exams',
                 'icon' => 'ri-question-answer-line',
                 'children' => $visibleItems([
+                    $roleIn([750, 760, 770]) ? ['label' => 'Final Exam', 'url' => $routeUrl('final_exam.intro')] : null,
                     $roleIn([750, 760, 770]) ? ['label' => 'Daily Exam', 'url' => $routeUrl('trading.exams.index')] : null,
                     $roleIn([1, 2, 760]) ? ['label' => 'Question Bank', 'url' => $routeUrl('admin.trading.exams.index')] : null,
+                    $roleIn([1, 2]) ? ['label' => 'Final Exam Bank', 'url' => $routeUrl('admin.final_exam.questions.index')] : null,
+                    $roleIn([1, 2]) ? ['label' => 'Final Exam Attempts', 'url' => $routeUrl('admin.final_exam.attempts.index')] : null,
+                    $roleIn([1, 2]) ? ['label' => 'Final Exam Settings', 'url' => $routeUrl('admin.final_exam.settings')] : null,
                 ]),
             ];
         }
@@ -205,6 +223,9 @@
                     $roleIn([1, 2, 750, 760, 770]) ? ['label' => 'Trading Journal', 'url' => $routeUrl('all.trading.journals')] : null,
                     $roleIn([750, 760, 770]) ? ['label' => 'Readiness Checklist', 'url' => $routeUrl('trader.readiness.index')] : null,
                     ['label' => 'Trading Statistics', 'url' => $routeUrl('all.trading.statistics')],
+                    ['label' => 'AI Market Insight', 'url' => $routeUrl('market_insight.dashboard')],
+                    $roleIn([1, 2]) ? ['label' => 'AI Market Insight Management', 'url' => $routeUrl('admin.market_insight.management')] : null,
+                    $roleIn([1, 2, 750, 760, 770]) ? ['label' => 'Prop Firm Leaderboard', 'url' => $routeUrl('propfirm.leaderboard.index')] : null,
                     $roleIn([1, 2, 750, 760, 770]) ? ['label' => 'Backtest Lab', 'url' => $routeUrl('trading.backtest.index')] : null,
                     $roleIn([750, 760, 770]) ? ['label' => 'Position Centre', 'url' => $routeUrl('trading.positions.index')] : null,
                     $roleIn([1, 2, 501, 750, 760, 770]) ? ['label' => 'Market Analyst', 'url' => $routeUrl('trading.market-analyst.index')] : null,
@@ -215,6 +236,7 @@
                     $roleIn([1, 2, 750, 760, 770]) ? ['label' => 'Trading Pair', 'url' => $routeUrl('all.trading.pairs')] : null,
                     $roleIn([1, 2]) ? ['label' => 'Traders Performance', 'url' => $routeUrl('admin.trader.journals.index')] : null,
                     $roleIn([1, 2]) ? ['label' => 'Funded Traders', 'url' => $routeUrl('admin.funded_traders.index')] : null,
+                    $roleIn([1, 2]) ? ['label' => 'Prop Firm Config', 'url' => $routeUrl('admin.funded_traders.config')] : null,
                 ]),
             ];
         }
@@ -405,7 +427,12 @@
         }
     }
 
-    if (!$tradingEnabled && !$ecommerceEnabled) {
+    if ($pmsEnabled && \App\Support\PmsAccess::workspace($user)) {
+        $menus[] = ['heading' => 'Engineering'];
+        $menus[] = ['label' => 'Project Management', 'icon' => 'ri-folder-chart-line', 'url' => $routeUrl('pms.dashboard')];
+    }
+
+    if (!$tradingEnabled && !$ecommerceEnabled && !$pmsEnabled) {
         $menus[] = ['heading' => 'Modules'];
         $menus[] = [
             'label' => 'No Module Enabled',
@@ -427,11 +454,21 @@
                 'icon' => 'ri-list-check-3',
                 'url' => $routeUrl('trader.readiness.index'),
             ],
+            [
+                'label' => 'AI Assistant',
+                'icon' => 'ri-robot-line',
+                'url' => $routeUrl('ai.assistant.index'),
+            ],
         ];
+    }
+
+    $menus = \App\Support\TradingSubmodules::filterMenus($menus);
+    if (($backofficeMode ?? 'existing') !== 'existing' && ! $traderOnboardingLocked) {
+        $menus = \App\Support\BackofficeNavigation::organize($menus, $backofficeMode);
     }
 @endphp
 
-<div class="vertical-menu">
+<div class="vertical-menu"@if(($backofficeMode ?? 'existing') !== 'existing') aria-label="Backoffice navigation"@endif>
     <div data-simplebar class="h-100">
         <div class="user-profile text-center mt-3">
             <div>
@@ -449,20 +486,22 @@
                     @if(isset($menu['heading']))
                         <li class="menu-title">{{ $menu['heading'] }}</li>
                     @elseif(!empty($menu['children']))
-                        <li>
-                            <a href="javascript:void(0);" class="has-arrow waves-effect">
+                        @php($activeChild = ($backofficeMode ?? 'existing') !== 'existing' && collect($menu['children'])->contains(fn ($child) => $child['url'] === url()->current()))
+                        <li @if($activeChild)class="mm-active"@endif>
+                            <a href="javascript:void(0);" class="has-arrow waves-effect{{ $activeChild ? ' active' : '' }}"@if($activeChild) aria-expanded="true"@endif>
                                 <i class="{{ $menu['icon'] }}"></i>
                                 <span>{{ $menu['label'] }}</span>
                             </a>
-                            <ul class="sub-menu" aria-expanded="false">
+                            <ul class="sub-menu{{ $activeChild ? ' mm-show' : '' }}" aria-expanded="{{ $activeChild ? 'true' : 'false' }}">
                                 @foreach($menu['children'] as $child)
-                                    <li><a href="{{ $child['url'] }}">{{ $child['label'] }}</a></li>
+                                    <li><a href="{{ $child['url'] }}"@if(($backofficeMode ?? 'existing') !== 'existing' && $child['url'] === url()->current()) aria-current="page"@endif>{{ $child['label'] }}</a></li>
                                 @endforeach
                             </ul>
                         </li>
                     @else
+                        @php($activeMenu = (($backofficeMode ?? 'existing') !== 'existing' && $menu['url'] === url()->current()) || ($menu['label'] === 'Project Management' && request()->routeIs('pms.*')))
                         <li>
-                            <a href="{{ $menu['url'] }}" class="waves-effect">
+                            <a href="{{ $menu['url'] }}" class="waves-effect{{ $activeMenu ? ' active' : '' }}"@if($activeMenu) aria-current="page"@endif>
                                 <i class="{{ $menu['icon'] }}"></i>
                                 <span>{{ $menu['label'] }}</span>
                             </a>

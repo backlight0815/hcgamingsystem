@@ -1,0 +1,638 @@
+{
+  "theme": {
+    "id": "CW-079",
+    "code": "CW-079",
+    "title": {
+      "en": "Taking Partial Profits Without Destroying Expected Value",
+      "zh": "在不破坏期望值的前提下分批止盈"
+    },
+    "shortTitle": {
+      "en": "partial profit",
+      "zh": "在不破坏期望值的前提下分批止盈"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates taking partial profits without destroying expected value using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示在不破坏期望值的前提下分批止盈。"
+    },
+    "categoryId": "trade_execution",
+    "categoryName": {
+      "en": "Trade Planning and Execution",
+      "zh": "交易计划与执行"
+    },
+    "difficulty": "advanced",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind taking partial profits without destroying expected value.",
+        "Apply taking partial profits without destroying expected value to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释在不破坏期望值的前提下分批止盈背后的核心决策规则。",
+        "将在不破坏期望值的前提下分批止盈应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "partial profit",
+      "expected value",
+      "position management",
+      "EURUSD",
+      "Trade Planning and Execution"
+    ],
+    "searchTokens": [
+      "cw-079",
+      "CW-079",
+      "trade_execution",
+      "trade planning and execution",
+      "交易计划与执行",
+      "taking",
+      "partial",
+      "profits",
+      "without",
+      "destroying",
+      "expected",
+      "value",
+      "在不破坏期望值的前提下分批止盈",
+      "profit",
+      "position",
+      "management",
+      "eurusd",
+      "trade",
+      "planning",
+      "and",
+      "execution"
+    ],
+    "difficultyOrder": 3,
+    "estimatedMinutes": 90,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 79,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "7dbb57b7db27d2293970684a8c49495f327e9675f4f23165a2f6cd10c53664f0"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-079",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for partial profit",
+        "zh": "在不破坏期望值的前提下分批止盈的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which combination of evidence is most appropriate for assessing taking partial profits without destroying expected value?",
+        "zh": "评估在不破坏期望值的前提下分批止盈时，哪种证据组合最合适？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing taking partial profits without destroying expected value.",
+            "zh": "评估在不破坏期望值的前提下分批止盈时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "60d39ccf28a70b4ddeb7d3813741451802170e40e3a6ff585f46346bff6c2c9e"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-079",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying partial profit Under Uncertainty",
+        "zh": "在不确定性下应用在不破坏期望值的前提下分批止盈"
+      },
+      "prompt": {
+        "en": "A chart resembles a textbook example of taking partial profits without destroying expected value, but the location is poor. How should it be treated?",
+        "zh": "图表看似在不破坏期望值的前提下分批止盈的教科书案例，但位置不佳。应如何处理？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "074436ab785412c14a34e5700de3212dceef9b613bd9b84dfb22c35c2019cc7f"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-079",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "EURUSD Chart Interpretation for partial profit",
+        "zh": "EURUSD图表中的在不破坏期望值的前提下分批止盈解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational EURUSD H1 chart. Which labelled zone is the strongest decision area for evaluating taking partial profits without destroying expected value while keeping invalidation visible?",
+        "zh": "研究合成教学用EURUSD H1图表。哪个标记区域最适合评估在不破坏期望值的前提下分批止盈，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "EURUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 1.0905,
+            "high": 1.09172,
+            "low": 1.08673,
+            "close": 1.08823
+          },
+          {
+            "timeIndex": 1,
+            "open": 1.08823,
+            "high": 1.08929,
+            "low": 1.08572,
+            "close": 1.08733
+          },
+          {
+            "timeIndex": 2,
+            "open": 1.08733,
+            "high": 1.08965,
+            "low": 1.08613,
+            "close": 1.08799
+          },
+          {
+            "timeIndex": 3,
+            "open": 1.08799,
+            "high": 1.09083,
+            "low": 1.0871,
+            "close": 1.08932
+          },
+          {
+            "timeIndex": 4,
+            "open": 1.08932,
+            "high": 1.0909,
+            "low": 1.08785,
+            "close": 1.09015
+          },
+          {
+            "timeIndex": 5,
+            "open": 1.09015,
+            "high": 1.09161,
+            "low": 1.08832,
+            "close": 1.08994
+          },
+          {
+            "timeIndex": 6,
+            "open": 1.08994,
+            "high": 1.09162,
+            "low": 1.08769,
+            "close": 1.08895
+          },
+          {
+            "timeIndex": 7,
+            "open": 1.08895,
+            "high": 1.09008,
+            "low": 1.08673,
+            "close": 1.08756
+          },
+          {
+            "timeIndex": 8,
+            "open": 1.08756,
+            "high": 1.0887,
+            "low": 1.08439,
+            "close": 1.08583
+          },
+          {
+            "timeIndex": 9,
+            "open": 1.08583,
+            "high": 1.0875,
+            "low": 1.08207,
+            "close": 1.0837
+          },
+          {
+            "timeIndex": 10,
+            "open": 1.0837,
+            "high": 1.08515,
+            "low": 1.08027,
+            "close": 1.08157
+          },
+          {
+            "timeIndex": 11,
+            "open": 1.08157,
+            "high": 1.08232,
+            "low": 1.07957,
+            "close": 1.08034
+          },
+          {
+            "timeIndex": 12,
+            "open": 1.08034,
+            "high": 1.08214,
+            "low": 1.07895,
+            "close": 1.08062
+          },
+          {
+            "timeIndex": 13,
+            "open": 1.08062,
+            "high": 1.08366,
+            "low": 1.07899,
+            "close": 1.082
+          },
+          {
+            "timeIndex": 14,
+            "open": 1.082,
+            "high": 1.08432,
+            "low": 1.08066,
+            "close": 1.08326
+          },
+          {
+            "timeIndex": 15,
+            "open": 1.08326,
+            "high": 1.08455,
+            "low": 1.08254,
+            "close": 1.08333
+          },
+          {
+            "timeIndex": 16,
+            "open": 1.08333,
+            "high": 1.08502,
+            "low": 1.08074,
+            "close": 1.0821
+          },
+          {
+            "timeIndex": 17,
+            "open": 1.0821,
+            "high": 1.0835,
+            "low": 1.0786,
+            "close": 1.08023
+          },
+          {
+            "timeIndex": 18,
+            "open": 1.08023,
+            "high": 1.08107,
+            "low": 1.07696,
+            "close": 1.07834
+          },
+          {
+            "timeIndex": 19,
+            "open": 1.07834,
+            "high": 1.0799,
+            "low": 1.0758,
+            "close": 1.07655
+          },
+          {
+            "timeIndex": 20,
+            "open": 1.07655,
+            "high": 1.07818,
+            "low": 1.07355,
+            "close": 1.07487
+          },
+          {
+            "timeIndex": 21,
+            "open": 1.07487,
+            "high": 1.07584,
+            "low": 1.07203,
+            "close": 1.07366
+          },
+          {
+            "timeIndex": 22,
+            "open": 1.07366,
+            "high": 1.07495,
+            "low": 1.07212,
+            "close": 1.07353
+          },
+          {
+            "timeIndex": 23,
+            "open": 1.07353,
+            "high": 1.0763,
+            "low": 1.07273,
+            "close": 1.0746
+          },
+          {
+            "timeIndex": 24,
+            "open": 1.0746,
+            "high": 1.07736,
+            "low": 1.07333,
+            "close": 1.07603
+          },
+          {
+            "timeIndex": 25,
+            "open": 1.07603,
+            "high": 1.07745,
+            "low": 1.0744,
+            "close": 1.07653
+          },
+          {
+            "timeIndex": 26,
+            "open": 1.07653,
+            "high": 1.07813,
+            "low": 1.074,
+            "close": 1.07545
+          },
+          {
+            "timeIndex": 27,
+            "open": 1.07545,
+            "high": 1.07704,
+            "low": 1.07239,
+            "close": 1.07325
+          },
+          {
+            "timeIndex": 28,
+            "open": 1.07325,
+            "high": 1.07414,
+            "low": 1.06969,
+            "close": 1.07092
+          },
+          {
+            "timeIndex": 29,
+            "open": 1.07092,
+            "high": 1.07228,
+            "low": 1.06751,
+            "close": 1.06912
+          },
+          {
+            "timeIndex": 30,
+            "open": 1.06912,
+            "high": 1.07082,
+            "low": 1.06639,
+            "close": 1.06787
+          },
+          {
+            "timeIndex": 31,
+            "open": 1.06787,
+            "high": 1.06914,
+            "low": 1.06611,
+            "close": 1.06703
+          },
+          {
+            "timeIndex": 32,
+            "open": 1.06703,
+            "high": 1.06803,
+            "low": 1.0656,
+            "close": 1.06678
+          },
+          {
+            "timeIndex": 33,
+            "open": 1.06678,
+            "high": 1.06904,
+            "low": 1.06518,
+            "close": 1.06741
+          },
+          {
+            "timeIndex": 34,
+            "open": 1.06741,
+            "high": 1.07016,
+            "low": 1.06589,
+            "close": 1.06861
+          },
+          {
+            "timeIndex": 35,
+            "open": 1.06861,
+            "high": 1.07019,
+            "low": 1.06764,
+            "close": 1.06938
+          },
+          {
+            "timeIndex": 36,
+            "open": 1.06938,
+            "high": 1.0708,
+            "low": 1.06759,
+            "close": 1.06872
+          },
+          {
+            "timeIndex": 37,
+            "open": 1.06872,
+            "high": 1.0704,
+            "low": 1.06496,
+            "close": 1.06654
+          },
+          {
+            "timeIndex": 38,
+            "open": 1.06654,
+            "high": 1.06773,
+            "low": 1.06226,
+            "close": 1.0638
+          },
+          {
+            "timeIndex": 39,
+            "open": 1.0638,
+            "high": 1.06489,
+            "low": 1.06063,
+            "close": 1.06165
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 1.06187,
+            "maximumPrice": 1.06623,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 1.06934,
+            "maximumPrice": 1.07369,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 1.07866,
+            "maximumPrice": 1.08301,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 1.08612,
+            "maximumPrice": 1.09048,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "3ae31ecae0f9ca96ef0a8091907de7aac55b3b117695ffc420123618b22ec6b2"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-079",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: partial profit",
+        "zh": "独立情境分析：在不破坏期望值的前提下分批止盈"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of taking partial profits without destroying expected value using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析在不破坏期望值的前提下分批止盈的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "fdf749b5cc7cc61f0a7fa2c9670f381dc78366c7b3319c976e5336b25eba456c"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-079",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: partial profit",
+        "zh": "实践展示：在不破坏期望值的前提下分批止盈"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate taking partial profits without destroying expected value. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示在不破坏期望值的前提下分批止盈。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "31286adbbbec5ac033a972650861ec4f1e1503a201e049746b706534aba7d9c8"
+    }
+  ]
+}

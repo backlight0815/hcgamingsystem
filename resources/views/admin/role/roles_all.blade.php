@@ -164,12 +164,10 @@
                                             <a href="{{ route('edit.role', $role->id) }}" class="btn btn-outline-primary btn-sm" title="Edit Role">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a href="{{ route('delete.role', $role->id) }}"
-                                               class="btn btn-outline-danger btn-sm"
-                                               title="Delete Role"
-                                               onclick="return confirm('Are you sure you want to delete this role?')">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </a>
+                                            <form method="post" action="{{ route('delete.role', $role->id) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this role?')">
+                                                @csrf @method('DELETE')
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete Role"><i class="fas fa-trash-alt"></i></button>
+                                            </form>
                                         </span>
                                     </td>
                                 </tr>

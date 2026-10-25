@@ -1,0 +1,636 @@
+{
+  "theme": {
+    "id": "CW-057",
+    "code": "CW-057",
+    "title": {
+      "en": "Resolving Conflicting Signals Across Trading Timeframes",
+      "zh": "处理不同交易周期之间的冲突信号"
+    },
+    "shortTitle": {
+      "en": "conflicting timeframe",
+      "zh": "处理不同交易周期之间的冲突信号"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates resolving conflicting signals across trading timeframes using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示处理不同交易周期之间的冲突信号。"
+    },
+    "categoryId": "multi_timeframe",
+    "categoryName": {
+      "en": "Multi-Timeframe Analysis",
+      "zh": "多时间周期分析"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind resolving conflicting signals across trading timeframes.",
+        "Apply resolving conflicting signals across trading timeframes to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释处理不同交易周期之间的冲突信号背后的核心决策规则。",
+        "将处理不同交易周期之间的冲突信号应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "conflicting timeframe",
+      "evidence",
+      "no trade",
+      "XAUUSD",
+      "Multi-Timeframe Analysis"
+    ],
+    "searchTokens": [
+      "cw-057",
+      "CW-057",
+      "multi_timeframe",
+      "multi-timeframe analysis",
+      "多时间周期分析",
+      "resolving",
+      "conflicting",
+      "signals",
+      "across",
+      "trading",
+      "timeframes",
+      "处理不同交易周期之间的冲突信号",
+      "timeframe",
+      "evidence",
+      "no",
+      "trade",
+      "xauusd",
+      "multi-timeframe",
+      "analysis"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 57,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "465780193a82b5d22268e5a0d630aac4043bbbd62e28d39296968e56fb247699"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-057",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for conflicting timeframe",
+        "zh": "处理不同交易周期之间的冲突信号的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which practice prevents resolving conflicting signals across trading timeframes from becoming a subjective guess?",
+        "zh": "哪项做法可防止处理不同交易周期之间的冲突信号变成主观猜测？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing resolving conflicting signals across trading timeframes.",
+            "zh": "评估处理不同交易周期之间的冲突信号时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "2261b23fad56572d75e50ad65c98cf49e3cef43164325d2e774f520b7cc2cc84"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-057",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying conflicting timeframe Under Uncertainty",
+        "zh": "在不确定性下应用处理不同交易周期之间的冲突信号"
+      },
+      "prompt": {
+        "en": "Price invalidates the original interpretation of resolving conflicting signals across trading timeframes immediately after entry. What preserves process discipline?",
+        "zh": "价格在入场后立即使原有处理不同交易周期之间的冲突信号解读失效。怎样做才能保持流程纪律？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "28efdab131861e854d1a7722620979aa1885001d4d8a25de05fdb95df1115935"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-057",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "XAUUSD Chart Interpretation for conflicting timeframe",
+        "zh": "XAUUSD图表中的处理不同交易周期之间的冲突信号解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational XAUUSD H1 chart. Which labelled zone is the strongest decision area for evaluating resolving conflicting signals across trading timeframes while keeping invalidation visible?",
+        "zh": "研究合成教学用XAUUSD H1图表。哪个标记区域最适合评估处理不同交易周期之间的冲突信号，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "XAUUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 2314.03,
+            "high": 2316.14,
+            "low": 2312.07,
+            "close": 2314.54
+          },
+          {
+            "timeIndex": 1,
+            "open": 2314.54,
+            "high": 2317.47,
+            "low": 2312.43,
+            "close": 2316.09
+          },
+          {
+            "timeIndex": 2,
+            "open": 2316.09,
+            "high": 2320.76,
+            "low": 2314.5,
+            "close": 2318.59
+          },
+          {
+            "timeIndex": 3,
+            "open": 2318.59,
+            "high": 2322.93,
+            "low": 2317.43,
+            "close": 2320.94
+          },
+          {
+            "timeIndex": 4,
+            "open": 2320.94,
+            "high": 2322.68,
+            "low": 2319.01,
+            "close": 2321.69
+          },
+          {
+            "timeIndex": 5,
+            "open": 2321.69,
+            "high": 2323.6,
+            "low": 2318.2,
+            "close": 2320.32
+          },
+          {
+            "timeIndex": 6,
+            "open": 2320.32,
+            "high": 2322.52,
+            "low": 2316.14,
+            "close": 2317.79
+          },
+          {
+            "timeIndex": 7,
+            "open": 2317.79,
+            "high": 2319.3,
+            "low": 2314.61,
+            "close": 2315.69
+          },
+          {
+            "timeIndex": 8,
+            "open": 2315.69,
+            "high": 2317.18,
+            "low": 2313.06,
+            "close": 2314.94
+          },
+          {
+            "timeIndex": 9,
+            "open": 2314.94,
+            "high": 2317.55,
+            "low": 2312.8,
+            "close": 2315.36
+          },
+          {
+            "timeIndex": 10,
+            "open": 2315.36,
+            "high": 2318.28,
+            "low": 2313.65,
+            "close": 2316.36
+          },
+          {
+            "timeIndex": 11,
+            "open": 2316.36,
+            "high": 2318.73,
+            "low": 2315.35,
+            "close": 2317.76
+          },
+          {
+            "timeIndex": 12,
+            "open": 2317.76,
+            "high": 2321.64,
+            "low": 2315.93,
+            "close": 2319.65
+          },
+          {
+            "timeIndex": 13,
+            "open": 2319.65,
+            "high": 2323.85,
+            "low": 2317.51,
+            "close": 2321.68
+          },
+          {
+            "timeIndex": 14,
+            "open": 2321.68,
+            "high": 2324.16,
+            "low": 2319.91,
+            "close": 2322.76
+          },
+          {
+            "timeIndex": 15,
+            "open": 2322.76,
+            "high": 2324.35,
+            "low": 2321.01,
+            "close": 2321.94
+          },
+          {
+            "timeIndex": 16,
+            "open": 2321.94,
+            "high": 2324.16,
+            "low": 2317.71,
+            "close": 2319.49
+          },
+          {
+            "timeIndex": 17,
+            "open": 2319.49,
+            "high": 2321.33,
+            "low": 2314.74,
+            "close": 2316.88
+          },
+          {
+            "timeIndex": 18,
+            "open": 2316.88,
+            "high": 2317.96,
+            "low": 2313.85,
+            "close": 2315.67
+          },
+          {
+            "timeIndex": 19,
+            "open": 2315.67,
+            "high": 2318.29,
+            "low": 2314.67,
+            "close": 2316.25
+          },
+          {
+            "timeIndex": 20,
+            "open": 2316.25,
+            "high": 2320.01,
+            "low": 2314.53,
+            "close": 2317.88
+          },
+          {
+            "timeIndex": 21,
+            "open": 2317.88,
+            "high": 2320.91,
+            "low": 2315.74,
+            "close": 2319.62
+          },
+          {
+            "timeIndex": 22,
+            "open": 2319.62,
+            "high": 2322.86,
+            "low": 2317.75,
+            "close": 2321.18
+          },
+          {
+            "timeIndex": 23,
+            "open": 2321.18,
+            "high": 2324.81,
+            "low": 2320.11,
+            "close": 2322.59
+          },
+          {
+            "timeIndex": 24,
+            "open": 2322.59,
+            "high": 2325.26,
+            "low": 2320.92,
+            "close": 2323.5
+          },
+          {
+            "timeIndex": 25,
+            "open": 2323.5,
+            "high": 2324.7,
+            "low": 2321.01,
+            "close": 2323.14
+          },
+          {
+            "timeIndex": 26,
+            "open": 2323.14,
+            "high": 2325.24,
+            "low": 2319.27,
+            "close": 2321.18
+          },
+          {
+            "timeIndex": 27,
+            "open": 2321.18,
+            "high": 2323.27,
+            "low": 2317.35,
+            "close": 2318.49
+          },
+          {
+            "timeIndex": 28,
+            "open": 2318.49,
+            "high": 2319.67,
+            "low": 2315.12,
+            "close": 2316.72
+          },
+          {
+            "timeIndex": 29,
+            "open": 2316.72,
+            "high": 2318.75,
+            "low": 2314.61,
+            "close": 2316.98
+          },
+          {
+            "timeIndex": 30,
+            "open": 2316.98,
+            "high": 2321.16,
+            "low": 2315.03,
+            "close": 2318.94
+          },
+          {
+            "timeIndex": 31,
+            "open": 2318.94,
+            "high": 2322.96,
+            "low": 2317.72,
+            "close": 2321.29
+          },
+          {
+            "timeIndex": 32,
+            "open": 2321.29,
+            "high": 2324.31,
+            "low": 2319.75,
+            "close": 2323.01
+          },
+          {
+            "timeIndex": 33,
+            "open": 2323.01,
+            "high": 2326.06,
+            "low": 2320.91,
+            "close": 2323.92
+          },
+          {
+            "timeIndex": 34,
+            "open": 2323.92,
+            "high": 2326.31,
+            "low": 2321.93,
+            "close": 2324.27
+          },
+          {
+            "timeIndex": 35,
+            "open": 2324.27,
+            "high": 2325.34,
+            "low": 2322.65,
+            "close": 2323.93
+          },
+          {
+            "timeIndex": 36,
+            "open": 2323.93,
+            "high": 2325.79,
+            "low": 2321.06,
+            "close": 2322.53
+          },
+          {
+            "timeIndex": 37,
+            "open": 2322.53,
+            "high": 2324.74,
+            "low": 2318.16,
+            "close": 2320.24
+          },
+          {
+            "timeIndex": 38,
+            "open": 2320.24,
+            "high": 2321.81,
+            "low": 2316.2,
+            "close": 2318.23
+          },
+          {
+            "timeIndex": 39,
+            "open": 2318.23,
+            "high": 2319.64,
+            "low": 2316.57,
+            "close": 2317.93
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 2312.64,
+            "maximumPrice": 2314.63,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 2316.06,
+            "maximumPrice": 2318.05,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 2320.33,
+            "maximumPrice": 2322.32,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 2323.75,
+            "maximumPrice": 2325.74,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "2d4f66e181be7e9f0edf006bd602c69e2341f42967012aaa5d36248c1fe736fd"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-057",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: conflicting timeframe",
+        "zh": "独立情境分析：处理不同交易周期之间的冲突信号"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of resolving conflicting signals across trading timeframes using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析处理不同交易周期之间的冲突信号的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "1ec61688ad3ab9fb2e9fc0b8e0b57528e73007ddbf1b43f1831cfc5fcd8b0a9c"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-057",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: conflicting timeframe",
+        "zh": "实践展示：处理不同交易周期之间的冲突信号"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate resolving conflicting signals across trading timeframes. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示处理不同交易周期之间的冲突信号。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "f888c70238f5eb43e94a62a998a95c9174ecccf3432734152ffb0036e586ffb4"
+    }
+  ]
+}

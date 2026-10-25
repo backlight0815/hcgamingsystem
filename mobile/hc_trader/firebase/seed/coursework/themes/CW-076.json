@@ -1,0 +1,634 @@
+{
+  "theme": {
+    "id": "CW-076",
+    "code": "CW-076",
+    "title": {
+      "en": "Planning Breakout-and-Retest Entries with Confirmation",
+      "zh": "以确认条件规划突破回测入场"
+    },
+    "shortTitle": {
+      "en": "breakout and retest",
+      "zh": "以确认条件规划突破回测入场"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates planning breakout-and-retest entries with confirmation using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示以确认条件规划突破回测入场。"
+    },
+    "categoryId": "trade_execution",
+    "categoryName": {
+      "en": "Trade Planning and Execution",
+      "zh": "交易计划与执行"
+    },
+    "difficulty": "advanced",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind planning breakout-and-retest entries with confirmation.",
+        "Apply planning breakout-and-retest entries with confirmation to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释以确认条件规划突破回测入场背后的核心决策规则。",
+        "将以确认条件规划突破回测入场应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "breakout and retest",
+      "confirmation",
+      "entry",
+      "US30",
+      "Trade Planning and Execution"
+    ],
+    "searchTokens": [
+      "cw-076",
+      "CW-076",
+      "trade_execution",
+      "trade planning and execution",
+      "交易计划与执行",
+      "planning",
+      "breakout",
+      "and",
+      "retest",
+      "entries",
+      "with",
+      "confirmation",
+      "以确认条件规划突破回测入场",
+      "entry",
+      "us30",
+      "trade",
+      "execution"
+    ],
+    "difficultyOrder": 3,
+    "estimatedMinutes": 90,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 76,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "a1c702d2577c7f1869f22aaf05424792f3152f9407d82dbb21f19d535fcf9dec"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-076",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for breakout and retest",
+        "zh": "以确认条件规划突破回测入场的核心决策规则"
+      },
+      "prompt": {
+        "en": "How should planning breakout-and-retest entries with confirmation influence a planned trading decision?",
+        "zh": "以确认条件规划突破回测入场应如何影响有计划的交易决策？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing planning breakout-and-retest entries with confirmation.",
+            "zh": "评估以确认条件规划突破回测入场时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "5dbb8b2587c453207494bb0d59cb81dc6eee40318f5faa16a10ff2d1a0637baf"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-076",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying breakout and retest Under Uncertainty",
+        "zh": "在不确定性下应用以确认条件规划突破回测入场"
+      },
+      "prompt": {
+        "en": "A learner wants to increase size because planning breakout-and-retest entries with confirmation appears convincing. What must happen first?",
+        "zh": "学习者因以确认条件规划突破回测入场看似有说服力而想增加仓位。首先必须做什么？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "dbe227e794a0c7123c5a9fad0f1e3a92c97c58d8c584beb162d2ca9d06ef4bd1"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-076",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "US30 Chart Interpretation for breakout and retest",
+        "zh": "US30图表中的以确认条件规划突破回测入场解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational US30 H1 chart. Which labelled zone is the strongest decision area for evaluating planning breakout-and-retest entries with confirmation while keeping invalidation visible?",
+        "zh": "研究合成教学用US30 H1图表。哪个标记区域最适合评估以确认条件规划突破回测入场，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "US30",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 39082.4,
+            "high": 39118.1,
+            "low": 38972.1,
+            "close": 39023.3
+          },
+          {
+            "timeIndex": 1,
+            "open": 39023.3,
+            "high": 39062.3,
+            "low": 38922.3,
+            "close": 38973.8
+          },
+          {
+            "timeIndex": 2,
+            "open": 38973.8,
+            "high": 39029.1,
+            "low": 38899.7,
+            "close": 38935.4
+          },
+          {
+            "timeIndex": 3,
+            "open": 38935.4,
+            "high": 38982.1,
+            "low": 38888.7,
+            "close": 38922
+          },
+          {
+            "timeIndex": 4,
+            "open": 38922,
+            "high": 38970.8,
+            "low": 38871.6,
+            "close": 38944.4
+          },
+          {
+            "timeIndex": 5,
+            "open": 38944.4,
+            "high": 39039.6,
+            "low": 38892.3,
+            "close": 38988.9
+          },
+          {
+            "timeIndex": 6,
+            "open": 38988.9,
+            "high": 39071.3,
+            "low": 38951.5,
+            "close": 39017.6
+          },
+          {
+            "timeIndex": 7,
+            "open": 39017.6,
+            "high": 39050.7,
+            "low": 38966.3,
+            "close": 38997.8
+          },
+          {
+            "timeIndex": 8,
+            "open": 38997.8,
+            "high": 39039.2,
+            "low": 38880.3,
+            "close": 38929.8
+          },
+          {
+            "timeIndex": 9,
+            "open": 38929.8,
+            "high": 38985.4,
+            "low": 38792.8,
+            "close": 38845.4
+          },
+          {
+            "timeIndex": 10,
+            "open": 38845.4,
+            "high": 38890.1,
+            "low": 38738.4,
+            "close": 38777.4
+          },
+          {
+            "timeIndex": 11,
+            "open": 38777.4,
+            "high": 38806.6,
+            "low": 38706.4,
+            "close": 38736.1
+          },
+          {
+            "timeIndex": 12,
+            "open": 38736.1,
+            "high": 38788.2,
+            "low": 38665,
+            "close": 38713.6
+          },
+          {
+            "timeIndex": 13,
+            "open": 38713.6,
+            "high": 38766.2,
+            "low": 38652,
+            "close": 38705
+          },
+          {
+            "timeIndex": 14,
+            "open": 38705,
+            "high": 38746.5,
+            "low": 38664.4,
+            "close": 38716.2
+          },
+          {
+            "timeIndex": 15,
+            "open": 38716.2,
+            "high": 38791,
+            "low": 38688.3,
+            "close": 38747.3
+          },
+          {
+            "timeIndex": 16,
+            "open": 38747.3,
+            "high": 38832.3,
+            "low": 38699.8,
+            "close": 38776.6
+          },
+          {
+            "timeIndex": 17,
+            "open": 38776.6,
+            "high": 38819.1,
+            "low": 38716.8,
+            "close": 38770.1
+          },
+          {
+            "timeIndex": 18,
+            "open": 38770.1,
+            "high": 38802,
+            "low": 38669,
+            "close": 38711.2
+          },
+          {
+            "timeIndex": 19,
+            "open": 38711.2,
+            "high": 38764.4,
+            "low": 38593.8,
+            "close": 38619.8
+          },
+          {
+            "timeIndex": 20,
+            "open": 38619.8,
+            "high": 38671.1,
+            "low": 38490.8,
+            "close": 38537.1
+          },
+          {
+            "timeIndex": 21,
+            "open": 38537.1,
+            "high": 38564.6,
+            "low": 38437.9,
+            "close": 38491.4
+          },
+          {
+            "timeIndex": 22,
+            "open": 38491.4,
+            "high": 38537.2,
+            "low": 38437.2,
+            "close": 38480.8
+          },
+          {
+            "timeIndex": 23,
+            "open": 38480.8,
+            "high": 38542.1,
+            "low": 38456.6,
+            "close": 38486.6
+          },
+          {
+            "timeIndex": 24,
+            "open": 38486.6,
+            "high": 38537.9,
+            "low": 38441.6,
+            "close": 38497.8
+          },
+          {
+            "timeIndex": 25,
+            "open": 38497.8,
+            "high": 38549.3,
+            "low": 38444.2,
+            "close": 38514.7
+          },
+          {
+            "timeIndex": 26,
+            "open": 38514.7,
+            "high": 38587.1,
+            "low": 38469.8,
+            "close": 38532.9
+          },
+          {
+            "timeIndex": 27,
+            "open": 38532.9,
+            "high": 38582.7,
+            "low": 38507.2,
+            "close": 38531.2
+          },
+          {
+            "timeIndex": 28,
+            "open": 38531.2,
+            "high": 38555.9,
+            "low": 38442.8,
+            "close": 38486.4
+          },
+          {
+            "timeIndex": 29,
+            "open": 38486.4,
+            "high": 38534.2,
+            "low": 38347.2,
+            "close": 38400.7
+          },
+          {
+            "timeIndex": 30,
+            "open": 38400.7,
+            "high": 38455.7,
+            "low": 38261.6,
+            "close": 38307.8
+          },
+          {
+            "timeIndex": 31,
+            "open": 38307.8,
+            "high": 38345.5,
+            "low": 38223,
+            "close": 38248.8
+          },
+          {
+            "timeIndex": 32,
+            "open": 38248.8,
+            "high": 38286,
+            "low": 38196.3,
+            "close": 38238.5
+          },
+          {
+            "timeIndex": 33,
+            "open": 38238.5,
+            "high": 38313.6,
+            "low": 38185.2,
+            "close": 38258.7
+          },
+          {
+            "timeIndex": 34,
+            "open": 38258.7,
+            "high": 38329.4,
+            "low": 38211.4,
+            "close": 38281.4
+          },
+          {
+            "timeIndex": 35,
+            "open": 38281.4,
+            "high": 38317.5,
+            "low": 38253.7,
+            "close": 38293.3
+          },
+          {
+            "timeIndex": 36,
+            "open": 38293.3,
+            "high": 38345.3,
+            "low": 38252.5,
+            "close": 38295.8
+          },
+          {
+            "timeIndex": 37,
+            "open": 38295.8,
+            "high": 38350.1,
+            "low": 38233.2,
+            "close": 38286.3
+          },
+          {
+            "timeIndex": 38,
+            "open": 38286.3,
+            "high": 38321.3,
+            "low": 38202,
+            "close": 38250.4
+          },
+          {
+            "timeIndex": 39,
+            "open": 38250.4,
+            "high": 38290.1,
+            "low": 38149.1,
+            "close": 38178.7
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 38187.9,
+            "maximumPrice": 38323.5,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 38420.4,
+            "maximumPrice": 38556.1,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 38711.1,
+            "maximumPrice": 38846.8,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 38943.7,
+            "maximumPrice": 39079.3,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "c71e9f72d812ae540e042cf88e7f915280cd84561fa829264a24342836bdd99b"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-076",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: breakout and retest",
+        "zh": "独立情境分析：以确认条件规划突破回测入场"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of planning breakout-and-retest entries with confirmation using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析以确认条件规划突破回测入场的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "b59e9879c488d6ae7534189f37bf5902dcc78fa568a109b65e267dbd94ab3197"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-076",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: breakout and retest",
+        "zh": "实践展示：以确认条件规划突破回测入场"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate planning breakout-and-retest entries with confirmation. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示以确认条件规划突破回测入场。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "7707eecdbbee71315550a2f93fcb9719411cda8f6687f6be0fb4ad6185ce3010"
+    }
+  ]
+}

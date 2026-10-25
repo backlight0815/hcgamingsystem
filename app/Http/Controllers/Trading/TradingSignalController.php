@@ -25,6 +25,11 @@ use App\Models\FeatureToggle;
 use Illuminate\Support\Facades\Validator;
 use App\Models\TradingReason;
 use App\Models\User;
+use App\Events\TradingSignalPublished;
+use App\Jobs\SendTradingSignalToDiscord;
+use App\Jobs\SendTradingSignalPushNotification;
+use App\Services\TradingSignalAuditService;
+use Illuminate\Support\Facades\Gate;
 
 
 class TradingSignalController extends Controller
@@ -38,7 +43,7 @@ class TradingSignalController extends Controller
     {
         $user = Auth::user();
 
-        return $user && in_array((int) $user->role_id, [1, 2, 999], true);
+        return $user && in_array((int) $user->role_id, config('trading_signals.roles.manage', [1, 2, 3, 502, 999]), true);
     }
 
     private function signalQueryForCurrentUser(array $with = [])
@@ -70,6 +75,13 @@ class TradingSignalController extends Controller
         }
 
         return 0.0;
+    }
+
+    private function decimalSignalPrice($value): ?string
+    {
+        $value = str_replace(',', '', (string) $value);
+
+        return preg_match('/\d+(?:\.\d+)?/', $value, $matches) ? $matches[0] : null;
     }
 
     private function resolveSignalPipFactor(?string $pair): float
@@ -167,7 +179,7 @@ public function index(Request $request)
     $canManageAll = $this->canManageAllSignals();
 
     // Base Query
-    $query = TradingSignal::with(['user', 'community']);
+    $query = TradingSignal::with(['user', 'sourceUser', 'community']);
 
     // Role filter for non-admins
     if (!$canManageAll) {
@@ -202,6 +214,14 @@ public function index(Request $request)
 
     if ($request->filled('trading_pair')) {
         $query->where('trading_pair', 'like', '%' . $request->trading_pair . '%');
+    }
+
+    if ($request->filled('source')) {
+        $query->where('source', strtoupper((string) $request->source));
+    }
+
+    if ($request->filled('workflow_status')) {
+        $query->where('workflow_status', strtoupper((string) $request->workflow_status));
     }
 
     if ($request->filled('status_filter')) {
@@ -254,6 +274,8 @@ public function index(Request $request)
         'provider_id'   => $request->provider_id,
         'trading_pair'  => $request->trading_pair,
         'status_filter' => $request->status_filter,
+        'source'        => $request->source,
+        'workflow_status' => $request->workflow_status,
     ]);
 }
 
@@ -264,6 +286,7 @@ public function index(Request $request)
      */
     public function create()
     {
+        Gate::authorize('create', TradingSignal::class);
         // Get all trading reasons
     $reasons = TradingReason::all();
             $communities = Community::all();
@@ -280,6 +303,8 @@ public function index(Request $request)
 
 public function store(Request $request)
 {
+    Gate::authorize('create', TradingSignal::class);
+    Gate::authorize('publish', TradingSignal::class);
     // ------------------------------------
     // Validation
     // ------------------------------------
@@ -328,60 +353,54 @@ public function store(Request $request)
     // ------------------------------------
     // Create Trading Signal (ONCE)
     // ------------------------------------
-    $signal = TradingSignal::create(array_merge($data, [
-        'signal_code'     => $signalCode,
-        'signal_image'    => $imagePath,
-        'user_id'         => auth()->id(),
-        'trading_reasons' => $data['trading_reasons'] ?? [],
-        'trigger_time'    => $data['trigger_time'] ?? null,
-    ]));
+    $signal = DB::transaction(function () use ($data, $signalCode, $imagePath): TradingSignal {
+        $signal = TradingSignal::create(array_merge($data, [
+            'signal_code'     => $signalCode,
+            'signal_title'    => trim($data['trading_pair'].' '.$data['immediate_action']),
+            'signal_image'    => $imagePath,
+            'user_id'         => auth()->id(),
+            'trading_reasons' => $data['trading_reasons'] ?? [],
+            'trigger_time'    => $data['trigger_time'] ?? null,
+            'source'          => 'WEBSITE',
+            'source_user_id'  => auth()->id(),
+            'workflow_status' => TradingSignal::WORKFLOW_PUBLISHED,
+            'published_at'    => now(),
+            'lifecycle_state' => 'pending_entry',
+            'order_type'      => 'pending_order',
+            'entry_price_value' => $this->decimalSignalPrice($data['entry_price']),
+            'current_entry_price_value' => $this->decimalSignalPrice($data['entry_price']),
+            'stop_loss_value' => $this->decimalSignalPrice($data['stop_loss']),
+            'current_stop_loss_value' => $this->decimalSignalPrice($data['stop_loss']),
+            'targets_hit' => [],
+            'target_count' => collect(range(1, 10))
+                ->filter(fn ($target) => filled($data["target_{$target}"] ?? null))
+                ->count(),
+            'percentage_remaining' => 100,
+            'last_update_type' => 'published',
+            'last_updated_by' => (string) auth()->id(),
+            ...collect(range(1, 10))->mapWithKeys(fn ($target) => [
+                "target_{$target}_value" => $this->decimalSignalPrice($data["target_{$target}"] ?? null),
+            ])->all(),
+        ]));
 
-    // ------------------------------------
-    // Backup Table
-    // ------------------------------------
-    TradingSignalBackup::create(array_merge($data, [
-        'signal_code'     => $signalCode,
-        'signal_image'    => $imagePath,
-        'user_id'         => auth()->id(),
-        'trading_reasons' => $data['trading_reasons'] ?? [],
-        'trigger_time'    => $data['trigger_time'] ?? null,
-    ]));
+        $signal->forceFill([
+            'signal_uuid' => sprintf('SIG-%s-%d', now()->format('Ymd'), $signal->id),
+        ])->saveQuietly();
 
-    // ------------------------------------
-    // Build Discord Message
-    // ------------------------------------
-    $message =
-        "🆔 信号编号：{$signalCode}\n" .
-        "交易品种：{$data['trading_pair']}\n" .
-        "📊 风险等级：{$data['risk_level']}\n" .
-        "📌 即时操作：{$data['immediate_action']} {$data['entry_price']}\n" .
-        "⚙ 技术防守区：{$data['stop_loss']}\n" .
-        "🎯 目标区：\n";
+        app(TradingSignalAuditService::class)->record($signal, 'SIGNAL_CREATED', auth()->user(), [
+            'channel' => 'website',
+        ]);
 
-    for ($i = 1; $i <= 10; $i++) {
-        $key = "target_$i";
-        if (!empty($data[$key])) {
-            $insight = $this->formatTargetInsight($data['trading_pair'], $data['entry_price'], $data[$key]);
-            $message .= "TP{$i}: {$data[$key]}{$insight}\n";
-        }
-    }
+        TradingSignalBackup::create(array_merge($data, [
+            'signal_code'     => $signalCode,
+            'signal_image'    => $imagePath,
+            'user_id'         => auth()->id(),
+            'trading_reasons' => $data['trading_reasons'] ?? [],
+            'trigger_time'    => $data['trigger_time'] ?? null,
+        ]));
 
-    // Trading Reasons
-    if (!empty($data['trading_reasons'])) {
-        $reasonNames = TradingReason::whereIn('id', $data['trading_reasons'])
-            ->pluck('name')
-            ->toArray();
-        $message .= "\n💡 原因: " . implode(', ', $reasonNames) . "\n";
-    }
-
-    // TradingView Link
-    if (!empty($data['link'])) {
-        $message .= "\n🔗 Link Access: {$data['link']}\n";
-    }
-
-    // Disclaimer
-    $message .= "\n⚠ 免责声明: 所有信号仅供学习参考，请自行判断并管理风险。\n";
-    $message .= "---------------------------------- 分割线 ----------------------------------\n";
+        return $signal;
+    });
 
     // ------------------------------------
     // Target Communities
@@ -401,52 +420,73 @@ public function store(Request $request)
 
     $communities = $query->get();
 
-    // ------------------------------------
-    // Discord Integration
-    // ------------------------------------
-    if (feature_enabled('DiscordIntegration')) {
+    try {
+        TradingSignalPublished::dispatch($signal->fresh());
+    } catch (\Throwable $exception) {
+        Log::warning('Website signal broadcast dispatch failed.', [
+            'signal_id' => $signal->id,
+            'exception' => $exception::class,
+        ]);
+    }
+    app(TradingSignalAuditService::class)->record($signal, 'SIGNAL_PUBLISHED', auth()->user());
+    if (app(\App\Services\FirebasePushNotificationService::class)->configured()) {
+        try {
+            SendTradingSignalPushNotification::dispatch($signal->id)->afterCommit();
+        } catch (\Throwable $exception) {
+            Log::error('Website signal push job dispatch failed.', [
+                'signal_id' => $signal->id,
+                'exception' => $exception::class,
+            ]);
+        }
+    }
 
+    if (config('trading_signals.discord_enabled') && feature_enabled('DiscordIntegration')) {
+        $queued = false;
+        $discordAttempted = false;
+        $discordDispatchError = null;
         foreach ($communities as $community) {
-
-            if (!$community->discord_webhook) continue;
-
-            $fileFullPath = $imagePath ? public_path($imagePath) : null;
-
-            $discordMessage = '';
-            if (
-                feature_enabled('DiscordIntegration_Everyone') &&
-                $community->discord_everyone_enabled
-            ) {
-                $discordMessage .= "@everyone\n\n";
+            if (blank($community->discord_webhook)) {
+                continue;
             }
-
-            $discordMessage .= $message;
-
-            $discordData = DiscordService::send(
-                $discordMessage,
-                $community->discord_webhook,
-                $fileFullPath
-            );
-
-            if ($discordData && isset($discordData['message_id'], $discordData['channel_id'])) {
-
-                TradingSignalDiscord::create([
-                    'trading_signal_id' => $signal->id,
-                    'community_id'      => $community->id,
-                    'category'          => $community->category, // cache OK
-                    'message_id'        => $discordData['message_id'],
-                    'channel_id'        => $discordData['channel_id'],
+            $discordAttempted = true;
+            try {
+                SendTradingSignalToDiscord::dispatch($signal->id, $community->id)->afterCommit();
+                $queued = true;
+            } catch (\Throwable $exception) {
+                $discordDispatchError = $exception->getMessage();
+                Log::error('Website signal Discord job dispatch failed.', [
+                    'signal_id' => $signal->id,
+                    'community_id' => $community->id,
+                    'exception' => $exception::class,
                 ]);
-
-            } else {
-                \Log::error("Failed to send Discord message: {$community->name}");
             }
+        }
+        if (! $queued && filled(config('trading_signals.discord_webhook_url'))) {
+            $discordAttempted = true;
+            try {
+                SendTradingSignalToDiscord::dispatch($signal->id)->afterCommit();
+                $queued = true;
+            } catch (\Throwable $exception) {
+                $discordDispatchError = $exception->getMessage();
+                Log::error('Website signal fallback Discord job dispatch failed.', [
+                    'signal_id' => $signal->id,
+                    'exception' => $exception::class,
+                ]);
+            }
+        }
+        if ($queued) {
+            $signal->forceFill(['discord_delivery_status' => 'PENDING'])->saveQuietly();
+        } elseif ($discordAttempted) {
+            $signal->forceFill([
+                'discord_delivery_status' => 'FAILED',
+                'discord_last_error' => mb_substr((string) $discordDispatchError, 0, 1000),
+            ])->saveQuietly();
         }
     }
 
     return redirect()->route('all.trading.signals')->with([
         'message' => feature_enabled('DiscordIntegration')
-            ? 'Trading Signal Added + Sent to Discord!'
+            ? 'Trading Signal added. Discord delivery has been queued.'
             : 'Trading Signal Added (Discord disabled).',
         'alert-type' => 'success',
     ]);
@@ -676,7 +716,13 @@ public function cancel(Request $request, $id)
         $signal->update([
             'status' => 12,
             'cancel_reason' => $reason,
+            'workflow_status' => TradingSignal::WORKFLOW_CANCELLED,
+            'cancelled_at' => now(),
             'updated_at' => now(),
+        ]);
+
+        app(TradingSignalAuditService::class)->record($signal, 'SIGNAL_CANCELLED', auth()->user(), [
+            'reason' => $reason,
         ]);
 
         // Update backup signal
@@ -707,6 +753,10 @@ public function cancel(Request $request, $id)
 public function activate(Request $request, $id)
 {
     $signal = $this->signalQueryForCurrentUser(['discordMessages'])->findOrFail($id);
+    $requiresApproval = $signal->workflow_status === TradingSignal::WORKFLOW_PENDING;
+    if ($requiresApproval) {
+        Gate::authorize('publish', $signal);
+    }
 
     // Already active
     if ($signal->status == 1) {
@@ -740,8 +790,49 @@ public function activate(Request $request, $id)
         $signal->update([
             'status'       => 1,
             'trigger_time' => $triggerTimeInTz,
+            'workflow_status' => TradingSignal::WORKFLOW_PUBLISHED,
+            'published_at' => $signal->published_at ?? now(),
             'updated_at'   => now(),
         ]);
+
+        if ($requiresApproval) {
+            try {
+                TradingSignalPublished::dispatch($signal->fresh());
+            } catch (\Throwable $exception) {
+                Log::warning('Approved signal broadcast dispatch failed.', [
+                    'signal_id' => $signal->id,
+                    'exception' => $exception::class,
+                ]);
+            }
+            if (app(\App\Services\FirebasePushNotificationService::class)->configured()) {
+                try {
+                    SendTradingSignalPushNotification::dispatch($signal->id)->afterCommit();
+                } catch (\Throwable $exception) {
+                    Log::error('Approved signal push job dispatch failed.', [
+                        'signal_id' => $signal->id,
+                        'exception' => $exception::class,
+                    ]);
+                }
+            }
+            app(TradingSignalAuditService::class)->record($signal, 'SIGNAL_PUBLISHED', auth()->user(), [
+                'channel' => 'website_approval',
+            ]);
+            if (config('trading_signals.discord_enabled') && filled(config('trading_signals.discord_webhook_url'))) {
+                $signal->forceFill(['discord_delivery_status' => 'PENDING'])->saveQuietly();
+                try {
+                    SendTradingSignalToDiscord::dispatch($signal->id)->afterCommit();
+                } catch (\Throwable $exception) {
+                    $signal->forceFill([
+                        'discord_delivery_status' => 'FAILED',
+                        'discord_last_error' => mb_substr($exception->getMessage(), 0, 1000),
+                    ])->saveQuietly();
+                    Log::error('Approved signal Discord job dispatch failed.', [
+                        'signal_id' => $signal->id,
+                        'exception' => $exception::class,
+                    ]);
+                }
+            }
+        }
 
         // Backup sync
         TradingSignalBackup::where('signal_code', $signal->signal_code)
@@ -1018,7 +1109,10 @@ public function markDone($id) {
     $signal = $this->signalQueryForCurrentUser()->findOrFail($id);
     $signal->IsDone = 1;
     $signal->is_done = 1;
+    $signal->workflow_status = TradingSignal::WORKFLOW_CLOSED;
+    $signal->closed_at = now();
     $signal->save();
+    app(TradingSignalAuditService::class)->record($signal, 'SIGNAL_CLOSED', auth()->user());
   // ✅ Update backup table
         TradingSignalBackup::where('signal_code', $signal->signal_code)
             ->update([
@@ -2865,6 +2959,7 @@ public function memberViewSignal($id)
     $signal = TradingSignal::with(['community', 'user'])
         ->where('status', '>=', 1)
         ->findOrFail($id);
+    Gate::authorize('view', $signal);
 
     $statusMap = [
         0  => 'Pending',

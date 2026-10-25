@@ -23,7 +23,7 @@
     /* Custom Colors to match original UI */
     .bg-custom-primary { background-color: #0d6efd !important; }
     .bg-custom-success { background-color: #198754 !important; }
-    .bg-custom-info    { background-color: #0dcaf0 !important; }
+    .bg-custom-info    { background-color: #075985 !important; }
     .bg-custom-warning { background-color: #ffc107 !important; }
     .bg-custom-danger  { background-color: #dc3545 !important; }
     .bg-custom-dark    { background-color: #212529 !important; }
@@ -60,7 +60,7 @@
     }
 </style>
 
-<div class="page-content">
+<div class="page-content active-signals-page">
     <div class="container-fluid">
 
         {{-- Dashboard Header --}}

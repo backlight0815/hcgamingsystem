@@ -185,7 +185,7 @@
                                         @endif
                                     </td>
                                     <td>{{ number_format($blog->views) }}</td>
-                                    <td>{{ $blog->published_at ? $blog->published_at->format('Y-m-d H:i') : '-' }}</td>
+                                    <td>{{ $blog->published_at ? $blog->published_at->copy()->setTimezone(config('trading_blogs.publication_timezone'))->format('Y-m-d H:i') : '-' }}</td>
                                     <td class="text-nowrap">
                                         @if($blog->status === \App\Models\TradingBlog::STATUS_PUBLISHED)
                                             <a href="{{ route('trading.blogs.show', $blog->slug) }}" class="btn btn-secondary btn-sm" target="_blank" title="View">

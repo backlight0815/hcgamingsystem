@@ -4,21 +4,21 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Referral;
+use App\Models\ReferralLinks;
+use App\Models\Role;
+use App\Models\TradingPositionApplication;
 use App\Models\User;
-use Illuminate\Validation\Rule;
+use App\Support\ModuleAccess;
 use App\Providers\RouteServiceProvider;
+use App\Services\FinalExamService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-use Illuminate\View\View;
 use Illuminate\Support\Str;
-use App\Models\ReferralLinks;
-use Carbon\Carbon;
-use App\Models\Role;
-use App\Models\TradingPositionApplication;
+use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 // Set the application timezone before creating the user
 $appTimezone = config('app.timezone');
@@ -32,7 +32,11 @@ class RegisteredUserController extends Controller
     public function create(): View
     {
         // Position roles are application-only and cannot be selected during public registration.
-        $roles = Role::whereNotIn('id', [1, 2, 201, 202, 501, TradingPositionApplication::ROLE_LEADERSHIP, TradingPositionApplication::ROLE_RECRUITER])->get();
+        $allowed = [];
+        if (ModuleAccess::registrationAllowed(ModuleAccess::TRADINGHUB)) $allowed[] = 750;
+        if (ModuleAccess::registrationAllowed(ModuleAccess::DEALERSHIP)) $allowed = array_merge($allowed, [350, 700]);
+        $roles = Role::whereIn('id', $allowed)->get();
+
         return view('auth.register', compact('roles'));
     }
 
@@ -49,25 +53,25 @@ class RegisteredUserController extends Controller
                 'required',
                 'string',
                 'max:255',
-                'unique:' . User::class,
-                'regex:/^[a-z0-9_]+$/'
+                'unique:'.User::class,
+                'regex:/^[a-z0-9_]+$/',
             ],
             'email' => [
                 'required',
                 'string',
                 'email',
                 'max:255',
-                'unique:' . User::class,
-                'regex:/gmail|ymail]|yahoo|hotmail|outlook/'
+                'unique:'.User::class,
+                'regex:/gmail|ymail]|yahoo|hotmail|outlook/',
             ],
             'password' => [
                 'required',
                 'confirmed',
                 'string',
                 'min:8',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             ],
-            'user_role' => ['required', Rule::notIn([1, 2, TradingPositionApplication::ROLE_LEADERSHIP, TradingPositionApplication::ROLE_RECRUITER])]
+            'user_role' => ['required', Rule::in([350, 700, 750])],
         ], [
             'username.unique' => 'The username is already taken.',
             'username.regex' => 'The username should not include capital letters or spaces.',
@@ -94,14 +98,13 @@ class RegisteredUserController extends Controller
 
             // Special code for sub admin
             if ($request->referral_code === 'estkaiyg') {
-                $userRoleID = 2;
-                $invitedByUser = User::where('referral_code', 'estkaiyg')->first();
+                return back()->withErrors(['referral_code' => 'This referral code is unavailable.'])->withInput();
             } else {
 
                 // Customer referral code
                 $invitedByUser = User::where('customer_referral_code', $request->referral_code)->first();
 
-                if (!$invitedByUser) {
+                if (! $invitedByUser) {
 
                     // Agent referral code
                     $agentUser = User::where('referral_code', $request->referral_code)
@@ -144,8 +147,9 @@ class RegisteredUserController extends Controller
                             } else {
                                 $notification = [
                                     'message' => 'Please enter a valid referral code!',
-                                    'alert-type' => 'error'
+                                    'alert-type' => 'error',
                                 ];
+
                                 return back()->withInput()->with($notification);
                             }
                         }
@@ -154,6 +158,11 @@ class RegisteredUserController extends Controller
                     $userRoleID = 700; // customer
                 }
             }
+        }
+
+        $module = ModuleAccess::legacyModuleForRole($userRoleID);
+        if (! $module || ! ModuleAccess::registrationAllowed($module)) {
+            return back()->withErrors(['user_role' => 'Registration is unavailable for this module.'])->withInput();
         }
 
         // Create user
@@ -196,13 +205,22 @@ class RegisteredUserController extends Controller
             Referral::create([
                 'user_id' => $user->id,
                 'upline_user_id' => null,
-                'referral_code' => $request->referral_code
+                'referral_code' => $request->referral_code,
             ]);
         }
 
         event(new Registered($user));
 
         Auth::login($user);
+
+        if (app(FinalExamService::class)->requiresExam($user)) {
+            return redirect()
+                ->route('final_exam.intro')
+                ->with([
+                    'message' => 'Please complete the Final Examination before accessing the prop firm section.',
+                    'alert-type' => 'info',
+                ]);
+        }
 
         if ($userRoleID === 750) {
             return redirect()
@@ -220,6 +238,7 @@ class RegisteredUserController extends Controller
     {
         $email = $request->input('email');
         $userExists = User::where('email', $email)->exists();
+
         return response()->json(['exists' => $userExists]);
     }
 
@@ -227,6 +246,7 @@ class RegisteredUserController extends Controller
     {
         $username = $request->input('username');
         $userExists = User::where('username', $username)->exists();
+
         return response()->json(['exists' => $userExists]);
     }
 }

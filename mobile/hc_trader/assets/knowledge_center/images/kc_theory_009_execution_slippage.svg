@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title">
+  <title id="title">Execution quality and slippage Diagram</title>
+  <rect width="1600" height="900" rx="0" fill="#F8FAFC"/>
+  <rect x="54" y="44" width="1492" height="772" rx="36" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+  <rect x="390" y="170" width="560" height="394" rx="30" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+  <line x1="430" y1="228" x2="910" y2="228" stroke="#E2E8F0" stroke-width="4"/><text x="460" y="214" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#334155">1.1004</text><line x1="430" y1="316" x2="910" y2="316" stroke="#E2E8F0" stroke-width="4"/><text x="460" y="302" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#F59E0B">Filled 1.1003</text><line x1="430" y1="404" x2="910" y2="404" stroke="#E2E8F0" stroke-width="4"/><text x="460" y="390" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#334155">Requested 1.1002</text><line x1="430" y1="492" x2="910" y2="492" stroke="#E2E8F0" stroke-width="4"/><text x="460" y="478" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#334155">1.1001</text>
+  <line x1="855" y1="470" x2="855" y2="390" stroke="#334155" stroke-width="9" stroke-linecap="round"/><polygon points="855,390 866,409.05255888325763 844,409.05255888325763" fill="#334155"/>
+  <text x="920" y="438" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="800" fill="#DC2626">Slippage</text>
+  <text x="895" y="520" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="800" fill="#334155">Requested vs filled price</text>
+  <rect x="84" y="842" width="290" height="18" rx="9" fill="#2563EB" opacity=".22"/>
+  <rect x="412" y="842" width="404" height="18" rx="9" fill="#10B981" opacity=".20"/>
+  <rect x="852" y="842" width="664" height="18" rx="9" fill="#334155" opacity=".10"/>
+</svg>

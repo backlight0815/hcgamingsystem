@@ -150,10 +150,10 @@
     }
     .appointment-calendar-day.is-muted .appointment-calendar-weekday-name,
     .appointment-calendar-day.is-muted .appointment-calendar-date-number {
-        color: #94a3b8;
+        color: #64748b;
     }
     .appointment-calendar-day.is-today .appointment-calendar-date-label {
-        background: #0ea5e9;
+        background: #075985;
         color: #fff;
         padding: 4px 9px;
     }

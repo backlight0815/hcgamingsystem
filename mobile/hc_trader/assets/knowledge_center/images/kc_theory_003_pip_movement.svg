@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title">
+  <title id="title">Pip movement Diagram</title>
+  <rect width="1600" height="900" rx="0" fill="#F8FAFC"/>
+  <rect x="54" y="44" width="1492" height="772" rx="36" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+  <rect x="160" y="120" width="1280" height="86" rx="28" fill="#2563EB" opacity=".10" stroke="#2563EB" stroke-width="3"/>
+  <text x="230" y="176" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="800" fill="#2563EB">1 pip movement</text>
+  <text x="1000" y="176" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="800" fill="#10B981">EUR/USD example</text>
+  <rect x="360" y="210" width="560" height="394" rx="30" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+  <line x1="400" y1="268" x2="880" y2="268" stroke="#E2E8F0" stroke-width="4"/><text x="430" y="254" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#334155">1.1002</text><line x1="400" y1="356" x2="880" y2="356" stroke="#E2E8F0" stroke-width="4"/><text x="430" y="342" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#F59E0B">1.1001</text><line x1="400" y1="444" x2="880" y2="444" stroke="#E2E8F0" stroke-width="4"/><text x="430" y="430" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#334155">1.1000</text><line x1="400" y1="532" x2="880" y2="532" stroke="#E2E8F0" stroke-width="4"/><text x="430" y="518" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#334155">1.0999</text>
+  <line x1="820" y1="482" x2="820" y2="400" stroke="#10B981" stroke-width="9" stroke-linecap="round"/><polygon points="820,400 831,419.05255888325763 809,419.05255888325763" fill="#10B981"/>
+  <text x="880" y="450" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#334155">1.1000 -&gt; 1.1001</text>
+  <text x="880" y="500" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="800" fill="#F59E0B">1 pip</text>
+  <rect x="84" y="842" width="290" height="18" rx="9" fill="#2563EB" opacity=".22"/>
+  <rect x="412" y="842" width="404" height="18" rx="9" fill="#10B981" opacity=".20"/>
+  <rect x="852" y="842" width="664" height="18" rx="9" fill="#334155" opacity=".10"/>
+</svg>

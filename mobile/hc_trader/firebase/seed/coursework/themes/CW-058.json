@@ -1,0 +1,633 @@
+{
+  "theme": {
+    "id": "CW-058",
+    "code": "CW-058",
+    "title": {
+      "en": "Establishing Higher-Timeframe Bias with Explicit Invalidation",
+      "zh": "以明确失效条件建立高周期偏向"
+    },
+    "shortTitle": {
+      "en": "higher timeframe",
+      "zh": "以明确失效条件建立高周期偏向"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates establishing higher-timeframe bias with explicit invalidation using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示以明确失效条件建立高周期偏向。"
+    },
+    "categoryId": "multi_timeframe",
+    "categoryName": {
+      "en": "Multi-Timeframe Analysis",
+      "zh": "多时间周期分析"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind establishing higher-timeframe bias with explicit invalidation.",
+        "Apply establishing higher-timeframe bias with explicit invalidation to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释以明确失效条件建立高周期偏向背后的核心决策规则。",
+        "将以明确失效条件建立高周期偏向应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "higher timeframe",
+      "bias",
+      "invalidation",
+      "EURUSD",
+      "Multi-Timeframe Analysis"
+    ],
+    "searchTokens": [
+      "cw-058",
+      "CW-058",
+      "multi_timeframe",
+      "multi-timeframe analysis",
+      "多时间周期分析",
+      "establishing",
+      "higher",
+      "timeframe",
+      "bias",
+      "with",
+      "explicit",
+      "invalidation",
+      "以明确失效条件建立高周期偏向",
+      "eurusd",
+      "multi-timeframe",
+      "analysis"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 58,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "f071cccf7ba6471804173113ca900382c247f39f0cd3bc852b458880e63b75a4"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-058",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for higher timeframe",
+        "zh": "以明确失效条件建立高周期偏向的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which method produces the most auditable conclusion about establishing higher-timeframe bias with explicit invalidation?",
+        "zh": "哪种方法能够对以明确失效条件建立高周期偏向得出最可审核的结论？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing establishing higher-timeframe bias with explicit invalidation.",
+            "zh": "评估以明确失效条件建立高周期偏向时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "ff9ca01a42d250fdc236288e81d28a5c26749e65e260929912555bb1c003e729"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-058",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying higher timeframe Under Uncertainty",
+        "zh": "在不确定性下应用以明确失效条件建立高周期偏向"
+      },
+      "prompt": {
+        "en": "Higher- and lower-timeframe evidence disagree about establishing higher-timeframe bias with explicit invalidation. What is the most defensible response?",
+        "zh": "高低时间周期对以明确失效条件建立高周期偏向的证据不一致。哪种反应最合理？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "c85acb8c26191e5b715eeaa505f7c671d29a239b82865f7ee89057d29044789a"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-058",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "EURUSD Chart Interpretation for higher timeframe",
+        "zh": "EURUSD图表中的以明确失效条件建立高周期偏向解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational EURUSD H1 chart. Which labelled zone is the strongest decision area for evaluating establishing higher-timeframe bias with explicit invalidation while keeping invalidation visible?",
+        "zh": "研究合成教学用EURUSD H1图表。哪个标记区域最适合评估以明确失效条件建立高周期偏向，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "EURUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 1.08075,
+            "high": 1.08188,
+            "low": 1.07919,
+            "close": 1.08073
+          },
+          {
+            "timeIndex": 1,
+            "open": 1.08073,
+            "high": 1.08349,
+            "low": 1.07971,
+            "close": 1.08182
+          },
+          {
+            "timeIndex": 2,
+            "open": 1.08182,
+            "high": 1.08465,
+            "low": 1.08074,
+            "close": 1.08318
+          },
+          {
+            "timeIndex": 3,
+            "open": 1.08318,
+            "high": 1.08432,
+            "low": 1.08162,
+            "close": 1.08358
+          },
+          {
+            "timeIndex": 4,
+            "open": 1.08358,
+            "high": 1.08509,
+            "low": 1.0808,
+            "close": 1.08237
+          },
+          {
+            "timeIndex": 5,
+            "open": 1.08237,
+            "high": 1.08402,
+            "low": 1.07896,
+            "close": 1.08003
+          },
+          {
+            "timeIndex": 6,
+            "open": 1.08003,
+            "high": 1.0811,
+            "low": 1.07661,
+            "close": 1.07764
+          },
+          {
+            "timeIndex": 7,
+            "open": 1.07764,
+            "high": 1.07885,
+            "low": 1.07434,
+            "close": 1.07588
+          },
+          {
+            "timeIndex": 8,
+            "open": 1.07588,
+            "high": 1.07757,
+            "low": 1.0732,
+            "close": 1.07478
+          },
+          {
+            "timeIndex": 9,
+            "open": 1.07478,
+            "high": 1.07619,
+            "low": 1.07299,
+            "close": 1.07412
+          },
+          {
+            "timeIndex": 10,
+            "open": 1.07412,
+            "high": 1.07495,
+            "low": 1.07302,
+            "close": 1.074
+          },
+          {
+            "timeIndex": 11,
+            "open": 1.074,
+            "high": 1.0762,
+            "low": 1.07248,
+            "close": 1.07464
+          },
+          {
+            "timeIndex": 12,
+            "open": 1.07464,
+            "high": 1.07739,
+            "low": 1.07304,
+            "close": 1.07577
+          },
+          {
+            "timeIndex": 13,
+            "open": 1.07577,
+            "high": 1.07739,
+            "low": 1.07459,
+            "close": 1.07641
+          },
+          {
+            "timeIndex": 14,
+            "open": 1.07641,
+            "high": 1.0777,
+            "low": 1.07469,
+            "close": 1.07561
+          },
+          {
+            "timeIndex": 15,
+            "open": 1.07561,
+            "high": 1.07731,
+            "low": 1.07184,
+            "close": 1.07333
+          },
+          {
+            "timeIndex": 16,
+            "open": 1.07333,
+            "high": 1.07467,
+            "low": 1.06893,
+            "close": 1.07054
+          },
+          {
+            "timeIndex": 17,
+            "open": 1.07054,
+            "high": 1.07145,
+            "low": 1.0672,
+            "close": 1.06843
+          },
+          {
+            "timeIndex": 18,
+            "open": 1.06843,
+            "high": 1.07002,
+            "low": 1.06658,
+            "close": 1.06745
+          },
+          {
+            "timeIndex": 19,
+            "open": 1.06745,
+            "high": 1.06904,
+            "low": 1.06581,
+            "close": 1.06726
+          },
+          {
+            "timeIndex": 20,
+            "open": 1.06726,
+            "high": 1.06831,
+            "low": 1.06564,
+            "close": 1.06741
+          },
+          {
+            "timeIndex": 21,
+            "open": 1.06741,
+            "high": 1.06916,
+            "low": 1.06614,
+            "close": 1.0678
+          },
+          {
+            "timeIndex": 22,
+            "open": 1.0678,
+            "high": 1.07016,
+            "low": 1.067,
+            "close": 1.06847
+          },
+          {
+            "timeIndex": 23,
+            "open": 1.06847,
+            "high": 1.07027,
+            "low": 1.06705,
+            "close": 1.06899
+          },
+          {
+            "timeIndex": 24,
+            "open": 1.06899,
+            "high": 1.06999,
+            "low": 1.06691,
+            "close": 1.06854
+          },
+          {
+            "timeIndex": 25,
+            "open": 1.06854,
+            "high": 1.07017,
+            "low": 1.06531,
+            "close": 1.06662
+          },
+          {
+            "timeIndex": 26,
+            "open": 1.06662,
+            "high": 1.06817,
+            "low": 1.06301,
+            "close": 1.06376
+          },
+          {
+            "timeIndex": 27,
+            "open": 1.06376,
+            "high": 1.06457,
+            "low": 1.05983,
+            "close": 1.06122
+          },
+          {
+            "timeIndex": 28,
+            "open": 1.06122,
+            "high": 1.06263,
+            "low": 1.05835,
+            "close": 1.05999
+          },
+          {
+            "timeIndex": 29,
+            "open": 1.05999,
+            "high": 1.06174,
+            "low": 1.05863,
+            "close": 1.06006
+          },
+          {
+            "timeIndex": 30,
+            "open": 1.06006,
+            "high": 1.06188,
+            "low": 1.05934,
+            "close": 1.06068
+          },
+          {
+            "timeIndex": 31,
+            "open": 1.06068,
+            "high": 1.06228,
+            "low": 1.05934,
+            "close": 1.0612
+          },
+          {
+            "timeIndex": 32,
+            "open": 1.0612,
+            "high": 1.06316,
+            "low": 1.05957,
+            "close": 1.0615
+          },
+          {
+            "timeIndex": 33,
+            "open": 1.0615,
+            "high": 1.0631,
+            "low": 1.06011,
+            "close": 1.0616
+          },
+          {
+            "timeIndex": 34,
+            "open": 1.0616,
+            "high": 1.06233,
+            "low": 1.06039,
+            "close": 1.06116
+          },
+          {
+            "timeIndex": 35,
+            "open": 1.06116,
+            "high": 1.06263,
+            "low": 1.05835,
+            "close": 1.05965
+          },
+          {
+            "timeIndex": 36,
+            "open": 1.05965,
+            "high": 1.06133,
+            "low": 1.05546,
+            "close": 1.05708
+          },
+          {
+            "timeIndex": 37,
+            "open": 1.05708,
+            "high": 1.05821,
+            "low": 1.05292,
+            "close": 1.05435
+          },
+          {
+            "timeIndex": 38,
+            "open": 1.05435,
+            "high": 1.05551,
+            "low": 1.05186,
+            "close": 1.05269
+          },
+          {
+            "timeIndex": 39,
+            "open": 1.05269,
+            "high": 1.05437,
+            "low": 1.05138,
+            "close": 1.05264
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 1.05273,
+            "maximumPrice": 1.05745,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 1.06082,
+            "maximumPrice": 1.06554,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 1.07093,
+            "maximumPrice": 1.07565,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 1.07902,
+            "maximumPrice": 1.08374,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "cafede15a5af88c84617a750a204136f7443be24e9709402cf3d420f327b5d8c"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-058",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: higher timeframe",
+        "zh": "独立情境分析：以明确失效条件建立高周期偏向"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of establishing higher-timeframe bias with explicit invalidation using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析以明确失效条件建立高周期偏向的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "79d3b6767647d99b584a4d53f3a29b796d29f64c2727f24fc3decdfed3126bc3"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-058",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: higher timeframe",
+        "zh": "实践展示：以明确失效条件建立高周期偏向"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate establishing higher-timeframe bias with explicit invalidation. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示以明确失效条件建立高周期偏向。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "b7cf151121b5bc2903cc2400b74e21d764fa2c397a51bc63975eb56e621dcc7b"
+    }
+  ]
+}

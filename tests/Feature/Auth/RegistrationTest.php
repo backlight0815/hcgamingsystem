@@ -1,7 +1,5 @@
 <?php
 
-use App\Providers\RouteServiceProvider;
-
 test('registration screen can be rendered', function () {
     $response = $this->get('/register');
 
@@ -11,11 +9,13 @@ test('registration screen can be rendered', function () {
 test('new users can register', function () {
     $response = $this->post('/register', [
         'name' => 'Test User',
-        'email' => 'test@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'username' => 'test_user',
+        'email' => 'test.user@gmail.com',
+        'password' => 'Password1',
+        'password_confirmation' => 'Password1',
+        'user_role' => 700,
     ]);
 
     $this->assertAuthenticated();
-    $response->assertRedirect(RouteServiceProvider::HOME);
+    $response->assertRedirect(route('final_exam.intro'));
 });

@@ -1,0 +1,638 @@
+{
+  "theme": {
+    "id": "CW-068",
+    "code": "CW-068",
+    "title": {
+      "en": "Managing Correlated Positions as One Combined Exposure",
+      "zh": "将相关持仓作为一个综合敞口管理"
+    },
+    "shortTitle": {
+      "en": "correlation",
+      "zh": "将相关持仓作为一个综合敞口管理"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates managing correlated positions as one combined exposure using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示将相关持仓作为一个综合敞口管理。"
+    },
+    "categoryId": "risk_management",
+    "categoryName": {
+      "en": "Risk and Money Management",
+      "zh": "风险与资金管理"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind managing correlated positions as one combined exposure.",
+        "Apply managing correlated positions as one combined exposure to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释将相关持仓作为一个综合敞口管理背后的核心决策规则。",
+        "将将相关持仓作为一个综合敞口管理应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "correlation",
+      "combined exposure",
+      "portfolio heat",
+      "AUDUSD",
+      "Risk and Money Management"
+    ],
+    "searchTokens": [
+      "cw-068",
+      "CW-068",
+      "risk_management",
+      "risk and money management",
+      "风险与资金管理",
+      "managing",
+      "correlated",
+      "positions",
+      "as",
+      "one",
+      "combined",
+      "exposure",
+      "将相关持仓作为一个综合敞口管理",
+      "correlation",
+      "portfolio",
+      "heat",
+      "audusd",
+      "risk",
+      "and",
+      "money",
+      "management"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 68,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "07e84ab74e4267e7dacff4ae6130ba2db8fff3d45b76e114ea465a08690012e0"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-068",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for correlation",
+        "zh": "将相关持仓作为一个综合敞口管理的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which method produces the most auditable conclusion about managing correlated positions as one combined exposure?",
+        "zh": "哪种方法能够对将相关持仓作为一个综合敞口管理得出最可审核的结论？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing managing correlated positions as one combined exposure.",
+            "zh": "评估将相关持仓作为一个综合敞口管理时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "3737826e33a37b4bf2f07914248c925e5c4a6331b3d5ee4cd40579d279c5ac00"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-068",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying correlation Under Uncertainty",
+        "zh": "在不确定性下应用将相关持仓作为一个综合敞口管理"
+      },
+      "prompt": {
+        "en": "Higher- and lower-timeframe evidence disagree about managing correlated positions as one combined exposure. What is the most defensible response?",
+        "zh": "高低时间周期对将相关持仓作为一个综合敞口管理的证据不一致。哪种反应最合理？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "0431b23bcce28c90c786ef6f3886dc7182bb32f4f71e9a1372027dff6bec647e"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-068",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "AUDUSD Chart Interpretation for correlation",
+        "zh": "AUDUSD图表中的将相关持仓作为一个综合敞口管理解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational AUDUSD H1 chart. Which labelled zone is the strongest decision area for evaluating managing correlated positions as one combined exposure while keeping invalidation visible?",
+        "zh": "研究合成教学用AUDUSD H1图表。哪个标记区域最适合评估将相关持仓作为一个综合敞口管理，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "AUDUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 0.662,
+            "high": 0.66369,
+            "low": 0.66096,
+            "close": 0.66233
+          },
+          {
+            "timeIndex": 1,
+            "open": 0.66233,
+            "high": 0.66376,
+            "low": 0.66121,
+            "close": 0.66201
+          },
+          {
+            "timeIndex": 2,
+            "open": 0.66201,
+            "high": 0.66288,
+            "low": 0.66032,
+            "close": 0.66162
+          },
+          {
+            "timeIndex": 3,
+            "open": 0.66162,
+            "high": 0.66273,
+            "low": 0.65992,
+            "close": 0.66133
+          },
+          {
+            "timeIndex": 4,
+            "open": 0.66133,
+            "high": 0.66282,
+            "low": 0.66006,
+            "close": 0.66114
+          },
+          {
+            "timeIndex": 5,
+            "open": 0.66114,
+            "high": 0.66248,
+            "low": 0.66039,
+            "close": 0.6613
+          },
+          {
+            "timeIndex": 6,
+            "open": 0.6613,
+            "high": 0.66312,
+            "low": 0.66003,
+            "close": 0.66233
+          },
+          {
+            "timeIndex": 7,
+            "open": 0.66233,
+            "high": 0.66583,
+            "low": 0.66091,
+            "close": 0.66444
+          },
+          {
+            "timeIndex": 8,
+            "open": 0.66444,
+            "high": 0.66839,
+            "low": 0.66332,
+            "close": 0.66699
+          },
+          {
+            "timeIndex": 9,
+            "open": 0.66699,
+            "high": 0.66967,
+            "low": 0.66629,
+            "close": 0.66888
+          },
+          {
+            "timeIndex": 10,
+            "open": 0.66888,
+            "high": 0.67058,
+            "low": 0.66764,
+            "close": 0.66941
+          },
+          {
+            "timeIndex": 11,
+            "open": 0.66941,
+            "high": 0.67089,
+            "low": 0.66741,
+            "close": 0.66884
+          },
+          {
+            "timeIndex": 12,
+            "open": 0.66884,
+            "high": 0.66996,
+            "low": 0.66689,
+            "close": 0.66804
+          },
+          {
+            "timeIndex": 13,
+            "open": 0.66804,
+            "high": 0.66891,
+            "low": 0.66703,
+            "close": 0.66768
+          },
+          {
+            "timeIndex": 14,
+            "open": 0.66768,
+            "high": 0.66926,
+            "low": 0.66648,
+            "close": 0.66783
+          },
+          {
+            "timeIndex": 15,
+            "open": 0.66783,
+            "high": 0.66972,
+            "low": 0.66641,
+            "close": 0.66835
+          },
+          {
+            "timeIndex": 16,
+            "open": 0.66835,
+            "high": 0.67007,
+            "low": 0.66716,
+            "close": 0.66935
+          },
+          {
+            "timeIndex": 17,
+            "open": 0.66935,
+            "high": 0.67231,
+            "low": 0.66872,
+            "close": 0.67108
+          },
+          {
+            "timeIndex": 18,
+            "open": 0.67108,
+            "high": 0.67486,
+            "low": 0.66991,
+            "close": 0.67338
+          },
+          {
+            "timeIndex": 19,
+            "open": 0.67338,
+            "high": 0.67651,
+            "low": 0.67195,
+            "close": 0.67545
+          },
+          {
+            "timeIndex": 20,
+            "open": 0.67545,
+            "high": 0.67729,
+            "low": 0.67422,
+            "close": 0.67635
+          },
+          {
+            "timeIndex": 21,
+            "open": 0.67635,
+            "high": 0.6778,
+            "low": 0.67519,
+            "close": 0.67587
+          },
+          {
+            "timeIndex": 22,
+            "open": 0.67587,
+            "high": 0.67719,
+            "low": 0.67363,
+            "close": 0.67476
+          },
+          {
+            "timeIndex": 23,
+            "open": 0.67476,
+            "high": 0.6754,
+            "low": 0.67263,
+            "close": 0.67405
+          },
+          {
+            "timeIndex": 24,
+            "open": 0.67405,
+            "high": 0.67554,
+            "low": 0.67279,
+            "close": 0.67426
+          },
+          {
+            "timeIndex": 25,
+            "open": 0.67426,
+            "high": 0.67665,
+            "low": 0.67353,
+            "close": 0.67518
+          },
+          {
+            "timeIndex": 26,
+            "open": 0.67518,
+            "high": 0.67745,
+            "low": 0.67409,
+            "close": 0.67646
+          },
+          {
+            "timeIndex": 27,
+            "open": 0.67646,
+            "high": 0.67902,
+            "low": 0.67504,
+            "close": 0.67802
+          },
+          {
+            "timeIndex": 28,
+            "open": 0.67802,
+            "high": 0.68138,
+            "low": 0.67673,
+            "close": 0.67992
+          },
+          {
+            "timeIndex": 29,
+            "open": 0.67992,
+            "high": 0.68311,
+            "low": 0.67914,
+            "close": 0.68183
+          },
+          {
+            "timeIndex": 30,
+            "open": 0.68183,
+            "high": 0.68366,
+            "low": 0.68078,
+            "close": 0.683
+          },
+          {
+            "timeIndex": 31,
+            "open": 0.683,
+            "high": 0.68433,
+            "low": 0.68146,
+            "close": 0.68287
+          },
+          {
+            "timeIndex": 32,
+            "open": 0.68287,
+            "high": 0.68431,
+            "low": 0.68042,
+            "close": 0.68174
+          },
+          {
+            "timeIndex": 33,
+            "open": 0.68174,
+            "high": 0.68266,
+            "low": 0.67983,
+            "close": 0.68066
+          },
+          {
+            "timeIndex": 34,
+            "open": 0.68066,
+            "high": 0.68173,
+            "low": 0.6796,
+            "close": 0.68061
+          },
+          {
+            "timeIndex": 35,
+            "open": 0.68061,
+            "high": 0.68319,
+            "low": 0.67922,
+            "close": 0.68171
+          },
+          {
+            "timeIndex": 36,
+            "open": 0.68171,
+            "high": 0.68463,
+            "low": 0.68037,
+            "close": 0.68341
+          },
+          {
+            "timeIndex": 37,
+            "open": 0.68341,
+            "high": 0.68587,
+            "low": 0.68253,
+            "close": 0.68513
+          },
+          {
+            "timeIndex": 38,
+            "open": 0.68513,
+            "high": 0.68812,
+            "low": 0.68417,
+            "close": 0.68675
+          },
+          {
+            "timeIndex": 39,
+            "open": 0.68675,
+            "high": 0.68969,
+            "low": 0.68537,
+            "close": 0.68827
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 0.66111,
+            "maximumPrice": 0.66528,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 0.66826,
+            "maximumPrice": 0.67242,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 0.67719,
+            "maximumPrice": 0.68135,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 0.68433,
+            "maximumPrice": 0.6885,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "976af797c8b220864c61ed4855850fcc667bbb4b2c014895a6070c19ae14de03"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-068",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: correlation",
+        "zh": "独立情境分析：将相关持仓作为一个综合敞口管理"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of managing correlated positions as one combined exposure using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析将相关持仓作为一个综合敞口管理的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "3f01bd7e0a3bbf53bd82a9a7ae46e4d8d54f8ccde018e0b5c25b869f020768f9"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-068",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: correlation",
+        "zh": "实践展示：将相关持仓作为一个综合敞口管理"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate managing correlated positions as one combined exposure. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示将相关持仓作为一个综合敞口管理。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "a2593136788d76e1481b8f6525a7dda16032c035da1234e77eb33ece3ff450e5"
+    }
+  ]
+}

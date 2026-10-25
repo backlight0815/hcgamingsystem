@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title">
+  <title id="title">Trading cost diagram Diagram</title>
+  <rect width="1600" height="900" rx="0" fill="#F8FAFC"/>
+  <rect x="54" y="44" width="1492" height="772" rx="36" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+  <rect x="145" y="260" width="310" height="160" rx="30" fill="#2563EB" opacity=".15" stroke="#2563EB" stroke-width="5"/>
+  <text x="179" y="328" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#2563EB">Spread</text>
+  <text x="479" y="350" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="800" fill="#64748B">+</text><rect x="529" y="260" width="310" height="160" rx="30" fill="#10B981" opacity=".15" stroke="#10B981" stroke-width="5"/>
+  <text x="563" y="328" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#10B981">Commission</text>
+  <text x="563" y="388" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="800" fill="#334155">+</text><text x="863" y="350" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="800" fill="#64748B">+</text><rect x="913" y="260" width="310" height="160" rx="30" fill="#F59E0B" opacity=".15" stroke="#F59E0B" stroke-width="5"/>
+  <text x="947" y="328" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#F59E0B">Swap</text>
+  <text x="1175" y="350" font-family="Arial, Helvetica, sans-serif" font-size="48" font-weight="800" fill="#64748B">=</text><rect x="1270" y="260" width="210" height="160" rx="30" fill="#10B981" opacity=".15" stroke="#10B981" stroke-width="5"/>
+  <text x="1304" y="328" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#10B981">Total Cost</text>
+  
+  <rect x="84" y="842" width="290" height="18" rx="9" fill="#2563EB" opacity=".22"/>
+  <rect x="412" y="842" width="404" height="18" rx="9" fill="#10B981" opacity=".20"/>
+  <rect x="852" y="842" width="664" height="18" rx="9" fill="#334155" opacity=".10"/>
+</svg>

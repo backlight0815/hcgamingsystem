@@ -50,19 +50,36 @@ class StockController extends Controller
     }
 
 
-            public function HomeProduct(){
-
-
-                $product = Product::latest()->get();
-                return view('frontend.stock',compact('product'));
-
-
-                }//End Methods
+            public function HomeProduct(Request $request){
+                $categoryId = $request->integer('category') ?: null;
+                if ($categoryId) {
+                    ProductCategory::findOrFail($categoryId);
+                }
+                $search = mb_substr(trim((string) $request->query('q', '')), 0, 80);
+                $query = Product::storefront()->with('productcategory');
+                if ($categoryId) {
+                    $query->where('product_category_id', $categoryId);
+                }
+                if ($search !== '') {
+                    $query->where('product_name', 'like', '%'.$search.'%');
+                }
+                $sort = $request->query('sort');
+                if ($sort === 'price_asc') {
+                    $query->orderBy('product_price');
+                } elseif ($sort === 'price_desc') {
+                    $query->orderByDesc('product_price');
+                } else {
+                    $query->latest();
+                }
+                $product = $query->paginate(12)->withQueryString();
+                $categories = ProductCategory::whereHas('products', fn ($query) => $query->storefront())->orderBy('product_category')->get();
+                return view('frontend.stock', compact('product', 'categories', 'categoryId', 'search', 'sort'));
+            }
 
 
 
                 public function StockDetails($id) {
-                    $stock = Product::with('productcategory')->find($id);
+                    $stock = Product::storefront()->with('productcategory')->find($id);
 
                     if (!$stock) {
                         return redirect()->route('home.product')->with('error', 'Stock not found.');

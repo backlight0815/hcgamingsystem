@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1180" viewBox="0 0 1800 1180" role="img" aria-label="HC Trader app functionality overview">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,4 L0,8 z" fill="#455A64"/>
+    </marker>
+    <style>
+      .heading { font: 700 30px Arial, sans-serif; fill: #123; }
+      .lane { font: 700 20px Arial, sans-serif; fill: #234; }
+      .title { font: 700 17px Arial, sans-serif; fill: #0E1A22; }
+      .body { font: 14px Arial, sans-serif; fill: #25313A; }
+      .label { font: 12px Arial, sans-serif; fill: #455A64; }
+      .small { font: 13px Arial, sans-serif; fill: #455A64; }
+    </style>
+  </defs>
+  <rect width="1800" height="1180" fill="#F7FAFC"/>
+  <text x="50" y="56" class="heading">HC Trader - Functional Map</text>
+  <text x="50" y="82" class="small">Roles, Flutter navigation, major modules, Firebase services, admin flow, trader flow, recruitment, localization and data movement.</text>
+
+  <text x="70" y="130" class="lane">User Roles</text>
+  <rect x="50" y="150" width="300" height="92" rx="12" fill="#E3F2FD" stroke="#243746" stroke-width="2"/>
+<text x="64" y="178" class="title">Guest</text>
+<text x="64" y="202" class="body">Sign in, register, reset password</text>
+<text x="64" y="222" class="body">Read public registration roles</text>
+  <rect x="50" y="262" width="300" height="112" rx="12" fill="#E8F5E9" stroke="#243746" stroke-width="2"/>
+<text x="64" y="290" class="title">Trader / Lead Client</text>
+<text x="64" y="314" class="body">Journal, hub, accounts, tools</text>
+<text x="64" y="334" class="body">Exams, support, appointments</text>
+<text x="64" y="354" class="body">Own data only</text>
+  <rect x="50" y="394" width="300" height="92" rx="12" fill="#FFF8E1" stroke="#243746" stroke-width="2"/>
+<text x="64" y="422" class="title">Leader / Recruiter</text>
+<text x="64" y="446" class="body">Invite public roles</text>
+<text x="64" y="466" class="body">View downline workspace</text>
+  <rect x="50" y="506" width="300" height="112" rx="12" fill="#F3E5F5" stroke="#243746" stroke-width="2"/>
+<text x="64" y="534" class="title">Publisher Roles</text>
+<text x="64" y="558" class="body">Market Analyst publishes analysis</text>
+<text x="64" y="578" class="body">Signal Provider publishes signals</text>
+<text x="64" y="598" class="body">Limited admin workspace</text>
+  <rect x="50" y="638" width="300" height="112" rx="12" fill="#FFEBEE" stroke="#243746" stroke-width="2"/>
+<text x="64" y="666" class="title">Super / Sub Admin</text>
+<text x="64" y="690" class="body">Operate users, content, reviews</text>
+<text x="64" y="710" class="body">Feature flags, audit, reports</text>
+
+  <text x="465" y="130" class="lane">Flutter Navigation</text>
+  <rect x="430" y="150" width="330" height="95" rx="12" fill="#E1F5FE" stroke="#243746" stroke-width="2"/>
+<text x="444" y="178" class="title">AuthScreen</text>
+<text x="444" y="202" class="body">Language, sign in, registration</text>
+<text x="444" y="222" class="body">Password reset</text>
+  <rect x="430" y="280" width="330" height="95" rx="12" fill="#E1F5FE" stroke="#243746" stroke-width="2"/>
+<text x="444" y="308" class="title">AuthGate</text>
+<text x="444" y="332" class="body">Firebase auth stream</text>
+<text x="444" y="352" class="body">Loads users/{uid} profile</text>
+  <rect x="430" y="410" width="330" height="118" rx="12" fill="#E0F2F1" stroke="#243746" stroke-width="2"/>
+<text x="444" y="438" class="title">HomeShell</text>
+<text x="444" y="462" class="body">Bottom tabs:</text>
+<text x="444" y="482" class="body">Home, Journal, Trading Hub, Accounts</text>
+<text x="444" y="502" class="body">Profile avatar opens More</text>
+  <rect x="430" y="570" width="330" height="180" rx="12" fill="#F1F8E9" stroke="#243746" stroke-width="2"/>
+<text x="444" y="598" class="title">Profile &amp; More</text>
+<text x="444" y="622" class="body">Final exam, toolkit, readiness</text>
+<text x="444" y="642" class="body">appointments, support, recruitment</text>
+<text x="444" y="662" class="body">profile, settings, admin</text>
+<text x="444" y="682" class="body">role and feature gated</text>
+
+  <text x="875" y="130" class="lane">Trader / User Modules</text>
+  <rect x="830" y="150" width="330" height="112" rx="12" fill="#FFFFFF" stroke="#243746" stroke-width="2"/>
+<text x="844" y="178" class="title">Dashboard</text>
+<text x="844" y="202" class="body">Trading performance summary</text>
+<text x="844" y="222" class="body">Journal/capital analytics</text>
+  <rect x="830" y="282" width="330" height="132" rx="12" fill="#FFFFFF" stroke="#243746" stroke-width="2"/>
+<text x="844" y="310" class="title">Journal + Accounts</text>
+<text x="844" y="334" class="body">Journal CRUD/import/attachments</text>
+<text x="844" y="354" class="body">Verification/KYC profile</text>
+<text x="844" y="374" class="body">Trading accounts and capital</text>
+  <rect x="830" y="434" width="330" height="172" rx="12" fill="#FFFFFF" stroke="#243746" stroke-width="2"/>
+<text x="844" y="462" class="title">Trading Hub</text>
+<text x="844" y="486" class="body">Market, knowledge, classes, blogs</text>
+<text x="844" y="506" class="body">Signals, daily exam, positions</text>
+<text x="844" y="526" class="body">Resources and detail pages</text>
+<text x="844" y="546" class="body">Publisher actions for eligible roles</text>
+  <rect x="830" y="626" width="330" height="152" rx="12" fill="#FFFFFF" stroke="#243746" stroke-width="2"/>
+<text x="844" y="654" class="title">Tools and Workflow</text>
+<text x="844" y="678" class="body">Risk calculator, statistics, reports</text>
+<text x="844" y="698" class="body">Prop firm, psychology, plan</text>
+<text x="844" y="718" class="body">Readiness checklist</text>
+<text x="844" y="738" class="body">Appointments and support</text>
+
+  <text x="1265" y="130" class="lane">Admin Flow</text>
+  <rect x="1220" y="150" width="300" height="132" rx="12" fill="#FFF3E0" stroke="#243746" stroke-width="2"/>
+<text x="1234" y="178" class="title">AdminOverviewScreen</text>
+<text x="1234" y="202" class="body">11 tabs: overview, modules, users</text>
+<text x="1234" y="222" class="body">verification, positions, content</text>
+<text x="1234" y="242" class="body">performance, leaderboard, requests</text>
+<text x="1234" y="262" class="body">features, audit</text>
+  <rect x="1220" y="302" width="300" height="132" rx="12" fill="#FFF3E0" stroke="#243746" stroke-width="2"/>
+<text x="1234" y="330" class="title">AdminManagementScreen</text>
+<text x="1234" y="354" class="body">Resource CRUD/archive/restore</text>
+<text x="1234" y="374" class="body">Signals, analysis, exams, props</text>
+<text x="1234" y="394" class="body">tickets, appointments, journals</text>
+<text x="1234" y="414" class="body">delete requests</text>
+  <rect x="1220" y="454" width="300" height="132" rx="12" fill="#FFF3E0" stroke="#243746" stroke-width="2"/>
+<text x="1234" y="482" class="title">Operations</text>
+<text x="1234" y="506" class="body">Onboarding and position review</text>
+<text x="1234" y="526" class="body">Prop firm review</text>
+<text x="1234" y="546" class="body">Leaderboard and competitions</text>
+<text x="1234" y="566" class="body">Audit trail</text>
+
+  <text x="1518" y="130" class="lane">Firebase / Services</text>
+  <rect x="1505" y="150" width="245" height="92" rx="12" fill="#ECEFF1" stroke="#243746" stroke-width="2"/>
+<text x="1519" y="178" class="title">Firebase Auth</text>
+<text x="1519" y="202" class="body">email/username session</text>
+<text x="1519" y="222" class="body">password reset/change</text>
+  <rect x="1505" y="262" width="245" height="132" rx="12" fill="#ECEFF1" stroke="#243746" stroke-width="2"/>
+<text x="1519" y="290" class="title">Cloud Firestore</text>
+<text x="1519" y="314" class="body">users, journals, content</text>
+<text x="1519" y="334" class="body">exams, tickets, appointments</text>
+<text x="1519" y="354" class="body">roles and feature flags</text>
+  <rect x="1505" y="414" width="245" height="92" rx="12" fill="#ECEFF1" stroke="#243746" stroke-width="2"/>
+<text x="1519" y="442" class="title">Firebase Storage</text>
+<text x="1519" y="466" class="body">profile/support/admin files</text>
+<text x="1519" y="486" class="body">validated by storage.rules</text>
+  <rect x="1505" y="526" width="245" height="112" rx="12" fill="#ECEFF1" stroke="#243746" stroke-width="2"/>
+<text x="1519" y="554" class="title">Cloud Functions</text>
+<text x="1519" y="578" class="body">registration/referrals</text>
+<text x="1519" y="598" class="body">translations</text>
+<text x="1519" y="618" class="body">notifications</text>
+  <rect x="1505" y="658" width="245" height="112" rx="12" fill="#ECEFF1" stroke="#243746" stroke-width="2"/>
+<text x="1519" y="686" class="title">Messaging + Local</text>
+<text x="1519" y="710" class="body">FCM topics/direct messages</text>
+<text x="1519" y="730" class="body">SharedPreferences drafts</text>
+<text x="1519" y="750" class="body">locale/preferences</text>
+
+  <text x="70" y="845" class="lane">Cross-cutting Flows</text>
+  <rect x="50" y="870" width="540" height="110" rx="12" fill="#FAFAFA" stroke="#243746" stroke-width="2"/>
+<text x="64" y="898" class="title">Recruitment / referral / downline</text>
+<text x="64" y="922" class="body">Registration validates referral code and role.</text>
+<text x="64" y="942" class="body">Cloud Function writes users, usernames, referral_codes,</text>
+<text x="64" y="962" class="body">referral_relationships and users/{uid}/downlines.</text>
+  <rect x="630" y="870" width="540" height="110" rx="12" fill="#FAFAFA" stroke="#243746" stroke-width="2"/>
+<text x="644" y="898" class="title">Localization / manual bilingual content</text>
+<text x="644" y="922" class="body">Static labels use AppLocalizations.</text>
+<text x="644" y="942" class="body">Dynamic Firestore text uses localizedValue/model helpers.</text>
+<text x="644" y="962" class="body">Functions do not translate; tools validate manual Chinese fields.</text>
+  <rect x="1210" y="870" width="540" height="110" rx="12" fill="#FAFAFA" stroke="#243746" stroke-width="2"/>
+<text x="1224" y="898" class="title">Security boundary</text>
+<text x="1224" y="922" class="body">Firestore/Storage rules enforce ownership, admin roles,</text>
+<text x="1224" y="942" class="body">feature flags, publisher roles, appointment participants,</text>
+<text x="1224" y="962" class="body">and file size/content-type limits.</text>
+
+  <line x1="350" y1="196" x2="430" y2="196" stroke="#455A64" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="595" y1="245" x2="595" y2="280" stroke="#455A64" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="595" y1="375" x2="595" y2="410" stroke="#455A64" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="760" y1="470" x2="830" y2="205" stroke="#455A64" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="760" y1="470" x2="830" y2="348" stroke="#455A64" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="760" y1="470" x2="830" y2="520" stroke="#455A64" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="595" y1="528" x2="595" y2="570" stroke="#455A64" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="760" y1="660" x2="830" y2="702" stroke="#455A64" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="1160" y1="348" x2="1220" y2="368" stroke="#455A64" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <path d="M995 778 L995 815 L1628 815 L1628 770" fill="none" stroke="#455A64" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <text x="1310" y="807" class="label" text-anchor="middle">module data, files, functions and notifications</text>
+  <path d="M1370 586 L1370 815" fill="none" stroke="#455A64" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="590" y1="925" x2="630" y2="925" stroke="#455A64" stroke-width="2.4" marker-end="url(#arrow)"/>
+  <line x1="1170" y1="925" x2="1210" y2="925" stroke="#455A64" stroke-width="2.4" marker-end="url(#arrow)"/>
+</svg>
+

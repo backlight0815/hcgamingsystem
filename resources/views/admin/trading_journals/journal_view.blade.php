@@ -2,7 +2,8 @@
 @section('admin')
 
 @php
-    $isProfit = (float) $journal->profit_loss >= 0;
+    $isClosedTrade = $journal->isClosed();
+    $isProfit = $isClosedTrade && (float) $journal->profit_loss >= 0;
     $directionLabel = $journal->direction == 1 ? 'Buy' : ($journal->direction == 2 ? 'Sell' : 'Unknown');
     $directionClass = $journal->direction == 1 ? 'bg-success' : ($journal->direction == 2 ? 'bg-danger' : 'bg-secondary');
     $resultLabel = match ((int) $journal->result) {
@@ -21,6 +22,12 @@
     $selectedTimeView = $journalTime->normalizeMode($selectedTimeView ?? request('time_view'));
     $selectedTimeViewOffset = $journalTime->normalizeOffset($selectedTimeViewOffset ?? request('mt5_offset_minutes', $journal->time_input_offset_minutes ?? null), $selectedTimeView);
     $selectedMt5ViewOffset = $journalTime->normalizeOffset(request('mt5_offset_minutes', $journal->time_input_offset_minutes ?? null), \App\Services\TradingJournalTimeService::TIMEZONE_MT5);
+    $statusBadgeClass = match ($journal->status) {
+        \App\Models\TradingJournal::STATUS_DRAFT => 'bg-secondary',
+        \App\Models\TradingJournal::STATUS_CLOSED => 'bg-success',
+        default => 'bg-info',
+    };
+    $mistakeTags = collect($journal->mistake_tags ?? []);
 @endphp
 
 <title>Trading Journal Details | HC Gaming Studio</title>
@@ -141,7 +148,12 @@
                     <h3 class="journal-detail-symbol">{{ strtoupper($journal->pair) }}</h3>
                     <div class="journal-detail-meta">
                         <span class="badge {{ $directionClass }}">{{ $directionLabel }}</span>
-                        <span class="badge {{ $resultClass }}">{{ $resultLabel }}</span>
+                        <span class="badge {{ $statusBadgeClass }}">{{ $journal->statusLabel() }}</span>
+                        <span class="badge {{ $isClosedTrade ? $resultClass : 'bg-secondary' }}">{{ $isClosedTrade ? $resultLabel : 'Open' }}</span>
+                        <span class="badge bg-light text-dark">{{ $journal->closeHandlingLabel() }}</span>
+                        @if($journal->reason)
+                            <span class="badge bg-light text-dark">{{ $journal->reason->name }}</span>
+                        @endif
                         <span class="badge bg-light text-dark">Saved from {{ $journalTime->label($journal->time_input_timezone ?? null, $journal->time_input_offset_minutes ?? null) }}</span>
                         @if($tradingPair && $tradingPair->description)
                             <span class="badge bg-light text-dark">{{ $tradingPair->description }}</span>
@@ -150,8 +162,8 @@
                 </div>
                 <div class="text-md-end">
                     <div class="text-muted">Profit / Loss</div>
-                    <h3 class="mb-0 {{ $isProfit ? 'text-success' : 'text-danger' }}">
-                        {{ number_format((float) $journal->profit_loss, 2) }}u
+                    <h3 class="mb-0 {{ ! $isClosedTrade ? 'text-muted' : ($isProfit ? 'text-success' : 'text-danger') }}">
+                        {{ $isClosedTrade ? (($isProfit ? '+' : '') . number_format((float) $journal->profit_loss, 2) . 'u') : '-' }}
                     </h3>
                 </div>
             </div>
@@ -167,7 +179,7 @@
                     <div class="col-md-3 col-sm-6">
                         <div class="journal-metric">
                             <span>Close Time ({{ $journalTime->shortLabel($selectedTimeView, $selectedTimeViewOffset) }})</span>
-                            <strong>{{ $journalTime->formatForDisplay($journal->close_date, $selectedTimeView, $selectedTimeViewOffset) }}</strong>
+                            <strong>{{ $isClosedTrade ? $journalTime->formatForDisplay($journal->close_date, $selectedTimeView, $selectedTimeViewOffset) : '-' }}</strong>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6">
@@ -179,7 +191,7 @@
                     <div class="col-md-3 col-sm-6">
                         <div class="journal-metric">
                             <span>Exit Price</span>
-                            <strong>{{ $journal->exit_price }}</strong>
+                            <strong>{{ $isClosedTrade ? $journal->exit_price : '-' }}</strong>
                         </div>
                     </div>
                 </div>
@@ -188,7 +200,7 @@
                     <div class="col-md-3 col-sm-6">
                         <div class="journal-metric">
                             <span>Pips</span>
-                            <strong>{{ $journal->pips }}</strong>
+                            <strong>{{ $isClosedTrade ? $journal->pips : '-' }}</strong>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6">
@@ -206,7 +218,7 @@
                     <div class="col-md-3 col-sm-6">
                         <div class="journal-metric">
                             <span>Result</span>
-                            <strong>{{ $resultLabel }}</strong>
+                            <strong>{{ $isClosedTrade ? $resultLabel : 'Open' }}</strong>
                         </div>
                     </div>
                 </div>
@@ -216,20 +228,83 @@
                         <div class="journal-metric">
                             <span>Malaysia Time</span>
                             <strong>Open: {{ $journalTime->formatForDisplay($journal->open_date, \App\Services\TradingJournalTimeService::TIMEZONE_MALAYSIA) }}</strong>
-                            <strong>Close: {{ $journalTime->formatForDisplay($journal->close_date, \App\Services\TradingJournalTimeService::TIMEZONE_MALAYSIA) }}</strong>
+                            <strong>Close: {{ $isClosedTrade ? $journalTime->formatForDisplay($journal->close_date, \App\Services\TradingJournalTimeService::TIMEZONE_MALAYSIA) : '-' }}</strong>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="journal-metric">
                             <span>MT5 Platform Time</span>
                             <strong>Open: {{ $journalTime->formatForDisplay($journal->open_date, \App\Services\TradingJournalTimeService::TIMEZONE_MT5, $selectedMt5ViewOffset) }}</strong>
-                            <strong>Close: {{ $journalTime->formatForDisplay($journal->close_date, \App\Services\TradingJournalTimeService::TIMEZONE_MT5, $selectedMt5ViewOffset) }}</strong>
+                            <strong>Close: {{ $isClosedTrade ? $journalTime->formatForDisplay($journal->close_date, \App\Services\TradingJournalTimeService::TIMEZONE_MT5, $selectedMt5ViewOffset) : '-' }}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="journal-metric">
+                            <span>Entry Reason</span>
+                            <strong>{{ $journal->reason?->name ?? '-' }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="journal-metric">
+                            <span>Prop Firm Model</span>
+                            <strong>{{ $journal->propFirmModel?->name ?? 'Default' }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="journal-metric">
+                            <span>Prop Firm Phase</span>
+                            <strong>{{ $journal->propFirmPhaseRule?->display_name ?? 'Phase from account' }}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="journal-metric">
+                            <span>Emotion Before</span>
+                            <strong>{{ $journal->emotion_before_entry ?: '-' }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="journal-metric">
+                            <span>Emotion During</span>
+                            <strong>{{ $journal->emotion_during_trade ?: '-' }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="journal-metric">
+                            <span>Emotion After</span>
+                            <strong>{{ $journal->emotion_after_trade ?: '-' }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="journal-metric">
+                            <span>Confidence</span>
+                            <strong>{{ $journal->confidence_level ? $journal->confidence_level . '/10' : '-' }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="journal-metric">
+                            <span>Discipline</span>
+                            <strong>{{ $journal->discipline_rating ? $journal->discipline_rating . '/10' : '-' }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="journal-metric">
+                            <span>Mistake Tags</span>
+                            <strong>{{ $mistakeTags->isNotEmpty() ? $mistakeTags->implode(', ') : '-' }}</strong>
                         </div>
                     </div>
                 </div>
 
                 <h5 class="mb-3">Notes</h5>
                 <div class="journal-notes">{{ $journal->notes ?: 'No notes recorded.' }}</div>
+
+                <h5 class="mb-3 mt-4">Reflection</h5>
+                <div class="journal-notes">{{ $journal->psychology_notes ?: 'No psychology reflection recorded.' }}</div>
             </div>
         </div>
     </div>

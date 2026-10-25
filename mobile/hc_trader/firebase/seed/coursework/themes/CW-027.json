@@ -1,0 +1,638 @@
+{
+  "theme": {
+    "id": "CW-027",
+    "code": "CW-027",
+    "title": {
+      "en": "Trading Role Reversal After Confirmed Level Breaks",
+      "zh": "在价位确认突破后分析角色互换"
+    },
+    "shortTitle": {
+      "en": "role reversal",
+      "zh": "在价位确认突破后分析角色互换"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates trading role reversal after confirmed level breaks using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示在价位确认突破后分析角色互换。"
+    },
+    "categoryId": "key_levels",
+    "categoryName": {
+      "en": "Support, Resistance and Key Levels",
+      "zh": "支撑、阻力与关键价位"
+    },
+    "difficulty": "beginner",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind trading role reversal after confirmed level breaks.",
+        "Apply trading role reversal after confirmed level breaks to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释在价位确认突破后分析角色互换背后的核心决策规则。",
+        "将在价位确认突破后分析角色互换应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "role reversal",
+      "breakout",
+      "retest",
+      "US30",
+      "Support, Resistance and Key Levels"
+    ],
+    "searchTokens": [
+      "cw-027",
+      "CW-027",
+      "key_levels",
+      "support, resistance and key levels",
+      "支撑、阻力与关键价位",
+      "trading",
+      "role",
+      "reversal",
+      "after",
+      "confirmed",
+      "level",
+      "breaks",
+      "在价位确认突破后分析角色互换",
+      "breakout",
+      "retest",
+      "us30",
+      "support,",
+      "resistance",
+      "and",
+      "key",
+      "levels"
+    ],
+    "difficultyOrder": 1,
+    "estimatedMinutes": 55,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 27,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "0cec655127a70b2d10f9756a5f16e7c539b0f70123ee1db52f47005411c0e21f"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-027",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for role reversal",
+        "zh": "在价位确认突破后分析角色互换的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which practice prevents trading role reversal after confirmed level breaks from becoming a subjective guess?",
+        "zh": "哪项做法可防止在价位确认突破后分析角色互换变成主观猜测？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing trading role reversal after confirmed level breaks.",
+            "zh": "评估在价位确认突破后分析角色互换时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "69f5f5dcacea7d7333b736663f38c2ba8ea31636bdf93ae8486e27bf244c3675"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-027",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying role reversal Under Uncertainty",
+        "zh": "在不确定性下应用在价位确认突破后分析角色互换"
+      },
+      "prompt": {
+        "en": "Price invalidates the original interpretation of trading role reversal after confirmed level breaks immediately after entry. What preserves process discipline?",
+        "zh": "价格在入场后立即使原有在价位确认突破后分析角色互换解读失效。怎样做才能保持流程纪律？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "5a0ddd50c183901a777fe31b4f64c928dab1be1a6352adee9189474f3097494c"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-027",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "US30 Chart Interpretation for role reversal",
+        "zh": "US30图表中的在价位确认突破后分析角色互换解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational US30 H1 chart. Which labelled zone is the strongest decision area for evaluating trading role reversal after confirmed level breaks while keeping invalidation visible?",
+        "zh": "研究合成教学用US30 H1图表。哪个标记区域最适合评估在价位确认突破后分析角色互换，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "US30",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 39670.4,
+            "high": 39719.1,
+            "low": 39627.6,
+            "close": 39671.2
+          },
+          {
+            "timeIndex": 1,
+            "open": 39671.2,
+            "high": 39768.5,
+            "low": 39646.1,
+            "close": 39713.6
+          },
+          {
+            "timeIndex": 2,
+            "open": 39713.6,
+            "high": 39805.1,
+            "low": 39667.9,
+            "close": 39767.7
+          },
+          {
+            "timeIndex": 3,
+            "open": 39767.7,
+            "high": 39848.2,
+            "low": 39714.2,
+            "close": 39810.8
+          },
+          {
+            "timeIndex": 4,
+            "open": 39810.8,
+            "high": 39894.4,
+            "low": 39766.6,
+            "close": 39839.5
+          },
+          {
+            "timeIndex": 5,
+            "open": 39839.5,
+            "high": 39904.6,
+            "low": 39816.2,
+            "close": 39856.7
+          },
+          {
+            "timeIndex": 6,
+            "open": 39856.7,
+            "high": 39881.3,
+            "low": 39810.7,
+            "close": 39855.1
+          },
+          {
+            "timeIndex": 7,
+            "open": 39855.1,
+            "high": 39904.7,
+            "low": 39768.4,
+            "close": 39821.9
+          },
+          {
+            "timeIndex": 8,
+            "open": 39821.9,
+            "high": 39876.2,
+            "low": 39716.6,
+            "close": 39762.1
+          },
+          {
+            "timeIndex": 9,
+            "open": 39762.1,
+            "high": 39796.9,
+            "low": 39682.1,
+            "close": 39707
+          },
+          {
+            "timeIndex": 10,
+            "open": 39707,
+            "high": 39746.9,
+            "low": 39650.8,
+            "close": 39693.8
+          },
+          {
+            "timeIndex": 11,
+            "open": 39693.8,
+            "high": 39788.6,
+            "low": 39640.4,
+            "close": 39733.2
+          },
+          {
+            "timeIndex": 12,
+            "open": 39733.2,
+            "high": 39845.7,
+            "low": 39686.5,
+            "close": 39799.7
+          },
+          {
+            "timeIndex": 13,
+            "open": 39799.7,
+            "high": 39883.1,
+            "low": 39773,
+            "close": 39855.7
+          },
+          {
+            "timeIndex": 14,
+            "open": 39855.7,
+            "high": 39933.3,
+            "low": 39814.1,
+            "close": 39882.1
+          },
+          {
+            "timeIndex": 15,
+            "open": 39882.1,
+            "high": 39937.5,
+            "low": 39828.9,
+            "close": 39884.2
+          },
+          {
+            "timeIndex": 16,
+            "open": 39884.2,
+            "high": 39916.3,
+            "low": 39824.2,
+            "close": 39872.1
+          },
+          {
+            "timeIndex": 17,
+            "open": 39872.1,
+            "high": 39914.4,
+            "low": 39816.8,
+            "close": 39845.4
+          },
+          {
+            "timeIndex": 18,
+            "open": 39845.4,
+            "high": 39901,
+            "low": 39760.5,
+            "close": 39800.6
+          },
+          {
+            "timeIndex": 19,
+            "open": 39800.6,
+            "high": 39844.4,
+            "low": 39698,
+            "close": 39750.9
+          },
+          {
+            "timeIndex": 20,
+            "open": 39750.9,
+            "high": 39781,
+            "low": 39678.5,
+            "close": 39727.4
+          },
+          {
+            "timeIndex": 21,
+            "open": 39727.4,
+            "high": 39806.6,
+            "low": 39697,
+            "close": 39754.1
+          },
+          {
+            "timeIndex": 22,
+            "open": 39754.1,
+            "high": 39873.8,
+            "low": 39715.6,
+            "close": 39821.7
+          },
+          {
+            "timeIndex": 23,
+            "open": 39821.7,
+            "high": 39921,
+            "low": 39769.2,
+            "close": 39891.6
+          },
+          {
+            "timeIndex": 24,
+            "open": 39891.6,
+            "high": 39972.2,
+            "low": 39841.8,
+            "close": 39927.7
+          },
+          {
+            "timeIndex": 25,
+            "open": 39927.7,
+            "high": 39983.3,
+            "low": 39890.6,
+            "close": 39922.8
+          },
+          {
+            "timeIndex": 26,
+            "open": 39922.8,
+            "high": 39964.4,
+            "low": 39858.1,
+            "close": 39895
+          },
+          {
+            "timeIndex": 27,
+            "open": 39895,
+            "high": 39927.8,
+            "low": 39810.2,
+            "close": 39862.1
+          },
+          {
+            "timeIndex": 28,
+            "open": 39862.1,
+            "high": 39915.7,
+            "low": 39777.3,
+            "close": 39828
+          },
+          {
+            "timeIndex": 29,
+            "open": 39828,
+            "high": 39878.8,
+            "low": 39758.8,
+            "close": 39792.8
+          },
+          {
+            "timeIndex": 30,
+            "open": 39792.8,
+            "high": 39819.4,
+            "low": 39735.5,
+            "close": 39770.6
+          },
+          {
+            "timeIndex": 31,
+            "open": 39770.6,
+            "high": 39830.9,
+            "low": 39719.4,
+            "close": 39784.4
+          },
+          {
+            "timeIndex": 32,
+            "open": 39784.4,
+            "high": 39896.8,
+            "low": 39732.9,
+            "close": 39841.4
+          },
+          {
+            "timeIndex": 33,
+            "open": 39841.4,
+            "high": 39955.6,
+            "low": 39805.7,
+            "close": 39916.4
+          },
+          {
+            "timeIndex": 34,
+            "open": 39916.4,
+            "high": 40002.3,
+            "low": 39883,
+            "close": 39966.8
+          },
+          {
+            "timeIndex": 35,
+            "open": 39966.8,
+            "high": 40022,
+            "low": 39916.4,
+            "close": 39967.6
+          },
+          {
+            "timeIndex": 36,
+            "open": 39967.6,
+            "high": 40016.8,
+            "low": 39877,
+            "close": 39929
+          },
+          {
+            "timeIndex": 37,
+            "open": 39929,
+            "high": 39952.8,
+            "low": 39844.1,
+            "close": 39881.5
+          },
+          {
+            "timeIndex": 38,
+            "open": 39881.5,
+            "high": 39929.9,
+            "low": 39814.7,
+            "close": 39846.2
+          },
+          {
+            "timeIndex": 39,
+            "open": 39846.2,
+            "high": 39901,
+            "low": 39775.4,
+            "close": 39825
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 39643.4,
+            "maximumPrice": 39698.6,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 39738,
+            "maximumPrice": 39793.2,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 39856.4,
+            "maximumPrice": 39911.6,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 39951,
+            "maximumPrice": 40006.2,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "6848dc0961d7e262b76139c1f5864b46560447c3341dd72031bd973aa1be5d55"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-027",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: role reversal",
+        "zh": "独立情境分析：在价位确认突破后分析角色互换"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of trading role reversal after confirmed level breaks using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析在价位确认突破后分析角色互换的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "73e0b7338f2490774859bb0651adb19207c6c9e0251f25c759c3bb905a8b3e84"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-027",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: role reversal",
+        "zh": "实践展示：在价位确认突破后分析角色互换"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate trading role reversal after confirmed level breaks. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示在价位确认突破后分析角色互换。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "9f20fa71c155c030f0de0e9d4bb97810c61d74ada9e788a24160baf2a8a294b0"
+    }
+  ]
+}

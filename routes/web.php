@@ -1,15 +1,43 @@
 <?php
-use App\Models\SignalProviderCertificate; // Make sure you have this model
 
+// Make sure you have this model
+
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AI\AiKnowledgeBaseController;
+use App\Http\Controllers\AI\GeminiAssistantController;
+use App\Http\Controllers\Api\Mobile\V1\ContentController as MobileContentController;
+use App\Http\Controllers\AppNotificationController;
+use App\Http\Controllers\Capital\CapitalController;
 use App\Http\Controllers\Cart\CartController;
+use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\Commission\CommissionController;
+use App\Http\Controllers\Config\FeatureManagementController;
+use App\Http\Controllers\Config\FeatureToggleController;
+use App\Http\Controllers\Config\AdminAuditController;
+use App\Http\Controllers\Config\RoleManagementController;
 use App\Http\Controllers\Dealer\AddressController;
 use App\Http\Controllers\Dealer\CustomerController;
 use App\Http\Controllers\Dealer\EWalletController;
+use App\Http\Controllers\Dealer\ShippingController;
 use App\Http\Controllers\Demo\demoController;
+use App\Http\Controllers\Event\EventController;
+use App\Http\Controllers\FrontendExperienceController;
+use App\Http\Controllers\Home\About_Page\AboutController;
 use App\Http\Controllers\Home\About_Page\AcknowledgementController;
 use App\Http\Controllers\Home\About_Page\EducationController;
 use App\Http\Controllers\Home\About_Page\SkillController;
+use App\Http\Controllers\Home\AccountController;
+use App\Http\Controllers\Home\BlogCategoryController;
+use App\Http\Controllers\Home\BlogController;
+use App\Http\Controllers\Home\CommunityShowcaseController;
+use App\Http\Controllers\Home\ContactController;
 use App\Http\Controllers\Home\DashboardController;
+use App\Http\Controllers\Home\FooterController;
+use App\Http\Controllers\Home\HomeSliderController;
+use App\Http\Controllers\Home\PortfolioController;
+use App\Http\Controllers\Home\RecruitmentController;
+use App\Http\Controllers\Home\ServiceController;
+use App\Http\Controllers\Home\UserController;
 use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Order\OrderItemController;
 use App\Http\Controllers\Order\TransactionsController;
@@ -18,57 +46,36 @@ use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Sales_Performances\SalesController;
 use App\Http\Controllers\Stock\DealerProductCategoryController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Home\HomeSliderController;
-use App\Http\Controllers\Home\About_Page\AboutController;
-use App\Http\Controllers\Home\PortfolioController;
-use App\Http\Controllers\Home\BlogCategoryController;
-use App\Http\Controllers\Home\BlogController;
-use App\Http\Controllers\Home\FooterController;
-use App\Http\Controllers\Home\ContactController;
-use App\Http\Controllers\Home\CommunityShowcaseController;
-use App\Http\Controllers\Home\ServiceController;
-use App\Http\Controllers\Home\RecruitmentController;
-use App\Http\Controllers\Stock\StockController;
-use App\Http\Controllers\Home\AccountController;
 use App\Http\Controllers\Stock\DealerStockController;
-use App\Http\Controllers\Home\ReferralController;
-use App\Http\Controllers\Home\UserController;
-use App\Http\Controllers\Dealer\ShippingController;
-use App\Http\Controllers\Transaction\TransactionController;
-use App\Http\Controllers\Commission\CommissionController;
+use App\Http\Controllers\Stock\StockController;
+use App\Http\Controllers\Support\SupportTicketController;
+use App\Http\Controllers\Trading\AdminFinalExaminationController;
+use App\Http\Controllers\Trading\CommunityManagementController;
+use App\Http\Controllers\Trading\FinalExaminationController;
+use App\Http\Controllers\Trading\FundedTraderController;
+use App\Http\Controllers\Trading\KnowledgeCentreController;
+use App\Http\Controllers\Trading\LeaderboardController;
+use App\Http\Controllers\Trading\MarketAnalystController;
+use App\Http\Controllers\Trading\MarketingResourceController;
+use App\Http\Controllers\Trading\NewsController;
+use App\Http\Controllers\Trading\SignalPerformanceController;
+use App\Http\Controllers\Trading\SignalProviderCertificateController;
+use App\Http\Controllers\Trading\TraderOnboardingController;
+use App\Http\Controllers\Trading\TraderReadinessChecklistController;
+use App\Http\Controllers\Trading\TradersPerformancesController;
+use App\Http\Controllers\Trading\TradingAppointmentController;
+use App\Http\Controllers\Trading\TradingBacktestController;
+use App\Http\Controllers\Trading\TradingBlogController;
+use App\Http\Controllers\Trading\TradingExaminationController;
 use App\Http\Controllers\Trading\TradingJournalController;
 use App\Http\Controllers\Trading\TradingPairController;
-use App\Http\Controllers\ChatbotController;
-use App\Http\Controllers\Event\EventController;
-use App\Http\Controllers\Capital\CapitalController;
-use App\Http\Controllers\Trading\TradersPerformancesController;
-use App\Http\Controllers\Config\FeatureToggleController;
-use App\Http\Controllers\Config\RoleManagementController;
-use App\Http\Controllers\Config\FeatureManagementController;
-use App\Http\Controllers\Trading\MarketAnalystController;
-use App\Http\Controllers\Trading\FundedTraderController;
-use App\Http\Controllers\Trading\LeaderboardController;
-use App\Http\Controllers\Trading\TradingSignalController;
-use App\Http\Controllers\Trading\KnowledgeCentreController;
-use App\Http\Controllers\Trading\CommunityManagementController;
-use App\Http\Controllers\Trading\SignalPerformanceController;
-use App\Http\Controllers\Trading\NewsController;
-use App\Http\Controllers\Trading\TradingReasonController;
-use App\Http\Controllers\Trading\SignalProviderCertificateController;
-use App\Http\Controllers\Trading\TradingStatisticsController;
-use App\Http\Controllers\Trading\TradingBacktestController;
-use App\Http\Controllers\Trading\TradingRecordingController;
-use App\Http\Controllers\Trading\TradingBlogController;
-use App\Http\Controllers\Trading\TraderOnboardingController;
 use App\Http\Controllers\Trading\TradingPositionApplicationController;
-use App\Http\Controllers\Trading\TraderReadinessChecklistController;
-use App\Http\Controllers\Trading\MarketingResourceController;
-use App\Http\Controllers\Trading\TradingAppointmentController;
-use App\Http\Controllers\Trading\TradingExaminationController;
-use App\Http\Controllers\Support\SupportTicketController;
-use App\Http\Controllers\AppNotificationController;
+use App\Http\Controllers\Trading\TradingReasonController;
+use App\Http\Controllers\Trading\TradingRecordingController;
+use App\Http\Controllers\Trading\TradingSignalController;
+use App\Http\Controllers\Trading\TradingStatisticsController;
+use App\Http\Controllers\Transaction\TransactionController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,155 +92,173 @@ use App\Http\Controllers\AppNotificationController;
 //     return view('frontend.index');
 // });
 
-Route::controller(demoController::class)->group(function(){
-    Route::get('/about','Index')->name('about.page')->middleware('check');
-    Route::get('/contact','ContactMethod')->name('contact.page');
-    Route::get('/','HomeMain')->name('home');
+Route::get('/mobile/resource/{token}', [MobileContentController::class, 'consumeMarketingResource'])
+    ->where('token', '[A-Za-z0-9]{64}')
+    ->middleware('throttle:20,1')
+    ->name('mobile.resource.consume');
 
+Route::controller(demoController::class)->group(function () {
+    Route::get('/about', 'Index')->name('about.page')->middleware('check');
+    Route::get('/contact', 'ContactMethod')->name('contact.page');
+
+});
+
+Route::get('/', [FrontendExperienceController::class, 'home'])->name('home');
+Route::get('/store', [demoController::class, 'HomeMain'])->name('store.home');
+// The retired /store/market-insights URLs have no route and return 404.
+Route::middleware(\App\Http\Middleware\EnsureTradingModuleEnabled::class)
+    ->prefix('trading-hub/market-outlooks')->name('trading.hub.outlooks.')
+    ->controller(\App\Http\Controllers\Trading\MarketOutlookPublicationController::class)
+    ->group(function (): void {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{analysis}', 'show')->whereNumber('analysis')->name('show');
+    });
+Route::controller(FrontendExperienceController::class)->prefix('trading-hub')->name('trading.hub.')->group(function (): void {
+    Route::get('/', 'tradingHome')->name('home');
+    Route::get('/insights', 'insights')->name('insights');
+    Route::get('/signals', 'signals')->name('signals');
+    Route::get('/about', 'about')->name('about');
+    Route::get('/services', 'services')->name('services');
+    Route::get('/contact', 'contact')->name('contact');
 });
 
 Route::get('/hc-trading-community', [CommunityShowcaseController::class, 'show'])
     ->name('community.showcase');
 
+Route::view('/privacy-policy', 'privacy-policy')
+    ->name('privacy.policy');
+
 //Admin All Route
 
-Route::middleware(['auth'])->group(function(){
+Route::middleware(['auth'])->group(function () {
 
-    Route::controller(AdminController::class)->group(function(){
-        Route::get('/admin/logout','destroy')->name('admin.logout');
-        Route::get('/admin/profile','Profile')->name('admin.profile');
-        Route::get('/edit/profile','EditProfile')->name('edit.profile');
-        Route::post('/store/profile','StoreProfile')->name('store.profile');
-        Route::get('/change/password','ChangePassword')->name('change.password');
-        Route::post('/update/password','UpdatePassword')->name('update.password');
+    Route::controller(AdminController::class)->group(function () {
+        Route::get('/admin/logout', 'destroy')->name('admin.logout');
+        Route::get('/admin/profile', 'Profile')->name('admin.profile');
+        Route::get('/edit/profile', 'EditProfile')->name('edit.profile');
+        Route::post('/store/profile', 'StoreProfile')->name('store.profile');
+        Route::get('/change/password', 'ChangePassword')->name('change.password');
+        Route::post('/update/password', 'UpdatePassword')->name('update.password');
        // Route::get('/users/status/{user_id}/{status_code}','UpdateStatus')->name('update.status');
 
 });
 
 });
 
-
-
 //Home Slide All Route
-Route::controller(HomeSliderController::class)->group(function(){
-    Route::get('/home/slide','HomeSlider')->name('home.slide');
+Route::controller(HomeSliderController::class)->group(function () {
+    Route::get('/home/slide', 'HomeSlider')->name('home.slide');
     Route::get('/home/slide/setup', 'SetupHomeSlider')->name('setup.home.slide');
-    Route::post('/update/slider','UpdateSlider')->name('update.slider');
-
+    Route::post('/update/slider', 'UpdateSlider')->name('update.slider');
 
 });
 
-
 //About Page All Route
-Route::controller(AboutController::class)->group(function(){
-    Route::get('/about/page','AboutPage')->name('about.page');
-    Route::get('/about/setup','SetupAboutPage')->name('setup.about.page');
+Route::controller(AboutController::class)->group(function () {
+    Route::get('/about/page', 'AboutPage')->name('about.page');
+    Route::get('/about/setup', 'SetupAboutPage')->name('setup.about.page');
 
-    Route::post('/update/about','UpdateAbout')->name('update.about');
-    Route::get('/about','HomeAbout')->name('home.about');
-    Route::get('/about/multi/image','AboutMultiImage')->name('about.multi.image');
-    Route::post('/store/multi/image','StoreMultiImage')->name('store.multi.image');
-    Route::get('/all/multi/image','AllMultiImage')->name('all.multi.image');
-    Route::get('/edit/multi/image/{id}','EditMultiImage')->name('edit.multi.image');
-    Route::post('/update/multi/image','UpdateMultiImage')->name('update.multi.image');
-    Route::get('/delete/multi/image/{id}','DeleteMultiImage')->name('delete.multi.image');
-
+    Route::post('/update/about', 'UpdateAbout')->name('update.about');
+    Route::get('/about', 'HomeAbout')->name('home.about');
+    Route::get('/about/multi/image', 'AboutMultiImage')->name('about.multi.image');
+    Route::post('/store/multi/image', 'StoreMultiImage')->name('store.multi.image');
+    Route::get('/all/multi/image', 'AllMultiImage')->name('all.multi.image');
+    Route::get('/edit/multi/image/{id}', 'EditMultiImage')->name('edit.multi.image');
+    Route::post('/update/multi/image', 'UpdateMultiImage')->name('update.multi.image');
+    Route::get('/delete/multi/image/{id}', 'DeleteMultiImage')->name('delete.multi.image');
 
 });
 
 //Skill Controller All Route
 
-Route::controller(SkillController::class)->group(function(){
-    Route::get('/all/skill','AllSkill')->name('all.skill');
-    Route::get('/add/skill','AddSkill')->name('add.skill');
-    Route::post('/store/skill','StoreSkill')->name('store.skill');
-    Route::get('/edit/skill/{id}','EditSkill')->name('edit.skill');
-    Route::post('/update/skill/{id}','UpdateSkill')->name('update.skill');
-    Route::get('/delete/skill/{id}','DeleteSkill')->name('delete.skill');
+Route::controller(SkillController::class)->group(function () {
+    Route::get('/all/skill', 'AllSkill')->name('all.skill');
+    Route::get('/add/skill', 'AddSkill')->name('add.skill');
+    Route::post('/store/skill', 'StoreSkill')->name('store.skill');
+    Route::get('/edit/skill/{id}', 'EditSkill')->name('edit.skill');
+    Route::post('/update/skill/{id}', 'UpdateSkill')->name('update.skill');
+    Route::get('/delete/skill/{id}', 'DeleteSkill')->name('delete.skill');
 });
 
 //Acknowlegement All Route
-Route::controller(AcknowledgementController::class)->group(function(){
-    Route::get('/all/acknowledgement','AllAcknowledgement')->name('all.acknowledgement');
-    Route::get('/add/acknowledgement','AddAcknowledgement')->name('add.acknowledgement');
-    Route::post('/store/acknowledgement','StoreAcknowledgement')->name('store.acknowledgement');
-    Route::get('/edit/acknowledgement/{id}','EditAcknowledgement')->name('edit.acknowledgement');
-    Route::post('/update/acknowledgement/{id}','UpdateAcknowledgement')->name('update.acknowledgement');
-    Route::get('/delete/acknowledgement/{id}','DeleteAcknowledgement')->name('delete.acknowledgement');
+Route::controller(AcknowledgementController::class)->group(function () {
+    Route::get('/all/acknowledgement', 'AllAcknowledgement')->name('all.acknowledgement');
+    Route::get('/add/acknowledgement', 'AddAcknowledgement')->name('add.acknowledgement');
+    Route::post('/store/acknowledgement', 'StoreAcknowledgement')->name('store.acknowledgement');
+    Route::get('/edit/acknowledgement/{id}', 'EditAcknowledgement')->name('edit.acknowledgement');
+    Route::post('/update/acknowledgement/{id}', 'UpdateAcknowledgement')->name('update.acknowledgement');
+    Route::get('/delete/acknowledgement/{id}', 'DeleteAcknowledgement')->name('delete.acknowledgement');
 
 });
 //Education All Route
-Route::controller(EducationController::class)->group(function(){
-    Route::get('/all/education','AllEducation')->name('all.education');
-    Route::get('/add/education','AddEducation')->name('add.education');
-    Route::post('/store/education','StoreEducation')->name('store.education');
-    Route::get('/edit/education/{id}','EditEducation')->name('edit.education');
-    Route::post('/update/education/{id}','UpdateEducation')->name('update.education');
-    Route::get('/delete/education/{id}','DeleteEducation')->name('delete.education');
-
+Route::controller(EducationController::class)->group(function () {
+    Route::get('/all/education', 'AllEducation')->name('all.education');
+    Route::get('/add/education', 'AddEducation')->name('add.education');
+    Route::post('/store/education', 'StoreEducation')->name('store.education');
+    Route::get('/edit/education/{id}', 'EditEducation')->name('edit.education');
+    Route::post('/update/education/{id}', 'UpdateEducation')->name('update.education');
+    Route::get('/delete/education/{id}', 'DeleteEducation')->name('delete.education');
 
 });
 
 //Portfolio All Route
-Route::controller(PortfolioController::class)->group(function(){
-    Route::get('/all/portfolio','AllPortfolio')->name('all.portfolio');
-    Route::get('/add/portfolio','AddPortfolio')->name('add.portfolio');
-    Route::post('/store/portfolio','StorePortfolio')->name('store.portfolio');
+Route::controller(PortfolioController::class)->group(function () {
+    Route::get('/all/portfolio', 'AllPortfolio')->name('all.portfolio');
+    Route::get('/add/portfolio', 'AddPortfolio')->name('add.portfolio');
+    Route::post('/store/portfolio', 'StorePortfolio')->name('store.portfolio');
 
-    Route::get('/edit/portfolio/{id}','EditPortfolio')->name('edit.portfolio');
-    Route::post('/update/portfolio','UpdatePortfolio')->name('update.portfolio');
-    Route::get('/delete/portfolio/{id}','DeletePortfolio')->name('delete.portfolio');
-    Route::get('/portfolio/details/{id}','PortfolioDetails')->name('portfolio.details');
-    Route::get('/portfolio','HomePortfolio')->name('home.portfolio');
-
+    Route::get('/edit/portfolio/{id}', 'EditPortfolio')->name('edit.portfolio');
+    Route::post('/update/portfolio', 'UpdatePortfolio')->name('update.portfolio');
+    Route::get('/delete/portfolio/{id}', 'DeletePortfolio')->name('delete.portfolio');
+    Route::get('/portfolio/details/{id}', 'PortfolioDetails')->name('portfolio.details');
+    Route::get('/portfolio', 'HomePortfolio')->name('home.portfolio');
 
 });
 //Account All Route
-Route::controller(AccountController::class)->group(function(){
-    Route::get('/all/account','AllAccount')->name('all.account');
-    Route::get('/all/signalprovider','AllSignalProvider')->name('all.signal_provider');
-    Route::get('/edit/signalprovider/account/{id}','EditSignalProviderAccount')->name('edit.signal_provider.account');
-    Route::post('/update/signalprovider/account','UpdateSignalProvider')->name('update.signal_provider');
+Route::controller(AccountController::class)->middleware(['auth', 'can:admin', \App\Http\Middleware\ProtectSuperAdminRole::class])->group(function () {
+    Route::get('/all/account', 'AllAccount')->name('all.account');
+    Route::get('/all/signalprovider', 'AllSignalProvider')->name('all.signal_provider');
+    Route::get('/edit/signalprovider/account/{id}', 'EditSignalProviderAccount')->name('edit.signal_provider.account');
+    Route::post('/update/signalprovider/account', 'UpdateSignalProvider')->name('update.signal_provider');
 
-    Route::get('/all/agent','AllAgent')->name('all.agent.account');
-    Route::get('/edit/agent/account/{id}','EditAgentAccount')->name('edit.agent.account');
-    Route::post('/update/agent/account','UpdateAgent')->name('update.agent');
-    Route::post('/update','updateAgentStatus')->name('updateAgentStatus');
-    Route::get('/all/customer','AllCustomer')->name('all.customer.account');
-    Route::get('/edit/customer/account/{id}','EditCustomerAccount')->name('edit.customer.account');
-    Route::post('/update/customer/account','UpdateCustomer')->name('update.customer');
-    Route::post('/update','updateCustomerStatus')->name('updateCustomerStatus');
-    Route::get('/all/admin','AllAdmin')->name('all.admin.account');
-    Route::get('/edit/admin/account/{id}','EditAdminAccount')->name('edit.admin.account');
-    Route::post('/update/admin/account','UpdateAdmin')->name('update.admin');
-    Route::post('/update','updateAdminStatus')->name('updateAdminStatus');
-    Route::post('/update/account','UpdateAccount')->name('update.account');
-    Route::get('/edit/account/{id}','EditAccount')->name('edit.account');
-    Route::post('/update','updateAccountStatus')->name('updateAccountStatus');
-    Route::get('/delete/account/{id}','DeleteAccount')->name('delete.account');
+    Route::get('/all/agent', 'AllAgent')->name('all.agent.account');
+    Route::get('/edit/agent/account/{id}', 'EditAgentAccount')->name('edit.agent.account');
+    Route::post('/update/agent/account', 'UpdateAgent')->name('update.agent');
+    Route::post('/update', 'updateAgentStatus')->name('updateAgentStatus');
+    Route::get('/all/customer', 'AllCustomer')->name('all.customer.account');
+    Route::get('/edit/customer/account/{id}', 'EditCustomerAccount')->name('edit.customer.account');
+    Route::post('/update/customer/account', 'UpdateCustomer')->name('update.customer');
+    Route::post('/update', 'updateCustomerStatus')->name('updateCustomerStatus');
+    Route::get('/all/admin', 'AllAdmin')->name('all.admin.account');
+    Route::get('/edit/admin/account/{id}', 'EditAdminAccount')->name('edit.admin.account');
+    Route::post('/update/admin/account', 'UpdateAdmin')->name('update.admin');
+    Route::post('/update', 'updateAdminStatus')->name('updateAdminStatus');
+    Route::post('/update/account', 'UpdateAccount')->name('update.account');
+    Route::get('/edit/account/{id}', 'EditAccount')->name('edit.account');
+    Route::post('/update', 'updateAccountStatus')->name('updateAccountStatus');
+    Route::delete('/delete/account/{id}', 'DeleteAccount')->name('delete.account');
 
-     Route::get('/all/traders','AllTraders')->name('all.traders.account');
-    Route::get('/edit/traders/account/{id}','EditTradersAccount')->name('edit.traders.account');
-    Route::post('/update/traders/account','UpdateTraders')->name('update.traders');
-    Route::post('/update','updateTradersStatus')->name('updateTradersStatus');
+     Route::get('/all/traders', 'AllTraders')->name('all.traders.account');
+    Route::get('/edit/traders/account/{id}', 'EditTradersAccount')->name('edit.traders.account');
+    Route::post('/update/traders/account', 'UpdateTraders')->name('update.traders');
+    Route::post('/update', 'updateTradersStatus')->name('updateTradersStatus');
 
 });
 
-
 //Blog Category All Route
-Route::controller(BlogCategoryController::class)->group(function(){
-    Route::get('/all/blog/category','AllBlogCategory')->name('all.blog.category');
-    Route::get('/add/blog/category','AddBlogCategory')->name('add.blog.category');
+Route::controller(BlogCategoryController::class)->group(function () {
+    Route::get('/all/blog/category', 'AllBlogCategory')->name('all.blog.category');
+    Route::get('/add/blog/category', 'AddBlogCategory')->name('add.blog.category');
 
-    Route::post('/store/blog/category','StoreBlogCategory')->name('store.blog.category');
-    Route::get('/edit/blog/category/{id}','EditBlogCategory')->name('edit.blog.category');
-    Route::post('/update/blog/category/{id}','UpdateBlogCategory')->name('update.blog.category');
-    Route::get('/delete/blog/category/{id}','DeleteBlogCategory')->name('delete.blog.category');
+    Route::post('/store/blog/category', 'StoreBlogCategory')->name('store.blog.category');
+    Route::get('/edit/blog/category/{id}', 'EditBlogCategory')->name('edit.blog.category');
+    Route::post('/update/blog/category/{id}', 'UpdateBlogCategory')->name('update.blog.category');
+    Route::get('/delete/blog/category/{id}', 'DeleteBlogCategory')->name('delete.blog.category');
 
 });
 
 // Signal Performance
-Route::controller(SignalPerformanceController::class)->group(function() {
+Route::controller(SignalPerformanceController::class)->group(function () {
     Route::get('/signal-performance', 'index')->name('signal.performance.index');
     Route::post('/signal-performance/send-discord', 'sendDiscord')
 
@@ -258,7 +283,7 @@ Route::controller(SignalPerformanceController::class)->group(function() {
     Route::post('/signal-performance/import', 'importExcel')
         ->name('signal.performance.import'); // new
 
-        Route::get('/signal-performance/template',  'downloadTemplate')
+        Route::get('/signal-performance/template', 'downloadTemplate')
     ->name('signal.performance.template');
 
 });
@@ -290,7 +315,7 @@ Route::controller(NewsController::class)->group(function () {
     Route::post('/news/{id}/send-discord', 'sendToDiscord')->name('trading.news.sendDiscord');
 });
 
-Route::controller(KnowledgeCentreController::class)->group(function() {
+Route::controller(KnowledgeCentreController::class)->group(function () {
     // CRUD
     Route::get('/knowledge-centre', 'index')->name('knowledge.centre.index');
     Route::get('/knowledge-centre/create', 'create')->name('knowledge.centre.create');
@@ -310,7 +335,7 @@ Route::controller(KnowledgeCentreController::class)->group(function() {
         ->name('knowledge.centre.downloadZip'); // 📦 new route
 });
 // ===== Trading Signal Routes =====
-Route::controller(TradingSignalController::class)->group(function () {
+Route::middleware(['auth'])->controller(TradingSignalController::class)->group(function () {
 
     // 📄 List & Manage Trading Signals
     Route::get('/all/trading/signals', 'index')->name('all.trading.signals');
@@ -372,7 +397,7 @@ Route::post('/close/trading/signal/{id}', 'markDone')
 
 });
 
-Route::controller(TradingReasonController::class)->group(function() {
+Route::controller(TradingReasonController::class)->group(function () {
     // List all reasons
     Route::get('/all/trading/reason', 'index')->name('all.trading.reason');
 
@@ -388,7 +413,7 @@ Route::controller(TradingReasonController::class)->group(function() {
     Route::get('/delete/trading/reason/{id}', 'destroy')->name('delete.trading.reason');
 });
 
-Route::controller(CommunityManagementController::class)->group(function() {
+Route::controller(CommunityManagementController::class)->group(function () {
     // 🔹 List all communities
     Route::get('/all/communities', 'index')->name('communities.index');
 
@@ -423,7 +448,7 @@ Route::middleware(['auth'])->controller(CommunityShowcaseController::class)->gro
     Route::post('/admin/community-showcase', 'update')->name('admin.community.showcase.update');
 });
 
-Route::controller(MarketAnalystController::class)->group(function() {
+Route::middleware(\App\Http\Middleware\EnsureTradingModuleEnabled::class)->controller(MarketAnalystController::class)->group(function () {
 
     // 🔹 List all market analyses
     Route::get('/market-analyst/all', 'index')->name('market-analyst.index');
@@ -431,6 +456,10 @@ Route::controller(MarketAnalystController::class)->group(function() {
     // 🔹 Add new market analysis
     Route::get('/market-analyst/create', 'create')->name('market-analyst.create');
     Route::post('/market-analyst/store', 'store')->name('market-analyst.store');
+    Route::post('/market-analyst/ai-generate-trading-plan', 'generateTradingPlan')
+        ->middleware('throttle:6,1')->name('market-analyst.ai-generate-trading-plan');
+    Route::post('/market-analyst/ai-generate-report', 'generateReport')
+        ->middleware('throttle:6,1')->name('market-analyst.ai-generate-report');
 
     // 🔹 Edit market analysis
     Route::get('/market-analyst/edit/{id}', 'edit')->name('market-analyst.edit');
@@ -443,14 +472,14 @@ Route::get('/market-analyst/show/{id}', 'show')->name('market-analyst.show');
 
     // 🔹 Send market analysis to Discord
     Route::post('/market-analyst/send-discord/{id}', 'sendToDiscord')->name('market-analyst.sendDiscord');
+    Route::post('/market-analyst/{id}/publish', 'publish')->name('market-analyst.publish');
+    Route::post('/market-analyst/{id}/unpublish', 'unpublish')->name('market-analyst.unpublish');
 
     Route::get('/trading/market-analyst', 'traderIndex')->name('trading.market-analyst.index');
     Route::get('/trading/market-analyst/{analysis}', 'traderShow')->name('trading.market-analyst.show');
 });
 
-
-
-Route::middleware(['auth'])->controller(SignalProviderCertificateController::class)->group(function() {
+Route::middleware(['auth'])->controller(SignalProviderCertificateController::class)->group(function () {
 
     // Admin: show certificate management page.
     Route::get('/certificate/all', 'index')->name('certificate.index');
@@ -480,48 +509,43 @@ Route::middleware(['auth'])->controller(SignalProviderCertificateController::cla
     Route::get('/certificates/{userId}', 'index')->name('certificates.index');
 });
 //Blog All Route
-Route::controller(BlogController::class)->group(function(){
-    Route::get('/all/blog','AllBlog')->name('all.blog');
-    Route::get('/add/blog','AddBlog')->name('add.blog');
-    Route::post('/store/blog','StoreBlog')->name('store.blog');
-    Route::get('/edit/blog/{id}','EditBlog')->name('edit.blog');
-    Route::post('/update/blog','UpdateBlog')->name('update.blog');
-    Route::get('/delete/blog/{id}','DeleteBlog')->name('delete.blog');
-    Route::get('/blog/details/{id}','BlogDetails')->name('blog.details');
-    Route::get('/category/blog/{id}','CategoryBlog')->name('category.blog');
+Route::controller(BlogController::class)->group(function () {
+    Route::get('/all/blog', 'AllBlog')->name('all.blog');
+    Route::get('/add/blog', 'AddBlog')->name('add.blog');
+    Route::post('/store/blog', 'StoreBlog')->name('store.blog');
+    Route::get('/edit/blog/{id}', 'EditBlog')->name('edit.blog');
+    Route::post('/update/blog', 'UpdateBlog')->name('update.blog');
+    Route::get('/delete/blog/{id}', 'DeleteBlog')->name('delete.blog');
+    Route::get('/category/blog/{id}', 'CategoryBlog')->name('category.blog');
 
-    Route::get('/blog','HomeBlog')->name('home.blog');
+    Route::get('/blog', 'HomeBlog')->name('home.blog');
 
     Route::get('/blog/details/{id}', [BlogController::class, 'blogDetails'])
     ->name('blog.details')
     ->middleware('pageview');
 
-
 });
 
 //Footer  All Route
-Route::controller(FooterController::class)->group(function(){
-    Route::get('/footer/setup','FooterSetup')->name('footer.setup');
-    Route::post('/update/footer','UpdateFooter')->name('update.footer');
-
+Route::controller(FooterController::class)->group(function () {
+    Route::get('/footer/setup', 'FooterSetup')->name('footer.setup');
+    Route::post('/update/footer', 'UpdateFooter')->name('update.footer');
 
 });
 
-
 //Contact  All Route
-Route::controller(ContactController::class)->group(function(){
-    Route::get('/contact','Contact')->name('contact.me');
-    Route::post('/store/message','StoreMessage')->name('store.message');
-    Route::get('/contact/message','ContactMessage')->name('contact.message');
-    Route::get('/delete/message/{id}','DeleteMessage')->name('delete.message');
-
+Route::controller(ContactController::class)->group(function () {
+    Route::get('/contact', 'Contact')->name('contact.me');
+    Route::post('/store/message', 'StoreMessage')->name('store.message');
+    Route::get('/contact/message', 'ContactMessage')->name('contact.message');
+    Route::get('/delete/message/{id}', 'DeleteMessage')->name('delete.message');
 
 });
 //Recruitment Route
-Route::middleware(['auth'])->group(function(){
+Route::middleware(['auth'])->group(function () {
 
-    Route::controller(RecruitmentController::class)->group(function(){
-        Route::get('/recruitment/agent','Agent')->name('all.agent');
+    Route::controller(RecruitmentController::class)->group(function () {
+        Route::get('/recruitment/agent', 'Agent')->name('all.agent');
         // Route::get('/recruitment/agentmanagement','AllAgent')->name('admin.all.agent');
 
        // Route::get('/users/status/{user_id}/{status_code}','UpdateStatus')->name('update.status');
@@ -529,51 +553,40 @@ Route::middleware(['auth'])->group(function(){
 
 });
 //Recruitment Route
-Route::middleware(['auth'])->group(function(){
+Route::middleware(['auth'])->group(function () {
 
-    Route::controller(CustomerController::class)->group(function(){
-        Route::get('/recruitment/customer','Customer')->name('all.customer');
+    Route::controller(CustomerController::class)->group(function () {
+        Route::get('/recruitment/customer', 'Customer')->name('all.customer');
        // Route::get('/users/status/{user_id}/{status_code}','UpdateStatus')->name('update.status');
 });
 
 });
 
-
-
 //My Address Route
-Route::middleware(['auth'])->group(function(){
+Route::middleware(['auth'])->group(function () {
 
-    Route::controller(AddressController::class)->group(function(){
-        Route::get('/my/address','MyAddress')->name('dealer.address');
+    Route::controller(AddressController::class)->group(function () {
+        Route::get('/my/address', 'MyAddress')->name('dealer.address');
 
         // Route::get('/store/address','StoreAddress')->name('store.address');
-        Route::post('/update/address','Updateaddress')->name('update.address');
-
-
+        Route::post('/update/address', 'Updateaddress')->name('update.address');
 
 });
 
 });
-
-
-
-
 
 //Service All Route
-Route::controller(ServiceController::class)->group(function(){
-    Route::get('/all/service','AllService')->name('all.service');
-    Route::get('/add/service',action: 'AddService')->name('add.service');
-    Route::post('/store/service','StoreService')->name('store.service');
-    Route::post('/update/service','UpdateService')->name('update.service');
-    Route::get('/edit/service/{id}','EditService')->name('edit.service');
-    Route::get('/delete/service/{id}','DeleteService')->name('delete.service');
-    Route::get('/service','HomeService')->name('home.service');
-    Route::get('/service/details/{id}','ServiceDetails')->name('service.details');
-
+Route::controller(ServiceController::class)->group(function () {
+    Route::get('/all/service', 'AllService')->name('all.service');
+    Route::get('/add/service', action: 'AddService')->name('add.service');
+    Route::post('/store/service', 'StoreService')->name('store.service');
+    Route::post('/update/service', 'UpdateService')->name('update.service');
+    Route::get('/edit/service/{id}', 'EditService')->name('edit.service');
+    Route::get('/delete/service/{id}', 'DeleteService')->name('delete.service');
+    Route::get('/service', 'HomeService')->name('home.service');
+    Route::get('/service/details/{id}', 'ServiceDetails')->name('service.details');
 
 });
-
-
 
 //DealerStock All Route
 
@@ -582,24 +595,23 @@ Route::controller(DealerStockController::class)->group(function () {
     Route::get('/dealer/add/product', 'AddDealerProduct')->name('add.dealer.product');
     Route::get('/dealer/delete/product/{id}', 'DeleteDealerProduct')->name('delete.dealer.product');
      Route::get('/dealer/edit/dealerstock/{id}', 'EditDealerProduct')->name('edit.dealer.product');
-     Route::post('/dealer/update/product','UpdateDealerProduct')->name('update.dealer.product');
-     Route::get('/stock_details/{id}','DealerStockDetails')->name('product.details');
+     Route::post('/dealer/update/product', 'UpdateDealerProduct')->name('update.dealer.product');
+     Route::get('/stock_details/{id}', 'DealerStockDetails')->name('product.details');
 
-     Route::get('/dealer/dealer-stock-update/{id}/publish','UpdateShippingPublishStatus')->name('update.product.to.publish.status');
+     Route::get('/dealer/dealer-stock-update/{id}/publish', 'UpdateShippingPublishStatus')->name('update.product.to.publish.status');
 
     // Route::get('/product_details/{id}', 'ProductDetails')->name('product.details');
 
 });
 
-
 //Dealer Product Category All Route
-Route::controller(DealerProductCategoryController::class)->group(function(){
-    Route::get('/all/dealer/product/category','AllDealerProductCategory')->name('all.dealer.product.category');
-    Route::get('/add/dealer/product/category','AddDealerProductCategory')->name('add.dealer.product.category');
-    Route::post('/store/dealer/product/category','StoreDealerProductCategory')->name('store.dealer.product.category');
-    Route::get('/edit/dealer/product/category/{id}','EditDealerProductCategory')->name('edit.dealer.product.category');
-    Route::post('/update/dealer/product/category/{id}','UpdateDealerProductCategory')->name('update.dealer.product.category');
-    Route::get('/delete/dealer/product/category/{id}','DeleteDealerProductCategory')->name('delete.dealer.product.category');
+Route::controller(DealerProductCategoryController::class)->group(function () {
+    Route::get('/all/dealer/product/category', 'AllDealerProductCategory')->name('all.dealer.product.category');
+    Route::get('/add/dealer/product/category', 'AddDealerProductCategory')->name('add.dealer.product.category');
+    Route::post('/store/dealer/product/category', 'StoreDealerProductCategory')->name('store.dealer.product.category');
+    Route::get('/edit/dealer/product/category/{id}', 'EditDealerProductCategory')->name('edit.dealer.product.category');
+    Route::post('/update/dealer/product/category/{id}', 'UpdateDealerProductCategory')->name('update.dealer.product.category');
+    Route::get('/delete/dealer/product/category/{id}', 'DeleteDealerProductCategory')->name('delete.dealer.product.category');
 
 });
 
@@ -610,7 +622,7 @@ Route::controller(ProductController::class)->group(function () {
     Route::get('/delete/product/{id}', 'DeleteProduct')->name('delete.product');
     Route::get('/edit/product/{id}', 'EditProduct')->name('edit.product');
     Route::get('/product_details/{id}', 'ProductDetails')->name('product.details');
-    Route::post('/update/product','UpdateProduct')->name('update.product');
+    Route::post('/update/product', 'UpdateProduct')->name('update.product');
     // Store Product with Throttle Middleware
     Route::post('/store/product', 'StoreProduct')
         ->name('store.product')
@@ -622,153 +634,143 @@ Route::controller(ProductController::class)->group(function () {
     //     ->middleware('throttle:60,1');
 });
 // Stock All Route
-Route::controller(StockController::class)->group(function(){
-    Route::get('/my-stock','MyStock')->name('my.stock');
-    Route::get('/product','HomeProduct')->name('home.product');
+Route::controller(StockController::class)->group(function () {
+    Route::get('/my-stock', 'MyStock')->name('my.stock');
+    Route::get('/product', 'HomeProduct')->name('home.product');
     //This is the e-storefront product details route
-    Route::get('/stock_details/{id}','StockDetails')->name('stock.details');
+    Route::get('/stock_details/{id}', 'StockDetails')->name('stock.details');
 
 });
 
 // Order Centre All Route
-Route::controller(ShippingController::class)->group(function(){
-    Route::get('/dealer/my-shipping-orders','MyShippingOrders')->name('my.shipping.order');
-    Route::get('/admin/shipping-orders',"AllShippingOrders")->name('all.shipping.order');
-    Route::get('/admn/shipping-orders-update/{id}/approve','UpdateShippingApprovedStatus')->name('update.shipping.to.approve.status');
-    Route::get('/admn/shipping-orders-update/{id}/delivery','UpdateShippingDeliveryStatus')->name('update.shipping.to.delivery.status');
-    Route::get('/admn/shipping-orders-update/{id}/complete','UpdateShippingCompleteStatus')->name('update.shipping.to.complete.status');
-    Route::get('/admn/shipping-orders-update/{id}/reject','UpdateShippingRejectStatus')->name('update.shipping.to.reject.status');
-    Route::get('/dealers/shipping-orders',"AllDealerShippingOrders")->name('all.dealers.shipping.orders');
+Route::controller(ShippingController::class)->group(function () {
+    Route::get('/dealer/my-shipping-orders', 'MyShippingOrders')->name('my.shipping.order');
+    Route::get('/admin/shipping-orders', 'AllShippingOrders')->name('all.shipping.order');
+    Route::get('/admn/shipping-orders-update/{id}/approve', 'UpdateShippingApprovedStatus')->name('update.shipping.to.approve.status');
+    Route::get('/admn/shipping-orders-update/{id}/delivery', 'UpdateShippingDeliveryStatus')->name('update.shipping.to.delivery.status');
+    Route::get('/admn/shipping-orders-update/{id}/complete', 'UpdateShippingCompleteStatus')->name('update.shipping.to.complete.status');
+    Route::get('/admn/shipping-orders-update/{id}/reject', 'UpdateShippingRejectStatus')->name('update.shipping.to.reject.status');
+    Route::get('/dealers/shipping-orders', 'AllDealerShippingOrders')->name('all.dealers.shipping.orders');
 
-    Route::get('/dealers/shipping-orders-update/{id}/approve','UpdateDealerShippingApprovedStatus')->name('update.dealer.shipping.to.approve.status');
-    Route::get('/dealers/shipping-orders-update/{id}/delivery','UpdateDealerShippingDeliveryStatus')->name('update.dealer.shipping.to.delivery.status');
-    Route::get('/dealers/shipping-orders-update/{id}/complete','UpdateDealerShippingCompleteStatus')->name('update.dealer.shipping.to.complete.status');
-    Route::get('/dealers/shipping-orders-update/{id}/reject','UpdateDealerShippingRejectStatus')->name('update.dealer.shipping.to.reject.status');
+    Route::get('/dealers/shipping-orders-update/{id}/approve', 'UpdateDealerShippingApprovedStatus')->name('update.dealer.shipping.to.approve.status');
+    Route::get('/dealers/shipping-orders-update/{id}/delivery', 'UpdateDealerShippingDeliveryStatus')->name('update.dealer.shipping.to.delivery.status');
+    Route::get('/dealers/shipping-orders-update/{id}/complete', 'UpdateDealerShippingCompleteStatus')->name('update.dealer.shipping.to.complete.status');
+    Route::get('/dealers/shipping-orders-update/{id}/reject', 'UpdateDealerShippingRejectStatus')->name('update.dealer.shipping.to.reject.status');
     Route::get('/order-items/{orderId}', 'getOrderItems')->name('admin.order.items');
 
 });
 
 //Dealer Order Centre
 
-
-
-
 // Cart All Route
-Route::controller(CartController::class)->group(function(){
-    Route::post('/cart/add','addToCart')->name('cart.add');
-    Route::post('/e-storefront/cart/add','GuestAddToCart')->name('guest.cart.add');
+Route::controller(CartController::class)->group(function () {
+    Route::post('/cart/add', 'addToCart')->name('cart.add');
+    Route::post('/e-storefront/cart/add', 'GuestAddToCart')->name('guest.cart.add');
 
     Route::get('/cart/total', 'getCartTotal')->name('cart.total')->middleware('auth');
-    Route::get('/guest/cart/total','GuestGetCartTotal')->name('guest.cart.total');
+    Route::get('/guest/cart/total', 'GuestGetCartTotal')->name('guest.cart.total');
     // Route::post('/cart/update','updateToCart')->name('cart.update');
     // Route::post('/cart/remove','removeToCart')->name('cart.remove');
     // Route::get('/cart','indexCart')->name('cart.index');
     Route::get('/cart', 'getCart')->name('cart.summary');
-    Route::get('/e-storefront/cart','getCartGuest')->name('guest.cart.summary');
-    Route::get('/remove/cart/{id}','RemoveCart')->name('remove.cart');
+    Route::get('/e-storefront/cart', 'getCartGuest')->name('guest.cart.summary');
+    Route::get('/remove/cart/{id}', 'RemoveCart')->name('remove.cart');
     Route::patch('/cart/{cartItem}', 'updateCartItem')->name('cart.update');
     Route::post('/checkout', 'checkout')->name('checkout');
     Route::post('/payment', 'payment')->name('payment');
 
-    Route::get('/success','CheckoutSuccessfully')->name('success.checkout');
+    Route::get('/success', 'CheckoutSuccessfully')->name('success.checkout');
     //Route::post('/empty-cart', 'CartController@emptyCart')->name('cart.empty');
-    Route::post('/empty-cart','emptyCart')->name('cart.empty');
+    Route::post('/empty-cart', 'emptyCart')->name('cart.empty');
 
 });
 
 //Commission All Route
-Route::controller(CommissionController::class)->group(function(){
-    Route::get('/mycommission','MyCommission')->name('My.Commission');
-    Route::get('/commissiontutorial','CommissionTutorial')->name('Commission.Tutorial');
-    Route::get('/admin/dealercommission',"AllDealerCommission")->name('all.dealer.commission');
-    Route::get('/admin/commission/setup',"showCommissionSetupForm")->name('admin.commission.setup');
-    Route::post('/admin/commission/setup',"saveCommissionSetup")->name('admin.commission.save');
+Route::controller(CommissionController::class)->group(function () {
+    Route::get('/mycommission', 'MyCommission')->name('My.Commission');
+    Route::get('/commissiontutorial', 'CommissionTutorial')->name('Commission.Tutorial');
+    Route::get('/admin/dealercommission', 'AllDealerCommission')->name('all.dealer.commission');
+    Route::get('/admin/commission/setup', 'showCommissionSetupForm')->name('admin.commission.setup');
+    Route::post('/admin/commission/setup', 'saveCommissionSetup')->name('admin.commission.save');
 
 });
-
 
 //Order Item All Route
-Route::controller(OrderItemController::class)->group(function(){
+Route::controller(OrderItemController::class)->group(function () {
 
 });
-
-
 
 //Order All Route
-Route::controller(OrderController::class)->group(function(){
+Route::controller(OrderController::class)->group(function () {
 
 });
-
-
 
 //Transactions All Route  (New)
-Route::controller(TransactionsController::class)->group(function(){
+Route::controller(TransactionsController::class)->group(function () {
 
 });
-
 
 //Transaction All Route (Old)
-Route::controller(TransactionController::class)->group(function(){
-    Route::post('/transactions','store')->name('transactions.store');
-    Route::post('/transaction-update','update')->name('transactions.update');
+Route::controller(TransactionController::class)->group(function () {
+    Route::post('/transactions', 'store')->name('transactions.store');
+    Route::post('/transaction-update', 'update')->name('transactions.update');
 
 });
-
 
 //Product Category All Route
-Route::controller(ProductCategoryController::class)->group(function(){
-    Route::get('/all/product/category','AllProductCategory')->name('all.product.category');
-    Route::get('/add/product/category','AddProductCategory')->name('add.product.category');
-    Route::post('/store/product/category','StoreProductCategory')->name('store.product.category');
-    Route::get('/edit/product/category/{id}','EditProductCategory')->name('edit.product.category');
-    Route::post('/update/product/category/{id}','UpdateProductCategory')->name('update.product.category');
-    Route::get('/delete/product/category/{id}','DeleteProductCategory')->name('delete.product.category');
+Route::controller(ProductCategoryController::class)->group(function () {
+    Route::get('/all/product/category', 'AllProductCategory')->name('all.product.category');
+    Route::get('/add/product/category', 'AddProductCategory')->name('add.product.category');
+    Route::post('/store/product/category', 'StoreProductCategory')->name('store.product.category');
+    Route::get('/edit/product/category/{id}', 'EditProductCategory')->name('edit.product.category');
+    Route::post('/update/product/category/{id}', 'UpdateProductCategory')->name('update.product.category');
+    Route::get('/delete/product/category/{id}', 'DeleteProductCategory')->name('delete.product.category');
 
 });
-
-
 
 // User All Route
-Route::controller(UserController::class)->group(function(){
-    Route::post('/referral/check','Check')->name('referral.check');
-
-
+Route::controller(UserController::class)->group(function () {
+    Route::post('/referral/check', 'Check')->name('referral.check');
 
 });
-
 
 //Sales Performances All Route
-Route::controller(SalesController::class)->group(function(){
-    Route::get('/salesperformances','SalesPerformances')->name('Sales.Performances');
+Route::controller(SalesController::class)->group(function () {
+    Route::get('/salesperformances', 'SalesPerformances')->name('Sales.Performances');
 
 });
 
-
 ///EWallet All Route
-Route::controller(EWalletController::class)->group(function(){
+Route::controller(EWalletController::class)->group(function () {
 
-    Route::get('/mywallet','MyEWallet')->name('My.Wallet');
-    Route::get('/wallelt-transaction-history','MyWalletHistory')->name('My.Wallet.History');
+    Route::get('/mywallet', 'MyEWallet')->name('My.Wallet');
+    Route::get('/wallelt-transaction-history', 'MyWalletHistory')->name('My.Wallet.History');
 
     // Protect top-up routes with feature toggle middleware
 Route::get('/add/wallet', 'TopUpWallet')->name('add.wallet');
 Route::post('/store/wallet', 'StoreWallet')->name('store.wallet');
 
-
-    Route::get('/admin/dealerwallets', action: "AllDealerWallets")->name('all.dealer.wallets');
-    Route::get('/admn/dealerwallets-update/{id}/approve','UpdateDealerWalletsApprovedStatus')->name('update.wallets.to.approve.status');
-    Route::get('/admn/dealerwallets-update/{id}/reject','UpdateDealerWalletsRejectStatus')->name('update.wallets.to.reject.status');
+    Route::get('/admin/dealerwallets', action: 'AllDealerWallets')->name('all.dealer.wallets');
+    Route::get('/admn/dealerwallets-update/{id}/approve', 'UpdateDealerWalletsApprovedStatus')->name('update.wallets.to.approve.status');
+    Route::get('/admn/dealerwallets-update/{id}/reject', 'UpdateDealerWalletsRejectStatus')->name('update.wallets.to.reject.status');
 });
 
-Route::controller(FeatureToggleController::class)->prefix('admin')->middleware(['auth'])->name(config('routes.admin_name_prefix', 'admin.'))->group(function () {
+Route::controller(FeatureToggleController::class)->prefix('admin')->middleware(['auth:pms,web'])->name(config('routes.admin_name_prefix', 'admin.'))->group(function () {
 
     // List features (no middleware needed)
     Route::get('/features', 'index')->name('features.index');
+    Route::get('/trading-modules', 'tradingModules')->name('trading-modules.index');
+    Route::post('/trading-modules/{key}', 'updateTradingModule')->name('trading-modules.update');
     // Update feature toggle status (maybe protect with auth/admin middleware)
     Route::post('/features/{id}/update', 'update')->name('features.update');
+    Route::post('/features/homepage', 'updateHomepage')->name('features.homepage');
+    Route::post('/features/module-access/{module}', 'updateModuleAccess')->name('features.module_access');
+    Route::post('/features/module-membership', 'updateMembership')->name('features.module_membership');
 
 });
 
+Route::get('/admin/system-audit', [AdminAuditController::class, 'index'])
+    ->middleware('auth:web,pms')->name('admin.system_audit');
 
 Route::controller(FeatureManagementController::class)->middleware(['auth'])->group(function () {
     Route::get('/all/features', 'AllFeatures')->name('all.features');
@@ -790,15 +792,15 @@ Route::prefix('chatbot')->group(function () {
 });
 
 //Event All Route
-Route::controller(EventController::class)->group(function(): void{
-    Route::get('/all/events','AllEvent')->name('all.events');
-    Route::post('/store/events','StoreEvents')->name('store.events');
+Route::controller(EventController::class)->group(function (): void {
+    Route::get('/all/events', 'AllEvent')->name('all.events');
+    Route::post('/store/events', 'StoreEvents')->name('store.events');
     Route::get('/add/events', action: 'AddEvents')->name('add.events');
-    Route::get('/edit/events/{id}','EditEvents')->name('edit.events');
-    Route::post('/update/events/{id}','UpdateEvents')->name('update.events');
-    Route::get('/delete/events/{id}','DeleteEvents')->name('delete.events');
-    Route::get('/events','HomeEvents')->name('home.event');
-    Route::get('/event/details/{id}','EventsDetails')->name('event.details');
+    Route::get('/edit/events/{id}', 'EditEvents')->name('edit.events');
+    Route::post('/update/events/{id}', 'UpdateEvents')->name('update.events');
+    Route::get('/delete/events/{id}', 'DeleteEvents')->name('delete.events');
+    Route::get('/events', 'HomeEvents')->name('home.event');
+    Route::get('/event/details/{id}', 'EventsDetails')->name('event.details');
 
 });
 
@@ -889,6 +891,37 @@ Route::middleware(['auth'])->controller(AppNotificationController::class)->group
     Route::delete('/admin/notifications/{notification}', 'destroy')->name('admin.notifications.destroy');
 });
 
+// AI Assistant
+Route::middleware(['auth'])->controller(GeminiAssistantController::class)->group(function (): void {
+    Route::get('/ai-assistant', 'index')->name('ai.assistant.index');
+    Route::post('/ai-assistant/ask', 'ask')->middleware('throttle:15,1')->name('ai.assistant.ask');
+    Route::get('/ai-assistant/conversations', 'conversations')->name('ai.assistant.conversations');
+    Route::post('/ai-assistant/conversations', 'createConversation')->name('ai.assistant.conversations.create');
+    Route::get('/ai-assistant/conversations/{conversation}/messages', 'messages')->name('ai.assistant.messages');
+    Route::patch('/ai-assistant/conversations/{conversation}', 'rename')->name('ai.assistant.rename');
+    Route::delete('/ai-assistant/conversations/{conversation}', 'delete')->name('ai.assistant.delete');
+    Route::get('/ai-assistant/preferences', 'preferences')->name('ai.assistant.preferences');
+    Route::put('/ai-assistant/preferences', 'savePreferences')->name('ai.assistant.preferences.update');
+    Route::post('/ai-assistant/risk', 'risk')->middleware('throttle:30,1')->name('ai.assistant.risk');
+    Route::post('/ai-assistant/break-even', 'breakEven')->middleware('throttle:30,1')->name('ai.assistant.break_even');
+    Route::post('/ai-assistant/structure', 'structure')->middleware('throttle:30,1')->name('ai.assistant.structure');
+    Route::post('/ai-assistant/feedback', 'feedback')->name('ai.assistant.feedback');
+});
+
+Route::middleware(['auth'])->controller(\App\Http\Controllers\AI\TradingAiSettingsController::class)->group(function (): void {
+    Route::get('/admin/ai-settings', 'index')->name('admin.ai_settings.index');
+    Route::put('/admin/ai-settings', 'update')->name('admin.ai_settings.update');
+});
+
+Route::middleware(['auth'])->controller(AiKnowledgeBaseController::class)->group(function (): void {
+    Route::get('/admin/ai-knowledge-base', 'index')->name('admin.ai_knowledge_base.index');
+    Route::get('/admin/ai-knowledge-base/create', 'create')->name('admin.ai_knowledge_base.create');
+    Route::post('/admin/ai-knowledge-base', 'store')->name('admin.ai_knowledge_base.store');
+    Route::get('/admin/ai-knowledge-base/{knowledgeBase}/edit', 'edit')->name('admin.ai_knowledge_base.edit');
+    Route::put('/admin/ai-knowledge-base/{knowledgeBase}', 'update')->name('admin.ai_knowledge_base.update');
+    Route::delete('/admin/ai-knowledge-base/{knowledgeBase}', 'destroy')->name('admin.ai_knowledge_base.destroy');
+});
+
 // Trading Appointments
 Route::middleware(['auth'])->controller(TradingAppointmentController::class)->group(function (): void {
     Route::get('/admin/trading-appointments', 'adminIndex')->name('admin.trading.appointments.index');
@@ -921,6 +954,32 @@ Route::middleware(['auth'])->controller(TradingExaminationController::class)->gr
     Route::post('/admin/trading-exams/quota-requests/{quotaRequest}/reject', 'rejectQuota')->name('admin.trading.exams.quota.reject');
 });
 
+Route::middleware(['auth'])->controller(FinalExaminationController::class)->group(function (): void {
+    Route::get('/final-exam', 'intro')->name('final_exam.intro');
+    Route::post('/final-exam/start', 'start')->name('final_exam.start');
+    Route::get('/final-exam/attempt', 'attempt')->name('final_exam.attempt');
+    Route::post('/final-exam/attempts/{attempt}/submit', 'submit')->name('final_exam.submit');
+    Route::get('/final-exam/attempts/{attempt}/result', 'result')->name('final_exam.result');
+    Route::get('/final-exam/prop-firm-selection', 'propFirmSelection')->name('final_exam.prop_firm_selection');
+    Route::post('/final-exam/prop-firm-selection', 'savePropFirmSelection')->name('final_exam.prop_firm_selection.save');
+});
+
+Route::middleware(['auth'])->prefix('admin/final-exam')->name('admin.final_exam.')->controller(AdminFinalExaminationController::class)->group(function (): void {
+    Route::get('/questions', 'index')->name('questions.index');
+    Route::get('/questions/create', 'create')->name('questions.create');
+    Route::post('/questions', 'store')->name('questions.store');
+    Route::post('/questions/import', 'import')->name('questions.import');
+    Route::get('/questions/export', 'export')->name('questions.export');
+    Route::get('/questions/{question}/edit', 'edit')->name('questions.edit');
+    Route::put('/questions/{question}', 'update')->name('questions.update');
+    Route::delete('/questions/{question}', 'destroy')->name('questions.destroy');
+    Route::post('/questions/{question}/toggle-status', 'toggleStatus')->name('questions.toggle_status');
+    Route::get('/attempts', 'attempts')->name('attempts.index');
+    Route::get('/attempts/{attempt}', 'showAttempt')->name('attempts.show');
+    Route::get('/settings', 'settings')->name('settings');
+    Route::post('/settings', 'updateSettings')->name('settings.update');
+});
+
 Route::middleware(['auth'])->controller(TraderOnboardingController::class)->group(function (): void {
     Route::get('/trader-onboarding', 'show')->name('trader.onboarding.show');
     Route::post('/trader-onboarding', 'store')->name('trader.onboarding.store');
@@ -949,8 +1008,8 @@ Route::middleware(['auth'])->controller(TraderReadinessChecklistController::clas
 });
 
 // ✅ Trading Journal Routes
-Route::controller(TradingJournalController::class)->group(function (): void {
-    
+Route::middleware(['auth'])->controller(TradingJournalController::class)->group(function (): void {
+
     // --- User Trading Journal ---
     Route::get('/all/trading-journals', 'AllTradingJournal')->name('all.trading.journals');
     Route::get('/add/trading-journal', 'AddTradingJournal')->name('add.trading.journal');
@@ -959,15 +1018,19 @@ Route::controller(TradingJournalController::class)->group(function (): void {
     Route::post('/update/trading-journal/{id}', 'UpdateTradingJournal')->name('update.trading.journal');
     Route::get('/delete/trading-journal/{id}', 'DeleteTradingJournal')->name('delete.trading.journal');
     Route::get('/trading-journal/details/{id}', 'TradingJournalDetails')->name('trading.journal.details');
+    Route::get('/trading-journal/behavior-detection/{id}', 'DetectTradingBehaviour')->middleware('auth')->name('trading.journal.behavior-detection');
     Route::get('/trading-journal/download', 'exportTraderJournal')->name('trading-journal.export');
     Route::post('/trading-journal/deposit', 'StoreDeposit')->name('store.trading.deposit');
-
 
     // --- Excel Import / Export for Trading Journal ---
     Route::get('/trading-journal/template/download', 'DownloadTemplate')->name('download.trades.template'); // download Excel template
     Route::post('/trading-journal/import', 'ImportTrades')->name('import.trading.journal'); // import trades from Excel
     Route::post('/trading-journal/prop-firm-questions/{question}/answer', 'answerPropFirmQuestion')
+        ->middleware(['auth', 'final_exam.passed'])
         ->name('trading.propfirm.questions.answer');
+    Route::post('/trading-journal/prop-firm-config', 'UpdatePropFirmConfig')
+        ->middleware(['auth', 'final_exam.passed'])
+        ->name('trading.propfirm.config.update');
 });
 // Funded Traders Routes
 Route::middleware(['auth'])->controller(FundedTraderController::class)->group(function () {
@@ -976,12 +1039,24 @@ Route::middleware(['auth'])->controller(FundedTraderController::class)->group(fu
     Route::get('/admin/funded-traders', 'AllFundedTrader')
         ->name('admin.funded_traders.index');
 
+    Route::get('/admin/funded-traders/config', 'PropFirmConfig')
+        ->name('admin.funded_traders.config');
+
+    Route::post('/admin/funded-traders/config/models/{model}', 'UpdatePropFirmModel')
+        ->name('admin.funded_traders.config.models.update');
+
+    Route::post('/admin/funded-traders/config/phase-rules/{phaseRule}', 'UpdatePropFirmPhaseRule')
+        ->name('admin.funded_traders.config.phase_rules.update');
+
     // Approve funded trader (POST)
     Route::post('/admin/funded-traders/{id}/approve', 'approve')
         ->name('admin.funded_traders.approve');
 
     Route::post('/admin/funded-traders/{id}/phase-one/require-profitable-days', 'requirePhaseOneProfitableDays')
         ->name('admin.funded_traders.phase_one.require_profitable_days');
+
+    Route::post('/admin/funded-traders/{id}/phase-two/require-profitable-days', 'requirePhaseTwoProfitableDays')
+        ->name('admin.funded_traders.phase_two.require_profitable_days');
 
     // Reject funded trader (POST)
     Route::post('/admin/funded-traders/{id}/reject', 'reject')
@@ -1012,9 +1087,8 @@ Route::middleware(['auth'])->controller(FundedTraderController::class)->group(fu
 
 Route::prefix('trading')->group(function () {
     Route::get('/leaderboard', [App\Http\Controllers\Trading\LeaderboardController::class, 'index'])
-        ->name('trading.leaderboard.index');
+        ->name('trading.leaderboard.trading');
 });
-
 
 // ✅ Traders Performance Routes
 Route::controller(TradersPerformancesController::class)->group(function (): void {
@@ -1030,10 +1104,12 @@ Route::controller(TradersPerformancesController::class)->group(function (): void
   // ✅ Export trader's journal (with filters)
 Route::get('/trader-performance/export', 'AdminTradingJournalExport')->name('traders-performance.export');
 
-        
         // View individual trader’s journals & performance
     Route::get('/traders/journals', 'tradersJournals')
         ->name('admin.trader.journals.index');
+
+    Route::post('/traders/journals/{trader}/prop-firm-config', 'UpdateTraderPropFirmConfig')
+        ->name('admin.trader.journals.prop_firm_config.update');
 
     // View all traders performance (paginated list)
     Route::get('/traders-performance', 'ViewAllTradersPerformance')
@@ -1041,11 +1117,13 @@ Route::get('/trader-performance/export', 'AdminTradingJournalExport')->name('tra
 
 });
 
-
 Route::controller(LeaderboardController::class)->group(function (): void {
 
     // --- Leaderboard Main (RRR Ranking) ---
     Route::get('/leaderboard', 'index')->name('trading.leaderboard.index');
+
+    // --- Prop Firm Evaluation Leaderboard ---
+    Route::get('/prop-firm-leaderboard', 'propFirm')->middleware(['auth', 'final_exam.passed'])->name('propfirm.leaderboard.index');
 
     // (Optional) Filter Leaderboard by Month/Year/User
     Route::get('/leaderboard/filter', 'filter')->name('trading.leaderboard.filter');
@@ -1075,16 +1153,14 @@ Route::controller(TradingPairController::class)->group(function (): void {
 
 // Role Management Routes
 
-Route::controller(RoleManagementController::class)->group(function (): void {
+Route::controller(RoleManagementController::class)->middleware(['auth', 'can:admin'])->group(function (): void {
     Route::get('/all/roles', 'AllRoles')->name('all.roles');
     Route::get('/add/role', 'AddRole')->name('add.role');
     Route::post('/store/role', 'StoreRole')->name('store.role');
     Route::get('/edit/role/{id}', 'EditRole')->name('edit.role');
     Route::post('/update/role/{id}', 'UpdateRole')->name('update.role');
-    Route::get('/delete/role/{id}', 'DeleteRole')->name('delete.role');
+    Route::delete('/delete/role/{id}', 'DeleteRole')->name('delete.role');
 });
-
-
 
 // Capital Routes
 Route::controller(CapitalController::class)
@@ -1099,11 +1175,9 @@ Route::controller(CapitalController::class)
         Route::get('/delete/{id}', 'destroy')->name('capital.delete');  // (Optional) Delete a capital entry
     });
 
-
-
 // Dashboard All Route
-Route::controller(DashboardController::class)->middleware(['auth'])->group(function(){
-    Route::get('/all/dashboard/statistics','AllStatistics')->name('all.statistics');
+Route::controller(DashboardController::class)->middleware(['auth'])->group(function () {
+    Route::get('/all/dashboard/statistics', 'AllStatistics')->name('all.statistics');
     // Route::get('/all/dashboard/statistics/latestorder','LatestShippingOrders')->name('all.statistics');
 
 });
@@ -1112,8 +1186,6 @@ Route::get('/all/dashboard/trading-statistics', [TradingStatisticsController::cl
 Route::get('/all/dashboard/trading-statistics/report/pdf', [TradingStatisticsController::class, 'exportPdf'])
     ->middleware(['auth'])
     ->name('all.trading.statistics.report.pdf');
-
-
 
 Route::get('/dashboard', [DashboardController::class, 'AllStatistics'])
     ->middleware(['auth', 'verified'])
@@ -1128,3 +1200,216 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// Stable entry points are independent of the public homepage selection.
+Route::get('/tradinghub/login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'tradingLogin'])->name('tradinghub.login');
+Route::post('/tradinghub/login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'tradingAuthenticate'])->middleware('throttle:6,1')->name('tradinghub.authenticate');
+Route::get('/dealership/login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'dealershipLogin'])->name('dealership.login');
+Route::post('/dealership/login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'dealershipAuthenticate'])->middleware('throttle:6,1')->name('dealership.authenticate');
+Route::redirect('/project-management/login', '/backoffice/project-management/login')->name('pms.login.alias');
+
+Route::get('/backoffice/project-management', [\App\Http\Controllers\Pms\WorkspaceController::class, 'home'])->name('pms.home');
+Route::get('/pms/invite/{token}', [\App\Http\Controllers\Pms\AuthController::class, 'invitation'])->middleware('throttle:30,1')->name('pms.invite');
+Route::prefix('backoffice/project-management')->name('pms.')->group(function (): void {
+    Route::get('/login', [\App\Http\Controllers\Pms\AuthController::class, 'login'])->name('login');
+    Route::post('/login', [\App\Http\Controllers\Pms\AuthController::class, 'authenticate'])->middleware('throttle:6,1')->name('authenticate');
+    Route::get('/register', [\App\Http\Controllers\Pms\AuthController::class, 'register'])->name('register');
+    Route::get('/organization-options', [\App\Http\Controllers\Pms\OrganizationSettingsController::class, 'options'])->name('organization.options');
+    Route::post('/register', [\App\Http\Controllers\Pms\AuthController::class, 'store'])->middleware('throttle:6,1')->name('register.store');
+    Route::post('/register/accept', [\App\Http\Controllers\Pms\InvitationController::class, 'accept'])->middleware(['auth:pms,web', 'throttle:6,1'])->name('invitations.accept');
+    Route::get('/forgot-password', [\App\Http\Controllers\Pms\AuthController::class, 'forgot'])->name('password.request');
+    Route::post('/forgot-password', [\App\Http\Controllers\Pms\AuthController::class, 'sendReset'])->middleware('throttle:6,1')->name('password.email');
+    Route::get('/reset-password/{token}', [\App\Http\Controllers\Pms\AuthController::class, 'resetForm'])->name('password.reset');
+    Route::post('/reset-password', [\App\Http\Controllers\Pms\AuthController::class, 'resetPassword'])->middleware('throttle:6,1')->name('password.update');
+    Route::post('/logout', [\App\Http\Controllers\Pms\AuthController::class, 'logout'])->middleware('auth:pms,web')->name('logout');
+});
+Route::middleware(['auth:pms,web', \App\Http\Middleware\EnsurePmsAccess::class])
+    ->prefix('backoffice/project-management')->name('pms.')->group(function (): void {
+        Route::get('/dashboard', [\App\Http\Controllers\Pms\WorkspaceController::class, 'dashboard'])->name('dashboard');
+        Route::get('/my-profile', [\App\Http\Controllers\Pms\MyProfileController::class, 'show'])->name('my-profile.show');
+        Route::patch('/my-profile', [\App\Http\Controllers\Pms\MyProfileController::class, 'update'])->name('my-profile.update');
+        Route::put('/my-profile/password', [\App\Http\Controllers\Pms\MyProfileController::class, 'password'])->name('my-profile.password');
+        Route::get('/profile-photos/{user}', [\App\Http\Controllers\Pms\MyProfileController::class, 'photo'])->name('my-profile.photo');
+        Route::get('/assignable-users', [\App\Http\Controllers\Api\Pms\V1\ProjectManagementController::class, 'getAssignableUsers'])->name('assignable-users');
+        Route::get('/reports', [\App\Http\Controllers\Pms\WorkspaceController::class, 'reports'])->name('reports');
+        Route::get('/reports/export', [\App\Http\Controllers\Pms\WorkspaceController::class, 'exportReports'])->name('reports.export');
+        Route::get('/time-tracking', [\App\Http\Controllers\Pms\ActivityReportController::class, 'index'])->name('time-tracking.index');
+        Route::get('/time-tracking/export', [\App\Http\Controllers\Pms\ActivityReportController::class, 'export'])->name('time-tracking.export');
+        Route::get('/time-tracking/employees/{employee}', [\App\Http\Controllers\Pms\ActivityReportController::class, 'employee'])->name('time-tracking.employee');
+        Route::get('/time-tracking/session', [\App\Http\Controllers\Pms\TimeTrackingController::class, 'status'])->name('time-tracking.session');
+        Route::post('/time-tracking/session', [\App\Http\Controllers\Pms\TimeTrackingController::class, 'activity'])->middleware('throttle:30,1')->name('time-tracking.activity');
+        Route::post('/time-tracking/heartbeat', [\App\Http\Controllers\Pms\TimeTrackingController::class, 'heartbeat'])->middleware('throttle:60,1')->name('time-tracking.heartbeat');
+        Route::post('/time-tracking/timer', [\App\Http\Controllers\Pms\TimeTrackingController::class, 'control'])->middleware('throttle:30,1')->name('time-tracking.control');
+        Route::put('/time-tracking/entries/{entry}', [\App\Http\Controllers\Pms\TimeTrackingController::class, 'adjust'])->name('time-tracking.adjust');
+        Route::get('/board', [\App\Http\Controllers\Pms\WorkspaceController::class, 'board'])->name('board');
+        Route::get('/audit', [\App\Http\Controllers\Pms\WorkspaceController::class, 'audit'])->name('audit');
+        Route::get('/settings', [\App\Http\Controllers\Pms\WorkspaceController::class, 'settings'])->name('settings');
+        Route::get('/organization-settings', [\App\Http\Controllers\Pms\OrganizationSettingsController::class, 'index'])->name('organization.index');
+        Route::post('/organization-settings/departments', [\App\Http\Controllers\Pms\OrganizationSettingsController::class, 'department'])->name('organization.departments.store');
+        Route::put('/organization-settings/departments/{department}', [\App\Http\Controllers\Pms\OrganizationSettingsController::class, 'department'])->name('organization.departments.update');
+        Route::post('/organization-settings/positions', [\App\Http\Controllers\Pms\OrganizationSettingsController::class, 'position'])->name('organization.positions.store');
+        Route::put('/organization-settings/positions/{position}', [\App\Http\Controllers\Pms\OrganizationSettingsController::class, 'position'])->name('organization.positions.update');
+        Route::put('/organization-settings/profiles/{user}', [\App\Http\Controllers\Pms\OrganizationSettingsController::class, 'profile'])->name('organization.profiles.update');
+        Route::post('/organization-settings/legacy-cycles/{cycle}/reconcile', [\App\Http\Controllers\Pms\OrganizationSettingsController::class, 'reconcileCycle'])->name('organization.legacy-cycles.reconcile');
+        Route::put('/settings', [\App\Http\Controllers\Pms\WorkspaceController::class, 'updateSettings'])->name('settings.update');
+        Route::post('/settings/defect-types', [\App\Http\Controllers\Pms\WorkspaceController::class, 'addDefectType'])->name('settings.defects.store');
+        Route::delete('/settings/defect-types/{type}', [\App\Http\Controllers\Pms\WorkspaceController::class, 'disableDefectType'])->name('settings.defects.destroy');
+        Route::get('/team', [\App\Http\Controllers\Pms\TeamController::class, 'index'])->name('team.index');
+        Route::get('/change-reviews', [\App\Http\Controllers\Pms\ChangeReviewController::class, 'index'])->name('change-reviews.index');
+        Route::post('/change-reviews/{review}/decision', [\App\Http\Controllers\Pms\ChangeReviewController::class, 'decide'])->name('change-reviews.decide');
+        Route::post('/change-reviews/{review}/cancel', [\App\Http\Controllers\Pms\ChangeReviewController::class, 'cancel'])->name('change-reviews.cancel');
+        Route::get('/team/{profile}', [\App\Http\Controllers\Pms\TeamController::class, 'show'])->name('team.show');
+        Route::get('/invitations', [\App\Http\Controllers\Pms\InvitationController::class, 'index'])->name('invitations.index');
+        Route::post('/invitations', [\App\Http\Controllers\Pms\InvitationController::class, 'store'])->middleware('throttle:20,1')->name('invitations.store');
+        Route::post('/invitations/batch', [\App\Http\Controllers\Pms\InvitationController::class, 'batch'])->middleware('throttle:10,1')->name('invitations.batch');
+        Route::delete('/invitations/{invitation}', [\App\Http\Controllers\Pms\InvitationController::class, 'revoke'])->middleware('throttle:20,1')->name('invitations.revoke');
+        Route::post('/invitations/{invitation}/reissue', [\App\Http\Controllers\Pms\InvitationController::class, 'reissue'])->middleware('throttle:20,1')->name('invitations.reissue');
+        Route::post('/team', [\App\Http\Controllers\Pms\TeamController::class, 'provision'])->name('team.provision');
+        Route::put('/team/{profile}', [\App\Http\Controllers\Pms\TeamController::class, 'update'])->name('team.update');
+        Route::post('/team/{profile}/projects', [\App\Http\Controllers\Pms\TeamController::class, 'assignProject'])->name('team.projects.store');
+        Route::delete('/team/{profile}/projects/{project}', [\App\Http\Controllers\Pms\TeamController::class, 'removeProject'])->name('team.projects.destroy');
+        Route::get('/projects', [\App\Http\Controllers\Pms\ProjectController::class, 'index'])->name('projects.index');
+        Route::post('/projects', [\App\Http\Controllers\Pms\ProjectController::class, 'store'])->name('projects.store');
+        Route::get('/projects/{project}', [\App\Http\Controllers\Pms\ProjectController::class, 'show'])->name('projects.show');
+        Route::post('/projects/{project}/description/preview', [\App\Http\Controllers\Pms\ProjectController::class, 'previewDescription'])->middleware('throttle:60,1')->name('projects.description.preview');
+        Route::post('/projects/{project}/attachments', [\App\Http\Controllers\Pms\ProjectController::class, 'storeAttachments'])->name('projects.attachments.store');
+        Route::put('/projects/{project}', [\App\Http\Controllers\Pms\ProjectController::class, 'update'])->name('projects.update');
+        Route::post('/projects/{project}/archive', [\App\Http\Controllers\Pms\ProjectController::class, 'archive'])->name('projects.archive');
+        Route::post('/projects/{project}/unarchive', [\App\Http\Controllers\Pms\ProjectController::class, 'unarchive'])->name('projects.unarchive');
+        Route::delete('/projects/{project}', [\App\Http\Controllers\Pms\ProjectController::class, 'trash'])->name('projects.trash');
+        Route::post('/projects/{id}/restore', [\App\Http\Controllers\Pms\ProjectController::class, 'restore'])->name('projects.restore');
+        Route::delete('/projects/{id}/purge', [\App\Http\Controllers\Pms\ProjectController::class, 'purge'])->name('projects.purge');
+        Route::post('/projects/{project}/members', [\App\Http\Controllers\Pms\ProjectController::class, 'addMember'])->name('projects.members.store');
+        Route::delete('/projects/{project}/members/{userId}', [\App\Http\Controllers\Pms\ProjectController::class, 'removeMember'])->name('projects.members.destroy');
+        Route::get('/projects/{project}/tickets/create/{category}', [\App\Http\Controllers\Pms\TicketController::class, 'createForProject'])->name('projects.tickets.create');
+        Route::post('/projects/{project}/tickets/{category}', [\App\Http\Controllers\Pms\TicketController::class, 'storeForProject'])->name('projects.tickets.store');
+        Route::get('/delivery-cycles', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'index'])->name('global-cycles.index');
+        Route::get('/wiki', [\App\Http\Controllers\Pms\WikiController::class, 'index'])->name('wiki.index');
+        Route::post('/wiki/spaces', [\App\Http\Controllers\Pms\WikiController::class, 'storeSpace'])->name('wiki.spaces.store');
+        Route::get('/wiki/spaces/{space}', [\App\Http\Controllers\Pms\WikiController::class, 'showSpace'])->name('wiki.spaces.show');
+        Route::post('/wiki/spaces/{space}/members', [\App\Http\Controllers\Pms\WikiController::class, 'addMember'])->name('wiki.spaces.members.store');
+        Route::get('/wiki/pages/create', [\App\Http\Controllers\Pms\WikiController::class, 'create'])->name('wiki.pages.create');
+        Route::post('/wiki/pages/preview', [\App\Http\Controllers\Pms\WikiController::class, 'preview'])->name('wiki.pages.preview');
+        Route::post('/wiki/pages', [\App\Http\Controllers\Pms\WikiController::class, 'storePage'])->name('wiki.pages.store');
+        Route::get('/wiki/pages/{page}', [\App\Http\Controllers\Pms\WikiController::class, 'showPage'])->name('wiki.pages.show');
+        Route::get('/wiki/pages/{page}/edit', [\App\Http\Controllers\Pms\WikiController::class, 'edit'])->name('wiki.pages.edit');
+        Route::put('/wiki/pages/{page}', [\App\Http\Controllers\Pms\WikiController::class, 'updatePage'])->name('wiki.pages.update');
+        Route::delete('/wiki/pages/{page}', [\App\Http\Controllers\Pms\WikiController::class, 'destroyPage'])->name('wiki.pages.destroy');
+        Route::get('/wiki/pages/{page}/revisions', [\App\Http\Controllers\Pms\WikiController::class, 'revisions'])->name('wiki.pages.revisions');
+        Route::post('/wiki/pages/{page}/revisions/{version}/restore', [\App\Http\Controllers\Pms\WikiController::class, 'restore'])->name('wiki.pages.restore');
+        Route::post('/wiki/pages/{page}/comments', [\App\Http\Controllers\Pms\WikiController::class, 'comment'])->name('wiki.pages.comments.store');
+        Route::post('/wiki/pages/{page}/favorite', [\App\Http\Controllers\Pms\WikiController::class, 'favorite'])->name('wiki.pages.favorite');
+        Route::post('/wiki/pages/{page}/links', [\App\Http\Controllers\Pms\WikiController::class, 'link'])->name('wiki.pages.links.store');
+        Route::post('/wiki/pages/{page}/attachments', [\App\Http\Controllers\Pms\WikiController::class, 'upload'])->name('wiki.pages.attachments.store');
+        Route::get('/wiki/pages/{page}/attachments/{attachment}', [\App\Http\Controllers\Pms\WikiController::class, 'download'])->name('wiki.pages.attachments.show');
+        Route::put('/delivery-cycles/settings', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'settings'])->name('global-cycles.settings');
+        Route::post('/delivery-cycles', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'store'])->name('global-cycles.store');
+        Route::get('/delivery-cycles/{cycle}', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'show'])->name('global-cycles.show');
+        Route::put('/delivery-cycles/{cycle}', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'update'])->name('global-cycles.update');
+        Route::put('/delivery-cycles/{cycle}/stages', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'stages'])->name('global-cycles.stages');
+        Route::post('/delivery-cycles/{cycle}/projects', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'assignProjects'])->name('global-cycles.projects.store');
+        Route::delete('/delivery-cycles/{cycle}/projects/{project}', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'removeProject'])->name('global-cycles.projects.destroy');
+        Route::post('/delivery-cycles/{cycle}/tickets', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'assignTicket'])->name('global-cycles.tickets.store');
+        Route::post('/delivery-cycles/{cycle}/tickets/{ticket}/stage', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'assignTicketStage'])->name('global-cycles.tickets.stage');
+        Route::delete('/delivery-cycles/{cycle}/tickets/{ticket}', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'removeTicket'])->name('global-cycles.tickets.destroy');
+        Route::post('/delivery-cycles/{cycle}/status', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'state'])->name('global-cycles.state');
+        Route::post('/delivery-cycles/{cycle}/archive', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'archive'])->name('global-cycles.archive');
+        Route::get('/cycles', [\App\Http\Controllers\Pms\CycleController::class, 'index'])->name('cycles.index');
+        Route::get('/cycles/progress-report', [\App\Http\Controllers\Pms\CycleProgressReportController::class, 'index'])->name('cycles.progress.index');
+        Route::get('/cycles/progress-report/export', [\App\Http\Controllers\Pms\CycleProgressReportController::class, 'export'])->name('cycles.progress.export');
+        Route::post('/cycles', [\App\Http\Controllers\Pms\CycleController::class, 'store'])->name('cycles.store');
+        Route::get('/cycles/{cycle}', [\App\Http\Controllers\Pms\CycleController::class, 'show'])->name('cycles.show');
+        Route::put('/cycles/{cycle}', [\App\Http\Controllers\Pms\CycleController::class, 'update'])->name('cycles.update');
+        Route::post('/cycles/{cycle}/status', [\App\Http\Controllers\Pms\CycleController::class, 'changeStatus'])->name('cycles.status');
+        Route::post('/cycles/{cycle}/duplicate', [\App\Http\Controllers\Pms\CycleController::class, 'duplicate'])->name('cycles.duplicate');
+        Route::post('/cycles/{cycle}/start', [\App\Http\Controllers\Pms\CycleController::class, 'start'])->name('cycles.start');
+        Route::post('/cycles/{cycle}/close', [\App\Http\Controllers\Pms\CycleController::class, 'close'])->name('cycles.close');
+        Route::post('/cycles/{cycle}/cancel', [\App\Http\Controllers\Pms\CycleController::class, 'cancel'])->name('cycles.cancel');
+        Route::delete('/cycles/{cycle}', [\App\Http\Controllers\Pms\CycleController::class, 'destroy'])->name('cycles.destroy');
+        Route::post('/cycles/{cycle}/issues', [\App\Http\Controllers\Pms\CycleController::class, 'assignIssue'])->name('cycles.issues.store');
+        Route::delete('/cycles/{cycle}/issues/{issue}', [\App\Http\Controllers\Pms\CycleController::class, 'removeIssue'])->name('cycles.issues.destroy');
+        Route::put('/cycles/{cycle}/phases/{phaseId}', [\App\Http\Controllers\Pms\CycleController::class, 'updatePhase'])->name('cycles.phases.update');
+        Route::get('/tickets', [\App\Http\Controllers\Pms\TicketController::class, 'index'])->name('tickets.index');
+        Route::get('/tickets/export', [\App\Http\Controllers\Pms\TicketController::class, 'export'])->name('tickets.export');
+        Route::get('/tickets/recently-deleted', [\App\Http\Controllers\Pms\TicketController::class, 'deleted'])->name('tickets.deleted');
+        Route::post('/tickets/recently-deleted/{id}/restore', [\App\Http\Controllers\Pms\TicketController::class, 'restore'])->name('tickets.restore');
+        Route::get('/tickets/create', [\App\Http\Controllers\Pms\TicketController::class, 'create'])->name('tickets.create');
+        Route::post('/tickets', [\App\Http\Controllers\Pms\TicketController::class, 'store'])->name('tickets.store');
+        Route::get('/tickets/{ticket}', [\App\Http\Controllers\Pms\TicketController::class, 'show'])->name('tickets.show');
+        Route::post('/tickets/{ticket}/project-owner', [\App\Http\Controllers\Pms\TicketController::class, 'assignProjectOwner'])->name('tickets.project-owner');
+        Route::put('/tickets/{ticket}', [\App\Http\Controllers\Pms\TicketController::class, 'update'])->name('tickets.update');
+        Route::delete('/tickets/{ticket}', [\App\Http\Controllers\Pms\TicketController::class, 'destroy'])->name('tickets.destroy');
+        Route::post('/tickets/{ticket}/review', [\App\Http\Controllers\Pms\TicketReviewController::class, 'submit'])->name('tickets.review.submit');
+        Route::get('/tickets/{ticket}/blockers', [\App\Http\Controllers\Pms\BlockerController::class, 'index'])->name('tickets.blockers.index');
+        Route::post('/tickets/{ticket}/blockers', [\App\Http\Controllers\Pms\BlockerController::class, 'store'])->name('tickets.blockers.store');
+        Route::post('/tickets/{ticket}/hold', [\App\Http\Controllers\Pms\TicketHoldController::class, 'hold'])->name('tickets.hold');
+        Route::post('/tickets/{ticket}/resume', [\App\Http\Controllers\Pms\TicketHoldController::class, 'resume'])->name('tickets.resume');
+        Route::put('/tickets/{ticket}/blockers/{blocker}', [\App\Http\Controllers\Pms\BlockerController::class, 'update'])->name('tickets.blockers.update');
+        Route::post('/tickets/{ticket}/blockers/{blocker}/resolve', [\App\Http\Controllers\Pms\BlockerController::class, 'resolve'])->name('tickets.blockers.resolve');
+        Route::post('/tickets/{ticket}/blockers/{blocker}/cancel', [\App\Http\Controllers\Pms\BlockerController::class, 'cancel'])->name('tickets.blockers.cancel');
+        Route::post('/tickets/{ticket}/blockers/{blocker}/reopen', [\App\Http\Controllers\Pms\BlockerController::class, 'reopen'])->name('tickets.blockers.reopen');
+        Route::get('/tickets/{ticket}/contributors', [\App\Http\Controllers\Pms\TicketContributorController::class, 'index'])->name('tickets.contributors.index');
+        Route::get('/tickets/{ticket}/pics', [\App\Http\Controllers\Pms\TicketPicController::class, 'index'])->name('tickets.pics.index');
+        Route::put('/tickets/{ticket}/pics', [\App\Http\Controllers\Pms\TicketPicController::class, 'update'])->name('tickets.pics.update');
+        Route::delete('/tickets/{ticket}/pics/{user}', [\App\Http\Controllers\Pms\TicketPicController::class, 'destroy'])->name('tickets.pics.destroy');
+        Route::post('/tickets/{ticket}/contributors', [\App\Http\Controllers\Pms\TicketContributorController::class, 'store'])->name('tickets.contributors.store');
+        Route::delete('/tickets/{ticket}/contributors/{user}', [\App\Http\Controllers\Pms\TicketContributorController::class, 'destroy'])->name('tickets.contributors.destroy');
+        Route::post('/tickets/{ticket}/review/decision', [\App\Http\Controllers\Pms\TicketReviewController::class, 'decide'])->name('tickets.review.decide');
+    Route::put('/tickets/{ticket}/qat-resolution', [\App\Http\Controllers\Pms\TicketController::class, 'updateQatResolution'])->name('tickets.qat-resolution');
+    Route::put('/tickets/{ticket}/qa-estimate', [\App\Http\Controllers\Pms\TicketController::class, 'updateQaEstimate'])->name('tickets.qa-estimate');
+        Route::post('/tickets/{ticket}/transitions', [\App\Http\Controllers\Pms\TicketController::class, 'transition'])->name('tickets.transition');
+        Route::post('/tickets/{ticket}/verifications', [\App\Http\Controllers\Pms\TicketController::class, 'verify'])->name('tickets.verify');
+        Route::post('/tickets/{ticket}/links', [\App\Http\Controllers\Pms\TicketController::class, 'link'])->name('tickets.links.store');
+        Route::delete('/tickets/{ticket}/links/{link}', [\App\Http\Controllers\Pms\TicketController::class, 'unlink'])->name('tickets.links.destroy');
+        Route::post('/tickets/{ticket}/comments', [\App\Http\Controllers\Pms\TicketCommentController::class, 'store'])->name('tickets.comments.store');
+        Route::put('/tickets/{ticket}/comments/{comment}', [\App\Http\Controllers\Pms\TicketCommentController::class, 'update'])->name('tickets.comments.update');
+        Route::delete('/tickets/{ticket}/comments/{comment}', [\App\Http\Controllers\Pms\TicketCommentController::class, 'destroy'])->name('tickets.comments.destroy');
+        Route::post('/tickets/{ticket}/attachments', [\App\Http\Controllers\Pms\TicketAttachmentController::class, 'store'])->name('tickets.attachments.store');
+        Route::get('/tickets/{ticket}/attachments/{attachment}', [\App\Http\Controllers\Pms\TicketAttachmentController::class, 'show'])->name('tickets.attachments.show');
+        Route::get('/tickets/{ticket}/attachments/{attachment}/thumbnail', [\App\Http\Controllers\Pms\TicketAttachmentController::class, 'thumbnail'])->name('tickets.attachments.thumbnail');
+        Route::delete('/tickets/{ticket}/attachments/{attachment}', [\App\Http\Controllers\Pms\TicketAttachmentController::class, 'destroy'])->name('tickets.attachments.destroy');
+        Route::get('/tickets/{ticket}/test-cases', [\App\Http\Controllers\Pms\TicketTestCaseController::class, 'index'])->name('tickets.test-cases.index');
+        Route::post('/tickets/{ticket}/test-cases', [\App\Http\Controllers\Pms\TicketTestCaseController::class, 'store'])->name('tickets.test-cases.store');
+        Route::get('/tickets/{ticket}/test-cases/{attachment}', [\App\Http\Controllers\Pms\TicketTestCaseController::class, 'show'])->name('tickets.test-cases.show');
+        Route::delete('/tickets/{ticket}/test-cases/{attachment}', [\App\Http\Controllers\Pms\TicketTestCaseController::class, 'destroy'])->name('tickets.test-cases.destroy');
+        Route::put('/tickets/{ticket}/test-case-review/reviewer', [\App\Http\Controllers\Pms\TicketTestCaseController::class, 'assign'])->name('tickets.test-case-review.assign');
+        Route::post('/tickets/{ticket}/test-case-review/decision', [\App\Http\Controllers\Pms\TicketTestCaseController::class, 'decide'])->name('tickets.test-case-review.decide');
+        Route::get('/releases', [\App\Http\Controllers\Pms\ReleaseController::class, 'index'])->name('releases.index');
+        Route::post('/releases/assign-cycle', [\App\Http\Controllers\Pms\ReleaseController::class, 'assignCycle'])->name('releases.cycle-assign');
+        Route::get('/releases/{release}/summary.pdf', [\App\Http\Controllers\Pms\ReleaseController::class, 'summary'])->name('releases.summary');
+        Route::get('/releases/{release}/notes.txt', [\App\Http\Controllers\Pms\ReleaseController::class, 'notes'])->name('releases.notes.download');
+        Route::post('/releases', [\App\Http\Controllers\Pms\ReleaseController::class, 'store'])->name('releases.store');
+        Route::get('/releases/{release}', [\App\Http\Controllers\Pms\ReleaseController::class, 'show'])->name('releases.show');
+        Route::put('/releases/{release}', [\App\Http\Controllers\Pms\ReleaseController::class, 'update'])->name('releases.update');
+        Route::delete('/releases/{release}', [\App\Http\Controllers\Pms\ReleaseController::class, 'destroy'])->name('releases.destroy');
+        Route::post('/releases/{release}/tickets', [\App\Http\Controllers\Pms\ReleaseController::class, 'addTicket'])->name('releases.tickets.store');
+        Route::post('/releases/{release}/status', [\App\Http\Controllers\Pms\ReleaseController::class, 'advance'])->name('releases.advance');
+        Route::post('/releases/{release}/notes', [\App\Http\Controllers\Pms\ReleaseController::class, 'draftNotes'])->name('releases.notes');
+        Route::post('/releases/{release}/approve', [\App\Http\Controllers\Pms\ReleaseController::class, 'approve'])->name('releases.approve');
+        Route::post('/releases/{release}/deploy', [\App\Http\Controllers\Pms\ReleaseController::class, 'deploy'])->name('releases.deploy');
+        Route::post('/releases/{release}/complete', [\App\Http\Controllers\Pms\ReleaseController::class, 'complete'])->name('releases.complete');
+        Route::get('/issues', [\App\Http\Controllers\Pms\IssueController::class, 'index'])->name('issues.index');
+        Route::post('/issues', [\App\Http\Controllers\Pms\IssueController::class, 'store'])->name('issues.store');
+        Route::get('/issues/{issue}', [\App\Http\Controllers\Pms\IssueController::class, 'show'])->name('issues.show');
+        Route::put('/issues/{issue}', [\App\Http\Controllers\Pms\IssueController::class, 'update'])->name('issues.update');
+        Route::delete('/issues/{issue}', [\App\Http\Controllers\Pms\IssueController::class, 'destroy'])->name('issues.destroy');
+        Route::post('/issues/{id}/restore', [\App\Http\Controllers\Pms\IssueController::class, 'restore'])->name('issues.restore');
+        Route::post('/issues/{issue}/transitions', [\App\Http\Controllers\Pms\IssueController::class, 'transition'])->name('issues.transition');
+    });
+
+// AI Market Insight reads persisted candles from the configured source mode.
+Route::middleware(['auth', \App\Http\Middleware\EnsureTradingModuleEnabled::class])->prefix('market-insight')->name('market_insight.')->controller(\App\Http\Controllers\MarketInsightController::class)->group(function (): void {
+    Route::get('/', 'dashboard')->name('dashboard');
+    Route::get('/history/{id}', 'showWeb')->name('show');
+    Route::post('/refresh', 'refresh')->name('refresh');
+});
+Route::middleware(['auth', \App\Http\Middleware\EnsureTradingModuleEnabled::class])->prefix('admin/market-insight')->name('admin.market_insight.')->controller(\App\Http\Controllers\MarketInsightController::class)->group(function (): void {
+    Route::get('/', 'management')->name('management');
+    Route::post('/settings', 'updateSettings')->name('settings');
+    Route::post('/instruments', 'saveInstrument')->name('instruments.store');
+    Route::post('/instruments/{id}', 'saveInstrument')->name('instruments.update');
+    Route::post('/generate', 'generate')->name('generate');
+    Route::post('/recalculate', 'recalculate')->name('recalculate');
+      Route::post('/sync', 'syncData')->name('sync');
+    Route::post('/history/{id}/archive', 'archive')->name('archive');
+});

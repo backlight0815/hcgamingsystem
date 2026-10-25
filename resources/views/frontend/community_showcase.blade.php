@@ -200,7 +200,7 @@
     }
 
     .hc-requirement-value {
-        color: #c78b15;
+        color: #a36b0d;
         font-size: 34px;
         font-weight: 900;
         line-height: 1;

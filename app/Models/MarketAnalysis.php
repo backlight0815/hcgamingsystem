@@ -30,11 +30,14 @@ class MarketAnalysis extends Model
         'discord_sent',
         'trading_plan',
         'Outlook_Code',
+        'publication_status',
+        'published_at',
     ];
 
     protected $casts = [
         'analysis_date' => 'date',
         'discord_sent' => 'boolean',
+        'published_at' => 'datetime',
     ];
 
     public function community()

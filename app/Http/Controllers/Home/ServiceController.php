@@ -151,17 +151,13 @@ class ServiceController extends Controller
     }//End Method
 
 
-    // public function HomeService(){
-
-    //     $service = Service::latest()->get();
-    //     return view('frontend.service',compact('service'));
-
-
-
-    //     }//End Methods
+    public function HomeService(){
+        $service = Service::storefront()->latest()->get();
+        return view('frontend.service', compact('service'));
+    }
 
     public function ServiceDetails($id){
-        $service = Service::findOrFail($id);
+        $service = Service::storefront()->findOrFail($id);
         return view('frontend.service_details',compact('service'));
 
 

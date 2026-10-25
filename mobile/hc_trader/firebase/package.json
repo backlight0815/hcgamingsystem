@@ -1,0 +1,20 @@
+{
+  "name": "hc-trader-firebase-operations",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "seed:coursework:generate": "node seed/coursework/generate_coursework_seed.js",
+    "seed:coursework:validate": "node seed/coursework/validate_coursework_seed.js",
+    "test:coursework": "node seed/coursework/coursework_seed.test.js",
+    "test:coursework:emulator": "node seed/coursework/run_emulator_integration.js",
+    "verify:coursework:emulator": "node seed/coursework/verify_emulator_seed.js",
+    "seed:coursework:dry-run": "node seed/coursework/seed_coursework.js --dry-run",
+    "seed:coursework:emulator": "node seed/coursework/seed_coursework.js --emulator --write",
+    "seed:coursework:production": "node seed/coursework/seed_coursework.js --production --write",
+    "rollback:coursework:emulator": "node seed/coursework/rollback_coursework_seed.js --emulator --write",
+    "rollback:coursework:production": "node seed/coursework/rollback_coursework_seed.js --production --write"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.10.0"
+  }
+}

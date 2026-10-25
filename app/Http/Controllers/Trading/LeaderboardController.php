@@ -5,17 +5,27 @@ namespace App\Http\Controllers\Trading;
 use App\Http\Controllers\Controller;
 use App\Models\Capital;
 use App\Models\TradingJournal;
+use App\Models\TradingJournalBackup;
 use App\Models\User;
+use App\Services\TradingJournalAnalytics;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
 class LeaderboardController extends Controller
 {
+    private const PROP_STAGE_PHASE_1 = 'phase1';
+
+    private const PROP_STAGE_PHASE_2 = 'phase2';
+
+    private const PROP_STAGE_FUNDED = 'funded';
+
     private const ROLE_LABELS = [
         1 => 'Admin',
         2 => 'Sub Admin',
@@ -104,6 +114,39 @@ class LeaderboardController extends Controller
         ]);
     }
 
+    public function propFirm(Request $request): View
+    {
+        $filters = $this->propFirmFilters($request);
+        $stageOptions = $this->propFirmStageOptions();
+        $leaderboard = $this->buildPropFirmLeaderboard($filters);
+        $summary = $this->propFirmSummary($leaderboard);
+        $currentPlacement = $this->currentPlacement($leaderboard);
+        $topThree = array_slice($leaderboard, 0, 3);
+        $availableYears = $this->propFirmAvailableYears();
+        $monthOptions = $this->monthOptions();
+        $selectedStage = $filters['stage'];
+        $selectedStageMeta = $stageOptions[$selectedStage];
+
+        $breadcrumbData = [
+            ['label' => 'HC Gaming', 'url' => route('all.statistics')],
+            ['label' => 'Prop Firm Leaderboard', 'url' => route('propfirm.leaderboard.index')],
+        ];
+
+        return view('traders.prop_firm_leaderboard', compact(
+            'availableYears',
+            'breadcrumbData',
+            'currentPlacement',
+            'filters',
+            'leaderboard',
+            'monthOptions',
+            'selectedStage',
+            'selectedStageMeta',
+            'stageOptions',
+            'summary',
+            'topThree'
+        ));
+    }
+
     private function buildLeaderboard(array $filters): array
     {
         $journals = $this->journalQuery($filters)
@@ -132,6 +175,148 @@ class LeaderboardController extends Controller
         }
 
         return $leaderboard;
+    }
+
+    private function buildPropFirmLeaderboard(array $filters): array
+    {
+        $journals = $this->loadPropFirmJournals($filters)
+            ->filter(fn ($journal): bool => (bool) ($journal->user ?? null))
+            ->groupBy('user_id');
+
+        $capitalSummary = $this->capitalSummary($journals->keys());
+        $analytics = app(TradingJournalAnalytics::class);
+        $leaderboard = [];
+
+        foreach ($journals as $userJournals) {
+            $user = $userJournals->first()->user;
+            $leaderboard[] = $this->calculatePropFirmTraderStats(
+                $user,
+                $userJournals,
+                $capitalSummary,
+                $filters['stage'],
+                $analytics
+            );
+        }
+
+        usort($leaderboard, function (array $a, array $b): int {
+            return [
+                $b['score'],
+                $b['profit_target_progress'],
+                $b['net_pl'],
+                $b['win_rate'],
+                $b['total_trades'],
+            ] <=> [
+                $a['score'],
+                $a['profit_target_progress'],
+                $a['net_pl'],
+                $a['win_rate'],
+                $a['total_trades'],
+            ];
+        });
+
+        foreach ($leaderboard as $index => $item) {
+            $leaderboard[$index]['rank'] = $index + 1;
+            $leaderboard[$index]['is_current_user'] = (int) $item['user']->id === (int) Auth::id();
+        }
+
+        return $leaderboard;
+    }
+
+    private function calculatePropFirmTraderStats(
+        User $user,
+        Collection $journals,
+        array $capitalSummary,
+        string $stage,
+        TradingJournalAnalytics $analytics
+    ): array {
+        $stage = $this->normalizePropFirmStage($stage);
+        $baseStats = $this->calculateTraderStats($user, $journals, $capitalSummary);
+        $startingBalance = $this->propFirmStartingBalance($user, $capitalSummary, $stage);
+        $netProfitLoss = (float) $journals->sum('profit_loss');
+        $growthPercent = $startingBalance > 0 ? round(($netProfitLoss / $startingBalance) * 100, 2) : 0.0;
+        $dailyPnL = $analytics->dailyProfitLoss($journals);
+        $worstDayPnL = $dailyPnL->isNotEmpty() ? (float) $dailyPnL->min() : 0.0;
+        $dailyLossPercent = $startingBalance > 0 ? round((abs(min(0, $worstDayPnL)) / $startingBalance) * 100, 2) : 0.0;
+        $totalLossPercent = $startingBalance > 0 ? round((abs(min(0, $netProfitLoss)) / $startingBalance) * 100, 2) : 0.0;
+        $targetPercent = $this->propFirmProfitTargetPercent($stage);
+        $targetAmount = $targetPercent > 0 && $startingBalance > 0 ? $startingBalance * ($targetPercent / 100) : 0.0;
+        $targetProgress = $targetAmount > 0 ? round(($netProfitLoss / $targetAmount) * 100, 2) : max(0, $growthPercent);
+        $profitTargetPassed = $targetAmount > 0 ? $netProfitLoss >= $targetAmount : $netProfitLoss > 0;
+        $maxDailyLossBreached = $dailyLossPercent > 5.0;
+        $maxTotalLossBreached = $totalLossPercent > 10.0;
+        $bestDayRule = $analytics->bestDayRule($journals);
+        unset($bestDayRule['daily_profit_loss']);
+        $grossProfitRule = $analytics->grossProfitRule($journals, $startingBalance);
+        $profitableDayRule = $analytics->profitableDayRule($journals, 3);
+        $ruleScoreAdjustment = $this->propFirmRuleScoreAdjustment(
+            $stage,
+            $profitTargetPassed,
+            (bool) data_get($profitableDayRule, 'has_profitable_day', false),
+            (bool) data_get($grossProfitRule, 'passed', false),
+            (bool) data_get($bestDayRule, 'passed', false),
+            $maxDailyLossBreached,
+            $maxTotalLossBreached,
+            0.0
+        );
+        $score = max(0, min(100, round((float) $baseStats['score'] + $ruleScoreAdjustment, 2)));
+
+        return array_merge($baseStats, [
+            'stage' => $stage,
+            'stage_label' => $this->propFirmStageOptions()[$stage]['short_label'],
+            'score' => $score,
+            'rating' => $this->ratingForScore($score, (int) $baseStats['total_trades']),
+            'starting_balance' => round($startingBalance, 2),
+            'growth' => $growthPercent,
+            'profit_target_percent' => $targetPercent,
+            'profit_target_amount' => round($targetAmount, 2),
+            'profit_target_progress' => $targetProgress,
+            'profit_target_passed' => $profitTargetPassed,
+            'daily_loss_percent' => $dailyLossPercent,
+            'total_loss_percent' => $totalLossPercent,
+            'daily_loss_breached' => $maxDailyLossBreached,
+            'total_loss_breached' => $maxTotalLossBreached,
+            'best_day_rule' => $bestDayRule,
+            'gross_profit_rule' => $grossProfitRule,
+            'profitable_day_rule' => $profitableDayRule,
+            'behaviour_score' => 0.0,
+            'behaviour_tier' => 'Use journal review',
+            'rule_score_adjustment' => $ruleScoreAdjustment,
+            'rule_status' => $this->propFirmRuleStatus($profitTargetPassed, $maxDailyLossBreached, $maxTotalLossBreached, $stage),
+            'last_trade_at' => $this->formatJournalDate($journals->last()),
+            'review_status' => (string) ($user->prop_firm_review_status ?? 'none'),
+            'funded_status' => (int) ($user->funded_status ?? 0),
+        ]);
+    }
+
+    private function loadPropFirmJournals(array $filters): Collection
+    {
+        $stage = $this->normalizePropFirmStage($filters['stage'] ?? self::PROP_STAGE_PHASE_1);
+        $journals = collect();
+        $currentStageUserIds = $this->currentPropFirmStageUserIds($stage);
+        $allPropFirmUserIds = $this->propFirmTraderUserIds();
+
+        $currentQuery = TradingJournal::with('user')
+            ->whereIn('user_id', $currentStageUserIds->all());
+        $this->applyTradeOnlyFilter($currentQuery);
+        $this->applyPropFirmDateFilters($currentQuery, $filters);
+
+        $journals = $journals->merge(
+            $this->tagPropFirmJournals($currentQuery->get(), 'journal', $stage)
+        );
+
+        if (Schema::hasTable('trading_journals_backup')) {
+            $backupQuery = TradingJournalBackup::with('user')
+                ->whereIn('user_id', $allPropFirmUserIds->all());
+            $this->applyTradeOnlyFilter($backupQuery);
+            $this->applyBackupPropFirmStageFilter($backupQuery, $stage);
+            $this->applyPropFirmDateFilters($backupQuery, $filters);
+
+            $journals = $journals->merge(
+                $this->tagPropFirmJournals($backupQuery->get(), 'backup', $stage)
+            );
+        }
+
+        return $this->sortPropFirmJournals($journals);
     }
 
     private function calculateTraderStats(User $user, $journals, array $capitalSummary): array
@@ -221,6 +406,111 @@ class LeaderboardController extends Controller
                     $userQuery->where('role_id', (int) $filters['role']);
                 });
             });
+    }
+
+    private function applyTradeOnlyFilter(Builder $query): void
+    {
+        $query->where(function (Builder $query): void {
+            $query->where('type', 'trade')->orWhereNull('type');
+        });
+    }
+
+    private function applyPropFirmDateFilters(Builder $query, array $filters): void
+    {
+        $dateExpression = DB::raw('COALESCE(close_date, open_date, created_at)');
+
+        if (($filters['year'] ?? 'all') !== 'all') {
+            $query->whereYear($dateExpression, (int) $filters['year']);
+        }
+
+        if (($filters['month'] ?? 'all') !== 'all') {
+            $query->whereMonth($dateExpression, (int) $filters['month']);
+        }
+    }
+
+    private function applyCurrentPropFirmStageFilter(Builder $query, string $stage): void
+    {
+        match ($this->normalizePropFirmStage($stage)) {
+            self::PROP_STAGE_PHASE_1 => $query
+                ->where(function (Builder $query): void {
+                    $query->whereNull('prop_firm_phase')->orWhere('prop_firm_phase', '<=', 1);
+                })
+                ->where(function (Builder $query): void {
+                    $query->whereNull('funded_status')->orWhere('funded_status', '!=', 1);
+                }),
+            self::PROP_STAGE_PHASE_2 => $query
+                ->where('prop_firm_phase', 2)
+                ->where(function (Builder $query): void {
+                    $query->whereNull('funded_status')->orWhere('funded_status', '!=', 1);
+                }),
+            self::PROP_STAGE_FUNDED => $query->where(function (Builder $query): void {
+                $query->where('prop_firm_phase', '>=', 3)
+                    ->orWhere('funded_status', 1)
+                    ->orWhere('prop_firm_review_status', 'funded_approved');
+            }),
+        };
+    }
+
+    private function currentPropFirmStageUserIds(string $stage): Collection
+    {
+        $query = User::where('role_id', 750);
+
+        match ($this->normalizePropFirmStage($stage)) {
+            self::PROP_STAGE_PHASE_1 => $query->where('prop_firm_phase', '<=', 1),
+            self::PROP_STAGE_PHASE_2 => $query->where('prop_firm_phase', 2),
+            self::PROP_STAGE_FUNDED => $query->where('prop_firm_phase', '>=', 3),
+        };
+
+        return $query->pluck('id')
+            ->map(fn ($id): int => (int) $id)
+            ->values();
+    }
+
+    private function propFirmTraderUserIds(): Collection
+    {
+        return User::where('role_id', 750)
+            ->pluck('id')
+            ->map(fn ($id): int => (int) $id)
+            ->values();
+    }
+
+    private function applyBackupPropFirmStageFilter(Builder $query, string $stage): void
+    {
+        if (! Schema::hasColumn('trading_journals_backup', 'prop_firm_phase')) {
+            if ($stage !== self::PROP_STAGE_PHASE_1) {
+                $query->whereRaw('1 = 0');
+            }
+
+            return;
+        }
+
+        match ($this->normalizePropFirmStage($stage)) {
+            self::PROP_STAGE_PHASE_1 => $query->where('prop_firm_phase', 1),
+            self::PROP_STAGE_PHASE_2 => $query->where('prop_firm_phase', 2),
+            self::PROP_STAGE_FUNDED => $query->where('prop_firm_phase', 3),
+        };
+    }
+
+    private function tagPropFirmJournals(Collection $journals, string $source, string $stage): Collection
+    {
+        return $journals->map(function ($journal) use ($source, $stage) {
+            $journal->setAttribute('source', $source);
+            $journal->setAttribute('prop_firm_leaderboard_stage', $stage);
+            $journal->setAttribute('behavior_trade_key', $source.':'.$journal->id);
+
+            return $journal;
+        });
+    }
+
+    private function sortPropFirmJournals(Collection $journals): Collection
+    {
+        return $journals
+            ->sortBy(function ($journal): int {
+                $date = $journal->close_date ?? $journal->open_date ?? $journal->created_at;
+
+                return $date ? Carbon::parse($date)->timestamp : 0;
+            })
+            ->values();
     }
 
     private function capitalSummary($userIds): array
@@ -437,6 +727,105 @@ class LeaderboardController extends Controller
         return [$score, $rating];
     }
 
+    private function propFirmStartingBalance(User $user, array $capitalSummary, string $stage): float
+    {
+        $userId = (int) $user->id;
+        $capital = $capitalSummary[$userId] ?? ['deposits' => 0.0];
+        $deposits = (float) ($capital['deposits'] ?? 0);
+
+        return $deposits;
+    }
+
+    private function propFirmProfitTargetPercent(string $stage): float
+    {
+        return match ($this->normalizePropFirmStage($stage)) {
+            self::PROP_STAGE_PHASE_1 => 10.0,
+            self::PROP_STAGE_PHASE_2 => 5.0,
+            self::PROP_STAGE_FUNDED => 0.0,
+        };
+    }
+
+    private function propFirmRuleScoreAdjustment(
+        string $stage,
+        bool $profitTargetPassed,
+        bool $profitableDaysPassed,
+        bool $grossProfitRulePassed,
+        bool $bestDayRulePassed,
+        bool $dailyLossBreached,
+        bool $totalLossBreached,
+        float $behaviourScore
+    ): float {
+        $stage = $this->normalizePropFirmStage($stage);
+        $adjustment = 0.0;
+
+        if ($stage === self::PROP_STAGE_FUNDED) {
+            $adjustment += $profitTargetPassed ? 8 : 0;
+        } else {
+            $adjustment += $profitTargetPassed ? 10 : 0;
+            $adjustment += $profitableDaysPassed ? 5 : 0;
+            $adjustment += $grossProfitRulePassed ? 5 : 0;
+        }
+
+        $adjustment += $bestDayRulePassed ? 3 : -5;
+
+        if ($dailyLossBreached) {
+            $adjustment -= 20;
+        }
+
+        if ($totalLossBreached) {
+            $adjustment -= 25;
+        }
+
+        if ($behaviourScore >= 80) {
+            $adjustment -= 15;
+        } elseif ($behaviourScore >= 65) {
+            $adjustment -= 8;
+        }
+
+        return round($adjustment, 2);
+    }
+
+    private function propFirmRuleStatus(bool $profitTargetPassed, bool $dailyLossBreached, bool $totalLossBreached, string $stage): string
+    {
+        if ($totalLossBreached) {
+            return 'Total loss breach';
+        }
+
+        if ($dailyLossBreached) {
+            return 'Daily loss breach';
+        }
+
+        if ($stage === self::PROP_STAGE_FUNDED) {
+            return $profitTargetPassed ? 'Profitable funded account' : 'Funded account active';
+        }
+
+        return $profitTargetPassed ? 'Profit target reached' : 'Evaluation in progress';
+    }
+
+    private function ratingForScore(float $score, int $totalTrades): string
+    {
+        if ($totalTrades === 0) {
+            return 'N/A';
+        }
+
+        return match (true) {
+            $score >= 95 => 'S',
+            $score >= 90 => 'A+',
+            $score >= 85 => 'A',
+            $score >= 80 => 'A-',
+            $score >= 75 => 'B+',
+            $score >= 70 => 'B',
+            $score >= 65 => 'B-',
+            $score >= 60 => 'C+',
+            $score >= 55 => 'C',
+            $score >= 50 => 'C-',
+            $score >= 45 => 'D',
+            $score >= 40 => 'D-',
+            $score >= 30 => 'E',
+            default => 'F',
+        };
+    }
+
     private function filters(Request $request): array
     {
         $role = $request->input('role', 'all');
@@ -450,6 +839,51 @@ class LeaderboardController extends Controller
         ];
     }
 
+    private function propFirmFilters(Request $request): array
+    {
+        $month = $request->input('month', 'all');
+        $year = $request->input('year', 'all');
+
+        return [
+            'stage' => $this->normalizePropFirmStage($request->input('stage')),
+            'month' => $month === 'all' ? 'all' : str_pad((string) max(1, min(12, (int) $month)), 2, '0', STR_PAD_LEFT),
+            'year' => $year === 'all' ? 'all' : (string) (int) $year,
+        ];
+    }
+
+    private function normalizePropFirmStage($stage): string
+    {
+        $stage = strtolower((string) ($stage ?: self::PROP_STAGE_PHASE_1));
+
+        return array_key_exists($stage, $this->propFirmStageOptions())
+            ? $stage
+            : self::PROP_STAGE_PHASE_1;
+    }
+
+    private function propFirmStageOptions(): array
+    {
+        return [
+            self::PROP_STAGE_PHASE_1 => [
+                'label' => 'Phase 1 Leaderboard',
+                'short_label' => 'Phase 1',
+                'description' => 'Ranks prop firm traders by Phase 1 evaluation performance, using current and archived Phase 1 journals.',
+                'target' => '10% target',
+            ],
+            self::PROP_STAGE_PHASE_2 => [
+                'label' => 'Phase 2 Leaderboard',
+                'short_label' => 'Phase 2',
+                'description' => 'Ranks prop firm traders by Phase 2 evaluation performance, using current and archived Phase 2 journals.',
+                'target' => '5% target',
+            ],
+            self::PROP_STAGE_FUNDED => [
+                'label' => 'Funded Account Leaderboard',
+                'short_label' => 'Funded',
+                'description' => 'Ranks approved funded traders by funded account performance and rule health.',
+                'target' => 'Live funded performance',
+            ],
+        ];
+    }
+
     private function availableYears(): array
     {
         return TradingJournal::query()
@@ -460,6 +894,37 @@ class LeaderboardController extends Controller
             ->pluck('journal_year')
             ->filter()
             ->map(fn ($year): int => (int) $year)
+            ->values()
+            ->all();
+    }
+
+    private function propFirmAvailableYears(): array
+    {
+        $years = collect();
+
+        $years = $years->merge(
+            TradingJournal::query()
+                ->whereRaw('COALESCE(close_date, open_date, created_at) IS NOT NULL')
+                ->selectRaw('YEAR(COALESCE(close_date, open_date, created_at)) as journal_year')
+                ->distinct()
+                ->pluck('journal_year')
+        );
+
+        if (Schema::hasTable('trading_journals_backup')) {
+            $years = $years->merge(
+                TradingJournalBackup::query()
+                    ->whereRaw('COALESCE(close_date, open_date, created_at) IS NOT NULL')
+                    ->selectRaw('YEAR(COALESCE(close_date, open_date, created_at)) as journal_year')
+                    ->distinct()
+                    ->pluck('journal_year')
+            );
+        }
+
+        return $years
+            ->filter()
+            ->map(fn ($year): int => (int) $year)
+            ->unique()
+            ->sortDesc()
             ->values()
             ->all();
     }
@@ -512,6 +977,24 @@ class LeaderboardController extends Controller
             'average_win_rate' => round((float) $collection->avg('win_rate'), 2),
             'best_score' => round((float) ($collection->first()['score'] ?? 0), 2),
             'top_rating' => $collection->first()['rating'] ?? 'N/A',
+        ];
+    }
+
+    private function propFirmSummary(array $leaderboard): array
+    {
+        $collection = collect($leaderboard);
+
+        return [
+            'ranked_traders' => $collection->count(),
+            'total_trades' => (int) $collection->sum('total_trades'),
+            'average_score' => round((float) $collection->avg('score'), 2),
+            'average_progress' => round((float) $collection->avg('profit_target_progress'), 2),
+            'total_net_pl' => round((float) $collection->sum('net_pl'), 2),
+            'rule_breaches' => $collection
+                ->filter(fn (array $item): bool => (bool) $item['daily_loss_breached'] || (bool) $item['total_loss_breached'])
+                ->count(),
+            'top_rating' => $collection->first()['rating'] ?? 'N/A',
+            'best_score' => round((float) ($collection->first()['score'] ?? 0), 2),
         ];
     }
 
@@ -601,10 +1084,10 @@ class LeaderboardController extends Controller
 
     private function roleLabel(int $roleId): string
     {
-        return self::ROLE_LABELS[$roleId] ?? 'Role ' . $roleId;
+        return self::ROLE_LABELS[$roleId] ?? 'Role '.$roleId;
     }
 
-    private function formatJournalDate(?TradingJournal $journal): ?string
+    private function formatJournalDate($journal): ?string
     {
         if (! $journal) {
             return null;

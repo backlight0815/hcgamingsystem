@@ -1,0 +1,641 @@
+{
+  "theme": {
+    "id": "CW-074",
+    "code": "CW-074",
+    "title": {
+      "en": "Using Pending Orders Only While the Original Thesis Remains Valid",
+      "zh": "仅在原交易论点有效时使用挂单"
+    },
+    "shortTitle": {
+      "en": "pending order",
+      "zh": "仅在原交易论点有效时使用挂单"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates using pending orders only while the original thesis remains valid using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示仅在原交易论点有效时使用挂单。"
+    },
+    "categoryId": "trade_execution",
+    "categoryName": {
+      "en": "Trade Planning and Execution",
+      "zh": "交易计划与执行"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind using pending orders only while the original thesis remains valid.",
+        "Apply using pending orders only while the original thesis remains valid to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释仅在原交易论点有效时使用挂单背后的核心决策规则。",
+        "将仅在原交易论点有效时使用挂单应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "pending order",
+      "expiry",
+      "invalidation",
+      "USDJPY",
+      "Trade Planning and Execution"
+    ],
+    "searchTokens": [
+      "cw-074",
+      "CW-074",
+      "trade_execution",
+      "trade planning and execution",
+      "交易计划与执行",
+      "using",
+      "pending",
+      "orders",
+      "only",
+      "while",
+      "the",
+      "original",
+      "thesis",
+      "remains",
+      "valid",
+      "仅在原交易论点有效时使用挂单",
+      "order",
+      "expiry",
+      "invalidation",
+      "usdjpy",
+      "trade",
+      "planning",
+      "and",
+      "execution"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 74,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "fd80b1d6a2394a1ef2c3be8538f2bfe7906721cab7c1609a9153da2ba8e68dcf"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-074",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for pending order",
+        "zh": "仅在原交易论点有效时使用挂单的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which statement best describes a risk-aware approach to using pending orders only while the original thesis remains valid?",
+        "zh": "哪项陈述最能说明对仅在原交易论点有效时使用挂单采取风险意识的方法？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing using pending orders only while the original thesis remains valid.",
+            "zh": "评估仅在原交易论点有效时使用挂单时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "9bfd31b5197577937308e7122dd71dec732fb4518e04725a7d888e9fde05b928"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-074",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying pending order Under Uncertainty",
+        "zh": "在不确定性下应用仅在原交易论点有效时使用挂单"
+      },
+      "prompt": {
+        "en": "The market moves quickly before confirmation of using pending orders only while the original thesis remains valid. Which action follows a professional plan?",
+        "zh": "在仅在原交易论点有效时使用挂单获得确认前市场快速波动。哪项行动符合专业计划？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "ba971e08c67ce20435c37acccb92ba6ef669d7b8dcdacbcc9849882be52a6889"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-074",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "USDJPY Chart Interpretation for pending order",
+        "zh": "USDJPY图表中的仅在原交易论点有效时使用挂单解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational USDJPY H1 chart. Which labelled zone is the strongest decision area for evaluating using pending orders only while the original thesis remains valid while keeping invalidation visible?",
+        "zh": "研究合成教学用USDJPY H1图表。哪个标记区域最适合评估仅在原交易论点有效时使用挂单，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "USDJPY",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 149.839,
+            "high": 150.02,
+            "low": 149.488,
+            "close": 149.67
+          },
+          {
+            "timeIndex": 1,
+            "open": 149.67,
+            "high": 149.892,
+            "low": 149.48,
+            "close": 149.58
+          },
+          {
+            "timeIndex": 2,
+            "open": 149.58,
+            "high": 149.796,
+            "low": 149.408,
+            "close": 149.632
+          },
+          {
+            "timeIndex": 3,
+            "open": 149.632,
+            "high": 149.921,
+            "low": 149.418,
+            "close": 149.786
+          },
+          {
+            "timeIndex": 4,
+            "open": 149.786,
+            "high": 150.204,
+            "low": 149.599,
+            "close": 149.988
+          },
+          {
+            "timeIndex": 5,
+            "open": 149.988,
+            "high": 150.431,
+            "low": 149.881,
+            "close": 150.23
+          },
+          {
+            "timeIndex": 6,
+            "open": 150.23,
+            "high": 150.619,
+            "low": 150.063,
+            "close": 150.516
+          },
+          {
+            "timeIndex": 7,
+            "open": 150.516,
+            "high": 150.979,
+            "low": 150.303,
+            "close": 150.791
+          },
+          {
+            "timeIndex": 8,
+            "open": 150.791,
+            "high": 151.16,
+            "low": 150.599,
+            "close": 150.939
+          },
+          {
+            "timeIndex": 9,
+            "open": 150.939,
+            "high": 151.093,
+            "low": 150.777,
+            "close": 150.892
+          },
+          {
+            "timeIndex": 10,
+            "open": 150.892,
+            "high": 151.037,
+            "low": 150.552,
+            "close": 150.712
+          },
+          {
+            "timeIndex": 11,
+            "open": 150.712,
+            "high": 150.931,
+            "low": 150.354,
+            "close": 150.565
+          },
+          {
+            "timeIndex": 12,
+            "open": 150.565,
+            "high": 150.779,
+            "low": 150.37,
+            "close": 150.584
+          },
+          {
+            "timeIndex": 13,
+            "open": 150.584,
+            "high": 150.866,
+            "low": 150.463,
+            "close": 150.772
+          },
+          {
+            "timeIndex": 14,
+            "open": 150.772,
+            "high": 151.232,
+            "low": 150.619,
+            "close": 151.036
+          },
+          {
+            "timeIndex": 15,
+            "open": 151.036,
+            "high": 151.514,
+            "low": 150.827,
+            "close": 151.295
+          },
+          {
+            "timeIndex": 16,
+            "open": 151.295,
+            "high": 151.677,
+            "low": 151.096,
+            "close": 151.534
+          },
+          {
+            "timeIndex": 17,
+            "open": 151.534,
+            "high": 151.908,
+            "low": 151.405,
+            "close": 151.752
+          },
+          {
+            "timeIndex": 18,
+            "open": 151.752,
+            "high": 152.124,
+            "low": 151.605,
+            "close": 151.903
+          },
+          {
+            "timeIndex": 19,
+            "open": 151.903,
+            "high": 152.096,
+            "low": 151.695,
+            "close": 151.909
+          },
+          {
+            "timeIndex": 20,
+            "open": 151.909,
+            "high": 152.014,
+            "low": 151.565,
+            "close": 151.768
+          },
+          {
+            "timeIndex": 21,
+            "open": 151.768,
+            "high": 151.97,
+            "low": 151.46,
+            "close": 151.596
+          },
+          {
+            "timeIndex": 22,
+            "open": 151.596,
+            "high": 151.811,
+            "low": 151.418,
+            "close": 151.558
+          },
+          {
+            "timeIndex": 23,
+            "open": 151.558,
+            "high": 151.863,
+            "low": 151.354,
+            "close": 151.73
+          },
+          {
+            "timeIndex": 24,
+            "open": 151.73,
+            "high": 152.206,
+            "low": 151.524,
+            "close": 152.041
+          },
+          {
+            "timeIndex": 25,
+            "open": 152.041,
+            "high": 152.577,
+            "low": 151.898,
+            "close": 152.355
+          },
+          {
+            "timeIndex": 26,
+            "open": 152.355,
+            "high": 152.77,
+            "low": 152.222,
+            "close": 152.591
+          },
+          {
+            "timeIndex": 27,
+            "open": 152.591,
+            "high": 152.866,
+            "low": 152.389,
+            "close": 152.751
+          },
+          {
+            "timeIndex": 28,
+            "open": 152.751,
+            "high": 153.063,
+            "low": 152.542,
+            "close": 152.855
+          },
+          {
+            "timeIndex": 29,
+            "open": 152.855,
+            "high": 153.092,
+            "low": 152.705,
+            "close": 152.882
+          },
+          {
+            "timeIndex": 30,
+            "open": 152.882,
+            "high": 153.004,
+            "low": 152.673,
+            "close": 152.799
+          },
+          {
+            "timeIndex": 31,
+            "open": 152.799,
+            "high": 152.974,
+            "low": 152.455,
+            "close": 152.653
+          },
+          {
+            "timeIndex": 32,
+            "open": 152.653,
+            "high": 152.876,
+            "low": 152.367,
+            "close": 152.577
+          },
+          {
+            "timeIndex": 33,
+            "open": 152.577,
+            "high": 152.867,
+            "low": 152.421,
+            "close": 152.696
+          },
+          {
+            "timeIndex": 34,
+            "open": 152.696,
+            "high": 153.134,
+            "low": 152.577,
+            "close": 153.007
+          },
+          {
+            "timeIndex": 35,
+            "open": 153.007,
+            "high": 153.59,
+            "low": 152.813,
+            "close": 153.377
+          },
+          {
+            "timeIndex": 36,
+            "open": 153.377,
+            "high": 153.861,
+            "low": 153.165,
+            "close": 153.656
+          },
+          {
+            "timeIndex": 37,
+            "open": 153.656,
+            "high": 153.904,
+            "low": 153.493,
+            "close": 153.793
+          },
+          {
+            "timeIndex": 38,
+            "open": 153.793,
+            "high": 154.017,
+            "low": 153.681,
+            "close": 153.834
+          },
+          {
+            "timeIndex": 39,
+            "open": 153.834,
+            "high": 154.056,
+            "low": 153.641,
+            "close": 153.831
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 149.594,
+            "maximumPrice": 150.245,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 150.709,
+            "maximumPrice": 151.36,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 152.104,
+            "maximumPrice": 152.755,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 153.219,
+            "maximumPrice": 153.87,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "86ae364a4b34b5f6bf998567ddb42eec007bfb8f17f6620d12cfb16ab627e749"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-074",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: pending order",
+        "zh": "独立情境分析：仅在原交易论点有效时使用挂单"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of using pending orders only while the original thesis remains valid using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析仅在原交易论点有效时使用挂单的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "5cc893cd7801ed593500a2dc58deed9b9d47f99026a38781a702a97af3990d6d"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-074",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: pending order",
+        "zh": "实践展示：仅在原交易论点有效时使用挂单"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate using pending orders only while the original thesis remains valid. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示仅在原交易论点有效时使用挂单。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "5bb8d24442c2f3c28f916339656f1da3ce94818e02920da54b75e50019a8b5b9"
+    }
+  ]
+}

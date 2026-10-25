@@ -116,6 +116,31 @@
         font-family: Consolas, Monaco, "Courier New", monospace;
         font-size: 13px;
     }
+    .ma-plan-editor:focus { background: #0f172a; color: #f8fafc; border-color: #0f766e !important; }
+    .ma-report-toolbar { padding: 18px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; margin-bottom: 20px; }
+    .ma-report-toolbar .ma-ai-toolbar { margin: 12px 0 0; }
+    .ma-field-ai { display: inline-flex; gap: 5px; margin-left: 8px; vertical-align: middle; }
+    .ma-field-ai button { font-size: 11px; padding: 2px 7px; }
+    .ma-report-preview { background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 18px; margin-top: 14px; }
+    .ma-report-diff { border-top: 1px solid #e2e8f0; padding: 12px 0; }
+    .ma-report-diff pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 140px; overflow: auto; font-size: 12px; line-height: 1.4; background: #f8fafc; padding: 8px; }
+
+    .ma-ai-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .ma-ai-toolbar select { width: auto; min-width: 165px; }
+    .ma-ai-status { min-height: 24px; color: #334155; font-size: 13px; margin-bottom: 8px; }
+    .ma-ai-preview { border: 1px solid #0f766e; border-radius: 8px; padding: 18px; margin: 16px 0; background: #f0fdfa; }
+    .ma-ai-preview h6 { color: #134e4a; font-weight: 800; }
+    .ma-ai-preview-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-height: 520px; overflow: auto; }
+    .ma-ai-preview-grid label { min-width: 0; font-size: 12px; font-weight: 700; color: #334155; }
+    .ma-ai-preview-grid textarea { min-height: 94px !important; margin-top: 5px; background: #fff; }
+    .ma-ai-preview-grid .ma-ai-changed textarea { border-color: #0f766e; box-shadow: inset 3px 0 #0f766e; }
+    .ma-ai-original-text { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 220px; overflow: auto; padding: 10px; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; }
+    .ma-ai-generated { box-shadow: 0 0 0 3px rgba(15, 118, 110, .24); }
+
+    @media (max-width: 767px) {
+        .ma-ai-preview-grid { grid-template-columns: 1fr; }
+        .ma-ai-toolbar select { width: 100%; }
+    }
 
     .ma-side-panel {
         padding: 18px;
@@ -173,7 +198,7 @@
 </style>
 @endonce
 
-<form method="POST" action="{{ $action }}" enctype="multipart/form-data" class="ma-form-shell">
+<form method="POST" action="{{ $action }}" enctype="multipart/form-data" class="ma-form-shell" data-ai-plan-endpoint="{{ route('market-analyst.ai-generate-trading-plan') }}" data-ai-report-endpoint="{{ route('market-analyst.ai-generate-report') }}">
     @csrf
 
     <div class="ma-topbar mb-3">
@@ -191,6 +216,38 @@
             </a>
         </div>
     </div>
+
+    <section class="ma-report-toolbar" aria-label="AI Report Assistant">
+        <h5 class="mb-1">AI Report Assistant</h5>
+        <p class="small text-muted mb-0">Draft from the current form. Review every change before applying or publishing.</p>
+        <div class="ma-ai-toolbar">
+            <button type="button" class="btn btn-primary" data-report-mode="full">✨ Generate Full Report</button>
+            <button type="button" class="btn btn-outline-primary" data-report-mode="empty">Fill Empty Fields</button>
+            <select class="form-control" id="maReportSection" aria-label="Report section">
+                <option value="report">Report Title</option><option value="market_structure">Market Structure</option>
+                <option value="chinese_analysis">Chinese Analysis</option><option value="execution_plan">Trading Execution Plan</option>
+            </select>
+            <button type="button" class="btn btn-outline-primary" data-report-mode="section">Regenerate Section</button>
+            <select class="form-control" id="maImproveStyle" aria-label="Improve writing style">
+                <option value="professional">Professionalize</option><option value="expand">Expand Analysis</option>
+                <option value="summarize">Summarize</option><option value="clarity">Improve Clarity</option>
+                <option value="grammar">Fix Grammar</option><option value="simplified_chinese">Simplified Chinese</option>
+            </select>
+            <button type="button" class="btn btn-light" id="maReportPreviewButton" disabled>Preview Changes</button>
+        </div>
+        <div id="maReportStatus" role="status" aria-live="polite" class="small mt-2"></div>
+        <div id="maReportStale" class="alert alert-warning mt-2 mb-0" hidden>Source fields changed after AI generation. Review dependent content and regenerate as needed.</div>
+        <div id="maReportPreview" class="ma-report-preview" hidden>
+            <h6>Review AI suggestions</h6><ul id="maReportWarnings" class="small"></ul>
+            <div id="maReportDiffs"></div>
+            <div class="d-flex gap-2 flex-wrap mt-2">
+                <button type="button" class="btn btn-primary" id="maReportApplyAll">Apply All</button>
+                <button type="button" class="btn btn-outline-primary" id="maReportApplySelected">Apply Selected Fields</button>
+                <button type="button" class="btn btn-light" id="maReportKeep">Keep Original</button>
+                <button type="button" class="btn btn-light" id="maReportRegenerate">Regenerate</button>
+            </div>
+        </div>
+    </section>
 
     <div class="breadcrumb mb-3">
         @foreach ($breadcrumbData as $breadcrumb)
@@ -392,6 +449,30 @@
                     </button>
                 </div>
 
+                <div class="ma-ai-toolbar" aria-label="AI trading plan tools">
+                    <button type="button" class="btn btn-primary" data-ai-mode="all">✨ AI 自动生成交易计划</button>
+                    <button type="button" class="btn btn-outline-primary" data-ai-mode="all">重新生成全部</button>
+                    <button type="button" class="btn btn-outline-primary" data-ai-mode="empty">仅填充空白</button>
+                    <select id="maAiSection" class="form-control" aria-label="选择重新生成的部分">
+                        <option value="bias">交易方向</option><option value="planA">计划 A</option><option value="planB">计划 B</option><option value="planC">计划 C</option><option value="riskManagement">风险管理</option>
+                    </select>
+                    <button type="button" class="btn btn-outline-primary" data-ai-mode="section">重新生成所选部分</button>
+                    <button type="button" class="btn btn-light" id="maAiPreviewButton" disabled>预览更改</button>
+                </div>
+                <div id="maAiStatus" class="ma-ai-status" role="status" aria-live="polite"></div>
+                <div id="maAiPreview" class="ma-ai-preview" hidden>
+                    <h6>AI 草稿预览 · 请逐项核对后应用</h6>
+                    <ul id="maAiWarnings" class="small"></ul>
+                    <details id="maAiOriginal" class="mb-3" hidden>
+                        <summary>查看原有交易计划</summary>
+                        <pre id="maAiOriginalText" class="ma-ai-original-text"></pre>
+                    </details>
+                    <div id="maAiPreviewGrid" class="ma-ai-preview-grid"></div>
+                    <div class="d-flex gap-2 flex-wrap mt-3">
+                        <button type="button" class="btn btn-primary" id="maAiApplyButton">应用到交易计划</button>
+                        <button type="button" class="btn btn-light" id="maAiCancelButton">取消</button>
+                    </div>
+                </div>
                 <textarea name="trading_plan" id="trading_plan" class="form-control ma-plan-editor @error('trading_plan') is-invalid @enderror">{{ old('trading_plan', $analysis->trading_plan ?? '') }}</textarea>
                 @error('trading_plan') <div class="invalid-feedback">{{ $message }}</div> @enderror
             </div>
@@ -516,30 +597,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function splitZoneLevels(value) {
         return (value || '')
-            .replace(/[：;]/g, ':')
-            .split(/[,\n，、\s]+/)
+            .split(/[:,：;；\n，、\s]+/)
             .map(function (level) { return level.trim(); })
             .filter(function (level) { return /^-?\d+(\.\d+)?$/.test(level); });
     }
 
     function parseZoneLine(text, labels) {
-        const lines = (text || '').split(/\n/);
-        const matchedLine = lines.find(function (line) {
-            return labels.some(function (label) {
-                return line.toLowerCase().includes(label.toLowerCase());
-            });
+        const matches = Array.from((text || '').matchAll(/(?:支撑|support|阻力|resistance)[^:：]*[:：]/gi));
+        const matched = matches.find(function (match) {
+            return labels.some(function (label) { return match[0].toLowerCase().includes(label.toLowerCase()); });
         });
-
-        if (!matchedLine) {
+        if (!matched) {
             return [];
         }
-
-        return splitZoneLevels(matchedLine.replace(/^.*?[:：]/, ''));
+        const next = matches.find(function (match) { return match.index > matched.index; });
+        return splitZoneLevels((text || '').slice(matched.index + matched[0].length, next ? next.index : undefined));
     }
 
     function zoneLevels() {
-        const fallbackSupports = ['4461', '4410', '4361'];
-        const fallbackResistances = ['4600', '4670', '4750'];
         const keyZoneText = keyZonesInput.value;
 
         const supports = splitZoneLevels(supportZonesInput.value);
@@ -549,8 +624,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const parsedResistances = parseZoneLine(keyZoneText, ['阻力', 'resistance']);
 
         return {
-            supports: supports.length ? supports : (parsedSupports.length ? parsedSupports : fallbackSupports),
-            resistances: resistances.length ? resistances : (parsedResistances.length ? parsedResistances : fallbackResistances)
+            supports: supports.length ? supports : parsedSupports,
+            resistances: resistances.length ? resistances : parsedResistances
         };
     }
 
@@ -560,12 +635,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function zoneTemplate() {
         const levels = zoneLevels();
-        const supports = levels.supports.length ? levels.supports : ['4461', '4410', '4361'];
-        const resistances = levels.resistances.length ? levels.resistances : ['4600', '4670', '4750'];
+        const supports = levels.supports;
+        const resistances = levels.resistances;
 
         return {
-            key: '关键阻力区：' + resistances.join(', ') + '\n关键支撑区：' + supports.join(', '),
-            entry: [
+            key: [resistances.length ? '关键阻力区：' + resistances.join(', ') : '', supports.length ? '关键支撑区：' + supports.join(', ') : ''].filter(Boolean).join('\n'),
+            entry: (supports.length && resistances.length ? [
                 '🏹 进场区 / 风险区 (Entry Zones)',
                 '⬆️ 做多进场区（Buy Zones）',
                 '🔴 高风险：' + levelAt(supports, 0),
@@ -576,13 +651,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 '🔴 高风险：' + levelAt(resistances, 0),
                 '🟡 中风险：' + levelAt(resistances, 1),
                 '🟢 低风险：' + levelAt(resistances, 2)
-            ].join('\n')
+            ].join('\n') : '')
         };
     }
 
     function buildDraftValues() {
         const trend = trendInput.value || 'ranging';
-        const strength = strengthInput.value || 'medium';
+        const strength = strengthInput.value;
         const market = (marketInput.value || 'MARKET').toUpperCase();
         const zones = zoneTemplate();
         const trendLabel = {
@@ -605,7 +680,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         return {
             title: market + ' 市场方向策略',
-            overview: structureCopy[trend] + ' ' + strengthCopy[strength] + '\n\n动能观察：' + rsiText + '\n技术区域：' + orderBlockText,
+            overview: structureCopy[trend] + (strength ? ' ' + strengthCopy[strength] : '') + '\n\n动能观察：' + rsiText + '\n技术区域：' + orderBlockText,
             keyZones: zones.key,
             entryZones: zones.entry,
             analystView: '当前分析师观点偏向' + trendLabel + '结构。操作上需要等待价格回到关键区间后，再根据收线、动能与反应确认是否执行，避免在区间中间追单。',
@@ -669,6 +744,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function draftReport() {
+        if (!trendInput.value) {
+            return;
+        }
         applyTrendAutofill();
         smartFill(planInput, buildDraftValues().plan);
     }
@@ -704,3 +782,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+<script src="{{ asset('backend/assets/js/market-analyst-ai-plan.js') }}" defer></script>
+<script src="{{ asset('backend/assets/js/market-analyst-ai-report.js') }}" defer></script>

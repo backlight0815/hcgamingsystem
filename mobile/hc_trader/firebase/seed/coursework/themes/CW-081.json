@@ -1,0 +1,637 @@
+{
+  "theme": {
+    "id": "CW-081",
+    "code": "CW-081",
+    "title": {
+      "en": "Preventing FOMO with Predefined Entry and No-Trade Rules",
+      "zh": "通过预设入场与禁止交易规则防止错失恐惧"
+    },
+    "shortTitle": {
+      "en": "FOMO",
+      "zh": "通过预设入场与禁止交易规则防止错失恐惧"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates preventing fomo with predefined entry and no-trade rules using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示通过预设入场与禁止交易规则防止错失恐惧。"
+    },
+    "categoryId": "trading_psychology",
+    "categoryName": {
+      "en": "Trading Psychology and Discipline",
+      "zh": "交易心理与纪律"
+    },
+    "difficulty": "advanced",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind preventing fomo with predefined entry and no-trade rules.",
+        "Apply preventing fomo with predefined entry and no-trade rules to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释通过预设入场与禁止交易规则防止错失恐惧背后的核心决策规则。",
+        "将通过预设入场与禁止交易规则防止错失恐惧应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "FOMO",
+      "entry rule",
+      "discipline",
+      "USDJPY",
+      "Trading Psychology and Discipline"
+    ],
+    "searchTokens": [
+      "cw-081",
+      "CW-081",
+      "trading_psychology",
+      "trading psychology and discipline",
+      "交易心理与纪律",
+      "preventing",
+      "fomo",
+      "with",
+      "predefined",
+      "entry",
+      "and",
+      "no",
+      "trade",
+      "rules",
+      "通过预设入场与禁止交易规则防止错失恐惧",
+      "rule",
+      "discipline",
+      "usdjpy",
+      "trading",
+      "psychology"
+    ],
+    "difficultyOrder": 3,
+    "estimatedMinutes": 90,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 81,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "f48dd4e5b75dd942e1ced431d8b83bb58d4b146d6f3eb28843bdf53da9fdd345"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-081",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for FOMO",
+        "zh": "通过预设入场与禁止交易规则防止错失恐惧的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which evidence most reliably shows that preventing fomo with predefined entry and no-trade rules is being applied correctly?",
+        "zh": "哪项证据最可靠地表明已正确应用通过预设入场与禁止交易规则防止错失恐惧？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing preventing fomo with predefined entry and no-trade rules.",
+            "zh": "评估通过预设入场与禁止交易规则防止错失恐惧时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "4b0744133281cc62e975cec30876b4aa10a3a466c00dd3fe6310f4d38b4fdfe7"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-081",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying FOMO Under Uncertainty",
+        "zh": "在不确定性下应用通过预设入场与禁止交易规则防止错失恐惧"
+      },
+      "prompt": {
+        "en": "A trader finds evidence for preventing fomo with predefined entry and no-trade rules, but the planned invalidation has already been breached. What is the best response?",
+        "zh": "交易者发现支持通过预设入场与禁止交易规则防止错失恐惧的证据，但计划失效条件已经被突破。最佳做法是什么？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "718019066a4304ab0e532f5497a920455a896fc4edc7dbc7b690bb2ce6e13135"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-081",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "USDJPY Chart Interpretation for FOMO",
+        "zh": "USDJPY图表中的通过预设入场与禁止交易规则防止错失恐惧解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational USDJPY H1 chart. Which labelled zone is the strongest decision area for evaluating preventing fomo with predefined entry and no-trade rules while keeping invalidation visible?",
+        "zh": "研究合成教学用USDJPY H1图表。哪个标记区域最适合评估通过预设入场与禁止交易规则防止错失恐惧，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "USDJPY",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 153.014,
+            "high": 153.262,
+            "low": 152.909,
+            "close": 153.04
+          },
+          {
+            "timeIndex": 1,
+            "open": 153.04,
+            "high": 153.389,
+            "low": 152.873,
+            "close": 153.205
+          },
+          {
+            "timeIndex": 2,
+            "open": 153.205,
+            "high": 153.51,
+            "low": 152.992,
+            "close": 153.4
+          },
+          {
+            "timeIndex": 3,
+            "open": 153.4,
+            "high": 153.766,
+            "low": 153.209,
+            "close": 153.561
+          },
+          {
+            "timeIndex": 4,
+            "open": 153.561,
+            "high": 153.901,
+            "low": 153.447,
+            "close": 153.688
+          },
+          {
+            "timeIndex": 5,
+            "open": 153.688,
+            "high": 153.904,
+            "low": 153.527,
+            "close": 153.777
+          },
+          {
+            "timeIndex": 6,
+            "open": 153.777,
+            "high": 153.946,
+            "low": 153.556,
+            "close": 153.768
+          },
+          {
+            "timeIndex": 7,
+            "open": 153.768,
+            "high": 153.99,
+            "low": 153.416,
+            "close": 153.611
+          },
+          {
+            "timeIndex": 8,
+            "open": 153.611,
+            "high": 153.786,
+            "low": 153.232,
+            "close": 153.353
+          },
+          {
+            "timeIndex": 9,
+            "open": 153.353,
+            "high": 153.475,
+            "low": 152.988,
+            "close": 153.143
+          },
+          {
+            "timeIndex": 10,
+            "open": 153.143,
+            "high": 153.353,
+            "low": 152.909,
+            "close": 153.119
+          },
+          {
+            "timeIndex": 11,
+            "open": 153.119,
+            "high": 153.501,
+            "low": 152.92,
+            "close": 153.293
+          },
+          {
+            "timeIndex": 12,
+            "open": 153.293,
+            "high": 153.663,
+            "low": 153.165,
+            "close": 153.546
+          },
+          {
+            "timeIndex": 13,
+            "open": 153.546,
+            "high": 153.924,
+            "low": 153.398,
+            "close": 153.746
+          },
+          {
+            "timeIndex": 14,
+            "open": 153.746,
+            "high": 154.067,
+            "low": 153.538,
+            "close": 153.845
+          },
+          {
+            "timeIndex": 15,
+            "open": 153.845,
+            "high": 154.035,
+            "low": 153.642,
+            "close": 153.869
+          },
+          {
+            "timeIndex": 16,
+            "open": 153.869,
+            "high": 154.002,
+            "low": 153.702,
+            "close": 153.837
+          },
+          {
+            "timeIndex": 17,
+            "open": 153.837,
+            "high": 154.052,
+            "low": 153.581,
+            "close": 153.723
+          },
+          {
+            "timeIndex": 18,
+            "open": 153.723,
+            "high": 153.925,
+            "low": 153.314,
+            "close": 153.52
+          },
+          {
+            "timeIndex": 19,
+            "open": 153.52,
+            "high": 153.625,
+            "low": 153.105,
+            "close": 153.31
+          },
+          {
+            "timeIndex": 20,
+            "open": 153.31,
+            "high": 153.497,
+            "low": 153.093,
+            "close": 153.235
+          },
+          {
+            "timeIndex": 21,
+            "open": 153.235,
+            "high": 153.591,
+            "low": 153.1,
+            "close": 153.37
+          },
+          {
+            "timeIndex": 22,
+            "open": 153.37,
+            "high": 153.804,
+            "low": 153.168,
+            "close": 153.648
+          },
+          {
+            "timeIndex": 23,
+            "open": 153.648,
+            "high": 154.05,
+            "low": 153.44,
+            "close": 153.907
+          },
+          {
+            "timeIndex": 24,
+            "open": 153.907,
+            "high": 154.245,
+            "low": 153.758,
+            "close": 154.027
+          },
+          {
+            "timeIndex": 25,
+            "open": 154.027,
+            "high": 154.223,
+            "low": 153.879,
+            "close": 154.007
+          },
+          {
+            "timeIndex": 26,
+            "open": 154.007,
+            "high": 154.101,
+            "low": 153.716,
+            "close": 153.915
+          },
+          {
+            "timeIndex": 27,
+            "open": 153.915,
+            "high": 154.109,
+            "low": 153.586,
+            "close": 153.796
+          },
+          {
+            "timeIndex": 28,
+            "open": 153.796,
+            "high": 154.015,
+            "low": 153.493,
+            "close": 153.648
+          },
+          {
+            "timeIndex": 29,
+            "open": 153.648,
+            "high": 153.794,
+            "low": 153.366,
+            "close": 153.486
+          },
+          {
+            "timeIndex": 30,
+            "open": 153.486,
+            "high": 153.639,
+            "low": 153.2,
+            "close": 153.395
+          },
+          {
+            "timeIndex": 31,
+            "open": 153.395,
+            "high": 153.694,
+            "low": 153.183,
+            "close": 153.474
+          },
+          {
+            "timeIndex": 32,
+            "open": 153.474,
+            "high": 153.915,
+            "low": 153.312,
+            "close": 153.726
+          },
+          {
+            "timeIndex": 33,
+            "open": 153.726,
+            "high": 154.125,
+            "low": 153.613,
+            "close": 154.022
+          },
+          {
+            "timeIndex": 34,
+            "open": 154.022,
+            "high": 154.398,
+            "low": 153.832,
+            "close": 154.197
+          },
+          {
+            "timeIndex": 35,
+            "open": 154.197,
+            "high": 154.413,
+            "low": 153.967,
+            "close": 154.18
+          },
+          {
+            "timeIndex": 36,
+            "open": 154.18,
+            "high": 154.315,
+            "low": 153.865,
+            "close": 154.032
+          },
+          {
+            "timeIndex": 37,
+            "open": 154.032,
+            "high": 154.195,
+            "low": 153.76,
+            "close": 153.865
+          },
+          {
+            "timeIndex": 38,
+            "open": 153.865,
+            "high": 154.087,
+            "low": 153.547,
+            "close": 153.733
+          },
+          {
+            "timeIndex": 39,
+            "open": 153.733,
+            "high": 153.914,
+            "low": 153.419,
+            "close": 153.633
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 152.935,
+            "maximumPrice": 153.15,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 153.304,
+            "maximumPrice": 153.52,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 153.766,
+            "maximumPrice": 153.982,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 154.136,
+            "maximumPrice": 154.351,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "ff2097d629974405b84e3dc0dad721999cf56f0f3a22b2b56e366f97bb75b419"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-081",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: FOMO",
+        "zh": "独立情境分析：通过预设入场与禁止交易规则防止错失恐惧"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of preventing fomo with predefined entry and no-trade rules using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析通过预设入场与禁止交易规则防止错失恐惧的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "0aa5b2eae82d22b2ff9d79ebb90ee05792de9c7b837f0364b83253b41ed6efcc"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-081",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: FOMO",
+        "zh": "实践展示：通过预设入场与禁止交易规则防止错失恐惧"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate preventing fomo with predefined entry and no-trade rules. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示通过预设入场与禁止交易规则防止错失恐惧。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "6337b1833ef0fb7bce9341d039eaf74fea85c25eaddc047089568ad724bcda73"
+    }
+  ]
+}

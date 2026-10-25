@@ -1,0 +1,637 @@
+{
+  "theme": {
+    "id": "CW-010",
+    "code": "CW-010",
+    "title": {
+      "en": "Assessing Brokers, Liquidity Providers and Execution Quality",
+      "zh": "评估经纪商、流动性提供者与执行质量"
+    },
+    "shortTitle": {
+      "en": "broker",
+      "zh": "评估经纪商、流动性提供者与执行质量"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates assessing brokers, liquidity providers and execution quality using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示评估经纪商、流动性提供者与执行质量。"
+    },
+    "categoryId": "market_foundations",
+    "categoryName": {
+      "en": "Trading Market Foundations",
+      "zh": "交易市场基础"
+    },
+    "difficulty": "beginner",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind assessing brokers, liquidity providers and execution quality.",
+        "Apply assessing brokers, liquidity providers and execution quality to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释评估经纪商、流动性提供者与执行质量背后的核心决策规则。",
+        "将评估经纪商、流动性提供者与执行质量应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "broker",
+      "liquidity provider",
+      "slippage",
+      "GBPUSD",
+      "Trading Market Foundations"
+    ],
+    "searchTokens": [
+      "cw-010",
+      "CW-010",
+      "market_foundations",
+      "trading market foundations",
+      "交易市场基础",
+      "assessing",
+      "brokers",
+      "liquidity",
+      "providers",
+      "and",
+      "execution",
+      "quality",
+      "评估经纪商、流动性提供者与执行质量",
+      "broker",
+      "provider",
+      "slippage",
+      "gbpusd",
+      "trading",
+      "market",
+      "foundations"
+    ],
+    "difficultyOrder": 1,
+    "estimatedMinutes": 55,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 10,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "0314581b2ab4bf05f30e003624df9f030091f32c418fc800e9a3199dbd941d0a"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-010",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for broker",
+        "zh": "评估经纪商、流动性提供者与执行质量的核心决策规则"
+      },
+      "prompt": {
+        "en": "What distinguishes professional analysis of assessing brokers, liquidity providers and execution quality from signal chasing?",
+        "zh": "对评估经纪商、流动性提供者与执行质量的专业分析与追逐信号有何区别？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing assessing brokers, liquidity providers and execution quality.",
+            "zh": "评估评估经纪商、流动性提供者与执行质量时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "6b54ce5f4ff9d868bc081650a13437af41de3b7d0b623f601fac1612ad8dfb42"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-010",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying broker Under Uncertainty",
+        "zh": "在不确定性下应用评估经纪商、流动性提供者与执行质量"
+      },
+      "prompt": {
+        "en": "A trader cannot explain the risk boundary for assessing brokers, liquidity providers and execution quality. What does this imply about readiness to enter?",
+        "zh": "交易者无法解释评估经纪商、流动性提供者与执行质量的风险边界。这说明入场准备程度如何？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "44e09ff799a21865d44fddee5ed6556e5444f9ab0545e2bb8e9238197e86350f"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-010",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "GBPUSD Chart Interpretation for broker",
+        "zh": "GBPUSD图表中的评估经纪商、流动性提供者与执行质量解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational GBPUSD H1 chart. Which labelled zone is the strongest decision area for evaluating assessing brokers, liquidity providers and execution quality while keeping invalidation visible?",
+        "zh": "研究合成教学用GBPUSD H1图表。哪个标记区域最适合评估评估经纪商、流动性提供者与执行质量，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "GBPUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 1.25674,
+            "high": 1.25879,
+            "low": 1.25475,
+            "close": 1.25736
+          },
+          {
+            "timeIndex": 1,
+            "open": 1.25736,
+            "high": 1.25926,
+            "low": 1.25534,
+            "close": 1.25777
+          },
+          {
+            "timeIndex": 2,
+            "open": 1.25777,
+            "high": 1.25992,
+            "low": 1.25565,
+            "close": 1.25708
+          },
+          {
+            "timeIndex": 3,
+            "open": 1.25708,
+            "high": 1.25892,
+            "low": 1.25338,
+            "close": 1.25464
+          },
+          {
+            "timeIndex": 4,
+            "open": 1.25464,
+            "high": 1.25564,
+            "low": 1.24905,
+            "close": 1.25101
+          },
+          {
+            "timeIndex": 5,
+            "open": 1.25101,
+            "high": 1.25297,
+            "low": 1.24568,
+            "close": 1.24773
+          },
+          {
+            "timeIndex": 6,
+            "open": 1.24773,
+            "high": 1.24983,
+            "low": 1.24468,
+            "close": 1.24617
+          },
+          {
+            "timeIndex": 7,
+            "open": 1.24617,
+            "high": 1.24776,
+            "low": 1.24497,
+            "close": 1.24644
+          },
+          {
+            "timeIndex": 8,
+            "open": 1.24644,
+            "high": 1.24908,
+            "low": 1.24452,
+            "close": 1.24749
+          },
+          {
+            "timeIndex": 9,
+            "open": 1.24749,
+            "high": 1.25047,
+            "low": 1.24543,
+            "close": 1.2483
+          },
+          {
+            "timeIndex": 10,
+            "open": 1.2483,
+            "high": 1.25031,
+            "low": 1.24675,
+            "close": 1.24855
+          },
+          {
+            "timeIndex": 11,
+            "open": 1.24855,
+            "high": 1.24965,
+            "low": 1.24723,
+            "close": 1.24836
+          },
+          {
+            "timeIndex": 12,
+            "open": 1.24836,
+            "high": 1.25037,
+            "low": 1.24567,
+            "close": 1.24755
+          },
+          {
+            "timeIndex": 13,
+            "open": 1.24755,
+            "high": 1.24962,
+            "low": 1.24352,
+            "close": 1.2456
+          },
+          {
+            "timeIndex": 14,
+            "open": 1.2456,
+            "high": 1.24682,
+            "low": 1.24082,
+            "close": 1.24243
+          },
+          {
+            "timeIndex": 15,
+            "open": 1.24243,
+            "high": 1.24411,
+            "low": 1.23797,
+            "close": 1.23903
+          },
+          {
+            "timeIndex": 16,
+            "open": 1.23903,
+            "high": 1.2412,
+            "low": 1.2351,
+            "close": 1.23693
+          },
+          {
+            "timeIndex": 17,
+            "open": 1.23693,
+            "high": 1.23861,
+            "low": 1.23483,
+            "close": 1.23692
+          },
+          {
+            "timeIndex": 18,
+            "open": 1.23692,
+            "high": 1.23954,
+            "low": 1.23525,
+            "close": 1.23833
+          },
+          {
+            "timeIndex": 19,
+            "open": 1.23833,
+            "high": 1.24178,
+            "low": 1.23735,
+            "close": 1.23971
+          },
+          {
+            "timeIndex": 20,
+            "open": 1.23971,
+            "high": 1.24207,
+            "low": 1.23793,
+            "close": 1.24005
+          },
+          {
+            "timeIndex": 21,
+            "open": 1.24005,
+            "high": 1.24116,
+            "low": 1.23725,
+            "close": 1.23934
+          },
+          {
+            "timeIndex": 22,
+            "open": 1.23934,
+            "high": 1.24111,
+            "low": 1.23629,
+            "close": 1.23801
+          },
+          {
+            "timeIndex": 23,
+            "open": 1.23801,
+            "high": 1.24018,
+            "low": 1.23523,
+            "close": 1.23614
+          },
+          {
+            "timeIndex": 24,
+            "open": 1.23614,
+            "high": 1.23774,
+            "low": 1.2318,
+            "close": 1.23354
+          },
+          {
+            "timeIndex": 25,
+            "open": 1.23354,
+            "high": 1.23486,
+            "low": 1.22841,
+            "close": 1.2305
+          },
+          {
+            "timeIndex": 26,
+            "open": 1.2305,
+            "high": 1.23261,
+            "low": 1.22636,
+            "close": 1.22813
+          },
+          {
+            "timeIndex": 27,
+            "open": 1.22813,
+            "high": 1.2301,
+            "low": 1.22661,
+            "close": 1.22757
+          },
+          {
+            "timeIndex": 28,
+            "open": 1.22757,
+            "high": 1.22986,
+            "low": 1.22589,
+            "close": 1.22886
+          },
+          {
+            "timeIndex": 29,
+            "open": 1.22886,
+            "high": 1.23255,
+            "low": 1.22678,
+            "close": 1.23071
+          },
+          {
+            "timeIndex": 30,
+            "open": 1.23071,
+            "high": 1.23369,
+            "low": 1.22889,
+            "close": 1.23154
+          },
+          {
+            "timeIndex": 31,
+            "open": 1.23154,
+            "high": 1.23304,
+            "low": 1.22969,
+            "close": 1.23074
+          },
+          {
+            "timeIndex": 32,
+            "open": 1.23074,
+            "high": 1.23216,
+            "low": 1.22718,
+            "close": 1.22881
+          },
+          {
+            "timeIndex": 33,
+            "open": 1.22881,
+            "high": 1.23095,
+            "low": 1.22446,
+            "close": 1.22654
+          },
+          {
+            "timeIndex": 34,
+            "open": 1.22654,
+            "high": 1.22844,
+            "low": 1.22234,
+            "close": 1.22421
+          },
+          {
+            "timeIndex": 35,
+            "open": 1.22421,
+            "high": 1.22512,
+            "low": 1.22066,
+            "close": 1.22177
+          },
+          {
+            "timeIndex": 36,
+            "open": 1.22177,
+            "high": 1.22368,
+            "low": 1.21806,
+            "close": 1.21962
+          },
+          {
+            "timeIndex": 37,
+            "open": 1.21962,
+            "high": 1.22175,
+            "low": 1.2166,
+            "close": 1.21866
+          },
+          {
+            "timeIndex": 38,
+            "open": 1.21866,
+            "high": 1.22084,
+            "low": 1.21675,
+            "close": 1.21944
+          },
+          {
+            "timeIndex": 39,
+            "open": 1.21944,
+            "high": 1.22284,
+            "low": 1.21826,
+            "close": 1.22132
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 1.21833,
+            "maximumPrice": 1.2244,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 1.22873,
+            "maximumPrice": 1.23479,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 1.24173,
+            "maximumPrice": 1.24779,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 1.25212,
+            "maximumPrice": 1.25819,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "4a85b5d0d000f6cd76b094b01fa7a2204818bb7cf5c5b6359e76a82ef55b4ae0"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-010",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: broker",
+        "zh": "独立情境分析：评估经纪商、流动性提供者与执行质量"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of assessing brokers, liquidity providers and execution quality using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析评估经纪商、流动性提供者与执行质量的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "9201bca39bbbc13425767fa14727af4d4168304b7d3d6c0d1b8569bc0e4040e6"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-010",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: broker",
+        "zh": "实践展示：评估经纪商、流动性提供者与执行质量"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate assessing brokers, liquidity providers and execution quality. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示评估经纪商、流动性提供者与执行质量。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "fdae825672c0a5d44728648b0a4a49bee22a8dcab9802528c46aa0503b859e0d"
+    }
+  ]
+}

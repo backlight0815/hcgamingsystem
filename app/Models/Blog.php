@@ -9,6 +9,12 @@ class Blog extends Model
 {
     use HasFactory;
     protected $guarded =[];
+
+    public function scopeStorefront($query)
+    {
+        return $query->where('blog_title', 'not like', '[Demo]%')
+            ->where('blog_title', 'not like', '??%');
+    }
     // protected $table = 'blogs';
 
     // protected $fillable = ['page_views']; // Add this line

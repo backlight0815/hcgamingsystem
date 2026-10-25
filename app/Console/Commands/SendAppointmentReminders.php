@@ -14,6 +14,7 @@ class SendAppointmentReminders extends Command
 
     public function handle(): int
     {
+        if (!\App\Support\TradingSubmodules::enabled('appointments')) return self::SUCCESS;
         $now = now();
         $windowEnd = $now->copy()->addMinutes(15);
         $sent = 0;

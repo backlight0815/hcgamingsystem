@@ -12,6 +12,7 @@ class TradingBlog extends Model
     use HasFactory;
 
     public const STATUS_DRAFT = 'draft';
+
     public const STATUS_PUBLISHED = 'published';
 
     protected $fillable = [
@@ -26,13 +27,17 @@ class TradingBlog extends Model
         'is_featured',
         'published_at',
         'author_id',
+        'source',
+        'client_request_id',
         'views',
+        'version',
     ];
 
     protected $casts = [
         'is_featured' => 'boolean',
         'published_at' => 'datetime',
         'views' => 'integer',
+        'version' => 'integer',
     ];
 
     public static function categories(): array
@@ -67,6 +72,11 @@ class TradingBlog extends Model
             ->where('status', self::STATUS_PUBLISHED)
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now());
+    }
+
+    public function scopeWebsitePublished(Builder $query): Builder
+    {
+        return $query->published()->where('title', 'not like', '[Demo]%');
     }
 
     public function getCategoryLabelAttribute(): string

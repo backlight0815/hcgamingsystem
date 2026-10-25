@@ -1,0 +1,26 @@
+{
+  "generatedDate": "2026-06-28",
+  "appName": "HC Trader",
+  "targetUsers": [
+    "Admin teams",
+    "Trading leaders and recruiters",
+    "Traders and lead clients",
+    "Market analysts and signal teams",
+    "Support and operations staff"
+  ],
+  "featureGroups": [
+    "Multi-role operations",
+    "Journal and insights",
+    "Trading hub",
+    "Verification and control",
+    "Referral growth engine",
+    "Bilingual experience"
+  ],
+  "confirmedFeatures": 22,
+  "requiresConfirmation": 3,
+  "files": [
+    "app_marketing_poster.html",
+    "App_Marketing_Overview.md",
+    "App_Marketing_Overview.docx"
+  ]
+}

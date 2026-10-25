@@ -1,0 +1,640 @@
+{
+  "theme": {
+    "id": "CW-078",
+    "code": "CW-078",
+    "title": {
+      "en": "Managing Open Trades Without Moving Risk Boundaries Emotionally",
+      "zh": "管理持仓时避免情绪化移动风险边界"
+    },
+    "shortTitle": {
+      "en": "trade management",
+      "zh": "管理持仓时避免情绪化移动风险边界"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates managing open trades without moving risk boundaries emotionally using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示管理持仓时避免情绪化移动风险边界。"
+    },
+    "categoryId": "trade_execution",
+    "categoryName": {
+      "en": "Trade Planning and Execution",
+      "zh": "交易计划与执行"
+    },
+    "difficulty": "advanced",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind managing open trades without moving risk boundaries emotionally.",
+        "Apply managing open trades without moving risk boundaries emotionally to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释管理持仓时避免情绪化移动风险边界背后的核心决策规则。",
+        "将管理持仓时避免情绪化移动风险边界应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "trade management",
+      "break even",
+      "discipline",
+      "XAUUSD",
+      "Trade Planning and Execution"
+    ],
+    "searchTokens": [
+      "cw-078",
+      "CW-078",
+      "trade_execution",
+      "trade planning and execution",
+      "交易计划与执行",
+      "managing",
+      "open",
+      "trades",
+      "without",
+      "moving",
+      "risk",
+      "boundaries",
+      "emotionally",
+      "管理持仓时避免情绪化移动风险边界",
+      "trade",
+      "management",
+      "break",
+      "even",
+      "discipline",
+      "xauusd",
+      "planning",
+      "and",
+      "execution"
+    ],
+    "difficultyOrder": 3,
+    "estimatedMinutes": 90,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 78,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "ba15b6c62a458ec31fa4fdb16ebf27e2d651196300f8fd81087ab8279cf6955f"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-078",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for trade management",
+        "zh": "管理持仓时避免情绪化移动风险边界的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which method produces the most auditable conclusion about managing open trades without moving risk boundaries emotionally?",
+        "zh": "哪种方法能够对管理持仓时避免情绪化移动风险边界得出最可审核的结论？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing managing open trades without moving risk boundaries emotionally.",
+            "zh": "评估管理持仓时避免情绪化移动风险边界时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "32b6c99251a96af7a30716207df9eaebfa51d69f292f665d71be535a13904309"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-078",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying trade management Under Uncertainty",
+        "zh": "在不确定性下应用管理持仓时避免情绪化移动风险边界"
+      },
+      "prompt": {
+        "en": "Higher- and lower-timeframe evidence disagree about managing open trades without moving risk boundaries emotionally. What is the most defensible response?",
+        "zh": "高低时间周期对管理持仓时避免情绪化移动风险边界的证据不一致。哪种反应最合理？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "1ea354c3eedbf023b977a1b86b4f964a83d12e5d962832bea4e3e1f66572411f"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-078",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "XAUUSD Chart Interpretation for trade management",
+        "zh": "XAUUSD图表中的管理持仓时避免情绪化移动风险边界解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational XAUUSD H1 chart. Which labelled zone is the strongest decision area for evaluating managing open trades without moving risk boundaries emotionally while keeping invalidation visible?",
+        "zh": "研究合成教学用XAUUSD H1图表。哪个标记区域最适合评估管理持仓时避免情绪化移动风险边界，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "XAUUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 2334.98,
+            "high": 2337.21,
+            "low": 2332.06,
+            "close": 2333.02
+          },
+          {
+            "timeIndex": 1,
+            "open": 2333.02,
+            "high": 2334.71,
+            "low": 2330.06,
+            "close": 2331.86
+          },
+          {
+            "timeIndex": 2,
+            "open": 2331.86,
+            "high": 2333.86,
+            "low": 2329.72,
+            "close": 2332.58
+          },
+          {
+            "timeIndex": 3,
+            "open": 2332.58,
+            "high": 2337.23,
+            "low": 2330.78,
+            "close": 2335.1
+          },
+          {
+            "timeIndex": 4,
+            "open": 2335.1,
+            "high": 2340.07,
+            "low": 2334.14,
+            "close": 2338.02
+          },
+          {
+            "timeIndex": 5,
+            "open": 2338.02,
+            "high": 2340.86,
+            "low": 2336.28,
+            "close": 2339.76
+          },
+          {
+            "timeIndex": 6,
+            "open": 2339.76,
+            "high": 2341.61,
+            "low": 2337.62,
+            "close": 2339.77
+          },
+          {
+            "timeIndex": 7,
+            "open": 2339.77,
+            "high": 2341.99,
+            "low": 2336.81,
+            "close": 2338.66
+          },
+          {
+            "timeIndex": 8,
+            "open": 2338.66,
+            "high": 2340.26,
+            "low": 2336.25,
+            "close": 2337.29
+          },
+          {
+            "timeIndex": 9,
+            "open": 2337.29,
+            "high": 2338.68,
+            "low": 2334.26,
+            "close": 2335.95
+          },
+          {
+            "timeIndex": 10,
+            "open": 2335.95,
+            "high": 2338.12,
+            "low": 2332.47,
+            "close": 2334.6
+          },
+          {
+            "timeIndex": 11,
+            "open": 2334.6,
+            "high": 2336.59,
+            "low": 2331.74,
+            "close": 2333.64
+          },
+          {
+            "timeIndex": 12,
+            "open": 2333.64,
+            "high": 2334.91,
+            "low": 2332.53,
+            "close": 2333.93
+          },
+          {
+            "timeIndex": 13,
+            "open": 2333.93,
+            "high": 2337.85,
+            "low": 2332.3,
+            "close": 2335.94
+          },
+          {
+            "timeIndex": 14,
+            "open": 2335.94,
+            "high": 2341.11,
+            "low": 2333.82,
+            "close": 2338.91
+          },
+          {
+            "timeIndex": 15,
+            "open": 2338.91,
+            "high": 2342.7,
+            "low": 2336.98,
+            "close": 2341.2
+          },
+          {
+            "timeIndex": 16,
+            "open": 2341.2,
+            "high": 2343.06,
+            "low": 2340.02,
+            "close": 2341.56
+          },
+          {
+            "timeIndex": 17,
+            "open": 2341.56,
+            "high": 2343.76,
+            "low": 2338.59,
+            "close": 2340.16
+          },
+          {
+            "timeIndex": 18,
+            "open": 2340.16,
+            "high": 2342.08,
+            "low": 2336.06,
+            "close": 2338.17
+          },
+          {
+            "timeIndex": 19,
+            "open": 2338.17,
+            "high": 2339.15,
+            "low": 2334.65,
+            "close": 2336.62
+          },
+          {
+            "timeIndex": 20,
+            "open": 2336.62,
+            "high": 2338.61,
+            "low": 2334.49,
+            "close": 2335.74
+          },
+          {
+            "timeIndex": 21,
+            "open": 2335.74,
+            "high": 2337.92,
+            "low": 2333.86,
+            "close": 2335.36
+          },
+          {
+            "timeIndex": 22,
+            "open": 2335.36,
+            "high": 2337.06,
+            "low": 2333.28,
+            "close": 2335.67
+          },
+          {
+            "timeIndex": 23,
+            "open": 2335.67,
+            "high": 2338.74,
+            "low": 2333.66,
+            "close": 2337.14
+          },
+          {
+            "timeIndex": 24,
+            "open": 2337.14,
+            "high": 2341.91,
+            "low": 2335.81,
+            "close": 2339.7
+          },
+          {
+            "timeIndex": 25,
+            "open": 2339.7,
+            "high": 2344.03,
+            "low": 2338.26,
+            "close": 2342.19
+          },
+          {
+            "timeIndex": 26,
+            "open": 2342.19,
+            "high": 2344.21,
+            "low": 2340.13,
+            "close": 2343.12
+          },
+          {
+            "timeIndex": 27,
+            "open": 2343.12,
+            "high": 2345.16,
+            "low": 2339.87,
+            "close": 2341.91
+          },
+          {
+            "timeIndex": 28,
+            "open": 2341.91,
+            "high": 2344.05,
+            "low": 2338.09,
+            "close": 2339.49
+          },
+          {
+            "timeIndex": 29,
+            "open": 2339.49,
+            "high": 2340.78,
+            "low": 2336.02,
+            "close": 2337.39
+          },
+          {
+            "timeIndex": 30,
+            "open": 2337.39,
+            "high": 2339.08,
+            "low": 2334.48,
+            "close": 2336.51
+          },
+          {
+            "timeIndex": 31,
+            "open": 2336.51,
+            "high": 2338.93,
+            "low": 2334.44,
+            "close": 2336.71
+          },
+          {
+            "timeIndex": 32,
+            "open": 2336.71,
+            "high": 2339.25,
+            "low": 2335.24,
+            "close": 2337.49
+          },
+          {
+            "timeIndex": 33,
+            "open": 2337.49,
+            "high": 2340,
+            "low": 2336.2,
+            "close": 2338.79
+          },
+          {
+            "timeIndex": 34,
+            "open": 2338.79,
+            "high": 2342.84,
+            "low": 2336.8,
+            "close": 2340.75
+          },
+          {
+            "timeIndex": 35,
+            "open": 2340.75,
+            "high": 2345.03,
+            "low": 2338.65,
+            "close": 2342.94
+          },
+          {
+            "timeIndex": 36,
+            "open": 2342.94,
+            "high": 2345.39,
+            "low": 2341.41,
+            "close": 2344.22
+          },
+          {
+            "timeIndex": 37,
+            "open": 2344.22,
+            "high": 2345.99,
+            "low": 2342.33,
+            "close": 2343.55
+          },
+          {
+            "timeIndex": 38,
+            "open": 2343.55,
+            "high": 2345.78,
+            "low": 2339.21,
+            "close": 2341.17
+          },
+          {
+            "timeIndex": 39,
+            "open": 2341.17,
+            "high": 2342.84,
+            "low": 2336.44,
+            "close": 2338.55
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 2330.37,
+            "maximumPrice": 2332.65,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 2334.28,
+            "maximumPrice": 2336.55,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 2339.16,
+            "maximumPrice": 2341.43,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 2343.06,
+            "maximumPrice": 2345.34,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "8267df55025ce4af26f242bc03f1a3130c8fe33c63b471936bc03c96e8d6d392"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-078",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: trade management",
+        "zh": "独立情境分析：管理持仓时避免情绪化移动风险边界"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of managing open trades without moving risk boundaries emotionally using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析管理持仓时避免情绪化移动风险边界的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "be437c468bef31faf2f6f8727da31279f4430ec29bc65b09b98b3696f26ac857"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-078",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: trade management",
+        "zh": "实践展示：管理持仓时避免情绪化移动风险边界"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate managing open trades without moving risk boundaries emotionally. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示管理持仓时避免情绪化移动风险边界。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "39fc838fdde68a2ba0713e7152d57e5a277b5b6fe2a51c142c2b80906ca49280"
+    }
+  ]
+}

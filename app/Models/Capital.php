@@ -11,9 +11,20 @@ class Capital extends Model
 
     protected $fillable = [
         'user_id',
+        'trading_account_id',
         'deposit_date',
         'amount',
         'type',
         'notes',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function tradingAccount()
+    {
+        return $this->belongsTo(TradingAccount::class);
+    }
 }

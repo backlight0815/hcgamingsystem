@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "329508345935",
+    "project_id": "hcgaming-31d5d",
+    "storage_bucket": "hcgaming-31d5d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329508345935:android:146b49d5d335c53cca323a",
+        "android_client_info": {
+          "package_name": "com.hcgaming.hc_trader"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUrwPzlEzcSvKdupMAyfxxqRxVneEBZq8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

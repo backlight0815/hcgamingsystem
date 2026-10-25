@@ -1,0 +1,638 @@
+{
+  "theme": {
+    "id": "CW-025",
+    "code": "CW-025",
+    "title": {
+      "en": "Validating Key Zones Through Departure, Return and Context",
+      "zh": "通过离开、回测与语境验证关键区域"
+    },
+    "shortTitle": {
+      "en": "zone validation",
+      "zh": "通过离开、回测与语境验证关键区域"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates validating key zones through departure, return and context using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示通过离开、回测与语境验证关键区域。"
+    },
+    "categoryId": "key_levels",
+    "categoryName": {
+      "en": "Support, Resistance and Key Levels",
+      "zh": "支撑、阻力与关键价位"
+    },
+    "difficulty": "beginner",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind validating key zones through departure, return and context.",
+        "Apply validating key zones through departure, return and context to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释通过离开、回测与语境验证关键区域背后的核心决策规则。",
+        "将通过离开、回测与语境验证关键区域应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "zone validation",
+      "departure",
+      "retest",
+      "USDJPY",
+      "Support, Resistance and Key Levels"
+    ],
+    "searchTokens": [
+      "cw-025",
+      "CW-025",
+      "key_levels",
+      "support, resistance and key levels",
+      "支撑、阻力与关键价位",
+      "validating",
+      "key",
+      "zones",
+      "through",
+      "departure",
+      "return",
+      "and",
+      "context",
+      "通过离开、回测与语境验证关键区域",
+      "zone",
+      "validation",
+      "retest",
+      "usdjpy",
+      "support,",
+      "resistance",
+      "levels"
+    ],
+    "difficultyOrder": 1,
+    "estimatedMinutes": 55,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 25,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "d2bb3cc5aa828f552a5ed40a9c1f7de1e37da32c8c032c5d11742f22833798d4"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-025",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for zone validation",
+        "zh": "通过离开、回测与语境验证关键区域的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which observation provides the strongest objective basis for validating key zones through departure, return and context?",
+        "zh": "哪项观察为通过离开、回测与语境验证关键区域提供最强的客观依据？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing validating key zones through departure, return and context.",
+            "zh": "评估通过离开、回测与语境验证关键区域时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "7db6609a0293afdc35faf47c96f254ec7a4070855c4c7063ccbb6b0e48bac725"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-025",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying zone validation Under Uncertainty",
+        "zh": "在不确定性下应用通过离开、回测与语境验证关键区域"
+      },
+      "prompt": {
+        "en": "A previous example of validating key zones through departure, return and context was profitable, but current evidence is incomplete. What is the sound conclusion?",
+        "zh": "之前的通过离开、回测与语境验证关键区域案例曾盈利，但当前证据不完整。合理结论是什么？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "9176a18ed80e642d2b0503d3fca5911991a973b5dc341f42fef5c40167086997"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-025",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "USDJPY Chart Interpretation for zone validation",
+        "zh": "USDJPY图表中的通过离开、回测与语境验证关键区域解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational USDJPY H1 chart. Which labelled zone is the strongest decision area for evaluating validating key zones through departure, return and context while keeping invalidation visible?",
+        "zh": "研究合成教学用USDJPY H1图表。哪个标记区域最适合评估通过离开、回测与语境验证关键区域，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "USDJPY",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 152.107,
+            "high": 152.318,
+            "low": 151.662,
+            "close": 151.806
+          },
+          {
+            "timeIndex": 1,
+            "open": 151.806,
+            "high": 151.927,
+            "low": 151.454,
+            "close": 151.661
+          },
+          {
+            "timeIndex": 2,
+            "open": 151.661,
+            "high": 151.9,
+            "low": 151.456,
+            "close": 151.725
+          },
+          {
+            "timeIndex": 3,
+            "open": 151.725,
+            "high": 152.129,
+            "low": 151.586,
+            "close": 151.907
+          },
+          {
+            "timeIndex": 4,
+            "open": 151.907,
+            "high": 152.211,
+            "low": 151.77,
+            "close": 152.041
+          },
+          {
+            "timeIndex": 5,
+            "open": 152.041,
+            "high": 152.169,
+            "low": 151.825,
+            "close": 152.029
+          },
+          {
+            "timeIndex": 6,
+            "open": 152.029,
+            "high": 152.242,
+            "low": 151.679,
+            "close": 151.886
+          },
+          {
+            "timeIndex": 7,
+            "open": 151.886,
+            "high": 152.091,
+            "low": 151.538,
+            "close": 151.684
+          },
+          {
+            "timeIndex": 8,
+            "open": 151.684,
+            "high": 151.794,
+            "low": 151.326,
+            "close": 151.456
+          },
+          {
+            "timeIndex": 9,
+            "open": 151.456,
+            "high": 151.64,
+            "low": 150.997,
+            "close": 151.197
+          },
+          {
+            "timeIndex": 10,
+            "open": 151.197,
+            "high": 151.419,
+            "low": 150.725,
+            "close": 150.934
+          },
+          {
+            "timeIndex": 11,
+            "open": 150.934,
+            "high": 151.094,
+            "low": 150.609,
+            "close": 150.762
+          },
+          {
+            "timeIndex": 12,
+            "open": 150.762,
+            "high": 150.908,
+            "low": 150.639,
+            "close": 150.77
+          },
+          {
+            "timeIndex": 13,
+            "open": 150.77,
+            "high": 151.154,
+            "low": 150.573,
+            "close": 150.937
+          },
+          {
+            "timeIndex": 14,
+            "open": 150.937,
+            "high": 151.317,
+            "low": 150.726,
+            "close": 151.118
+          },
+          {
+            "timeIndex": 15,
+            "open": 151.118,
+            "high": 151.254,
+            "low": 150.959,
+            "close": 151.155
+          },
+          {
+            "timeIndex": 16,
+            "open": 151.155,
+            "high": 151.346,
+            "low": 150.887,
+            "close": 151.002
+          },
+          {
+            "timeIndex": 17,
+            "open": 151.002,
+            "high": 151.222,
+            "low": 150.547,
+            "close": 150.74
+          },
+          {
+            "timeIndex": 18,
+            "open": 150.74,
+            "high": 150.89,
+            "low": 150.26,
+            "close": 150.473
+          },
+          {
+            "timeIndex": 19,
+            "open": 150.473,
+            "high": 150.622,
+            "low": 150.077,
+            "close": 150.242
+          },
+          {
+            "timeIndex": 20,
+            "open": 150.242,
+            "high": 150.462,
+            "low": 149.933,
+            "close": 150.041
+          },
+          {
+            "timeIndex": 21,
+            "open": 150.041,
+            "high": 150.233,
+            "low": 149.704,
+            "close": 149.892
+          },
+          {
+            "timeIndex": 22,
+            "open": 149.892,
+            "high": 149.989,
+            "low": 149.644,
+            "close": 149.858
+          },
+          {
+            "timeIndex": 23,
+            "open": 149.858,
+            "high": 150.171,
+            "low": 149.687,
+            "close": 149.973
+          },
+          {
+            "timeIndex": 24,
+            "open": 149.973,
+            "high": 150.373,
+            "low": 149.872,
+            "close": 150.155
+          },
+          {
+            "timeIndex": 25,
+            "open": 150.155,
+            "high": 150.385,
+            "low": 149.972,
+            "close": 150.245
+          },
+          {
+            "timeIndex": 26,
+            "open": 150.245,
+            "high": 150.404,
+            "low": 149.916,
+            "close": 150.13
+          },
+          {
+            "timeIndex": 27,
+            "open": 150.13,
+            "high": 150.352,
+            "low": 149.664,
+            "close": 149.84
+          },
+          {
+            "timeIndex": 28,
+            "open": 149.84,
+            "high": 150.025,
+            "low": 149.419,
+            "close": 149.512
+          },
+          {
+            "timeIndex": 29,
+            "open": 149.512,
+            "high": 149.621,
+            "low": 149.082,
+            "close": 149.26
+          },
+          {
+            "timeIndex": 30,
+            "open": 149.26,
+            "high": 149.464,
+            "low": 148.89,
+            "close": 149.104
+          },
+          {
+            "timeIndex": 31,
+            "open": 149.104,
+            "high": 149.318,
+            "low": 148.832,
+            "close": 149.014
+          },
+          {
+            "timeIndex": 32,
+            "open": 149.014,
+            "high": 149.143,
+            "low": 148.886,
+            "close": 148.985
+          },
+          {
+            "timeIndex": 33,
+            "open": 148.985,
+            "high": 149.214,
+            "low": 148.812,
+            "close": 149.046
+          },
+          {
+            "timeIndex": 34,
+            "open": 149.046,
+            "high": 149.406,
+            "low": 148.832,
+            "close": 149.183
+          },
+          {
+            "timeIndex": 35,
+            "open": 149.183,
+            "high": 149.467,
+            "low": 148.997,
+            "close": 149.291
+          },
+          {
+            "timeIndex": 36,
+            "open": 149.291,
+            "high": 149.411,
+            "low": 149.125,
+            "close": 149.232
+          },
+          {
+            "timeIndex": 37,
+            "open": 149.232,
+            "high": 149.441,
+            "low": 148.799,
+            "close": 148.966
+          },
+          {
+            "timeIndex": 38,
+            "open": 148.966,
+            "high": 149.175,
+            "low": 148.384,
+            "close": 148.597
+          },
+          {
+            "timeIndex": 39,
+            "open": 148.597,
+            "high": 148.715,
+            "low": 148.097,
+            "close": 148.288
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 148.266,
+            "maximumPrice": 148.857,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 149.279,
+            "maximumPrice": 149.87,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 150.545,
+            "maximumPrice": 151.136,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 151.558,
+            "maximumPrice": 152.149,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "605859c1bdd00997a3b41f697c47fbd3bf8bb0b44e612c2b320f9b0ffc860976"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-025",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: zone validation",
+        "zh": "独立情境分析：通过离开、回测与语境验证关键区域"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of validating key zones through departure, return and context using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析通过离开、回测与语境验证关键区域的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "f0411cf257daf1c94eeab25d5c026e5bb1b0c9608a8c5d5e46104578870857ff"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-025",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: zone validation",
+        "zh": "实践展示：通过离开、回测与语境验证关键区域"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate validating key zones through departure, return and context. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示通过离开、回测与语境验证关键区域。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "8cba7253639f2cff04a262aa2172707ca3a6141c01c457f089098f63692451c1"
+    }
+  ]
+}

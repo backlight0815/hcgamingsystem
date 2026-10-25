@@ -9,7 +9,7 @@
         gap: 8px;
         align-items: center;
         margin: 0 0 18px;
-        color: #718096;
+        color: #526276;
         font-size: 13px;
         font-weight: 700;
         text-transform: uppercase;
@@ -87,7 +87,7 @@
     .commerce-stat span {
         display: block;
         margin-bottom: 10px;
-        color: #718096;
+        color: #526276;
         font-size: 12px;
         font-weight: 800;
         letter-spacing: .06em;
@@ -418,7 +418,7 @@
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
-        color: #64748b;
+        color: #475569;
         font-size: 13px;
     }
 

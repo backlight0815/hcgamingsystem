@@ -109,7 +109,8 @@
 
                             <div class="mb-3">
                                 <label for="published_at" class="form-label">Publish Time</label>
-                                <input type="datetime-local" name="published_at" id="published_at" class="form-control @error('published_at') is-invalid @enderror" value="{{ old('published_at', $blog->published_at ? $blog->published_at->format('Y-m-d\TH:i') : '') }}">
+                                <input type="datetime-local" name="published_at" id="published_at" class="form-control @error('published_at') is-invalid @enderror" value="{{ old('published_at', $blog->published_at ? $blog->published_at->copy()->setTimezone(config('trading_blogs.publication_timezone'))->format('Y-m-d\TH:i') : '') }}">
+                                <div class="form-text">Leave blank to keep the current publish time. Scheduled times use {{ config('trading_blogs.publication_timezone') }}.</div>
                                 @error('published_at') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
 

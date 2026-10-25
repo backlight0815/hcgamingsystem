@@ -1,3 +1,4 @@
+@php($backofficeMode = \App\Support\BackofficeExperience::mode())
 <!doctype html>
 <html lang="en">
 
@@ -5,11 +6,14 @@
 
     <meta charset="utf-8" />
     {{-- <title>Dashboard | HC Gaming</title> --}}
+    @if($backofficeMode !== 'existing')
+        <title>{{ $backofficeMode === 'dealership' ? 'Dealership Overview | HC Dealership' : 'Trading Hub Control Center | HC Trading Hub' }}</title>
+    @endif
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Themesdesign" name="author" />
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('backend/assets/images/hclogo_white.png') }}">
+    <link rel="shortcut icon" href="{{ asset($backofficeMode === 'existing' ? 'backend/assets/images/hclogo_white.png' : 'backend/assets/images/hc-backoffice-mark.svg') }}">
 
     <!-- jquery.vectormap css -->
     <link href="{{ asset('backend/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css') }}"
@@ -34,6 +38,14 @@
     <link href="{{ asset('backend/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="{{ asset('backend/assets/css/app.min.css') }}" id="app-style" rel="stylesheet" type="text/css" />
+    @if($backofficeMode !== 'existing')
+        <link href="{{ asset('backend/assets/css/backoffice-experiences.css') }}" rel="stylesheet" type="text/css" />
+    @else
+        <link href="{{ asset('backend/assets/css/backoffice-contrast.css') }}" rel="stylesheet" type="text/css" />
+    @endif
+    @if(request()->routeIs('all.trading.journals', 'add.trading.journal', 'edit.trading.journal', 'trading.journal.details'))
+        <link href="{{ asset('backend/assets/css/trading-journal-contrast.css') }}?v={{ filemtime(public_path('backend/assets/css/trading-journal-contrast.css')) }}" rel="stylesheet" type="text/css" />
+    @endif
 
     <link rel="stylesheet" type="text/css"
         href="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.css">
@@ -41,9 +53,10 @@
 
     <!-- PWA  -->
     <meta name="theme-color" content="#6777ef" />
-    <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset($backofficeMode === 'existing' ? 'logo.png' : 'backend/assets/images/hc-backoffice-mark.svg') }}">
     <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
+    @if($backofficeMode === 'existing')
     <script src="{{ asset('/sw.js') }}"></script>
     <script>
         if ("serviceWorker" in navigator) {
@@ -58,9 +71,10 @@
             console.error("Service workers are not supported.");
         }
     </script>
+    @endif
 </head>
 
-<body data-topbar="dark">
+<body data-topbar="dark"@if($backofficeMode !== 'existing') data-backoffice-mode="{{ $backofficeMode }}"@endif>
 
     <!-- <body data-layout="horizontal" data-topbar="dark"> -->
 
@@ -71,6 +85,9 @@
 
         <!-- ========== Left Sidebar Start ========== -->
         @include('admin.body.sidebar')
+        @if($backofficeMode !== 'existing')
+            <button class="bo-drawer-backdrop" type="button" aria-label="Close navigation"></button>
+        @endif
         <!-- Left Sidebar End -->
 
 
@@ -131,6 +148,9 @@
     <script src="{{ asset('backend/assets/js/pages/range-sliders.init.js') }}"></script>
     <!-- App js -->
     <script src="{{ asset('backend/assets/js/app.js') }}"></script>
+    @if($backofficeMode !== 'existing')
+        <script defer src="{{ asset('backend/assets/js/backoffice-experiences.js') }}"></script>
+    @endif
 
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

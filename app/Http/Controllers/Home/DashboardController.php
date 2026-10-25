@@ -14,9 +14,12 @@ use App\Models\Referral;
 use App\Models\Service;
 use App\Models\SignalPerformance;
 use App\Models\TradingJournal;
+use App\Models\TradingBlog;
 use App\Models\TradingPositionApplication;
 use App\Models\TradingSignal;
 use App\Models\User;
+use App\Support\BackofficeExperience;
+use App\Support\TradingSubmodules;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -102,7 +105,34 @@ class DashboardController extends Controller
         $dashboardActions = $this->dashboardActions($roleId, $tradingEnabled, $ecommerceEnabled);
         $recentActivity = $this->recentActivity($userId, $roleId, $tradingEnabled, $ecommerceEnabled, $shippingorders);
 
-        return view('admin.dashboard.dashboard', compact(
+        $backofficeMode = BackofficeExperience::mode();
+        $recentSignals = collect();
+        $recentTradingBlogs = collect();
+        $tradingSummary = [];
+        $dealershipSummary = [];
+        if ($backofficeMode === BackofficeExperience::DEALERSHIP && in_array($roleId, [1, 2], true)) {
+            $dealershipSummary = [
+                $this->metric('Platform Products', $this->formatNumber($products), 'All catalog records', 'ri-box-3-line', 'primary'),
+                $this->metric('Processing Orders', $this->formatNumber($ProcessingCount), 'Across all accounts', 'ri-time-line', 'warning'),
+                $this->metric('Completed Orders', $this->formatNumber($CompleteCount), 'Across all accounts', 'ri-checkbox-circle-line', 'success'),
+                $this->metric('Approved Sales', $this->formatCurrency($systemTotalSales), 'Platform approved order value', 'ri-money-dollar-circle-line', 'info'),
+            ];
+        }
+        if ($backofficeMode === BackofficeExperience::TRADING) {
+            $publishedSignals = TradingSignal::published()
+                ->whereNotNull('published_at')
+                ->where('published_at', '<=', now());
+            $tradingSummary = [
+                $this->metric('Published Signals', (string) (clone $publishedSignals)->count(), 'Released signal records', 'ri-signal-tower-line', 'primary'),
+                $this->metric('Open Signals', (string) (clone $publishedSignals)->where('workflow_status', TradingSignal::WORKFLOW_PUBLISHED)->where('status', 1)->count(), 'Published workflow state', 'ri-pulse-line', 'info'),
+                $this->metric('Closed Signals', (string) (clone $publishedSignals)->where('workflow_status', TradingSignal::WORKFLOW_CLOSED)->count(), 'Closed workflow state', 'ri-checkbox-circle-line', 'secondary'),
+                $this->metric('Research Articles', (string) TradingBlog::websitePublished()->count(), 'Published on the website', 'ri-article-line', 'warning'),
+            ];
+            $recentSignals = (clone $publishedSignals)->orderByDesc('published_at')->limit(5)->get();
+            $recentTradingBlogs = TradingBlog::websitePublished()->orderByDesc('published_at')->limit(5)->get();
+        }
+
+        return view($backofficeMode === BackofficeExperience::EXISTING ? 'admin.dashboard.dashboard' : 'admin.dashboard.specialized', compact(
             'shippingordersCount',
             'shippingorders',
             'ProcessingCount',
@@ -125,7 +155,12 @@ class DashboardController extends Controller
             'dashboardActions',
             'recentActivity',
             'tradingEnabled',
-            'ecommerceEnabled'
+            'ecommerceEnabled',
+            'backofficeMode',
+            'recentSignals',
+            'recentTradingBlogs',
+            'tradingSummary',
+            'dealershipSummary'
         ));
     }
 
@@ -227,9 +262,9 @@ class DashboardController extends Controller
                 $metrics[] = $this->metric('Traders', $this->formatNumber(User::where('role_id', 750)->count()), 'Trader accounts', 'ri-user-star-line', 'warning');
                 $metrics[] = $this->metric('Leaders', $this->formatNumber(User::where('role_id', TradingPositionApplication::ROLE_LEADERSHIP)->count()), 'Trading leadership', 'ri-user-follow-line', 'success');
                 $metrics[] = $this->metric('Recruiters', $this->formatNumber(User::where('role_id', TradingPositionApplication::ROLE_RECRUITER)->count()), 'Trading recruiters', 'ri-user-add-line', 'info');
-                $metrics[] = $this->metric('Active Signals', $this->formatNumber($this->activeSignalsCount()), 'Signals currently in play', 'ri-signal-tower-line', 'danger');
-                $metrics[] = $this->metric('Market Analyses', $this->formatNumber(MarketAnalysis::count()), 'Published analysis records', 'ri-line-chart-line', 'info');
-                $metrics[] = $this->metric('Trading P/L', $this->formatCurrency($tradeSummary['net_profit_loss']), 'All journal records', 'ri-funds-line', $tradeSummary['net_profit_loss'] >= 0 ? 'success' : 'danger');
+                if (TradingSubmodules::enabled('trading_signals')) $metrics[] = $this->metric('Active Signals', $this->formatNumber($this->activeSignalsCount()), 'Signals currently in play', 'ri-signal-tower-line', 'danger');
+                if (TradingSubmodules::enabled('market_analyst')) $metrics[] = $this->metric('Market Analyses', $this->formatNumber(MarketAnalysis::count()), 'Published analysis records', 'ri-line-chart-line', 'info');
+                if (TradingSubmodules::enabled('trading_journal')) $metrics[] = $this->metric('Trading P/L', $this->formatCurrency($tradeSummary['net_profit_loss']), 'All journal records', 'ri-funds-line', $tradeSummary['net_profit_loss'] >= 0 ? 'success' : 'danger');
             }
 
             return $metrics;
@@ -267,6 +302,7 @@ class DashboardController extends Controller
         }
 
         if ($roleId === 501) {
+            if (!TradingSubmodules::enabled('market_analyst')) return [];
             return [
                 $this->metric('Analyses', $this->formatNumber(MarketAnalysis::count()), 'Total market outlooks', 'ri-line-chart-line', 'primary'),
                 $this->metric('This Month', $this->formatNumber(MarketAnalysis::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count()), 'Fresh analysis cadence', 'ri-calendar-check-line', 'success'),
@@ -276,6 +312,7 @@ class DashboardController extends Controller
         }
 
         if (in_array($roleId, [201, 202], true)) {
+            if (!TradingSubmodules::enabled('trading_signals')) return [];
             $signalSummary = $this->signalSummary($userId);
 
             return [
@@ -377,7 +414,7 @@ class DashboardController extends Controller
                 ->all();
         }
 
-        if ($tradingEnabled && in_array($roleId, [201, 202], true)) {
+        if ($tradingEnabled && TradingSubmodules::enabled('trading_signals') && in_array($roleId, [201, 202], true)) {
             return TradingSignal::where('user_id', $userId)
                 ->latest()
                 ->take(6)
@@ -391,7 +428,7 @@ class DashboardController extends Controller
                 ->all();
         }
 
-        if ($tradingEnabled && $roleId === 501) {
+        if ($tradingEnabled && TradingSubmodules::enabled('market_analyst') && $roleId === 501) {
             return MarketAnalysis::latest()
                 ->take(6)
                 ->get()

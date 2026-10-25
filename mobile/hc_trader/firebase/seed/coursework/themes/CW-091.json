@@ -1,0 +1,640 @@
+{
+  "theme": {
+    "id": "CW-091",
+    "code": "CW-091",
+    "title": {
+      "en": "Building a Trading Journal That Records Decisions, Not Just Results",
+      "zh": "建立记录决策而非仅记录结果的交易日志"
+    },
+    "shortTitle": {
+      "en": "trade journal",
+      "zh": "建立记录决策而非仅记录结果的交易日志"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates building a trading journal that records decisions, not just results using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示建立记录决策而非仅记录结果的交易日志。"
+    },
+    "categoryId": "journal_review",
+    "categoryName": {
+      "en": "Trading Journal and Performance Review",
+      "zh": "交易日志与绩效复盘"
+    },
+    "difficulty": "advanced",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind building a trading journal that records decisions, not just results.",
+        "Apply building a trading journal that records decisions, not just results to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释建立记录决策而非仅记录结果的交易日志背后的核心决策规则。",
+        "将建立记录决策而非仅记录结果的交易日志应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "trade journal",
+      "decision",
+      "result",
+      "NAS100",
+      "Trading Journal and Performance Review"
+    ],
+    "searchTokens": [
+      "cw-091",
+      "CW-091",
+      "journal_review",
+      "trading journal and performance review",
+      "交易日志与绩效复盘",
+      "building",
+      "a",
+      "trading",
+      "journal",
+      "that",
+      "records",
+      "decisions",
+      "not",
+      "just",
+      "results",
+      "建立记录决策而非仅记录结果的交易日志",
+      "trade",
+      "decision",
+      "result",
+      "nas100",
+      "and",
+      "performance",
+      "review"
+    ],
+    "difficultyOrder": 3,
+    "estimatedMinutes": 90,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 91,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "0c50739df2de17f3bc02b0f32efec5b9abcd972634825d7cbbcaa232b2dbd7f0"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-091",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for trade journal",
+        "zh": "建立记录决策而非仅记录结果的交易日志的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which evidence most reliably shows that building a trading journal that records decisions, not just results is being applied correctly?",
+        "zh": "哪项证据最可靠地表明已正确应用建立记录决策而非仅记录结果的交易日志？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing building a trading journal that records decisions, not just results.",
+            "zh": "评估建立记录决策而非仅记录结果的交易日志时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "71223d3eca33744c5661b8f06e74636ddfa9e7beb4f5f71b9295edd04dd01aac"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-091",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying trade journal Under Uncertainty",
+        "zh": "在不确定性下应用建立记录决策而非仅记录结果的交易日志"
+      },
+      "prompt": {
+        "en": "A trader finds evidence for building a trading journal that records decisions, not just results, but the planned invalidation has already been breached. What is the best response?",
+        "zh": "交易者发现支持建立记录决策而非仅记录结果的交易日志的证据，但计划失效条件已经被突破。最佳做法是什么？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "e0003d22b9a7b25e087f107b4e8704cd3c80b755a4065a0804c2c401f7f2d284"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-091",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "NAS100 Chart Interpretation for trade journal",
+        "zh": "NAS100图表中的建立记录决策而非仅记录结果的交易日志解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational NAS100 H1 chart. Which labelled zone is the strongest decision area for evaluating building a trading journal that records decisions, not just results while keeping invalidation visible?",
+        "zh": "研究合成教学用NAS100 H1图表。哪个标记区域最适合评估建立记录决策而非仅记录结果的交易日志，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "NAS100",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 19167.2,
+            "high": 19224,
+            "low": 19139.9,
+            "close": 19185.2
+          },
+          {
+            "timeIndex": 1,
+            "open": 19185.2,
+            "high": 19217.5,
+            "low": 19146.7,
+            "close": 19195.6
+          },
+          {
+            "timeIndex": 2,
+            "open": 19195.6,
+            "high": 19228.6,
+            "low": 19139.8,
+            "close": 19177.5
+          },
+          {
+            "timeIndex": 3,
+            "open": 19177.5,
+            "high": 19218.8,
+            "low": 19098.4,
+            "close": 19123.7
+          },
+          {
+            "timeIndex": 4,
+            "open": 19123.7,
+            "high": 19154.6,
+            "low": 19026.8,
+            "close": 19052.8
+          },
+          {
+            "timeIndex": 5,
+            "open": 19052.8,
+            "high": 19077.1,
+            "low": 18958.5,
+            "close": 18996.5
+          },
+          {
+            "timeIndex": 6,
+            "open": 18996.5,
+            "high": 19036.3,
+            "low": 18935.8,
+            "close": 18974
+          },
+          {
+            "timeIndex": 7,
+            "open": 18974,
+            "high": 19017.1,
+            "low": 18947.5,
+            "close": 18979.4
+          },
+          {
+            "timeIndex": 8,
+            "open": 18979.4,
+            "high": 19013.6,
+            "low": 18954.7,
+            "close": 18993.8
+          },
+          {
+            "timeIndex": 9,
+            "open": 18993.8,
+            "high": 19039.4,
+            "low": 18956.3,
+            "close": 19004.9
+          },
+          {
+            "timeIndex": 10,
+            "open": 19004.9,
+            "high": 19053.3,
+            "low": 18966.2,
+            "close": 19012.2
+          },
+          {
+            "timeIndex": 11,
+            "open": 19012.2,
+            "high": 19043.4,
+            "low": 18984.4,
+            "close": 19014.2
+          },
+          {
+            "timeIndex": 12,
+            "open": 19014.2,
+            "high": 19040.5,
+            "low": 18976.3,
+            "close": 18999.7
+          },
+          {
+            "timeIndex": 13,
+            "open": 18999.7,
+            "high": 19040.1,
+            "low": 18919.8,
+            "close": 18956.5
+          },
+          {
+            "timeIndex": 14,
+            "open": 18956.5,
+            "high": 18993.1,
+            "low": 18851,
+            "close": 18890
+          },
+          {
+            "timeIndex": 15,
+            "open": 18890,
+            "high": 18907.7,
+            "low": 18797.5,
+            "close": 18826.5
+          },
+          {
+            "timeIndex": 16,
+            "open": 18826.5,
+            "high": 18862.4,
+            "low": 18772.1,
+            "close": 18794.2
+          },
+          {
+            "timeIndex": 17,
+            "open": 18794.2,
+            "high": 18840.5,
+            "low": 18758.1,
+            "close": 18799.8
+          },
+          {
+            "timeIndex": 18,
+            "open": 18799.8,
+            "high": 18852,
+            "low": 18760.4,
+            "close": 18824.6
+          },
+          {
+            "timeIndex": 19,
+            "open": 18824.6,
+            "high": 18872.4,
+            "low": 18794.5,
+            "close": 18844.1
+          },
+          {
+            "timeIndex": 20,
+            "open": 18844.1,
+            "high": 18888.4,
+            "low": 18823.5,
+            "close": 18847.4
+          },
+          {
+            "timeIndex": 21,
+            "open": 18847.4,
+            "high": 18882.7,
+            "low": 18802.5,
+            "close": 18837.7
+          },
+          {
+            "timeIndex": 22,
+            "open": 18837.7,
+            "high": 18856.4,
+            "low": 18777.9,
+            "close": 18817.5
+          },
+          {
+            "timeIndex": 23,
+            "open": 18817.5,
+            "high": 18854.6,
+            "low": 18749.7,
+            "close": 18781
+          },
+          {
+            "timeIndex": 24,
+            "open": 18781,
+            "high": 18821.2,
+            "low": 18705.8,
+            "close": 18725.2
+          },
+          {
+            "timeIndex": 25,
+            "open": 18725.2,
+            "high": 18750.5,
+            "low": 18628.8,
+            "close": 18663.2
+          },
+          {
+            "timeIndex": 26,
+            "open": 18663.2,
+            "high": 18693.2,
+            "low": 18582,
+            "close": 18621.8
+          },
+          {
+            "timeIndex": 27,
+            "open": 18621.8,
+            "high": 18663,
+            "low": 18586.9,
+            "close": 18619.2
+          },
+          {
+            "timeIndex": 28,
+            "open": 18619.2,
+            "high": 18681.2,
+            "low": 18601.3,
+            "close": 18647.4
+          },
+          {
+            "timeIndex": 29,
+            "open": 18647.4,
+            "high": 18698.8,
+            "low": 18614,
+            "close": 18678
+          },
+          {
+            "timeIndex": 30,
+            "open": 18678,
+            "high": 18724.9,
+            "low": 18638.2,
+            "close": 18686.6
+          },
+          {
+            "timeIndex": 31,
+            "open": 18686.6,
+            "high": 18726,
+            "low": 18636.3,
+            "close": 18669.6
+          },
+          {
+            "timeIndex": 32,
+            "open": 18669.6,
+            "high": 18693,
+            "low": 18620.1,
+            "close": 18637.9
+          },
+          {
+            "timeIndex": 33,
+            "open": 18637.9,
+            "high": 18669.7,
+            "low": 18566.7,
+            "close": 18599.2
+          },
+          {
+            "timeIndex": 34,
+            "open": 18599.2,
+            "high": 18640.5,
+            "low": 18512.9,
+            "close": 18552.6
+          },
+          {
+            "timeIndex": 35,
+            "open": 18552.6,
+            "high": 18584.9,
+            "low": 18465.9,
+            "close": 18500.2
+          },
+          {
+            "timeIndex": 36,
+            "open": 18500.2,
+            "high": 18523.1,
+            "low": 18438.1,
+            "close": 18457.3
+          },
+          {
+            "timeIndex": 37,
+            "open": 18457.3,
+            "high": 18496.5,
+            "low": 18413.1,
+            "close": 18444.5
+          },
+          {
+            "timeIndex": 38,
+            "open": 18444.5,
+            "high": 18505.3,
+            "low": 18404.9,
+            "close": 18466.8
+          },
+          {
+            "timeIndex": 39,
+            "open": 18466.8,
+            "high": 18524.6,
+            "low": 18431.6,
+            "close": 18503.3
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 18437.8,
+            "maximumPrice": 18553.2,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 18635.5,
+            "maximumPrice": 18750.9,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 18882.6,
+            "maximumPrice": 18998,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 19080.3,
+            "maximumPrice": 19195.7,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "73b558b6e12b50fe61f9c378a1f1f91a75fb31de0666d363dd2dd1aa17491cc6"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-091",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: trade journal",
+        "zh": "独立情境分析：建立记录决策而非仅记录结果的交易日志"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of building a trading journal that records decisions, not just results using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析建立记录决策而非仅记录结果的交易日志的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "8e1df06e6e6d07e3e2583d08c722aa74fe6fcde99ca080f23ef6d2895cf106e0"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-091",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: trade journal",
+        "zh": "实践展示：建立记录决策而非仅记录结果的交易日志"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate building a trading journal that records decisions, not just results. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示建立记录决策而非仅记录结果的交易日志。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "45dfe867cdbda953782e5cc808df03f594840cbb209c29d50d8bc8a20062251d"
+    }
+  ]
+}

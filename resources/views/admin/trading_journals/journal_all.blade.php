@@ -2,8 +2,16 @@
 @section('admin')
 
 @php
-    $selectedMonth = request('month', 'all');
-    $selectedYear = request('year', 'all');
+    $selectedMonth = $selectedMonth ?? request('month', 'all');
+    $selectedYear = $selectedYear ?? request('year', 'all');
+    $selectedAccountStage = $selectedAccountStage ?? request('account_stage', 'overall');
+    $accountStageOptions = collect($accountStageOptions ?? []);
+    $selectedAccountStageLabel = $selectedAccountStageLabel ?? data_get($accountStageOptions->get($selectedAccountStage), 'short_label', 'Overview');
+    $selectedAccountStageDescription = $selectedAccountStageDescription ?? data_get($accountStageOptions->get($selectedAccountStage), 'description', 'Phase 1 + Phase 2 journal records.');
+    $accountStageComparison = collect($accountStageComparison ?? []);
+    $propFirmModels = collect($propFirmModels ?? []);
+    $selectedPropFirmModel = $selectedPropFirmModel ?? null;
+    $selectedPropFirmPhaseRule = $selectedPropFirmPhaseRule ?? null;
     $journalTime = app(\App\Services\TradingJournalTimeService::class);
     $selectedTimeView = $journalTime->normalizeMode($selectedTimeView ?? request('time_view'));
     $selectedTimeViewOffset = $journalTime->normalizeOffset($selectedTimeViewOffset ?? request('mt5_offset_minutes'), $selectedTimeView);
@@ -13,13 +21,17 @@
     $journalReportQuery = [
         'month' => $selectedMonth,
         'year' => $selectedYear,
-        'source' => 'current',
+        'source' => 'all',
+        'account_stage' => $selectedAccountStage,
         'time_view' => $selectedTimeView,
         'mt5_offset_minutes' => $selectedMt5ViewOffset,
     ];
     $revengeTradeMap = collect(data_get($traderStyleProfile, 'revenge.trade_map', []));
     $gamblingTradeMap = collect(data_get($traderStyleProfile, 'gambling.trade_map', []));
     $behaviorScorePenalty = $behaviorScorePenalty ?? data_get($scoreEvaluationProfile, 'behavior_score_penalty', []);
+    $scoreIsProvisional = (bool) data_get($scoreEvaluationProfile, 'score_is_provisional', false);
+    $displayTotalScore = (float) data_get($scoreEvaluationProfile ?? [], 'score', $totalScore ?? 0);
+    $displayRating = (string) data_get($scoreEvaluationProfile ?? [], 'rating', $rating ?? 'N/A');
     $behaviorWeeklyProfile = $behaviorWeeklyProfile ?? [];
     $behaviorWeeklyMetrics = collect(data_get($behaviorWeeklyProfile, 'metrics', []));
     $behaviorToneBadgeClass = function ($tone) {
@@ -33,17 +45,20 @@
     };
     $netProfitLoss = (float) $totalProfit - (float) $totalLoss;
     $summaryCards = [
+        ['label' => 'Account View', 'value' => $selectedAccountStageLabel, 'icon' => 'mdi-account-switch-outline', 'tone' => 'primary'],
         ['label' => 'Balance', 'value' => number_format((float) $currentBalance, 2) . 'u', 'icon' => 'mdi-wallet-outline', 'tone' => 'primary'],
         ['label' => 'Win Rate', 'value' => number_format((float) $winRate, 2) . '%', 'icon' => 'mdi-target', 'tone' => 'info'],
         ['label' => 'Total Profit', 'value' => number_format((float) $totalProfit, 2) . 'u', 'icon' => 'mdi-trending-up', 'tone' => 'success'],
-        ['label' => 'Total Loss', 'value' => number_format((float) $totalLoss, 2) . 'u', 'icon' => 'mdi-trending-down', 'tone' => 'danger'],
+        ['label' => 'Total Loss', 'value' => number_format((float) $totalLoss, 2) . 'u', 'icon' => 'mdi-trending-down', 'tone' => (float) $totalLoss > 0 ? 'danger' : 'secondary'],
         ['label' => 'Net P/L', 'value' => number_format($netProfitLoss, 2) . 'u', 'icon' => 'mdi-scale-balance', 'tone' => $netProfitLoss >= 0 ? 'success' : 'danger'],
         ['label' => 'Risk Reward', 'value' => is_numeric($averageRRR) ? $averageRRR : 'N/A', 'icon' => 'mdi-chart-timeline-variant', 'tone' => 'secondary'],
         ['label' => 'Growth', 'value' => number_format((float) $growthPercent, 2) . '%', 'icon' => 'mdi-finance', 'tone' => 'success'],
-        ['label' => 'Drawdown', 'value' => number_format((float) $drawdownPercent, 2) . '%', 'icon' => 'mdi-alert-outline', 'tone' => 'danger'],
+        ['label' => 'Drawdown', 'value' => number_format((float) $drawdownPercent, 2) . '%', 'icon' => 'mdi-alert-outline', 'tone' => (float) $drawdownPercent > 0 ? 'danger' : 'success'],
         ['label' => 'Best Day Rule', 'value' => number_format((float) $consistencyPercent, 2) . '%', 'icon' => 'mdi-ruler-square-compass', 'tone' => ($bestDayRule['passed'] ?? false) ? 'success' : 'warning'],
         ['label' => '2% Gross Profit', 'value' => number_format((float) data_get($grossProfitRule, 'achieved_percent', 0), 2) . '%', 'icon' => 'mdi-cash-plus', 'tone' => data_get($grossProfitRule, 'passed', false) ? 'success' : 'warning'],
         ['label' => 'Trader Style', 'value' => data_get($traderStyleProfile, 'style_label', 'N/A'), 'icon' => 'mdi-brain', 'tone' => data_get($traderStyleProfile, 'tone', 'secondary')],
+        ['label' => 'Final Behaviour', 'value' => number_format((float) data_get($traderStyleProfile, 'final_score', data_get($traderStyleProfile, 'risk_score', 0)), 2) . '/100', 'icon' => 'mdi-shield-search', 'tone' => data_get($traderStyleProfile, 'tone', 'secondary')],
+        ['label' => 'Confidence', 'value' => number_format((float) data_get($traderStyleProfile, 'confidence_score', 0), 2) . '/100', 'icon' => 'mdi-check-decagram-outline', 'tone' => (float) data_get($traderStyleProfile, 'confidence_score', 0) < 50 ? 'warning' : 'success'],
         ['label' => 'Revenge Tier', 'value' => data_get($traderStyleProfile, 'revenge.status', 'N/A'), 'icon' => 'mdi-emoticon-angry-outline', 'tone' => data_get($traderStyleProfile, 'revenge.tier_tone', data_get($traderStyleProfile, 'revenge.tone', 'secondary'))],
         ['label' => 'Gambling Tier', 'value' => data_get($traderStyleProfile, 'gambling.status', 'N/A'), 'icon' => 'mdi-dice-multiple-outline', 'tone' => data_get($traderStyleProfile, 'gambling.tier_tone', data_get($traderStyleProfile, 'gambling.tone', 'secondary'))],
         ['label' => 'Behaviour Penalty', 'value' => '-' . number_format((float) data_get($behaviorScorePenalty, 'points', 0), 2) . ' pts', 'icon' => 'mdi-shield-alert-outline', 'tone' => data_get($behaviorScorePenalty, 'tone', 'success')],
@@ -52,7 +67,7 @@
         ['label' => 'Position Consistency', 'value' => number_format((float) data_get($positionProfile, 'score', 0), 2) . '/100', 'icon' => 'mdi-chart-bell-curve-cumulative', 'tone' => data_get($positionProfile, 'is_dynamic', false) ? 'warning' : 'info'],
         ['label' => 'Avg Duration', 'value' => $durationProfile['average_label'] ?? '0m', 'icon' => 'mdi-timer-outline', 'tone' => 'secondary'],
         ['label' => 'Expectancy', 'value' => number_format((float) $expectancy, 2), 'icon' => 'mdi-calculator-variant-outline', 'tone' => 'info'],
-        ['label' => 'Grade', 'value' => $rating, 'icon' => 'mdi-medal-outline', 'tone' => 'dark'],
+        ['label' => 'Grade', 'value' => $displayRating, 'icon' => 'mdi-medal-outline', 'tone' => $scoreIsProvisional ? 'warning' : 'dark'],
     ];
 @endphp
 
@@ -176,7 +191,7 @@
 
     .journal-filter {
         display: grid;
-        grid-template-columns: repeat(4, minmax(180px, 1fr)) auto;
+        grid-template-columns: repeat(5, minmax(160px, 1fr)) auto;
         gap: 14px;
         align-items: end;
     }
@@ -274,8 +289,10 @@
     }
 
     .trade-signal-icon.tier-low { box-shadow: inset 0 0 0 1px rgba(37, 99, 235, .35); }
+    .trade-signal-icon.tier-mid { box-shadow: inset 0 0 0 1px rgba(217, 119, 6, .45); }
     .trade-signal-icon.tier-medium { box-shadow: inset 0 0 0 1px rgba(217, 119, 6, .45); }
     .trade-signal-icon.tier-high { box-shadow: inset 0 0 0 1px rgba(185, 28, 28, .55); }
+    .trade-signal-icon.tier-critical { box-shadow: inset 0 0 0 2px rgba(185, 28, 28, .7); }
 
     .journal-empty {
         padding: 42px 20px;
@@ -491,7 +508,14 @@
             </div>
         @endif
 
-        <div class="row g-3 mb-4">
+        <div class="journal-kpi-heading">
+            <div>
+                <p class="journal-kpi-eyebrow">Account analytics</p>
+                <h5>Performance snapshot</h5>
+            </div>
+            <span>Performance, risk and behaviour at a glance</span>
+        </div>
+        <div class="row g-3 mb-4 journal-kpi-grid">
             @foreach($summaryCards as $card)
                 <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="journal-stat tone-{{ $card['tone'] }}">
@@ -559,6 +583,17 @@
                     </div>
 
                     <div>
+                        <label for="account_stage" class="form-label">Account View</label>
+                        <select name="account_stage" id="account_stage" class="form-control">
+                            @foreach($accountStageOptions as $stageKey => $stageOption)
+                                <option value="{{ $stageKey }}" {{ $selectedAccountStage === $stageKey ? 'selected' : '' }}>
+                                    {{ $stageOption['label'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
                         <label for="time_view" class="form-label">Time Display</label>
                         <select name="time_view" id="time_view" class="form-control">
                             @foreach($timeModes as $value => $mode)
@@ -587,6 +622,117 @@
                         <a href="{{ route('all.trading.journals') }}" class="btn btn-light">Reset</a>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        @if($propFirmModels->isNotEmpty())
+            <div class="journal-panel mb-4">
+                <div class="journal-panel-header">
+                    <div>
+                        <h5>Prop Firm Challenge</h5>
+                        <div class="small text-muted">
+                            {{ $selectedPropFirmModel?->name ?? 'No model selected' }}
+                            @if($selectedPropFirmPhaseRule)
+                                &middot; {{ $selectedPropFirmPhaseRule->display_name }}
+                            @endif
+                        </div>
+                    </div>
+                    <span class="badge bg-light text-dark">Daily reset 05:00 MYT</span>
+                </div>
+                <div class="journal-panel-body">
+                    <form method="POST" action="{{ route('trading.propfirm.config.update') }}" class="row g-3 align-items-end" data-prop-firm-config-form>
+                        @csrf
+                        <input type="hidden" name="month" value="{{ $selectedMonth }}">
+                        <input type="hidden" name="year" value="{{ $selectedYear }}">
+
+                        <div class="col-lg-5">
+                            <label for="prop_firm_model_id" class="form-label">Model</label>
+                            <select id="prop_firm_model_id" name="prop_firm_model_id" class="form-control" data-prop-firm-model required>
+                                @foreach($propFirmModels as $model)
+                                    <option value="{{ $model->id }}" {{ (int) ($selectedPropFirmModel?->id ?? 0) === (int) $model->id ? 'selected' : '' }}>
+                                        {{ $model->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-lg-5">
+                            <label for="prop_firm_phase_rule_id" class="form-label">Phase</label>
+                            <select id="prop_firm_phase_rule_id" name="prop_firm_phase_rule_id" class="form-control" data-prop-firm-phase required>
+                                @foreach($propFirmModels as $model)
+                                    @foreach($model->phaseRules as $phaseRule)
+                                        <option value="{{ $phaseRule->id }}"
+                                            data-model-id="{{ $model->id }}"
+                                            {{ (int) ($selectedPropFirmPhaseRule?->id ?? 0) === (int) $phaseRule->id ? 'selected' : '' }}>
+                                            {{ $phaseRule->display_name }} - Target {{ rtrim(rtrim(number_format((float) $phaseRule->profit_target_percent, 2), '0'), '.') }}%
+                                        </option>
+                                    @endforeach
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="mdi mdi-content-save-outline me-1"></i> Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        @endif
+
+        <div class="journal-panel mb-4">
+            <div class="journal-panel-header">
+                <div>
+                    <h5>Account Stage Comparison</h5>
+                    <div class="small text-muted">{{ $selectedAccountStageDescription }}</div>
+                </div>
+                <span class="badge bg-light text-dark">{{ $selectedAccountStageLabel }} selected</span>
+            </div>
+            <div class="journal-panel-body">
+                <div class="row g-3">
+                    @foreach($accountStageComparison as $stageSummary)
+                        @php
+                            $stageQuery = array_merge($stageSummary['query'] ?? [], [
+                                'time_view' => $selectedTimeView,
+                                'mt5_offset_minutes' => $selectedMt5ViewOffset,
+                            ]);
+                        @endphp
+                        <div class="col-xl-3 col-md-6">
+                            <div class="behavior-week-card tone-{{ $stageSummary['tone'] ?? 'primary' }}">
+                                <div class="d-flex justify-content-between gap-2">
+                                    <div>
+                                        <h6 class="mb-1">{{ $stageSummary['label'] ?? 'Stage' }}</h6>
+                                        <div class="small text-muted">{{ $stageSummary['description'] ?? '' }}</div>
+                                    </div>
+                                    <span class="badge bg-light text-dark">{{ $stageSummary['trade_count'] ?? 0 }} trades</span>
+                                </div>
+                                <div class="behavior-week-score">
+                                    <div>
+                                        <span>Net P/L</span>
+                                        <strong class="{{ (float) ($stageSummary['net_profit'] ?? 0) >= 0 ? 'text-success' : 'text-danger' }}">
+                                            {{ number_format((float) ($stageSummary['net_profit'] ?? 0), 2) }}
+                                        </strong>
+                                    </div>
+                                    <div>
+                                        <span>Win Rate</span>
+                                        <strong>{{ number_format((float) ($stageSummary['win_rate'] ?? 0), 2) }}%</strong>
+                                    </div>
+                                </div>
+                                <div class="small text-muted">
+                                    Avg lot {{ number_format((float) ($stageSummary['average_lot'] ?? 0), 2) }}
+                                    @if(!empty($stageSummary['first_trade_date']) || !empty($stageSummary['last_trade_date']))
+                                        | {{ optional(\Carbon\Carbon::parse($stageSummary['first_trade_date'] ?? $stageSummary['last_trade_date']))->format('Y-m-d') }}
+                                        to {{ optional(\Carbon\Carbon::parse($stageSummary['last_trade_date'] ?? $stageSummary['first_trade_date']))->format('Y-m-d') }}
+                                    @endif
+                                </div>
+                                <a class="btn btn-sm btn-outline-primary mt-3" href="{{ route('all.trading.journals', array_filter($stageQuery, fn($value) => $value !== null && $value !== '')) }}">
+                                    Review
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
 
@@ -641,9 +787,10 @@
         <div class="journal-panel">
             <div class="journal-panel-header">
                 <h5>Trade History</h5>
-                <span class="badge bg-light text-dark">{{ $totalTrades }} trades | signal icons</span>
+                <span class="badge bg-light text-dark">{{ $totalTrades }} closed trades &middot; {{ $journals->count() }} records</span>
             </div>
             <div class="journal-panel-body">
+                @if($journals->isNotEmpty())
                 <div class="table-responsive">
                     <table id="datatable" class="table table-hover align-middle journal-table">
                         <thead>
@@ -652,6 +799,12 @@
                                 <th>Open ({{ $journalTime->shortLabel($selectedTimeView, $selectedTimeViewOffset) }})</th>
                                 <th>Close ({{ $journalTime->shortLabel($selectedTimeView, $selectedTimeViewOffset) }})</th>
                                 <th>Saved From</th>
+                                <th>Account View</th>
+                                <th>Status</th>
+                                <th>Close Handling</th>
+                                <th>Entry Reason</th>
+                                <th>Psychology</th>
+                                <th>Prop Firm</th>
                                 <th>Pair</th>
                                 <th>Direction</th>
                                 <th>Entry</th>
@@ -666,7 +819,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($journals as $journal)
+                            @foreach($journals as $journal)
                                 @php
                                     $journalProfit = (float) $journal->profit_loss;
                                     $resultLabel = match ((int) $journal->result) {
@@ -681,7 +834,18 @@
                                         3 => 'bg-warning text-dark',
                                         default => 'bg-secondary',
                                     };
-                                    $tradeKey = 'journal:' . $journal->id;
+                                    $tradeKey = $journal->behavior_trade_key ?? (($journal->source ?? 'journal') . ':' . $journal->id);
+                                    $isCurrentJournal = ($journal->journal_source_key ?? 'current') === 'current';
+                                    $isClosedTrade = method_exists($journal, 'isClosed') ? $journal->isClosed() : ($journal->close_date && $journal->result);
+                                    $journalStatus = (string) ($journal->status ?? ($isClosedTrade ? 'closed' : 'open'));
+                                    $statusBadgeClass = match ($journalStatus) {
+                                        'draft' => 'bg-secondary',
+                                        'closed' => 'bg-success',
+                                        default => 'bg-info',
+                                    };
+                                    $statusLabel = method_exists($journal, 'statusLabel') ? $journal->statusLabel() : ucfirst($journalStatus);
+                                    $closeHandlingLabel = method_exists($journal, 'closeHandlingLabel') ? $journal->closeHandlingLabel() : 'Manual Close';
+                                    $psychologySummary = method_exists($journal, 'psychologySummary') ? $journal->psychologySummary() : 'No psychology notes';
                                     $hedgeInsight = ($hedgingProfile['trade_map'] ?? collect())->get($tradeKey);
                                     $layeringInsight = data_get($traderStyleProfile, 'layering.trade_map', collect())->get($tradeKey);
                                     $revengeInsight = $revengeTradeMap->get($tradeKey);
@@ -692,6 +856,18 @@
                                     <td>{{ $journalTime->formatForDisplay($journal->open_date, $selectedTimeView, $selectedTimeViewOffset) }}</td>
                                     <td>{{ $journalTime->formatForDisplay($journal->close_date, $selectedTimeView, $selectedTimeViewOffset) }}</td>
                                     <td><span class="badge bg-light text-dark">{{ $journalTime->shortLabel($journal->time_input_timezone ?? null, $journal->time_input_offset_minutes ?? null) }}</span></td>
+                                    <td>
+                                        <span class="badge bg-light text-dark">{{ $journal->account_stage_label ?? 'Overview' }}</span>
+                                        <div class="small text-muted">{{ $journal->journal_source_label ?? 'Current Journal' }}</div>
+                                    </td>
+                                    <td><span class="badge {{ $statusBadgeClass }}">{{ $statusLabel }}</span></td>
+                                    <td>{{ $closeHandlingLabel }}</td>
+                                    <td>{{ $journal->reason?->name ?? '-' }}</td>
+                                    <td class="note-cell">{{ \Illuminate\Support\Str::limit($psychologySummary, 90) }}</td>
+                                    <td>
+                                        <span class="badge bg-light text-dark">{{ $journal->propFirmModel?->name ?? 'Default' }}</span>
+                                        <div class="small text-muted">{{ $journal->propFirmPhaseRule?->display_name ?? 'Phase from account' }}</div>
+                                    </td>
                                     <td class="pair-cell">{{ strtoupper($journal->pair) }}</td>
                                     <td>
                                         @if($journal->direction == 1)
@@ -703,13 +879,13 @@
                                         @endif
                                     </td>
                                     <td>{{ $journal->entry_price }}</td>
-                                    <td>{{ $journal->exit_price }}</td>
-                                    <td>{{ $journal->pips }}</td>
+                                    <td>{{ $isClosedTrade ? $journal->exit_price : '-' }}</td>
+                                    <td>{{ $isClosedTrade ? $journal->pips : '-' }}</td>
                                     <td>{{ $journal->lot_size }}</td>
-                                    <td class="{{ $journalProfit >= 0 ? 'text-success' : 'text-danger' }} fw-bold">
-                                        {{ number_format($journalProfit, 2) }}u
+                                    <td class="{{ $isClosedTrade ? ($journalProfit >= 0 ? 'text-success' : 'text-danger') : 'text-muted' }} fw-bold">
+                                        {{ $isClosedTrade ? number_format($journalProfit, 2) . 'u' : '-' }}
                                     </td>
-                                    <td><span class="badge {{ $resultClass }}">{{ $resultLabel }}</span></td>
+                                    <td><span class="badge {{ $isClosedTrade ? $resultClass : 'bg-secondary' }}">{{ $isClosedTrade ? $resultLabel : 'Open' }}</span></td>
                                     <td>
                                         <div class="trade-signal-icons">
                                             @if($hedgeInsight)
@@ -732,10 +908,14 @@
                                     <td class="note-cell">{{ $journal->notes ? \Illuminate\Support\Str::limit($journal->notes, 70) : '-' }}</td>
                                     <td class="text-end">
                                         <div class="d-inline-flex gap-1">
-                                            <a href="{{ route('trading.journal.details', ['id' => $journal->id, 'time_view' => $selectedTimeView, 'mt5_offset_minutes' => $selectedMt5ViewOffset]) }}" class="btn btn-light journal-action-btn" title="View">
-                                                <i class="mdi mdi-eye-outline"></i>
-                                            </a>
-                                            @if(! $propFirmLockMessage)
+                                            @if($isCurrentJournal)
+                                                <a href="{{ route('trading.journal.details', ['id' => $journal->id, 'time_view' => $selectedTimeView, 'mt5_offset_minutes' => $selectedMt5ViewOffset]) }}" class="btn btn-light journal-action-btn" title="View">
+                                                    <i class="mdi mdi-eye-outline"></i>
+                                                </a>
+                                            @else
+                                                <span class="badge bg-secondary">Archived</span>
+                                            @endif
+                                            @if($isCurrentJournal && ! $propFirmLockMessage)
                                                 <a href="{{ route('edit.trading.journal', $journal->id) }}" class="btn btn-light journal-action-btn" title="Edit">
                                                     <i class="mdi mdi-pencil-outline"></i>
                                                 </a>
@@ -746,21 +926,18 @@
                                         </div>
                                     </td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="15">
-                                        <div class="journal-empty">
-                                            <h5 class="mb-2">No trades recorded</h5>
-                                            @if(! $propFirmLockMessage)
-                                                <a href="{{ route('add.trading.journal') }}" class="btn btn-primary btn-sm">Record Trade</a>
-                                            @endif
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforelse
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
+                @else
+                    <div class="journal-empty">
+                        <h5 class="mb-2">No trades recorded</h5>
+                        @if(! $propFirmLockMessage)
+                            <a href="{{ route('add.trading.journal') }}" class="btn btn-primary btn-sm">Record Trade</a>
+                        @endif
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -805,7 +982,7 @@
 @endif
 
 <div class="modal fade" id="ratingBreakdownModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Performance Rating Breakdown</h5>
@@ -830,16 +1007,64 @@
                         <strong>-{{ $drawdownPenalty }} pts <span class="badge bg-danger ms-2">{{ $drawdownGrade }}</span></strong>
                     </div>
                     <div class="journal-modal-row">
-                        <span>Consistency</span>
+                        <span>Best Day Consistency (10%)</span>
                         <strong>{{ $consistencyPoints }} pts <span class="badge bg-secondary ms-2">{{ $consistencyGrade }}</span></strong>
                     </div>
                     <div class="journal-modal-row">
-                        <span>Position Consistency</span>
-                        <strong>{{ number_format((float) data_get($positionProfile, 'score', 0), 2) }}/100 <span class="badge bg-secondary ms-2">{{ data_get($positionProfile, 'grade', 'N/A') }}</span></strong>
+                        <span>Position Consistency (5%)</span>
+                        <strong>{{ number_format((float) ($positionConsistencyPoints ?? data_get($scoreEvaluationProfile, 'components.4.points', 0)), 2) }} pts <span class="badge bg-secondary ms-2">{{ number_format((float) data_get($positionProfile, 'score', 0), 2) }}/100 {{ data_get($positionProfile, 'grade', 'N/A') }}</span></strong>
                     </div>
+                    <div class="small text-muted px-2">5 pts are split from the old consistency criteria: Best Day Consistency is now 10 pts, and Position Consistency contributes up to 5 pts.</div>
+                    <div class="journal-modal-row">
+                        <span>Score Sample</span>
+                        <strong>{{ data_get($scoreEvaluationProfile, 'sample_size_status', 'Reliable Sample') }} <span class="badge {{ $scoreIsProvisional ? 'bg-warning text-dark' : 'bg-success' }} ms-2">{{ number_format((float) data_get($scoreEvaluationProfile, 'sample_size_confidence', 0), 0) }}%</span></strong>
+                    </div>
+                    <div class="journal-modal-row">
+                        <span>Provisional Trigger</span>
+                        <strong>{{ number_format((int) $totalTrades) }} / {{ number_format((int) data_get($scoreEvaluationProfile, 'minimum_reliable_trades', 10)) }} trades</strong>
+                    </div>
+                    <div class="small text-muted px-2">Under {{ number_format((int) data_get($scoreEvaluationProfile, 'minimum_reliable_trades', 10)) }} trades is shown as provisional, so a small 3-order sample is reviewed with extra caution.</div>
+                    @if($scoreIsProvisional)
+                        <div class="journal-modal-row">
+                            <span>Raw Formula Score</span>
+                            <strong>{{ number_format((float) data_get($scoreEvaluationProfile, 'raw_score', $totalScore), 2) }} pts</strong>
+                        </div>
+                        <div class="journal-modal-row">
+                            <span>Provisional Calculation</span>
+                            <strong>{{ data_get($scoreEvaluationProfile, 'sample_size_calculation') }}</strong>
+                        </div>
+                        <div class="journal-modal-row">
+                            <span>Sample Weight / Baseline</span>
+                            <strong>{{ number_format((float) data_get($scoreEvaluationProfile, 'sample_size_raw_weight', 0), 0) }}% raw / {{ number_format((float) data_get($scoreEvaluationProfile, 'sample_size_baseline', 0), 2) }} baseline</strong>
+                        </div>
+                        <div class="journal-modal-row">
+                            <span>Small Sample Adjustment</span>
+                            <strong class="{{ (float) data_get($scoreEvaluationProfile, 'sample_size_adjustment', 0) >= 0 ? 'text-success' : 'text-danger' }}">{{ number_format((float) data_get($scoreEvaluationProfile, 'sample_size_adjustment', 0), 2) }} pts</strong>
+                        </div>
+                        <div class="small text-muted px-2">{{ data_get($scoreEvaluationProfile, 'sample_size_note') }}</div>
+                    @endif
                     <div class="journal-modal-row">
                         <span>Trader Style</span>
                         <strong>{{ data_get($traderStyleProfile, 'style_label', 'N/A') }} <span class="badge bg-secondary ms-2">{{ number_format((float) data_get($traderStyleProfile, 'risk_score', 0), 2) }}/100</span></strong>
+                    </div>
+                    <div class="journal-modal-row">
+                        <span>Detection Label</span>
+                        <strong>{{ data_get($traderStyleProfile, 'label', 'Normal Trading Behaviour') }} <span class="badge bg-secondary ms-2">{{ data_get($traderStyleProfile, 'tier_label', 'Normal') }}</span></strong>
+                    </div>
+                    <div class="journal-modal-row">
+                        <span>Final Behaviour Formula</span>
+                        <strong>max({{ number_format((float) data_get($traderStyleProfile, 'gambling.score', 0), 2) }}, {{ number_format((float) data_get($traderStyleProfile, 'revenge.score', 0), 2) }}) = {{ number_format((float) data_get($traderStyleProfile, 'final_score', data_get($traderStyleProfile, 'risk_score', 0)), 2) }}/100</strong>
+                    </div>
+                    @if((float) data_get($traderStyleProfile, 'behavior_recovery.total_reduction_percent', 0) > 0)
+                        <div class="journal-modal-row">
+                            <span>8-Trade Recovery</span>
+                            <strong>Raw {{ number_format((float) data_get($traderStyleProfile, 'raw_risk_score', data_get($traderStyleProfile, 'risk_score', 0)), 2) }} -> {{ number_format((float) data_get($traderStyleProfile, 'risk_score', 0), 2) }} <span class="badge bg-success ms-2">-{{ number_format((float) data_get($traderStyleProfile, 'behavior_recovery.total_reduction_percent', 0), 2) }}%</span></strong>
+                        </div>
+                        <div class="small text-muted px-2">{{ data_get($traderStyleProfile, 'behavior_recovery.summary') }}</div>
+                    @endif
+                    <div class="journal-modal-row">
+                        <span>Detection Confidence</span>
+                        <strong>{{ number_format((float) data_get($traderStyleProfile, 'confidence_score', 0), 2) }}/100</strong>
                     </div>
                     <div class="journal-modal-row">
                         <span>Revenge Trading</span>
@@ -855,6 +1080,7 @@
                         <span>Layering</span>
                         <strong>{{ data_get($traderStyleProfile, 'layering.status', 'N/A') }} <span class="badge bg-danger ms-2">{{ number_format((float) data_get($traderStyleProfile, 'layering.score', 0), 2) }}/100</span></strong>
                     </div>
+                    <div class="small text-muted px-2">Layering is shown as a separate review signal. It does not automatically increase revenge or gambling score when risk is controlled.</div>
                     <div class="journal-modal-row">
                         <span>Expectancy</span>
                         <strong>{{ $expectancyPoints }} pts <span class="badge bg-warning text-dark ms-2">{{ $expectancyGrade }}</span></strong>
@@ -873,11 +1099,11 @@
                     <div class="small text-muted px-2">{{ data_get($behaviorScorePenalty, 'summary', 'Clear and low revenge/gambling tiers do not reduce the score.') }}</div>
                     <div class="journal-modal-row">
                         <span>Adjusted Total Score</span>
-                        <strong>{{ $totalScore }} pts</strong>
+                        <strong>{{ number_format($displayTotalScore, 2) }} pts</strong>
                     </div>
                     <div class="journal-modal-row">
                         <span>Final Grade</span>
-                        <strong>{{ $rating }}</strong>
+                        <strong>{{ $displayRating }}</strong>
                     </div>
                 </div>
             </div>
@@ -900,6 +1126,26 @@
                             <strong>{{ number_format((float) data_get($scoreEvaluationProfile, 'score', 0), 2) }} pts</strong>
                         </div>
                     </div>
+                    @if($scoreIsProvisional)
+                        <div class="col-md-3">
+                            <div class="journal-modal-row h-100">
+                                <span>Raw Formula Score</span>
+                                <strong>{{ number_format((float) data_get($scoreEvaluationProfile, 'raw_score', data_get($scoreEvaluationProfile, 'score', 0)), 2) }} pts</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="journal-modal-row h-100">
+                                <span>Sample Confidence</span>
+                                <strong>{{ number_format((float) data_get($scoreEvaluationProfile, 'sample_size_confidence', 0), 0) }}%</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="journal-modal-row h-100">
+                                <span>Provisional Trigger</span>
+                                <strong>{{ number_format((int) $totalTrades) }} / {{ number_format((int) data_get($scoreEvaluationProfile, 'minimum_reliable_trades', 10)) }} trades</strong>
+                            </div>
+                        </div>
+                    @endif
                     <div class="col-md-3">
                         <div class="journal-modal-row h-100">
                             <span>Behaviour Penalty</span>
@@ -929,6 +1175,17 @@
                 <div class="alert alert-info">
                     <strong>{{ data_get($scoreEvaluationProfile, 'formula') }}</strong>
                     <div class="mt-1">{{ data_get($scoreEvaluationProfile, 'meaning') }}</div>
+                    @if($scoreIsProvisional)
+                        <div class="mt-1">{{ data_get($scoreEvaluationProfile, 'sample_size_note') }}</div>
+                        <div class="mt-2 small">
+                            <strong>Provisional rule:</strong>
+                            under {{ number_format((int) data_get($scoreEvaluationProfile, 'minimum_reliable_trades', 10)) }} trades is marked provisional.
+                            {{ data_get($scoreEvaluationProfile, 'sample_size_formula') }}
+                        </div>
+                        <div class="mt-1 small">
+                            <strong>Calculation:</strong> {{ data_get($scoreEvaluationProfile, 'sample_size_calculation') }}
+                        </div>
+                    @endif
                     <div class="mt-1">{{ data_get($scoreEvaluationProfile, 'behavior_score_penalty.summary', '') }}</div>
                 </div>
 
@@ -957,7 +1214,7 @@
                                     <td class="{{ $component['points'] < 0 ? 'text-danger' : ($component['points'] > 0 ? 'text-success' : '') }}">
                                         {{ $component['points'] > 0 ? '+' : '' }}{{ number_format((float) $component['points'], 2) }}
                                     </td>
-                                    <td>{{ $component['max_points'] > 0 ? number_format((float) $component['max_points']) : 'Penalty' }}</td>
+                                    <td>{{ data_get($component, 'is_adjustment') ? 'Adjustment' : ($component['max_points'] > 0 ? number_format((float) $component['max_points']) : (((float) $component['points']) < 0 ? 'Penalty' : 'Adjustment')) }}</td>
                                     <td><span class="badge {{ $component['badge_class'] }}">{{ $component['status'] }}</span></td>
                                     <td>{{ $component['calculation'] }}</td>
                                 </tr>
@@ -1018,6 +1275,13 @@
                             <span>Recovery Quality Progress</span>
                             <strong>{{ number_format((float) data_get($scoreEvaluationProfile, 'recovery_factor_progress', 0), 2) }}% toward 3.00 recovery factor</strong>
                         </div>
+                        @if($scoreIsProvisional)
+                            <div class="journal-modal-row mt-3">
+                                <span>Trades Marked Provisional</span>
+                                <strong>{{ number_format((int) $totalTrades) }} trade(s)</strong>
+                            </div>
+                            <div class="small text-muted px-2">Any score with fewer than {{ number_format((int) data_get($scoreEvaluationProfile, 'minimum_reliable_trades', 10)) }} trades is provisional. Sample cap {{ number_format((float) data_get($scoreEvaluationProfile, 'sample_size_cap', 0), 2) }} pts; adjustment {{ number_format((float) data_get($scoreEvaluationProfile, 'sample_size_adjustment', 0), 2) }} pts.</div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -1300,6 +1564,31 @@
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
                     </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="import_time_input_timezone" class="form-label">File Time</label>
+                            <select id="import_time_input_timezone" name="time_input_timezone" class="form-select @error('time_input_timezone') is-invalid @enderror">
+                                <option value="mt5" {{ old('time_input_timezone', 'mt5') === 'mt5' ? 'selected' : '' }}>MT5 Platform Time</option>
+                                <option value="malaysia" {{ old('time_input_timezone') === 'malaysia' ? 'selected' : '' }}>Malaysia Time</option>
+                            </select>
+                            @error('time_input_timezone')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6" id="import_mt5_offset_group">
+                            <label for="import_time_input_offset_minutes" class="form-label">MT5 Offset</label>
+                            <select id="import_time_input_offset_minutes" name="time_input_offset_minutes" class="form-select @error('time_input_offset_minutes') is-invalid @enderror">
+                                @foreach($mt5OffsetOptions as $offsetMinutes => $offsetLabel)
+                                    <option value="{{ $offsetMinutes }}" {{ (int) old('time_input_offset_minutes', 180) === (int) $offsetMinutes ? 'selected' : '' }}>
+                                        {{ $offsetLabel }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('time_input_offset_minutes')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
                     <a href="{{ route('download.trades.template') }}">Download import template</a>
                 </div>
                 <div class="modal-footer">
@@ -1311,7 +1600,7 @@
     </div>
 </div>
 
-@if ($errors->has('file'))
+@if ($errors->has('file') || $errors->has('time_input_timezone') || $errors->has('time_input_offset_minutes'))
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var modalElement = document.getElementById('importTradesModal');
@@ -1321,6 +1610,55 @@
         });
     </script>
 @endif
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var timeSelect = document.getElementById('import_time_input_timezone');
+        var offsetGroup = document.getElementById('import_mt5_offset_group');
+        var configForm = document.querySelector('[data-prop-firm-config-form]');
+        var modelSelect = configForm ? configForm.querySelector('[data-prop-firm-model]') : null;
+        var phaseSelect = configForm ? configForm.querySelector('[data-prop-firm-phase]') : null;
+
+        if (modelSelect && phaseSelect) {
+            var syncPropFirmPhaseOptions = function () {
+                var selectedModelId = modelSelect.value;
+                var selectedOptionAvailable = false;
+
+                Array.prototype.forEach.call(phaseSelect.options, function (option) {
+                    var matchesModel = option.getAttribute('data-model-id') === selectedModelId;
+                    option.hidden = !matchesModel;
+                    option.disabled = !matchesModel;
+
+                    if (option.selected && matchesModel) {
+                        selectedOptionAvailable = true;
+                    }
+                });
+
+                if (!selectedOptionAvailable) {
+                    var firstMatchingOption = Array.prototype.find.call(phaseSelect.options, function (option) {
+                        return option.getAttribute('data-model-id') === selectedModelId;
+                    });
+
+                    if (firstMatchingOption) {
+                        phaseSelect.value = firstMatchingOption.value;
+                    }
+                }
+            };
+
+            modelSelect.addEventListener('change', syncPropFirmPhaseOptions);
+            syncPropFirmPhaseOptions();
+        }
+
+        if (timeSelect && offsetGroup) {
+            var syncImportTimeControls = function () {
+                offsetGroup.classList.toggle('d-none', timeSelect.value !== 'mt5');
+            };
+
+            timeSelect.addEventListener('change', syncImportTimeControls);
+            syncImportTimeControls();
+        }
+    });
+</script>
 
 @if($pendingEvaluationQuestions->isNotEmpty())
     <script>

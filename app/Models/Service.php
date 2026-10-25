@@ -10,4 +10,9 @@ class Service extends Model
     use HasFactory;
     protected $guarded=[];
 
+    public function scopeStorefront($query)
+    {
+        return $query->where('service_title', 'not like', '[Demo]%');
+    }
+
 }

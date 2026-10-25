@@ -20,7 +20,7 @@
 
         body {
             color: #172033;
-            font-family: DejaVu Sans, Arial, sans-serif;
+            font-family: Helvetica, Arial, sans-serif;
             font-size: 11px;
             line-height: 1.42;
             margin: 0;

@@ -1,0 +1,635 @@
+{
+  "theme": {
+    "id": "CW-082",
+    "code": "CW-082",
+    "title": {
+      "en": "Interrupting Revenge Trading After an Emotional Loss",
+      "zh": "在情绪性亏损后阻断报复性交易"
+    },
+    "shortTitle": {
+      "en": "revenge trading",
+      "zh": "在情绪性亏损后阻断报复性交易"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates interrupting revenge trading after an emotional loss using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示在情绪性亏损后阻断报复性交易。"
+    },
+    "categoryId": "trading_psychology",
+    "categoryName": {
+      "en": "Trading Psychology and Discipline",
+      "zh": "交易心理与纪律"
+    },
+    "difficulty": "advanced",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind interrupting revenge trading after an emotional loss.",
+        "Apply interrupting revenge trading after an emotional loss to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释在情绪性亏损后阻断报复性交易背后的核心决策规则。",
+        "将在情绪性亏损后阻断报复性交易应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "revenge trading",
+      "loss",
+      "reset",
+      "AUDUSD",
+      "Trading Psychology and Discipline"
+    ],
+    "searchTokens": [
+      "cw-082",
+      "CW-082",
+      "trading_psychology",
+      "trading psychology and discipline",
+      "交易心理与纪律",
+      "interrupting",
+      "revenge",
+      "trading",
+      "after",
+      "an",
+      "emotional",
+      "loss",
+      "在情绪性亏损后阻断报复性交易",
+      "reset",
+      "audusd",
+      "psychology",
+      "and",
+      "discipline"
+    ],
+    "difficultyOrder": 3,
+    "estimatedMinutes": 90,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 82,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "5f4b3e111a16641d86a9327032145a12cfcbff8d09f7134c6a7af43a3b8b799c"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-082",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for revenge trading",
+        "zh": "在情绪性亏损后阻断报复性交易的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which decision rule is most consistent with disciplined use of interrupting revenge trading after an emotional loss?",
+        "zh": "哪项决策规则最符合有纪律地运用在情绪性亏损后阻断报复性交易？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing interrupting revenge trading after an emotional loss.",
+            "zh": "评估在情绪性亏损后阻断报复性交易时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "9cc277260fe9776f97fc1e71789d44d7e2fb5bf88ffc709cd77d2f7e410f6f73"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-082",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying revenge trading Under Uncertainty",
+        "zh": "在不确定性下应用在情绪性亏损后阻断报复性交易"
+      },
+      "prompt": {
+        "en": "Two signals related to interrupting revenge trading after an emotional loss conflict before entry. Which response best protects decision quality?",
+        "zh": "入场前与在情绪性亏损后阻断报复性交易相关的两个信号互相冲突。哪种做法最能保护决策质量？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "e1664e55dda41a04544084a04c0cf75131164eadb42db89db965251567420a2b"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-082",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "AUDUSD Chart Interpretation for revenge trading",
+        "zh": "AUDUSD图表中的在情绪性亏损后阻断报复性交易解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational AUDUSD H1 chart. Which labelled zone is the strongest decision area for evaluating interrupting revenge trading after an emotional loss while keeping invalidation visible?",
+        "zh": "研究合成教学用AUDUSD H1图表。哪个标记区域最适合评估在情绪性亏损后阻断报复性交易，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "AUDUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 0.65406,
+            "high": 0.65522,
+            "low": 0.65265,
+            "close": 0.6539
+          },
+          {
+            "timeIndex": 1,
+            "open": 0.6539,
+            "high": 0.65493,
+            "low": 0.65247,
+            "close": 0.65412
+          },
+          {
+            "timeIndex": 2,
+            "open": 0.65412,
+            "high": 0.65585,
+            "low": 0.65297,
+            "close": 0.65445
+          },
+          {
+            "timeIndex": 3,
+            "open": 0.65445,
+            "high": 0.65628,
+            "low": 0.65378,
+            "close": 0.6549
+          },
+          {
+            "timeIndex": 4,
+            "open": 0.6549,
+            "high": 0.65609,
+            "low": 0.65368,
+            "close": 0.65532
+          },
+          {
+            "timeIndex": 5,
+            "open": 0.65532,
+            "high": 0.65651,
+            "low": 0.65369,
+            "close": 0.65512
+          },
+          {
+            "timeIndex": 6,
+            "open": 0.65512,
+            "high": 0.6566,
+            "low": 0.65256,
+            "close": 0.65374
+          },
+          {
+            "timeIndex": 7,
+            "open": 0.65374,
+            "high": 0.65484,
+            "low": 0.65074,
+            "close": 0.65136
+          },
+          {
+            "timeIndex": 8,
+            "open": 0.65136,
+            "high": 0.65225,
+            "low": 0.64778,
+            "close": 0.64896
+          },
+          {
+            "timeIndex": 9,
+            "open": 0.64896,
+            "high": 0.65039,
+            "low": 0.64614,
+            "close": 0.64757
+          },
+          {
+            "timeIndex": 10,
+            "open": 0.64757,
+            "high": 0.64892,
+            "low": 0.64625,
+            "close": 0.64747
+          },
+          {
+            "timeIndex": 11,
+            "open": 0.64747,
+            "high": 0.64879,
+            "low": 0.6468,
+            "close": 0.64809
+          },
+          {
+            "timeIndex": 12,
+            "open": 0.64809,
+            "high": 0.64993,
+            "low": 0.64695,
+            "close": 0.64868
+          },
+          {
+            "timeIndex": 13,
+            "open": 0.64868,
+            "high": 0.65042,
+            "low": 0.64726,
+            "close": 0.64895
+          },
+          {
+            "timeIndex": 14,
+            "open": 0.64895,
+            "high": 0.64999,
+            "low": 0.6477,
+            "close": 0.64895
+          },
+          {
+            "timeIndex": 15,
+            "open": 0.64895,
+            "high": 0.64991,
+            "low": 0.64787,
+            "close": 0.64859
+          },
+          {
+            "timeIndex": 16,
+            "open": 0.64859,
+            "high": 0.65005,
+            "low": 0.64639,
+            "close": 0.64749
+          },
+          {
+            "timeIndex": 17,
+            "open": 0.64749,
+            "high": 0.6488,
+            "low": 0.64405,
+            "close": 0.64547
+          },
+          {
+            "timeIndex": 18,
+            "open": 0.64547,
+            "high": 0.64609,
+            "low": 0.64178,
+            "close": 0.64306
+          },
+          {
+            "timeIndex": 19,
+            "open": 0.64306,
+            "high": 0.64436,
+            "low": 0.64055,
+            "close": 0.64132
+          },
+          {
+            "timeIndex": 20,
+            "open": 0.64132,
+            "high": 0.64278,
+            "low": 0.63991,
+            "close": 0.64097
+          },
+          {
+            "timeIndex": 21,
+            "open": 0.64097,
+            "high": 0.64273,
+            "low": 0.63956,
+            "close": 0.64176
+          },
+          {
+            "timeIndex": 22,
+            "open": 0.64176,
+            "high": 0.64378,
+            "low": 0.64045,
+            "close": 0.64276
+          },
+          {
+            "timeIndex": 23,
+            "open": 0.64276,
+            "high": 0.64465,
+            "low": 0.64194,
+            "close": 0.64318
+          },
+          {
+            "timeIndex": 24,
+            "open": 0.64318,
+            "high": 0.64444,
+            "low": 0.64186,
+            "close": 0.64288
+          },
+          {
+            "timeIndex": 25,
+            "open": 0.64288,
+            "high": 0.64356,
+            "low": 0.64073,
+            "close": 0.64212
+          },
+          {
+            "timeIndex": 26,
+            "open": 0.64212,
+            "high": 0.64346,
+            "low": 0.63965,
+            "close": 0.64099
+          },
+          {
+            "timeIndex": 27,
+            "open": 0.64099,
+            "high": 0.64243,
+            "low": 0.63846,
+            "close": 0.63932
+          },
+          {
+            "timeIndex": 28,
+            "open": 0.63932,
+            "high": 0.64022,
+            "low": 0.63625,
+            "close": 0.63722
+          },
+          {
+            "timeIndex": 29,
+            "open": 0.63722,
+            "high": 0.63831,
+            "low": 0.63399,
+            "close": 0.63537
+          },
+          {
+            "timeIndex": 30,
+            "open": 0.63537,
+            "high": 0.63685,
+            "low": 0.63329,
+            "close": 0.63465
+          },
+          {
+            "timeIndex": 31,
+            "open": 0.63465,
+            "high": 0.63648,
+            "low": 0.63373,
+            "close": 0.63527
+          },
+          {
+            "timeIndex": 32,
+            "open": 0.63527,
+            "high": 0.63729,
+            "low": 0.63435,
+            "close": 0.63654
+          },
+          {
+            "timeIndex": 33,
+            "open": 0.63654,
+            "high": 0.63871,
+            "low": 0.63517,
+            "close": 0.63733
+          },
+          {
+            "timeIndex": 34,
+            "open": 0.63733,
+            "high": 0.63874,
+            "low": 0.63568,
+            "close": 0.63705
+          },
+          {
+            "timeIndex": 35,
+            "open": 0.63705,
+            "high": 0.63788,
+            "low": 0.63496,
+            "close": 0.63592
+          },
+          {
+            "timeIndex": 36,
+            "open": 0.63592,
+            "high": 0.63707,
+            "low": 0.63357,
+            "close": 0.63445
+          },
+          {
+            "timeIndex": 37,
+            "open": 0.63445,
+            "high": 0.63593,
+            "low": 0.63154,
+            "close": 0.63288
+          },
+          {
+            "timeIndex": 38,
+            "open": 0.63288,
+            "high": 0.63403,
+            "low": 0.6298,
+            "close": 0.63119
+          },
+          {
+            "timeIndex": 39,
+            "open": 0.63119,
+            "high": 0.63202,
+            "low": 0.62856,
+            "close": 0.62957
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 0.62968,
+            "maximumPrice": 0.63361,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 0.63641,
+            "maximumPrice": 0.64034,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 0.64482,
+            "maximumPrice": 0.64875,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 0.65155,
+            "maximumPrice": 0.65548,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "7a5da5bea06c24f76fb6a857cbcb23384cbf805279480ff537805c5e5c1eea65"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-082",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: revenge trading",
+        "zh": "独立情境分析：在情绪性亏损后阻断报复性交易"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of interrupting revenge trading after an emotional loss using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析在情绪性亏损后阻断报复性交易的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "1a5b6270518c35462c00c55c426e2ce94640b463ecd3dec42bce1cc6a363cd53"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-082",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: revenge trading",
+        "zh": "实践展示：在情绪性亏损后阻断报复性交易"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate interrupting revenge trading after an emotional loss. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示在情绪性亏损后阻断报复性交易。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "16a707cd801cd615849e6eca39626e27e1f82623f86ebebdd53a6bb110d43ea8"
+    }
+  ]
+}

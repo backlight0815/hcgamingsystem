@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title">
+  <title id="title">RSI oversold Diagram</title>
+  <rect width="1600" height="900" rx="0" fill="#F8FAFC"/>
+  <rect x="54" y="44" width="1492" height="772" rx="36" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+  <rect x="110" y="120" width="1380" height="610" rx="24" fill="#FDFEFF" stroke="#CBD5E1" stroke-width="3"/><line x1="120" y1="190" x2="1480" y2="190" stroke="#E2E8F0" stroke-width="2"/><line x1="120" y1="290" x2="1480" y2="290" stroke="#E2E8F0" stroke-width="2"/><line x1="120" y1="390" x2="1480" y2="390" stroke="#E2E8F0" stroke-width="2"/><line x1="120" y1="490" x2="1480" y2="490" stroke="#E2E8F0" stroke-width="2"/><line x1="120" y1="590" x2="1480" y2="590" stroke="#E2E8F0" stroke-width="2"/><line x1="120" y1="690" x2="1480" y2="690" stroke="#E2E8F0" stroke-width="2"/><line x1="300" y1="130" x2="300" y2="720" stroke="#E2E8F0" stroke-width="2"/><line x1="500" y1="130" x2="500" y2="720" stroke="#E2E8F0" stroke-width="2"/><line x1="700" y1="130" x2="700" y2="720" stroke="#E2E8F0" stroke-width="2"/><line x1="900" y1="130" x2="900" y2="720" stroke="#E2E8F0" stroke-width="2"/><line x1="1100" y1="130" x2="1100" y2="720" stroke="#E2E8F0" stroke-width="2"/><line x1="1300" y1="130" x2="1300" y2="720" stroke="#E2E8F0" stroke-width="2"/>
+  
+  
+  <line x1="160" y1="155" x2="160" y2="331" stroke="#16A34A" stroke-width="7" stroke-linecap="round"/><rect x="143" y="225" width="34" height="36" rx="5" fill="#16A34A" opacity=".92"/><line x1="330" y1="167" x2="330" y2="367" stroke="#DC2626" stroke-width="7" stroke-linecap="round"/><rect x="313" y="207" width="34" height="118" rx="5" fill="#DC2626" opacity=".92"/><line x1="500" y1="240" x2="500" y2="385" stroke="#16A34A" stroke-width="7" stroke-linecap="round"/><rect x="483" y="280" width="34" height="63" rx="5" fill="#16A34A" opacity=".92"/><line x1="680" y1="192" x2="680" y2="452" stroke="#DC2626" stroke-width="7" stroke-linecap="round"/><rect x="663" y="262" width="34" height="148" rx="5" fill="#DC2626" opacity=".92"/><line x1="850" y1="340" x2="850" y2="498" stroke="#16A34A" stroke-width="7" stroke-linecap="round"/><rect x="833" y="380" width="34" height="48" rx="5" fill="#16A34A" opacity=".92"/><line x1="1030" y1="322" x2="1030" y2="552" stroke="#DC2626" stroke-width="7" stroke-linecap="round"/><rect x="1013" y="362" width="34" height="148" rx="5" fill="#DC2626" opacity=".92"/><line x1="1210" y1="400" x2="1210" y2="570" stroke="#16A34A" stroke-width="7" stroke-linecap="round"/><rect x="1193" y="470" width="34" height="58" rx="5" fill="#16A34A" opacity=".92"/><line x1="1410" y1="412" x2="1410" y2="662" stroke="#DC2626" stroke-width="7" stroke-linecap="round"/><rect x="1393" y="452" width="34" height="168" rx="5" fill="#DC2626" opacity=".92"/>
+  <polyline points="160,225 330,325 500,280 680,410 850,380 1030,510 1210,470 1410,620" fill="none" stroke="#0F766E" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  
+  
+  <rect x="160" y="600" width="1280" height="140" rx="24" fill="#EEF2FF" stroke="#CBD5E1" stroke-width="3"/>
+  <line x1="190" y1="705" x2="1410" y2="705" stroke="#16A34A" stroke-width="5" stroke-dasharray="18 12"/>
+  <path d="M190 650 C360 690 480 710 620 705 C780 705 900 720 1040 705 C1210 685 1310 710 1410 700" fill="none" stroke="#6366F1" stroke-width="8"/>
+  <text x="1260" y="725" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#16A34A">RSI &lt; 30</text>
+  <rect x="84" y="842" width="290" height="18" rx="9" fill="#0F766E" opacity=".22"/>
+  <rect x="412" y="842" width="404" height="18" rx="9" fill="#14B8A6" opacity=".20"/>
+  <rect x="852" y="842" width="664" height="18" rx="9" fill="#334155" opacity=".10"/>
+</svg>

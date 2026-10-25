@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Services\TraderLevelSnapshotService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +19,7 @@ class ProfileController extends Controller
     {
         return view('profile.edit', [
             'user' => $request->user(),
+            'traderLevelSnapshot' => app(TraderLevelSnapshotService::class)->forUser($request->user()),
         ]);
     }
 
@@ -36,6 +38,7 @@ class ProfileController extends Controller
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
+
 public function connectDiscord()
 {
     $user = auth()->user();                     // Get logged-in user
@@ -44,6 +47,7 @@ public function connectDiscord()
 
     return redirect('https://discord.gg/FWWYuf3kXM'); // Redirect to Discord
 }
+
     /**
      * Delete the user's account.
      */

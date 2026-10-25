@@ -1,0 +1,92 @@
+[
+  {
+    "id": "market_foundations",
+    "name": {
+      "en": "Trading Market Foundations",
+      "zh": "交易市场基础"
+    },
+    "sortOrder": 1,
+    "themeCount": 10
+  },
+  {
+    "id": "price_action",
+    "name": {
+      "en": "Candlestick and Price Action",
+      "zh": "K线与价格行为"
+    },
+    "sortOrder": 2,
+    "themeCount": 10
+  },
+  {
+    "id": "key_levels",
+    "name": {
+      "en": "Support, Resistance and Key Levels",
+      "zh": "支撑、阻力与关键价位"
+    },
+    "sortOrder": 3,
+    "themeCount": 10
+  },
+  {
+    "id": "market_structure",
+    "name": {
+      "en": "Market Structure",
+      "zh": "市场结构"
+    },
+    "sortOrder": 4,
+    "themeCount": 10
+  },
+  {
+    "id": "trend_indicators",
+    "name": {
+      "en": "Trend, Momentum and Indicators",
+      "zh": "趋势、动量与指标"
+    },
+    "sortOrder": 5,
+    "themeCount": 10
+  },
+  {
+    "id": "multi_timeframe",
+    "name": {
+      "en": "Multi-Timeframe Analysis",
+      "zh": "多时间周期分析"
+    },
+    "sortOrder": 6,
+    "themeCount": 10
+  },
+  {
+    "id": "risk_management",
+    "name": {
+      "en": "Risk and Money Management",
+      "zh": "风险与资金管理"
+    },
+    "sortOrder": 7,
+    "themeCount": 10
+  },
+  {
+    "id": "trade_execution",
+    "name": {
+      "en": "Trade Planning and Execution",
+      "zh": "交易计划与执行"
+    },
+    "sortOrder": 8,
+    "themeCount": 10
+  },
+  {
+    "id": "trading_psychology",
+    "name": {
+      "en": "Trading Psychology and Discipline",
+      "zh": "交易心理与纪律"
+    },
+    "sortOrder": 9,
+    "themeCount": 10
+  },
+  {
+    "id": "journal_review",
+    "name": {
+      "en": "Trading Journal and Performance Review",
+      "zh": "交易日志与绩效复盘"
+    },
+    "sortOrder": 10,
+    "themeCount": 10
+  }
+]

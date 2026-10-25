@@ -1,0 +1,42 @@
+{
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs22"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "emulators": {
+    "firestore": {
+      "port": 8085
+    },
+    "storage": {
+      "port": 9199
+    }
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "hcgaming-31d5d",
+          "appId": "1:329508345935:android:146b49d5d335c53cca323a",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "hcgaming-31d5d",
+          "configurations": {
+            "android": "1:329508345935:android:146b49d5d335c53cca323a",
+            "web": "1:329508345935:web:6d999ef1a7bd6fbcca323a",
+            "windows": "1:329508345935:web:d49abf189e95bc7cca323a"
+          }
+        }
+      }
+    }
+  }
+}

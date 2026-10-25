@@ -1,0 +1,136 @@
+"use strict";
+
+// Human-reviewed curriculum source. Ordering is contractual: the flattened
+// position determines CW-001 through CW-100 and must not be changed casually.
+const categories = [
+  category("market_foundations", "Trading Market Foundations", "交易市场基础", [
+    theme("Understanding Financial Markets Through Participants and Order Flow", "从市场参与者与订单流理解金融市场", ["financial market", "participants", "order flow"]),
+    theme("Mapping the Forex Market from Interbank Liquidity to Retail Execution", "从银行间流动性到零售执行的外汇市场结构", ["forex", "interbank", "execution"]),
+    theme("Evaluating CFD Trading Mechanics, Costs and Counterparty Risk", "评估差价合约的交易机制、成本与对手方风险", ["CFD", "counterparty", "cost"]),
+    theme("Reading Bid, Ask and Spread Before Committing to a Trade", "交易前解读买价、卖价与点差", ["bid", "ask", "spread"]),
+    theme("Connecting Lot Size, Contract Size and Monetary Exposure", "连接手数、合约规模与资金敞口", ["lot size", "contract size", "exposure"]),
+    theme("Using Leverage and Margin Without Losing Risk Control", "在保持风险控制的前提下使用杠杆与保证金", ["leverage", "margin", "margin call"]),
+    theme("Planning Around Asian, London and New York Trading Sessions", "围绕亚洲、伦敦与纽约交易时段制定计划", ["trading sessions", "London", "New York"]),
+    theme("Selecting Trading Instruments by Volatility, Liquidity and Cost", "按波动性、流动性与成本选择交易品种", ["instrument", "volatility", "liquidity"]),
+    theme("Choosing Market, Limit and Stop Orders for Defined Trade Intent", "按明确交易意图选择市价单、限价单与停止单", ["order types", "limit order", "stop order"]),
+    theme("Assessing Brokers, Liquidity Providers and Execution Quality", "评估经纪商、流动性提供者与执行质量", ["broker", "liquidity provider", "slippage"]),
+  ]),
+  category("price_action", "Candlestick and Price Action", "K线与价格行为", [
+    theme("Reading Candlestick Anatomy as a Record of Auction Behaviour", "将K线结构解读为市场竞价行为记录", ["candlestick anatomy", "body", "wick"]),
+    theme("Comparing Bullish and Bearish Candles Within Market Context", "在市场语境中比较看涨与看跌K线", ["bullish candle", "bearish candle", "context"]),
+    theme("Validating Rejection Candles at Decision Areas", "在决策区域验证拒绝K线", ["rejection candle", "wick", "key level"]),
+    theme("Distinguishing Meaningful Engulfing Patterns from Visual Noise", "区分有效吞没形态与视觉噪音", ["engulfing", "confirmation", "price action"]),
+    theme("Interpreting Inside Bars as Compression Rather Than Automatic Signals", "将内包线理解为压缩而非自动信号", ["inside bar", "compression", "breakout"]),
+    theme("Using Pin Bars Only When Location and Structure Agree", "仅在位置与结构一致时使用针形K线", ["pin bar", "location", "structure"]),
+    theme("Measuring Momentum Candles Through Range, Close and Follow-Through", "通过振幅、收盘与延续衡量动量K线", ["momentum candle", "range", "follow-through"]),
+    theme("Recognising Consolidation Boundaries and No-Trade Conditions", "识别盘整边界与禁止交易条件", ["consolidation", "range", "no trade"]),
+    theme("Confirming Breakout Candles with Acceptance Beyond Structure", "以结构外接受度确认突破K线", ["breakout candle", "acceptance", "structure"]),
+    theme("Diagnosing False Breakouts Through Rejection and Failed Follow-Through", "通过拒绝与延续失败判断假突破", ["false breakout", "liquidity sweep", "rejection"]),
+  ]),
+  category("key_levels", "Support, Resistance and Key Levels", "支撑、阻力与关键价位", [
+    theme("Identifying High-Quality Support Zones from Repeated Price Reactions", "从重复价格反应识别高质量支撑区", ["support", "zone", "reaction"]),
+    theme("Defining Resistance Zones with Clear Rejection Evidence", "以明确拒绝证据界定阻力区", ["resistance", "zone", "rejection"]),
+    theme("Combining Candle Bodies and Wicks into Practical Decision Zones", "将K线实体与影线结合为实用决策区", ["body and wick", "zone", "price level"]),
+    theme("Comparing Fresh Zones with Repeatedly Tested Levels", "比较新鲜区域与多次测试价位", ["fresh zone", "tested zone", "quality"]),
+    theme("Validating Key Zones Through Departure, Return and Context", "通过离开、回测与语境验证关键区域", ["zone validation", "departure", "retest"]),
+    theme("Recognising When Support or Resistance Has Been Invalidated", "识别支撑或阻力失效的时刻", ["zone invalidation", "close", "acceptance"]),
+    theme("Trading Role Reversal After Confirmed Level Breaks", "在价位确认突破后分析角色互换", ["role reversal", "breakout", "retest"]),
+    theme("Using Psychological Price Levels Without Treating Them as Exact Lines", "使用心理价位但不将其视为精确线条", ["psychological level", "round number", "zone"]),
+    theme("Integrating Previous Highs and Lows into Session Planning", "将前期高低点纳入交易时段计划", ["previous high", "previous low", "liquidity"]),
+    theme("Building Evidence-Based Entry Models Around Key Levels", "围绕关键价位建立证据驱动的入场模型", ["key level", "entry model", "invalidation"]),
+  ]),
+  category("market_structure", "Market Structure", "市场结构", [
+    theme("Labelling Swing Highs and Swing Lows with Consistent Rules", "使用一致规则标记摆动高点与低点", ["swing high", "swing low", "structure"]),
+    theme("Confirming Higher Highs and Higher Lows in Developing Trends", "确认发展中趋势的更高高点与更高低点", ["higher high", "higher low", "uptrend"]),
+    theme("Confirming Lower Highs and Lower Lows in Bearish Sequences", "确认看跌序列中的更低高点与更低低点", ["lower high", "lower low", "downtrend"]),
+    theme("Building a Bullish Structure Narrative from Impulse and Pullback", "从推动与回调构建看涨结构叙事", ["bullish structure", "impulse", "pullback"]),
+    theme("Building a Bearish Structure Narrative from Supply and Continuation", "从供应与延续构建看跌结构叙事", ["bearish structure", "supply", "continuation"]),
+    theme("Confirming Break of Structure Without Anticipating the Close", "不提前假设收盘地确认结构突破", ["Break of Structure", "BOS", "close"]),
+    theme("Using Change of Character as Evidence, Not a Standalone Entry", "将结构转变作为证据而非独立入场信号", ["Change of Character", "CHOCH", "reversal"]),
+    theme("Separating Internal Structure from the Dominant Market Swing", "区分内部结构与主导市场摆动", ["internal structure", "minor swing", "context"]),
+    theme("Mapping Major Structure for Directional Decision Making", "绘制主要结构以支持方向决策", ["major structure", "external structure", "bias"]),
+    theme("Protecting Structural Bias with Protected Highs and Lows", "利用受保护高低点维护结构偏向", ["protected high", "protected low", "invalidation"]),
+  ]),
+  category("trend_indicators", "Trend, Momentum and Indicators", "趋势、动量与指标", [
+    theme("Identifying Trend Quality Through Structure, Slope and Participation", "通过结构、斜率与参与度识别趋势质量", ["trend identification", "slope", "structure"]),
+    theme("Planning Trend Continuation After Controlled Pullbacks", "在受控回调后规划趋势延续", ["trend continuation", "pullback", "entry"]),
+    theme("Evaluating Trend Reversal Evidence Before Changing Bias", "改变偏向前评估趋势反转证据", ["trend reversal", "confirmation", "bias"]),
+    theme("Using EMA 24 to Observe Short-Term Dynamic Behaviour", "使用EMA 24观察短期动态行为", ["EMA 24", "dynamic support", "momentum"]),
+    theme("Using EMA 52 to Assess Intermediate Trend Rhythm", "使用EMA 52评估中期趋势节奏", ["EMA 52", "trend rhythm", "pullback"]),
+    theme("Using EMA 100 as Context Rather Than an Automatic Signal", "将EMA 100作为语境而非自动信号", ["EMA 100", "context", "trend"]),
+    theme("Using EMA 200 to Frame Long-Term Direction and Regime", "使用EMA 200界定长期方向与市场状态", ["EMA 200", "long-term trend", "regime"]),
+    theme("Interpreting MACD Momentum Without Chasing Crossovers", "解读MACD动量而不追逐交叉", ["MACD", "momentum", "divergence"]),
+    theme("Reading RSI Conditions Without Assuming Immediate Reversal", "解读RSI状态而不假设立即反转", ["RSI", "overbought", "oversold"]),
+    theme("Combining Indicator Confluence While Respecting Its Limitations", "组合指标共振并尊重其局限性", ["indicator confluence", "lag", "limitations"]),
+  ]),
+  category("multi_timeframe", "Multi-Timeframe Analysis", "多时间周期分析", [
+    theme("Building a Repeatable Top-Down Analysis Sequence", "建立可重复的自上而下分析流程", ["top-down analysis", "timeframe", "workflow"]),
+    theme("Mapping H4 Major Structure for Session Direction", "绘制H4主要结构以判断时段方向", ["H4", "major structure", "bias"]),
+    theme("Reading H1 Internal Structure Within the H4 Narrative", "在H4叙事中解读H1内部结构", ["H1", "internal structure", "alignment"]),
+    theme("Using M15 to Define the Current Tradable Structure", "使用M15界定当前可交易结构", ["M15", "current structure", "setup"]),
+    theme("Using M5 for Execution Without Losing Higher-Timeframe Context", "使用M5执行且不丢失高周期语境", ["M5", "execution timeframe", "context"]),
+    theme("Confirming Timeframe Alignment Before Risking Capital", "承担风险前确认时间周期一致性", ["timeframe alignment", "confirmation", "risk"]),
+    theme("Resolving Conflicting Signals Across Trading Timeframes", "处理不同交易周期之间的冲突信号", ["conflicting timeframe", "evidence", "no trade"]),
+    theme("Establishing Higher-Timeframe Bias with Explicit Invalidation", "以明确失效条件建立高周期偏向", ["higher timeframe", "bias", "invalidation"]),
+    theme("Requiring Lower-Timeframe Confirmation at Higher-Timeframe Areas", "在高周期区域要求低周期确认", ["lower timeframe", "confirmation", "zone"]),
+    theme("Writing a Coherent Multi-Timeframe Trade Narrative", "撰写连贯的多时间周期交易叙事", ["trade narrative", "H4", "H1", "M15"]),
+  ]),
+  category("risk_management", "Risk and Money Management", "风险与资金管理", [
+    theme("Defining Risk per Trade Before Calculating Position Size", "在计算仓位前定义每笔交易风险", ["risk per trade", "percentage risk", "capital"]),
+    theme("Calculating Position Size from Account Risk and Stop Distance", "根据账户风险与止损距离计算仓位", ["position size", "stop distance", "lot size"]),
+    theme("Placing Stop Losses at Logical Invalidation Rather Than Convenience", "将止损设于逻辑失效处而非方便位置", ["stop loss", "invalidation", "risk"]),
+    theme("Planning Take Profit Around Structure, Liquidity and Feasibility", "围绕结构、流动性与可行性规划止盈", ["take profit", "liquidity", "target"]),
+    theme("Evaluating Risk-to-Reward Before Accepting a Setup", "接受交易形态前评估风险回报比", ["risk-to-reward ratio", "reward", "setup"]),
+    theme("Applying a Daily Loss Limit to Prevent Decision Deterioration", "使用单日亏损上限防止决策恶化", ["daily loss limit", "discipline", "stop rule"]),
+    theme("Controlling Maximum Drawdown with Predefined Risk Reduction", "通过预设风险降低控制最大回撤", ["maximum drawdown", "risk reduction", "equity"]),
+    theme("Managing Correlated Positions as One Combined Exposure", "将相关持仓作为一个综合敞口管理", ["correlation", "combined exposure", "portfolio heat"]),
+    theme("Evaluating Scaling and Pyramiding Without Multiplying Hidden Risk", "评估加仓与金字塔策略而不放大隐性风险", ["scaling", "pyramiding", "risk"]),
+    theme("Prioritising Capital Preservation Across Changing Market Conditions", "在变化市场环境中优先保护资本", ["capital preservation", "survival", "risk control"]),
+  ]),
+  category("trade_execution", "Trade Planning and Execution", "交易计划与执行", [
+    theme("Preparing a Trading Plan Before the Active Session Begins", "在活跃交易时段开始前准备交易计划", ["trading plan", "pre-session", "preparation"]),
+    theme("Writing Objective Entry Rules That Can Be Audited", "制定可审核的客观入场规则", ["entry rules", "checklist", "confirmation"]),
+    theme("Defining Exit Rules for Profit, Loss and Time-Based Decisions", "为盈利、亏损与时间决策定义离场规则", ["exit rules", "take profit", "time exit"]),
+    theme("Using Pending Orders Only While the Original Thesis Remains Valid", "仅在原交易论点有效时使用挂单", ["pending order", "expiry", "invalidation"]),
+    theme("Executing Market Orders with Spread and Slippage Awareness", "在考虑点差与滑点的情况下执行市价单", ["market order", "spread", "slippage"]),
+    theme("Planning Breakout-and-Retest Entries with Confirmation", "以确认条件规划突破回测入场", ["breakout and retest", "confirmation", "entry"]),
+    theme("Defining Trade Invalidation Before Entry", "入场前定义交易失效条件", ["trade invalidation", "thesis", "stop loss"]),
+    theme("Managing Open Trades Without Moving Risk Boundaries Emotionally", "管理持仓时避免情绪化移动风险边界", ["trade management", "break even", "discipline"]),
+    theme("Taking Partial Profits Without Destroying Expected Value", "在不破坏期望值的前提下分批止盈", ["partial profit", "expected value", "position management"]),
+    theme("Reviewing Execution Quality After the Trade Is Closed", "交易结束后复盘执行质量", ["execution review", "slippage", "process"]),
+  ]),
+  category("trading_psychology", "Trading Psychology and Discipline", "交易心理与纪律", [
+    theme("Preventing FOMO with Predefined Entry and No-Trade Rules", "通过预设入场与禁止交易规则防止错失恐惧", ["FOMO", "entry rule", "discipline"]),
+    theme("Interrupting Revenge Trading After an Emotional Loss", "在情绪性亏损后阻断报复性交易", ["revenge trading", "loss", "reset"]),
+    theme("Controlling Overtrading with Session and Setup Limits", "通过时段与形态限制控制过度交易", ["overtrading", "trade limit", "setup"]),
+    theme("Managing Fear of Loss Without Avoiding Valid Setups", "管理亏损恐惧而不回避有效形态", ["fear of loss", "valid setup", "risk acceptance"]),
+    theme("Containing Greed Through Planned Targets and Position Risk", "通过计划目标与仓位风险约束贪婪", ["greed", "target", "position risk"]),
+    theme("Applying a Recovery Protocol After Consecutive Losses", "连续亏损后执行恢复流程", ["consecutive losses", "recovery", "risk reduction"]),
+    theme("Replacing Impulsive Entries with a Verifiable Checklist", "用可验证清单取代冲动入场", ["impulsive entry", "checklist", "pause"]),
+    theme("Measuring Trading Discipline Through Observable Behaviour", "通过可观察行为衡量交易纪律", ["discipline", "behaviour", "compliance"]),
+    theme("Separating Evidence-Based Confidence from Overconfidence", "区分证据驱动的信心与过度自信", ["confidence", "overconfidence", "evidence"]),
+    theme("Designing an Emotional Recovery Plan Before Stress Escalates", "在压力升级前设计情绪恢复计划", ["emotional recovery", "stress", "routine"]),
+  ]),
+  category("journal_review", "Trading Journal and Performance Review", "交易日志与绩效复盘", [
+    theme("Building a Trading Journal That Records Decisions, Not Just Results", "建立记录决策而非仅记录结果的交易日志", ["trade journal", "decision", "result"]),
+    theme("Capturing Chart Screenshots That Preserve Decision Context", "保存能够保留决策语境的图表截图", ["screenshot", "annotation", "context"]),
+    theme("Documenting Pre-Trade Analysis Before Outcome Bias Appears", "在结果偏差出现前记录交易前分析", ["pre-trade analysis", "bias", "plan"]),
+    theme("Writing Post-Trade Analysis that Separates Process from Outcome", "撰写区分过程与结果的交易后分析", ["post-trade analysis", "process", "outcome"]),
+    theme("Classifying Trading Mistakes by Rule, Execution and Psychology", "按规则、执行与心理对交易错误分类", ["mistake classification", "rule breach", "execution"]),
+    theme("Scoring Behaviour with Consistent Evidence-Based Criteria", "使用一致的证据标准进行行为评分", ["behaviour scoring", "criteria", "evidence"]),
+    theme("Conducting a Weekly Review that Produces Actionable Decisions", "开展能够形成可执行决策的每周复盘", ["weekly review", "action item", "performance"]),
+    theme("Auditing Trading-Plan Compliance Across Every Attempt", "审核每次交易尝试的计划遵守情况", ["plan compliance", "audit", "discipline"]),
+    theme("Interpreting Win Rate, Expectancy and Drawdown Together", "综合解读胜率、期望值与回撤", ["win rate", "expectancy", "drawdown"]),
+    theme("Creating a Personal Improvement Plan from Journal Evidence", "根据日志证据制定个人改进计划", ["improvement plan", "journal evidence", "goal"]),
+  ]),
+];
+
+function category(id, en, zh, themes) {
+  return {id, name: {en, zh}, themes};
+}
+
+function theme(titleEn, titleZh, keywords) {
+  return {title: {en: titleEn, zh: titleZh}, keywords};
+}
+
+module.exports = {categories};

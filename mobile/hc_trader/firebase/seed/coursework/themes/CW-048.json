@@ -1,0 +1,634 @@
+{
+  "theme": {
+    "id": "CW-048",
+    "code": "CW-048",
+    "title": {
+      "en": "Interpreting MACD Momentum Without Chasing Crossovers",
+      "zh": "解读MACD动量而不追逐交叉"
+    },
+    "shortTitle": {
+      "en": "MACD",
+      "zh": "解读MACD动量而不追逐交叉"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates interpreting macd momentum without chasing crossovers using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示解读MACD动量而不追逐交叉。"
+    },
+    "categoryId": "trend_indicators",
+    "categoryName": {
+      "en": "Trend, Momentum and Indicators",
+      "zh": "趋势、动量与指标"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind interpreting macd momentum without chasing crossovers.",
+        "Apply interpreting macd momentum without chasing crossovers to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释解读MACD动量而不追逐交叉背后的核心决策规则。",
+        "将解读MACD动量而不追逐交叉应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "MACD",
+      "momentum",
+      "divergence",
+      "US30",
+      "Trend, Momentum and Indicators"
+    ],
+    "searchTokens": [
+      "cw-048",
+      "CW-048",
+      "trend_indicators",
+      "trend, momentum and indicators",
+      "趋势、动量与指标",
+      "interpreting",
+      "macd",
+      "momentum",
+      "without",
+      "chasing",
+      "crossovers",
+      "解读MACD动量而不追逐交叉",
+      "divergence",
+      "us30",
+      "trend,",
+      "and",
+      "indicators"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 48,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "294dc7295e771a608134b7f9746baec58360af9a2f9d43c1abedbeb52eeed4f4"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-048",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for MACD",
+        "zh": "解读MACD动量而不追逐交叉的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which method produces the most auditable conclusion about interpreting macd momentum without chasing crossovers?",
+        "zh": "哪种方法能够对解读MACD动量而不追逐交叉得出最可审核的结论？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing interpreting macd momentum without chasing crossovers.",
+            "zh": "评估解读MACD动量而不追逐交叉时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "780b13de9d017a8507cac8a080541aaa4b31aeeb784e5507cf3f4f9f6e3524c1"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-048",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying MACD Under Uncertainty",
+        "zh": "在不确定性下应用解读MACD动量而不追逐交叉"
+      },
+      "prompt": {
+        "en": "Higher- and lower-timeframe evidence disagree about interpreting macd momentum without chasing crossovers. What is the most defensible response?",
+        "zh": "高低时间周期对解读MACD动量而不追逐交叉的证据不一致。哪种反应最合理？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "ec215bf8a0df15aa2ae9d60e6761ae17946084622e0f7356e38c53d77fe598ed"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-048",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "US30 Chart Interpretation for MACD",
+        "zh": "US30图表中的解读MACD动量而不追逐交叉解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational US30 H1 chart. Which labelled zone is the strongest decision area for evaluating interpreting macd momentum without chasing crossovers while keeping invalidation visible?",
+        "zh": "研究合成教学用US30 H1图表。哪个标记区域最适合评估解读MACD动量而不追逐交叉，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "US30",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 38964.8,
+            "high": 38991.9,
+            "low": 38860.3,
+            "close": 38913.6
+          },
+          {
+            "timeIndex": 1,
+            "open": 38913.6,
+            "high": 38959.7,
+            "low": 38840.5,
+            "close": 38887.9
+          },
+          {
+            "timeIndex": 2,
+            "open": 38887.9,
+            "high": 38943.3,
+            "low": 38857.2,
+            "close": 38885
+          },
+          {
+            "timeIndex": 3,
+            "open": 38885,
+            "high": 38936.3,
+            "low": 38844.3,
+            "close": 38896.6
+          },
+          {
+            "timeIndex": 4,
+            "open": 38896.6,
+            "high": 38959.9,
+            "low": 38843.5,
+            "close": 38924.9
+          },
+          {
+            "timeIndex": 5,
+            "open": 38924.9,
+            "high": 39029.7,
+            "low": 38876.4,
+            "close": 38975.4
+          },
+          {
+            "timeIndex": 6,
+            "open": 38975.4,
+            "high": 39085.3,
+            "low": 38945.7,
+            "close": 39035.8
+          },
+          {
+            "timeIndex": 7,
+            "open": 39035.8,
+            "high": 39098.3,
+            "low": 38996.7,
+            "close": 39074
+          },
+          {
+            "timeIndex": 8,
+            "open": 39074,
+            "high": 39122.1,
+            "low": 39010,
+            "close": 39062.6
+          },
+          {
+            "timeIndex": 9,
+            "open": 39062.6,
+            "high": 39117.5,
+            "low": 38956.9,
+            "close": 39006.4
+          },
+          {
+            "timeIndex": 10,
+            "open": 39006.4,
+            "high": 39043.6,
+            "low": 38910,
+            "close": 38941.5
+          },
+          {
+            "timeIndex": 11,
+            "open": 38941.5,
+            "high": 38979.1,
+            "low": 38867.8,
+            "close": 38905.3
+          },
+          {
+            "timeIndex": 12,
+            "open": 38905.3,
+            "high": 38963.4,
+            "low": 38853.2,
+            "close": 38908.4
+          },
+          {
+            "timeIndex": 13,
+            "open": 38908.4,
+            "high": 38983.6,
+            "low": 38858,
+            "close": 38935.8
+          },
+          {
+            "timeIndex": 14,
+            "open": 38935.8,
+            "high": 38996,
+            "low": 38902.5,
+            "close": 38971.3
+          },
+          {
+            "timeIndex": 15,
+            "open": 38971.3,
+            "high": 39061.7,
+            "low": 38935.5,
+            "close": 39011.9
+          },
+          {
+            "timeIndex": 16,
+            "open": 39011.9,
+            "high": 39111.7,
+            "low": 38960.4,
+            "close": 39057.5
+          },
+          {
+            "timeIndex": 17,
+            "open": 39057.5,
+            "high": 39128.3,
+            "low": 39006.4,
+            "close": 39093.7
+          },
+          {
+            "timeIndex": 18,
+            "open": 39093.7,
+            "high": 39134.7,
+            "low": 39058.7,
+            "close": 39094.6
+          },
+          {
+            "timeIndex": 19,
+            "open": 39094.6,
+            "high": 39150.1,
+            "low": 39015.3,
+            "close": 39049.4
+          },
+          {
+            "timeIndex": 20,
+            "open": 39049.4,
+            "high": 39095.3,
+            "low": 38929.6,
+            "close": 38980.3
+          },
+          {
+            "timeIndex": 21,
+            "open": 38980.3,
+            "high": 39007.9,
+            "low": 38878,
+            "close": 38929.8
+          },
+          {
+            "timeIndex": 22,
+            "open": 38929.8,
+            "high": 38981.1,
+            "low": 38889.6,
+            "close": 38926.3
+          },
+          {
+            "timeIndex": 23,
+            "open": 38926.3,
+            "high": 39017,
+            "low": 38894,
+            "close": 38963.7
+          },
+          {
+            "timeIndex": 24,
+            "open": 38963.7,
+            "high": 39046.2,
+            "low": 38913.8,
+            "close": 39014.3
+          },
+          {
+            "timeIndex": 25,
+            "open": 39014.3,
+            "high": 39099.5,
+            "low": 38961.9,
+            "close": 39057.1
+          },
+          {
+            "timeIndex": 26,
+            "open": 39057.1,
+            "high": 39145.1,
+            "low": 39018.8,
+            "close": 39089.4
+          },
+          {
+            "timeIndex": 27,
+            "open": 39089.4,
+            "high": 39156.2,
+            "low": 39058.9,
+            "close": 39112.5
+          },
+          {
+            "timeIndex": 28,
+            "open": 39112.5,
+            "high": 39146.1,
+            "low": 39063.5,
+            "close": 39115.8
+          },
+          {
+            "timeIndex": 29,
+            "open": 39115.8,
+            "high": 39168.4,
+            "low": 39032,
+            "close": 39084.8
+          },
+          {
+            "timeIndex": 30,
+            "open": 39084.8,
+            "high": 39136.9,
+            "low": 38984,
+            "close": 39024
+          },
+          {
+            "timeIndex": 31,
+            "open": 39024,
+            "high": 39053.2,
+            "low": 38937,
+            "close": 38965.7
+          },
+          {
+            "timeIndex": 32,
+            "open": 38965.7,
+            "high": 39010.3,
+            "low": 38900.4,
+            "close": 38948.4
+          },
+          {
+            "timeIndex": 33,
+            "open": 38948.4,
+            "high": 39039,
+            "low": 38895.2,
+            "close": 38983.4
+          },
+          {
+            "timeIndex": 34,
+            "open": 38983.4,
+            "high": 39088.2,
+            "low": 38942,
+            "close": 39046.8
+          },
+          {
+            "timeIndex": 35,
+            "open": 39046.8,
+            "high": 39135.4,
+            "low": 39019.9,
+            "close": 39102.3
+          },
+          {
+            "timeIndex": 36,
+            "open": 39102.3,
+            "high": 39185.5,
+            "low": 39055.5,
+            "close": 39131.8
+          },
+          {
+            "timeIndex": 37,
+            "open": 39131.8,
+            "high": 39190.2,
+            "low": 39078.4,
+            "close": 39139.5
+          },
+          {
+            "timeIndex": 38,
+            "open": 39139.5,
+            "high": 39165.9,
+            "low": 39090,
+            "close": 39132.9
+          },
+          {
+            "timeIndex": 39,
+            "open": 39132.9,
+            "high": 39179.5,
+            "low": 39083.9,
+            "close": 39108.8
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 38854.5,
+            "maximumPrice": 38903.4,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 38938.4,
+            "maximumPrice": 38987.4,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 39043.3,
+            "maximumPrice": 39092.3,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 39127.3,
+            "maximumPrice": 39176.2,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "9b4c8cc700311eef78646a8876f62068bc6f79d8201850bab0f0d6c1b3d090c7"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-048",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: MACD",
+        "zh": "独立情境分析：解读MACD动量而不追逐交叉"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of interpreting macd momentum without chasing crossovers using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析解读MACD动量而不追逐交叉的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "d3686b38f07655d84ede7f0e374488b35ec54699ff33844a97714bfdb444c405"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-048",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: MACD",
+        "zh": "实践展示：解读MACD动量而不追逐交叉"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate interpreting macd momentum without chasing crossovers. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示解读MACD动量而不追逐交叉。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "d2c7bc9bff53a7fdaa69b246a5361c401a0e9494675ed84ddb4d811c6d1c1245"
+    }
+  ]
+}

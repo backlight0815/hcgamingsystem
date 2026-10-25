@@ -1,0 +1,12 @@
+<details class="pm-panel pm-form-panel" @if($errors->any()) open @endif><summary>Create a release</summary>
+<p class="pm-muted">Choose a project and either an organization cycle assigned to that project or a legacy project cycle.</p>
+<form method="post" action="{{ route('pms.releases.store') }}" class="pm-form-grid" id="pm-release-create">@csrf
+    <label>Project<select name="project_id" id="pm-project" required><option value="">Select project</option>@foreach($projects as $project)<option value="{{ $project->id }}" @selected(old('project_id')==$project->id)>{{ $project->key }} · {{ $project->name }}</option>@endforeach</select></label>
+    <label>Organization cycle<select name="global_cycle_id" id="pm-global-cycle"><option value="">No organization cycle</option>@foreach($globalCycles as $globalCycle)<option value="{{ $globalCycle->id }}" data-projects="{{ $globalCycle->projects->pluck('id')->join(',') }}" @selected(old('global_cycle_id')==$globalCycle->id)>{{ $globalCycle->cycle_key }} · {{ $globalCycle->name }}</option>@endforeach</select></label>
+    <label>Legacy project cycle<select name="cycle_id" id="pm-cycle"><option value="">No legacy cycle</option>@foreach($cycles as $cycle)<option value="{{ $cycle->id }}" data-project="{{ $cycle->project_id }}" @selected(old('cycle_id')==$cycle->id)>{{ $cycle->cycle_key }} · {{ $cycle->name }}</option>@endforeach</select></label>
+    <label>Release type<select name="release_type"><option value="standard">Standard</option><option value="hotfix">Hotfix</option></select></label>
+    <label>Name<input name="name" required value="{{ old('name') }}" placeholder="October delivery"></label><label>Version<input name="version" required value="{{ old('version') }}" placeholder="2.1.0"></label>
+    <label>Release owner<select name="owner_id" class="pm-member-select"><option value="">Unassigned</option>@foreach($members as $member)<option value="{{ $member->id }}" data-project="{{ $member->project_id }}" @selected(old('owner_id')==$member->id)>{{ $member->name }}</option>@endforeach</select></label>
+    <label>Planned deployment<input type="date" name="planned_deploy_date" required value="{{ old('planned_deploy_date') }}"></label><label>Freeze date<input type="date" name="freeze_date" value="{{ old('freeze_date') }}"></label>
+    <label class="wide">Description<textarea name="description" rows="3">{{ old('description') }}</textarea></label><button class="pm-button">Create release</button>
+</form></details>

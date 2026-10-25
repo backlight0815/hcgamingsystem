@@ -1,0 +1,637 @@
+{
+  "theme": {
+    "id": "CW-017",
+    "code": "CW-017",
+    "title": {
+      "en": "Measuring Momentum Candles Through Range, Close and Follow-Through",
+      "zh": "通过振幅、收盘与延续衡量动量K线"
+    },
+    "shortTitle": {
+      "en": "momentum candle",
+      "zh": "通过振幅、收盘与延续衡量动量K线"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates measuring momentum candles through range, close and follow-through using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示通过振幅、收盘与延续衡量动量K线。"
+    },
+    "categoryId": "price_action",
+    "categoryName": {
+      "en": "Candlestick and Price Action",
+      "zh": "K线与价格行为"
+    },
+    "difficulty": "beginner",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind measuring momentum candles through range, close and follow-through.",
+        "Apply measuring momentum candles through range, close and follow-through to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释通过振幅、收盘与延续衡量动量K线背后的核心决策规则。",
+        "将通过振幅、收盘与延续衡量动量K线应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "momentum candle",
+      "range",
+      "follow-through",
+      "GBPUSD",
+      "Candlestick and Price Action"
+    ],
+    "searchTokens": [
+      "cw-017",
+      "CW-017",
+      "price_action",
+      "candlestick and price action",
+      "K线与价格行为",
+      "measuring",
+      "momentum",
+      "candles",
+      "through",
+      "range",
+      "close",
+      "and",
+      "follow",
+      "通过振幅、收盘与延续衡量动量K线",
+      "candle",
+      "follow-through",
+      "gbpusd",
+      "candlestick",
+      "price",
+      "action"
+    ],
+    "difficultyOrder": 1,
+    "estimatedMinutes": 55,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 17,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "e79dc131b81914ed28a2120fa18ca09a49480def5ca53d55bd1557713a572bec"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-017",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for momentum candle",
+        "zh": "通过振幅、收盘与延续衡量动量K线的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which practice prevents measuring momentum candles through range, close and follow-through from becoming a subjective guess?",
+        "zh": "哪项做法可防止通过振幅、收盘与延续衡量动量K线变成主观猜测？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing measuring momentum candles through range, close and follow-through.",
+            "zh": "评估通过振幅、收盘与延续衡量动量K线时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "43ba04ba624e5c46afac78053903cb04b6f35e1ac26fd4b9c5e9e0f0947de60f"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-017",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying momentum candle Under Uncertainty",
+        "zh": "在不确定性下应用通过振幅、收盘与延续衡量动量K线"
+      },
+      "prompt": {
+        "en": "Price invalidates the original interpretation of measuring momentum candles through range, close and follow-through immediately after entry. What preserves process discipline?",
+        "zh": "价格在入场后立即使原有通过振幅、收盘与延续衡量动量K线解读失效。怎样做才能保持流程纪律？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "d61cd1ad3b2c0b1782962684564dcdff7239d5a0d31aed1c6b4ff5bf73f44da9"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-017",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "GBPUSD Chart Interpretation for momentum candle",
+        "zh": "GBPUSD图表中的通过振幅、收盘与延续衡量动量K线解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational GBPUSD H1 chart. Which labelled zone is the strongest decision area for evaluating measuring momentum candles through range, close and follow-through while keeping invalidation visible?",
+        "zh": "研究合成教学用GBPUSD H1图表。哪个标记区域最适合评估通过振幅、收盘与延续衡量动量K线，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "GBPUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 1.28345,
+            "high": 1.28521,
+            "low": 1.28141,
+            "close": 1.28394
+          },
+          {
+            "timeIndex": 1,
+            "open": 1.28394,
+            "high": 1.28603,
+            "low": 1.2818,
+            "close": 1.28328
+          },
+          {
+            "timeIndex": 2,
+            "open": 1.28328,
+            "high": 1.28527,
+            "low": 1.28058,
+            "close": 1.28179
+          },
+          {
+            "timeIndex": 3,
+            "open": 1.28179,
+            "high": 1.28285,
+            "low": 1.27887,
+            "close": 1.28079
+          },
+          {
+            "timeIndex": 4,
+            "open": 1.28079,
+            "high": 1.28339,
+            "low": 1.27873,
+            "close": 1.28159
+          },
+          {
+            "timeIndex": 5,
+            "open": 1.28159,
+            "high": 1.28652,
+            "low": 1.28004,
+            "close": 1.28436
+          },
+          {
+            "timeIndex": 6,
+            "open": 1.28436,
+            "high": 1.28947,
+            "low": 1.28322,
+            "close": 1.28792
+          },
+          {
+            "timeIndex": 7,
+            "open": 1.28792,
+            "high": 1.29218,
+            "low": 1.28604,
+            "close": 1.29081
+          },
+          {
+            "timeIndex": 8,
+            "open": 1.29081,
+            "high": 1.29453,
+            "low": 1.28873,
+            "close": 1.29241
+          },
+          {
+            "timeIndex": 9,
+            "open": 1.29241,
+            "high": 1.29498,
+            "low": 1.2908,
+            "close": 1.29305
+          },
+          {
+            "timeIndex": 10,
+            "open": 1.29305,
+            "high": 1.29415,
+            "low": 1.29199,
+            "close": 1.29321
+          },
+          {
+            "timeIndex": 11,
+            "open": 1.29321,
+            "high": 1.29508,
+            "low": 1.29102,
+            "close": 1.29286
+          },
+          {
+            "timeIndex": 12,
+            "open": 1.29286,
+            "high": 1.29501,
+            "low": 1.28988,
+            "close": 1.29196
+          },
+          {
+            "timeIndex": 13,
+            "open": 1.29196,
+            "high": 1.29341,
+            "low": 1.28944,
+            "close": 1.2911
+          },
+          {
+            "timeIndex": 14,
+            "open": 1.2911,
+            "high": 1.29292,
+            "low": 1.29011,
+            "close": 1.29145
+          },
+          {
+            "timeIndex": 15,
+            "open": 1.29145,
+            "high": 1.29591,
+            "low": 1.28966,
+            "close": 1.29376
+          },
+          {
+            "timeIndex": 16,
+            "open": 1.29376,
+            "high": 1.2993,
+            "low": 1.29167,
+            "close": 1.29744
+          },
+          {
+            "timeIndex": 17,
+            "open": 1.29744,
+            "high": 1.30185,
+            "low": 1.29572,
+            "close": 1.30088
+          },
+          {
+            "timeIndex": 18,
+            "open": 1.30088,
+            "high": 1.30474,
+            "low": 1.29996,
+            "close": 1.3028
+          },
+          {
+            "timeIndex": 19,
+            "open": 1.3028,
+            "high": 1.30522,
+            "low": 1.30105,
+            "close": 1.3031
+          },
+          {
+            "timeIndex": 20,
+            "open": 1.3031,
+            "high": 1.30445,
+            "low": 1.30056,
+            "close": 1.30265
+          },
+          {
+            "timeIndex": 21,
+            "open": 1.30265,
+            "high": 1.30422,
+            "low": 1.30037,
+            "close": 1.30214
+          },
+          {
+            "timeIndex": 22,
+            "open": 1.30214,
+            "high": 1.30431,
+            "low": 1.30076,
+            "close": 1.30172
+          },
+          {
+            "timeIndex": 23,
+            "open": 1.30172,
+            "high": 1.3035,
+            "low": 1.2997,
+            "close": 1.30139
+          },
+          {
+            "timeIndex": 24,
+            "open": 1.30139,
+            "high": 1.30279,
+            "low": 1.2993,
+            "close": 1.30171
+          },
+          {
+            "timeIndex": 25,
+            "open": 1.30171,
+            "high": 1.3055,
+            "low": 1.2999,
+            "close": 1.30349
+          },
+          {
+            "timeIndex": 26,
+            "open": 1.30349,
+            "high": 1.30888,
+            "low": 1.30246,
+            "close": 1.30681
+          },
+          {
+            "timeIndex": 27,
+            "open": 1.30681,
+            "high": 1.31175,
+            "low": 1.30517,
+            "close": 1.31051
+          },
+          {
+            "timeIndex": 28,
+            "open": 1.31051,
+            "high": 1.31464,
+            "low": 1.30843,
+            "close": 1.31298
+          },
+          {
+            "timeIndex": 29,
+            "open": 1.31298,
+            "high": 1.31561,
+            "low": 1.31112,
+            "close": 1.31344
+          },
+          {
+            "timeIndex": 30,
+            "open": 1.31344,
+            "high": 1.31514,
+            "low": 1.31141,
+            "close": 1.31251
+          },
+          {
+            "timeIndex": 31,
+            "open": 1.31251,
+            "high": 1.3137,
+            "low": 1.3099,
+            "close": 1.31147
+          },
+          {
+            "timeIndex": 32,
+            "open": 1.31147,
+            "high": 1.31353,
+            "low": 1.30901,
+            "close": 1.31108
+          },
+          {
+            "timeIndex": 33,
+            "open": 1.31108,
+            "high": 1.31336,
+            "low": 1.30918,
+            "close": 1.31133
+          },
+          {
+            "timeIndex": 34,
+            "open": 1.31133,
+            "high": 1.31323,
+            "low": 1.31016,
+            "close": 1.31209
+          },
+          {
+            "timeIndex": 35,
+            "open": 1.31209,
+            "high": 1.31541,
+            "low": 1.31058,
+            "close": 1.31367
+          },
+          {
+            "timeIndex": 36,
+            "open": 1.31367,
+            "high": 1.31858,
+            "low": 1.31162,
+            "close": 1.31641
+          },
+          {
+            "timeIndex": 37,
+            "open": 1.31641,
+            "high": 1.32149,
+            "low": 1.31447,
+            "close": 1.31988
+          },
+          {
+            "timeIndex": 38,
+            "open": 1.31988,
+            "high": 1.32402,
+            "low": 1.31863,
+            "close": 1.32273
+          },
+          {
+            "timeIndex": 39,
+            "open": 1.32273,
+            "high": 1.32579,
+            "low": 1.32128,
+            "close": 1.3237
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 1.28061,
+            "maximumPrice": 1.2872,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 1.29191,
+            "maximumPrice": 1.2985,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 1.30602,
+            "maximumPrice": 1.31261,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 1.31732,
+            "maximumPrice": 1.32391,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "e10a3ccb04eb0f7f9ef958cefac2bfb8fc5e24cf91d035445e99046fab195f28"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-017",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: momentum candle",
+        "zh": "独立情境分析：通过振幅、收盘与延续衡量动量K线"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of measuring momentum candles through range, close and follow-through using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析通过振幅、收盘与延续衡量动量K线的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "0595b9fdedbe3439c47b7ab6267a1af80b4494674f44cf1d2dd48ce14fa1335f"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-017",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: momentum candle",
+        "zh": "实践展示：通过振幅、收盘与延续衡量动量K线"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate measuring momentum candles through range, close and follow-through. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示通过振幅、收盘与延续衡量动量K线。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "d7c37762ccb780b0413f1e7c2239cdfbb47ff4b8bf89d7b824b7c33fb8024fd7"
+    }
+  ]
+}

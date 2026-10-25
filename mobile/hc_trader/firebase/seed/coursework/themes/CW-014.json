@@ -1,0 +1,636 @@
+{
+  "theme": {
+    "id": "CW-014",
+    "code": "CW-014",
+    "title": {
+      "en": "Distinguishing Meaningful Engulfing Patterns from Visual Noise",
+      "zh": "区分有效吞没形态与视觉噪音"
+    },
+    "shortTitle": {
+      "en": "engulfing",
+      "zh": "区分有效吞没形态与视觉噪音"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates distinguishing meaningful engulfing patterns from visual noise using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示区分有效吞没形态与视觉噪音。"
+    },
+    "categoryId": "price_action",
+    "categoryName": {
+      "en": "Candlestick and Price Action",
+      "zh": "K线与价格行为"
+    },
+    "difficulty": "beginner",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind distinguishing meaningful engulfing patterns from visual noise.",
+        "Apply distinguishing meaningful engulfing patterns from visual noise to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释区分有效吞没形态与视觉噪音背后的核心决策规则。",
+        "将区分有效吞没形态与视觉噪音应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "engulfing",
+      "confirmation",
+      "price action",
+      "NAS100",
+      "Candlestick and Price Action"
+    ],
+    "searchTokens": [
+      "cw-014",
+      "CW-014",
+      "price_action",
+      "candlestick and price action",
+      "K线与价格行为",
+      "distinguishing",
+      "meaningful",
+      "engulfing",
+      "patterns",
+      "from",
+      "visual",
+      "noise",
+      "区分有效吞没形态与视觉噪音",
+      "confirmation",
+      "price",
+      "action",
+      "nas100",
+      "candlestick",
+      "and"
+    ],
+    "difficultyOrder": 1,
+    "estimatedMinutes": 55,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 14,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "d326ae8540e7dae6f6029cf4e76d46d9619fe25617878e21710fa366d16f7b2b"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-014",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for engulfing",
+        "zh": "区分有效吞没形态与视觉噪音的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which statement best describes a risk-aware approach to distinguishing meaningful engulfing patterns from visual noise?",
+        "zh": "哪项陈述最能说明对区分有效吞没形态与视觉噪音采取风险意识的方法？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing distinguishing meaningful engulfing patterns from visual noise.",
+            "zh": "评估区分有效吞没形态与视觉噪音时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "93b80043da8dce7da2fc5fd16f5c0d32f394fe93b219ae388d53576171213c22"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-014",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying engulfing Under Uncertainty",
+        "zh": "在不确定性下应用区分有效吞没形态与视觉噪音"
+      },
+      "prompt": {
+        "en": "The market moves quickly before confirmation of distinguishing meaningful engulfing patterns from visual noise. Which action follows a professional plan?",
+        "zh": "在区分有效吞没形态与视觉噪音获得确认前市场快速波动。哪项行动符合专业计划？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "eba4f307940517970ddb7a7c3e5c618cc1da7241434256ed592ed73060381f28"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-014",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "NAS100 Chart Interpretation for engulfing",
+        "zh": "NAS100图表中的区分有效吞没形态与视觉噪音解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational NAS100 H1 chart. Which labelled zone is the strongest decision area for evaluating distinguishing meaningful engulfing patterns from visual noise while keeping invalidation visible?",
+        "zh": "研究合成教学用NAS100 H1图表。哪个标记区域最适合评估区分有效吞没形态与视觉噪音，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "NAS100",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 19400,
+            "high": 19438.9,
+            "low": 19362.3,
+            "close": 19411.6
+          },
+          {
+            "timeIndex": 1,
+            "open": 19411.6,
+            "high": 19452.3,
+            "low": 19374.5,
+            "close": 19399.8
+          },
+          {
+            "timeIndex": 2,
+            "open": 19399.8,
+            "high": 19435.7,
+            "low": 19359.1,
+            "close": 19385.1
+          },
+          {
+            "timeIndex": 3,
+            "open": 19385.1,
+            "high": 19402.8,
+            "low": 19339.3,
+            "close": 19377.3
+          },
+          {
+            "timeIndex": 4,
+            "open": 19377.3,
+            "high": 19413.8,
+            "low": 19337.3,
+            "close": 19375.6
+          },
+          {
+            "timeIndex": 5,
+            "open": 19375.6,
+            "high": 19422.7,
+            "low": 19349,
+            "close": 19382.2
+          },
+          {
+            "timeIndex": 6,
+            "open": 19382.2,
+            "high": 19434.8,
+            "low": 19357.5,
+            "close": 19408.4
+          },
+          {
+            "timeIndex": 7,
+            "open": 19408.4,
+            "high": 19491.3,
+            "low": 19371,
+            "close": 19462.2
+          },
+          {
+            "timeIndex": 8,
+            "open": 19462.2,
+            "high": 19572.8,
+            "low": 19423.5,
+            "close": 19531.7
+          },
+          {
+            "timeIndex": 9,
+            "open": 19531.7,
+            "high": 19622.7,
+            "low": 19503.9,
+            "close": 19588.2
+          },
+          {
+            "timeIndex": 10,
+            "open": 19588.2,
+            "high": 19627.8,
+            "low": 19564.8,
+            "close": 19608
+          },
+          {
+            "timeIndex": 11,
+            "open": 19608,
+            "high": 19645.8,
+            "low": 19556.3,
+            "close": 19593
+          },
+          {
+            "timeIndex": 12,
+            "open": 19593,
+            "high": 19632.8,
+            "low": 19528,
+            "close": 19567
+          },
+          {
+            "timeIndex": 13,
+            "open": 19567,
+            "high": 19591.4,
+            "low": 19524.4,
+            "close": 19553.4
+          },
+          {
+            "timeIndex": 14,
+            "open": 19553.4,
+            "high": 19589.6,
+            "low": 19531.4,
+            "close": 19558.6
+          },
+          {
+            "timeIndex": 15,
+            "open": 19558.6,
+            "high": 19618.1,
+            "low": 19522.5,
+            "close": 19576.8
+          },
+          {
+            "timeIndex": 16,
+            "open": 19576.8,
+            "high": 19638.8,
+            "low": 19537.4,
+            "close": 19605.8
+          },
+          {
+            "timeIndex": 17,
+            "open": 19605.8,
+            "high": 19672.4,
+            "low": 19575.6,
+            "close": 19650.6
+          },
+          {
+            "timeIndex": 18,
+            "open": 19650.6,
+            "high": 19749.4,
+            "low": 19629.9,
+            "close": 19710.6
+          },
+          {
+            "timeIndex": 19,
+            "open": 19710.6,
+            "high": 19807.5,
+            "low": 19675.4,
+            "close": 19768.5
+          },
+          {
+            "timeIndex": 20,
+            "open": 19768.5,
+            "high": 19820.9,
+            "low": 19728.9,
+            "close": 19798.5
+          },
+          {
+            "timeIndex": 21,
+            "open": 19798.5,
+            "high": 19831.1,
+            "low": 19758.2,
+            "close": 19789.5
+          },
+          {
+            "timeIndex": 22,
+            "open": 19789.5,
+            "high": 19830.8,
+            "low": 19738.2,
+            "close": 19757.5
+          },
+          {
+            "timeIndex": 23,
+            "open": 19757.5,
+            "high": 19788.8,
+            "low": 19698.6,
+            "close": 19733
+          },
+          {
+            "timeIndex": 24,
+            "open": 19733,
+            "high": 19759.7,
+            "low": 19693.3,
+            "close": 19735.8
+          },
+          {
+            "timeIndex": 25,
+            "open": 19735.8,
+            "high": 19803.1,
+            "low": 19703.5,
+            "close": 19763.5
+          },
+          {
+            "timeIndex": 26,
+            "open": 19763.5,
+            "high": 19840.8,
+            "low": 19745.6,
+            "close": 19802.8
+          },
+          {
+            "timeIndex": 27,
+            "open": 19802.8,
+            "high": 19866.9,
+            "low": 19769.3,
+            "close": 19846.6
+          },
+          {
+            "timeIndex": 28,
+            "open": 19846.6,
+            "high": 19930,
+            "low": 19806.8,
+            "close": 19895.8
+          },
+          {
+            "timeIndex": 29,
+            "open": 19895.8,
+            "high": 19987.3,
+            "low": 19862.5,
+            "close": 19946.1
+          },
+          {
+            "timeIndex": 30,
+            "open": 19946.1,
+            "high": 20010.1,
+            "low": 19928.3,
+            "close": 19980.5
+          },
+          {
+            "timeIndex": 31,
+            "open": 19980.5,
+            "high": 20007.9,
+            "low": 19948.1,
+            "close": 19982
+          },
+          {
+            "timeIndex": 32,
+            "open": 19982,
+            "high": 20022.3,
+            "low": 19913.6,
+            "close": 19953.3
+          },
+          {
+            "timeIndex": 33,
+            "open": 19953.3,
+            "high": 19990.2,
+            "low": 19886.4,
+            "close": 19920.7
+          },
+          {
+            "timeIndex": 34,
+            "open": 19920.7,
+            "high": 19938.9,
+            "low": 19894.8,
+            "close": 19914
+          },
+          {
+            "timeIndex": 35,
+            "open": 19914,
+            "high": 19978.4,
+            "low": 19882.6,
+            "close": 19942.8
+          },
+          {
+            "timeIndex": 36,
+            "open": 19942.8,
+            "high": 20033.9,
+            "low": 19903.2,
+            "close": 19993.1
+          },
+          {
+            "timeIndex": 37,
+            "open": 19993.1,
+            "high": 20072.6,
+            "low": 19957.9,
+            "close": 20044.8
+          },
+          {
+            "timeIndex": 38,
+            "open": 20044.8,
+            "high": 20117.2,
+            "low": 20024.3,
+            "close": 20089.4
+          },
+          {
+            "timeIndex": 39,
+            "open": 20089.4,
+            "high": 20168.9,
+            "low": 20059.1,
+            "close": 20128
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 19370.6,
+            "maximumPrice": 19487,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 19570.1,
+            "maximumPrice": 19686.6,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 19819.6,
+            "maximumPrice": 19936.1,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 20019.2,
+            "maximumPrice": 20135.6,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "44bf23a1f9b2b9fdf499dd3e2c668bb91f27b82515376da4acc6bfcdd7751855"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-014",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: engulfing",
+        "zh": "独立情境分析：区分有效吞没形态与视觉噪音"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of distinguishing meaningful engulfing patterns from visual noise using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析区分有效吞没形态与视觉噪音的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "434e6d2fe171b291c9940d864f8a0b1e950bd5b41d756c81b6fbec7581b13fd4"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-014",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: engulfing",
+        "zh": "实践展示：区分有效吞没形态与视觉噪音"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate distinguishing meaningful engulfing patterns from visual noise. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示区分有效吞没形态与视觉噪音。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "e8cc43be6f4a941a8a134e747d19f7b1fec08bcedc0fe2e1e87a782232d1e954"
+    }
+  ]
+}

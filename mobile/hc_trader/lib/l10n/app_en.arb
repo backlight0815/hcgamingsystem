@@ -1,0 +1,15 @@
+{
+  "@@locale": "en",
+  "appTitle": "HC Trader",
+  "currentRoles": "Current Roles",
+  "noRoleAssigned": "No role assigned",
+  "roleSuperAdmin": "Super Admin",
+  "roleSubAdmin": "Sub Admin",
+  "roleMarketAnalyst": "Market Analyst",
+  "roleSignalProvider": "Signal Provider",
+  "roleFinancialDepartment": "Financial Department",
+  "roleLeader": "Leader",
+  "roleRecruiter": "Recruiter",
+  "roleTrader": "Trader",
+  "roleLeadClient": "Lead Client"
+}

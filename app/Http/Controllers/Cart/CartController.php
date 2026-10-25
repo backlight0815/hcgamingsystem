@@ -147,7 +147,7 @@ class CartController extends Controller
 
     // Validate the quantity input against the available stock
     $validator = Validator::make($request->all(), [
-        'quantity' => "required|numeric|max:$availableStock",
+        'quantity' => "required|integer|min:1|max:$availableStock",
     ], [
         'quantity.max' => 'The quantity cannot exceed the available stock.',
     ]);
@@ -158,9 +158,14 @@ class CartController extends Controller
         return redirect()->back()->withErrors($validator)->withInput();
     }
 
+    if (!session()->has('guest_id')) {
+        session()->put('guest_id', 'GUEST_' . Str::uuid()->toString());
+    }
+
     $cart = new Cart();
     $cart->product_id = $productId;
     $cart->user_id = null; // Set user_id as null for guest users
+    $cart->guest_id = session('guest_id');
     $cart->quantity = $quantity;
     $cart->save();
 
@@ -249,7 +254,14 @@ class CartController extends Controller
         }
 
         // Clear the guest cart after merging.
+        if (session()->has('guest_id')) {
+            Cart::where('guest_id', session('guest_id'))->whereNull('user_id')->delete();
+        }
         session()->forget('cart');
+        session()->forget('guest_id');
+        session()->forget('GuestCartTotal');
+        session()->put('cartTotal', Cart::where('user_id', $user->id)->sum('quantity')
+            + DealerCart::where('user_id', $user->id)->sum('quantity'));
 
     }
 
@@ -272,6 +284,9 @@ class CartController extends Controller
     {
         if (auth()->check()) {
             // User is authenticated
+            if (session()->has('cart')) {
+                $this->mergeCarts();
+            }
             $user_id = auth()->id();
 
             // Retrieve cart items along with associated products (including soft-deleted)
@@ -334,6 +349,11 @@ class CartController extends Controller
 
             return view('frontend.guest_cart_summary', compact('allCartItems'));
         }
+    }
+
+    public function getCartGuest()
+    {
+        return $this->getCart();
     }
 
 

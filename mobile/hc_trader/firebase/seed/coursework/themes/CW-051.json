@@ -1,0 +1,635 @@
+{
+  "theme": {
+    "id": "CW-051",
+    "code": "CW-051",
+    "title": {
+      "en": "Building a Repeatable Top-Down Analysis Sequence",
+      "zh": "建立可重复的自上而下分析流程"
+    },
+    "shortTitle": {
+      "en": "top-down analysis",
+      "zh": "建立可重复的自上而下分析流程"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates building a repeatable top-down analysis sequence using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示建立可重复的自上而下分析流程。"
+    },
+    "categoryId": "multi_timeframe",
+    "categoryName": {
+      "en": "Multi-Timeframe Analysis",
+      "zh": "多时间周期分析"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind building a repeatable top-down analysis sequence.",
+        "Apply building a repeatable top-down analysis sequence to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释建立可重复的自上而下分析流程背后的核心决策规则。",
+        "将建立可重复的自上而下分析流程应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "top-down analysis",
+      "timeframe",
+      "workflow",
+      "EURUSD",
+      "Multi-Timeframe Analysis"
+    ],
+    "searchTokens": [
+      "cw-051",
+      "CW-051",
+      "multi_timeframe",
+      "multi-timeframe analysis",
+      "多时间周期分析",
+      "building",
+      "a",
+      "repeatable",
+      "top",
+      "down",
+      "analysis",
+      "sequence",
+      "建立可重复的自上而下分析流程",
+      "top-down",
+      "timeframe",
+      "workflow",
+      "eurusd",
+      "multi-timeframe"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 51,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "6939bb2ca179eec48613b8b7f93114855c6f24eae5b5527853414422164a8eca"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-051",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for top-down analysis",
+        "zh": "建立可重复的自上而下分析流程的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which evidence most reliably shows that building a repeatable top-down analysis sequence is being applied correctly?",
+        "zh": "哪项证据最可靠地表明已正确应用建立可重复的自上而下分析流程？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing building a repeatable top-down analysis sequence.",
+            "zh": "评估建立可重复的自上而下分析流程时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "5e0d120974b2f0bc5a88c78455cd9ab4ffe15a552a82694ad23f43c4c72fc9b2"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-051",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying top-down analysis Under Uncertainty",
+        "zh": "在不确定性下应用建立可重复的自上而下分析流程"
+      },
+      "prompt": {
+        "en": "A trader finds evidence for building a repeatable top-down analysis sequence, but the planned invalidation has already been breached. What is the best response?",
+        "zh": "交易者发现支持建立可重复的自上而下分析流程的证据，但计划失效条件已经被突破。最佳做法是什么？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "262c57fbb06586843b63597e43cbd2d2da331727d81e896609971b38a0bd1d55"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-051",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "EURUSD Chart Interpretation for top-down analysis",
+        "zh": "EURUSD图表中的建立可重复的自上而下分析流程解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational EURUSD H1 chart. Which labelled zone is the strongest decision area for evaluating building a repeatable top-down analysis sequence while keeping invalidation visible?",
+        "zh": "研究合成教学用EURUSD H1图表。哪个标记区域最适合评估建立可重复的自上而下分析流程，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "EURUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 1.08725,
+            "high": 1.08822,
+            "low": 1.08423,
+            "close": 1.08583
+          },
+          {
+            "timeIndex": 1,
+            "open": 1.08583,
+            "high": 1.08713,
+            "low": 1.0834,
+            "close": 1.08492
+          },
+          {
+            "timeIndex": 2,
+            "open": 1.08492,
+            "high": 1.08706,
+            "low": 1.08395,
+            "close": 1.08536
+          },
+          {
+            "timeIndex": 3,
+            "open": 1.08536,
+            "high": 1.08854,
+            "low": 1.08424,
+            "close": 1.08721
+          },
+          {
+            "timeIndex": 4,
+            "open": 1.08721,
+            "high": 1.09041,
+            "low": 1.08563,
+            "close": 1.08948
+          },
+          {
+            "timeIndex": 5,
+            "open": 1.08948,
+            "high": 1.09252,
+            "low": 1.08794,
+            "close": 1.09091
+          },
+          {
+            "timeIndex": 6,
+            "open": 1.09091,
+            "high": 1.09255,
+            "low": 1.08988,
+            "close": 1.09097
+          },
+          {
+            "timeIndex": 7,
+            "open": 1.09097,
+            "high": 1.09185,
+            "low": 1.089,
+            "close": 1.09007
+          },
+          {
+            "timeIndex": 8,
+            "open": 1.09007,
+            "high": 1.09144,
+            "low": 1.08738,
+            "close": 1.08895
+          },
+          {
+            "timeIndex": 9,
+            "open": 1.08895,
+            "high": 1.09064,
+            "low": 1.08636,
+            "close": 1.08792
+          },
+          {
+            "timeIndex": 10,
+            "open": 1.08792,
+            "high": 1.08918,
+            "low": 1.08589,
+            "close": 1.08698
+          },
+          {
+            "timeIndex": 11,
+            "open": 1.08698,
+            "high": 1.08799,
+            "low": 1.08527,
+            "close": 1.08629
+          },
+          {
+            "timeIndex": 12,
+            "open": 1.08629,
+            "high": 1.0881,
+            "low": 1.08475,
+            "close": 1.08646
+          },
+          {
+            "timeIndex": 13,
+            "open": 1.08646,
+            "high": 1.08943,
+            "low": 1.08488,
+            "close": 1.08789
+          },
+          {
+            "timeIndex": 14,
+            "open": 1.08789,
+            "high": 1.09091,
+            "low": 1.08676,
+            "close": 1.09012
+          },
+          {
+            "timeIndex": 15,
+            "open": 1.09012,
+            "high": 1.09337,
+            "low": 1.08915,
+            "close": 1.09194
+          },
+          {
+            "timeIndex": 16,
+            "open": 1.09194,
+            "high": 1.094,
+            "low": 1.09042,
+            "close": 1.09232
+          },
+          {
+            "timeIndex": 17,
+            "open": 1.09232,
+            "high": 1.0935,
+            "low": 1.08967,
+            "close": 1.09127
+          },
+          {
+            "timeIndex": 18,
+            "open": 1.09127,
+            "high": 1.09237,
+            "low": 1.08849,
+            "close": 1.08968
+          },
+          {
+            "timeIndex": 19,
+            "open": 1.08968,
+            "high": 1.09134,
+            "low": 1.08752,
+            "close": 1.08843
+          },
+          {
+            "timeIndex": 20,
+            "open": 1.08843,
+            "high": 1.08992,
+            "low": 1.08629,
+            "close": 1.08778
+          },
+          {
+            "timeIndex": 21,
+            "open": 1.08778,
+            "high": 1.08848,
+            "low": 1.08595,
+            "close": 1.08756
+          },
+          {
+            "timeIndex": 22,
+            "open": 1.08756,
+            "high": 1.08931,
+            "low": 1.08633,
+            "close": 1.08782
+          },
+          {
+            "timeIndex": 23,
+            "open": 1.08782,
+            "high": 1.09055,
+            "low": 1.08697,
+            "close": 1.08888
+          },
+          {
+            "timeIndex": 24,
+            "open": 1.08888,
+            "high": 1.09184,
+            "low": 1.08743,
+            "close": 1.09074
+          },
+          {
+            "timeIndex": 25,
+            "open": 1.09074,
+            "high": 1.09381,
+            "low": 1.08911,
+            "close": 1.09263
+          },
+          {
+            "timeIndex": 26,
+            "open": 1.09263,
+            "high": 1.09512,
+            "low": 1.09136,
+            "close": 1.09344
+          },
+          {
+            "timeIndex": 27,
+            "open": 1.09344,
+            "high": 1.09487,
+            "low": 1.09181,
+            "close": 1.09261
+          },
+          {
+            "timeIndex": 28,
+            "open": 1.09261,
+            "high": 1.0934,
+            "low": 1.08934,
+            "close": 1.09075
+          },
+          {
+            "timeIndex": 29,
+            "open": 1.09075,
+            "high": 1.09229,
+            "low": 1.08743,
+            "close": 1.08906
+          },
+          {
+            "timeIndex": 30,
+            "open": 1.08906,
+            "high": 1.0907,
+            "low": 1.08701,
+            "close": 1.08833
+          },
+          {
+            "timeIndex": 31,
+            "open": 1.08833,
+            "high": 1.08954,
+            "low": 1.08758,
+            "close": 1.08851
+          },
+          {
+            "timeIndex": 32,
+            "open": 1.08851,
+            "high": 1.09044,
+            "low": 1.08714,
+            "close": 1.08919
+          },
+          {
+            "timeIndex": 33,
+            "open": 1.08919,
+            "high": 1.09188,
+            "low": 1.08756,
+            "close": 1.09019
+          },
+          {
+            "timeIndex": 34,
+            "open": 1.09019,
+            "high": 1.09297,
+            "low": 1.08883,
+            "close": 1.0916
+          },
+          {
+            "timeIndex": 35,
+            "open": 1.0916,
+            "high": 1.09408,
+            "low": 1.09088,
+            "close": 1.0932
+          },
+          {
+            "timeIndex": 36,
+            "open": 1.0932,
+            "high": 1.09579,
+            "low": 1.09187,
+            "close": 1.09421
+          },
+          {
+            "timeIndex": 37,
+            "open": 1.09421,
+            "high": 1.09582,
+            "low": 1.09218,
+            "close": 1.09381
+          },
+          {
+            "timeIndex": 38,
+            "open": 1.09381,
+            "high": 1.09476,
+            "low": 1.09066,
+            "close": 1.09206
+          },
+          {
+            "timeIndex": 39,
+            "open": 1.09206,
+            "high": 1.09338,
+            "low": 1.08924,
+            "close": 1.09002
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 1.0839,
+            "maximumPrice": 1.08564,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 1.08688,
+            "maximumPrice": 1.08862,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 1.0906,
+            "maximumPrice": 1.09234,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 1.09358,
+            "maximumPrice": 1.09532,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "c174d321a704992d659eaee498dbae03c7542fde9b2bffd82d7a9ca4caf3adc0"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-051",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: top-down analysis",
+        "zh": "独立情境分析：建立可重复的自上而下分析流程"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of building a repeatable top-down analysis sequence using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析建立可重复的自上而下分析流程的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "3e2033481a88ff290161d9fbfe3e436f8179ff69b768c993b6d7b1d1907cd460"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-051",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: top-down analysis",
+        "zh": "实践展示：建立可重复的自上而下分析流程"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate building a repeatable top-down analysis sequence. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示建立可重复的自上而下分析流程。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "5e39240cb5b42ecef40810cc8bf536dd66895ef8e3cd1ed0073f87f9f5b70e65"
+    }
+  ]
+}

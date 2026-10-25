@@ -13,6 +13,11 @@ class Product extends Model
     protected $guarded =[];
     protected $table = 'product';
 
+    public function scopeStorefront($query)
+    {
+        return $query->where('product_name', 'not like', '[Demo]%');
+    }
+
 
     public function productcategory(){
         return $this->belongsTo(ProductCategory::class,'product_category_id','id');

@@ -57,7 +57,7 @@
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col-12 d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">Generate Trading Certificate</h4>
+                <h4 class="mb-0 contrast-dark-title">Generate Trading Certificate</h4>
                 <a href="{{ route('certificate.index') }}" class="btn btn-light">
                     <i class="fas fa-arrow-left"></i> All Certificates
                 </a>
@@ -103,10 +103,14 @@
                             <select name="user_id" id="user_id" class="form-control" required>
                                 <option value="">Select recipient</option>
                                 @foreach($users as $user)
+                                    @php
+                                        $recipientName = $user->name ?: ($user->username ?: $user->email);
+                                        $showUsername = $user->username && strcasecmp($recipientName, $user->username) !== 0;
+                                    @endphp
                                     <option value="{{ $user->id }}"
-                                            data-name="{{ $user->name ?: $user->username }}"
+                                            data-name="{{ $recipientName }}"
                                             {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                                        {{ $user->name ?: $user->username }} - {{ $user->email }} (Role {{ $user->role_id }})
+                                        {{ $recipientName }}@if($showUsername) ({{ $user->username }})@endif - {{ $user->email }} (Role {{ $user->role_id }})
                                     </option>
                                 @endforeach
                             </select>

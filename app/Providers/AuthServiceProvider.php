@@ -3,6 +3,10 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+use App\Models\TradingBlog;
+use App\Models\TradingSignal;
+use App\Policies\TradingBlogPolicy;
+use App\Policies\TradingSignalPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -14,7 +18,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        TradingBlog::class => TradingBlogPolicy::class,
+        TradingSignal::class => TradingSignalPolicy::class,
     ];
 
     /**
@@ -24,8 +29,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        // Role 1 is the existing server-side platform administrator assignment.
+        // Module enablement, authentication, and workflow safety checks remain outside Gate.
+        Gate::before(fn ($user) => $user->isGlobalSuperAdmin() ? true : null);
+
         Gate::define('admin', function ($user) {
-            return $user->hasRole('admin');
+            return $user->isBackofficeAdministrator();
         });
 
         Gate::define('agent', function ($user) {

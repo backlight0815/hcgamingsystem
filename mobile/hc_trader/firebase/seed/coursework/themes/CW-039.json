@@ -1,0 +1,634 @@
+{
+  "theme": {
+    "id": "CW-039",
+    "code": "CW-039",
+    "title": {
+      "en": "Mapping Major Structure for Directional Decision Making",
+      "zh": "绘制主要结构以支持方向决策"
+    },
+    "shortTitle": {
+      "en": "major structure",
+      "zh": "绘制主要结构以支持方向决策"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates mapping major structure for directional decision making using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示绘制主要结构以支持方向决策。"
+    },
+    "categoryId": "market_structure",
+    "categoryName": {
+      "en": "Market Structure",
+      "zh": "市场结构"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind mapping major structure for directional decision making.",
+        "Apply mapping major structure for directional decision making to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释绘制主要结构以支持方向决策背后的核心决策规则。",
+        "将绘制主要结构以支持方向决策应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "major structure",
+      "external structure",
+      "bias",
+      "USDJPY",
+      "Market Structure"
+    ],
+    "searchTokens": [
+      "cw-039",
+      "CW-039",
+      "market_structure",
+      "market structure",
+      "市场结构",
+      "mapping",
+      "major",
+      "structure",
+      "for",
+      "directional",
+      "decision",
+      "making",
+      "绘制主要结构以支持方向决策",
+      "external",
+      "bias",
+      "usdjpy",
+      "market"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 39,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "9eefe7bda9bd294277100ff545452523d9666fb367d589a91c5764459321773e"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-039",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for major structure",
+        "zh": "绘制主要结构以支持方向决策的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which combination of evidence is most appropriate for assessing mapping major structure for directional decision making?",
+        "zh": "评估绘制主要结构以支持方向决策时，哪种证据组合最合适？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing mapping major structure for directional decision making.",
+            "zh": "评估绘制主要结构以支持方向决策时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "535567d208f3b3b62f455913eb8d166018cb38878e6bc317999adbc342fc4f8a"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-039",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying major structure Under Uncertainty",
+        "zh": "在不确定性下应用绘制主要结构以支持方向决策"
+      },
+      "prompt": {
+        "en": "A chart resembles a textbook example of mapping major structure for directional decision making, but the location is poor. How should it be treated?",
+        "zh": "图表看似绘制主要结构以支持方向决策的教科书案例，但位置不佳。应如何处理？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "a0eb39ec32ef7a81bb45d7f05c9b31193db54ed25693183459d187aa3561afc0"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-039",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "USDJPY Chart Interpretation for major structure",
+        "zh": "USDJPY图表中的绘制主要结构以支持方向决策解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational USDJPY H1 chart. Which labelled zone is the strongest decision area for evaluating mapping major structure for directional decision making while keeping invalidation visible?",
+        "zh": "研究合成教学用USDJPY H1图表。哪个标记区域最适合评估绘制主要结构以支持方向决策，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "USDJPY",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 150.293,
+            "high": 150.617,
+            "low": 150.084,
+            "close": 150.486
+          },
+          {
+            "timeIndex": 1,
+            "open": 150.486,
+            "high": 150.7,
+            "low": 150.329,
+            "close": 150.479
+          },
+          {
+            "timeIndex": 2,
+            "open": 150.479,
+            "high": 150.683,
+            "low": 150.16,
+            "close": 150.285
+          },
+          {
+            "timeIndex": 3,
+            "open": 150.285,
+            "high": 150.392,
+            "low": 149.841,
+            "close": 150.038
+          },
+          {
+            "timeIndex": 4,
+            "open": 150.038,
+            "high": 150.224,
+            "low": 149.668,
+            "close": 149.879
+          },
+          {
+            "timeIndex": 5,
+            "open": 149.879,
+            "high": 150.1,
+            "low": 149.69,
+            "close": 149.847
+          },
+          {
+            "timeIndex": 6,
+            "open": 149.847,
+            "high": 150.058,
+            "low": 149.73,
+            "close": 149.9
+          },
+          {
+            "timeIndex": 7,
+            "open": 149.9,
+            "high": 150.144,
+            "low": 149.707,
+            "close": 150.002
+          },
+          {
+            "timeIndex": 8,
+            "open": 150.002,
+            "high": 150.379,
+            "low": 149.79,
+            "close": 150.161
+          },
+          {
+            "timeIndex": 9,
+            "open": 150.161,
+            "high": 150.574,
+            "low": 149.998,
+            "close": 150.377
+          },
+          {
+            "timeIndex": 10,
+            "open": 150.377,
+            "high": 150.665,
+            "low": 150.267,
+            "close": 150.57
+          },
+          {
+            "timeIndex": 11,
+            "open": 150.57,
+            "high": 150.809,
+            "low": 150.381,
+            "close": 150.616
+          },
+          {
+            "timeIndex": 12,
+            "open": 150.616,
+            "high": 150.835,
+            "low": 150.246,
+            "close": 150.459
+          },
+          {
+            "timeIndex": 13,
+            "open": 150.459,
+            "high": 150.607,
+            "low": 150.018,
+            "close": 150.188
+          },
+          {
+            "timeIndex": 14,
+            "open": 150.188,
+            "high": 150.34,
+            "low": 149.867,
+            "close": 149.97
+          },
+          {
+            "timeIndex": 15,
+            "open": 149.97,
+            "high": 150.19,
+            "low": 149.734,
+            "close": 149.919
+          },
+          {
+            "timeIndex": 16,
+            "open": 149.919,
+            "high": 150.208,
+            "low": 149.705,
+            "close": 150.018
+          },
+          {
+            "timeIndex": 17,
+            "open": 150.018,
+            "high": 150.278,
+            "low": 149.843,
+            "close": 150.178
+          },
+          {
+            "timeIndex": 18,
+            "open": 150.178,
+            "high": 150.539,
+            "low": 150.082,
+            "close": 150.339
+          },
+          {
+            "timeIndex": 19,
+            "open": 150.339,
+            "high": 150.715,
+            "low": 150.16,
+            "close": 150.498
+          },
+          {
+            "timeIndex": 20,
+            "open": 150.498,
+            "high": 150.781,
+            "low": 150.284,
+            "close": 150.644
+          },
+          {
+            "timeIndex": 21,
+            "open": 150.644,
+            "high": 150.869,
+            "low": 150.464,
+            "close": 150.707
+          },
+          {
+            "timeIndex": 22,
+            "open": 150.707,
+            "high": 150.929,
+            "low": 150.511,
+            "close": 150.608
+          },
+          {
+            "timeIndex": 23,
+            "open": 150.608,
+            "high": 150.79,
+            "low": 150.188,
+            "close": 150.362
+          },
+          {
+            "timeIndex": 24,
+            "open": 150.362,
+            "high": 150.474,
+            "low": 149.892,
+            "close": 150.106
+          },
+          {
+            "timeIndex": 25,
+            "open": 150.106,
+            "high": 150.312,
+            "low": 149.815,
+            "close": 150.001
+          },
+          {
+            "timeIndex": 26,
+            "open": 150.001,
+            "high": 150.311,
+            "low": 149.896,
+            "close": 150.098
+          },
+          {
+            "timeIndex": 27,
+            "open": 150.098,
+            "high": 150.44,
+            "low": 149.93,
+            "close": 150.314
+          },
+          {
+            "timeIndex": 28,
+            "open": 150.314,
+            "high": 150.694,
+            "low": 150.101,
+            "close": 150.523
+          },
+          {
+            "timeIndex": 29,
+            "open": 150.523,
+            "high": 150.886,
+            "low": 150.333,
+            "close": 150.664
+          },
+          {
+            "timeIndex": 30,
+            "open": 150.664,
+            "high": 150.921,
+            "low": 150.552,
+            "close": 150.747
+          },
+          {
+            "timeIndex": 31,
+            "open": 150.747,
+            "high": 150.899,
+            "low": 150.585,
+            "close": 150.776
+          },
+          {
+            "timeIndex": 32,
+            "open": 150.776,
+            "high": 150.987,
+            "low": 150.499,
+            "close": 150.711
+          },
+          {
+            "timeIndex": 33,
+            "open": 150.711,
+            "high": 150.918,
+            "low": 150.328,
+            "close": 150.522
+          },
+          {
+            "timeIndex": 34,
+            "open": 150.522,
+            "high": 150.637,
+            "low": 150.158,
+            "close": 150.277
+          },
+          {
+            "timeIndex": 35,
+            "open": 150.277,
+            "high": 150.457,
+            "low": 149.968,
+            "close": 150.124
+          },
+          {
+            "timeIndex": 36,
+            "open": 150.124,
+            "high": 150.398,
+            "low": 149.913,
+            "close": 150.176
+          },
+          {
+            "timeIndex": 37,
+            "open": 150.176,
+            "high": 150.572,
+            "low": 149.978,
+            "close": 150.408
+          },
+          {
+            "timeIndex": 38,
+            "open": 150.408,
+            "high": 150.81,
+            "low": 150.281,
+            "close": 150.676
+          },
+          {
+            "timeIndex": 39,
+            "open": 150.676,
+            "high": 151.064,
+            "low": 150.527,
+            "close": 150.849
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 149.724,
+            "maximumPrice": 149.919,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 150.059,
+            "maximumPrice": 150.254,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 150.478,
+            "maximumPrice": 150.673,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 150.813,
+            "maximumPrice": 151.008,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "6d3a2f98819ebd7fb713295c0eb789766eb173db281ed9a4316dcd8d1173aa21"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-039",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: major structure",
+        "zh": "独立情境分析：绘制主要结构以支持方向决策"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of mapping major structure for directional decision making using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析绘制主要结构以支持方向决策的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "35ea2b320079c68503ab8f3c26da11bf4ad528a0ea2033feaf91038727f38083"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-039",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: major structure",
+        "zh": "实践展示：绘制主要结构以支持方向决策"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate mapping major structure for directional decision making. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示绘制主要结构以支持方向决策。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "5e11fb4dc3627aa5c3ff70868ac9bbdcc8c494d9dcec8dea3d9909b40673f330"
+    }
+  ]
+}

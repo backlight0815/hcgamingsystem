@@ -1,0 +1,302 @@
+{
+  "themeKey": {
+    "themeId": "CW-090",
+    "code": "CW-090",
+    "questionCount": 5,
+    "totalMarks": 100,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "70374c40a5408380d04d59300edf5e7533c74679b41716a83b0aba92e368afee"
+  },
+  "questions": [
+    {
+      "themeId": "CW-090",
+      "questionId": "Q1",
+      "questionType": "theory_single_choice",
+      "maximumMarks": 15,
+      "correctOptionIds": [
+        "C"
+      ],
+      "answerExplanation": {
+        "en": "The correct response combines observable evidence, a written rule and invalidation when assessing designing an emotional recovery plan before stress escalates.",
+        "zh": "正确回答在评估在压力升级前设计情绪恢复计划时结合可观察证据、书面规则与失效条件。"
+      },
+      "modelAnswer": {
+        "en": null,
+        "zh": null
+      },
+      "rubric": [
+        {
+          "id": "correct_selection",
+          "criterion": {
+            "en": "Selects the correct answer using the stated decision rule",
+            "zh": "按照规定的决策规则选择正确答案"
+          },
+          "maximumMarks": 15
+        }
+      ],
+      "commonMistakes": {
+        "en": [
+          "Treating one signal as certainty",
+          "Ignoring invalidation or transaction cost",
+          "Increasing risk to recover a prior loss"
+        ],
+        "zh": [
+          "将单一信号视为确定结果",
+          "忽略失效条件或交易成本",
+          "为弥补之前亏损而增加风险"
+        ]
+      },
+      "seedVersion": "coursework_100_themes_v1",
+      "version": 1,
+      "managedBySeed": true,
+      "createdBy": "system_seed",
+      "updatedBy": "system_seed",
+      "contentHash": "f9b943b2e0911596ec9498c37768cc1d93ecbc1858896eda59da10ae95f432a1"
+    },
+    {
+      "themeId": "CW-090",
+      "questionId": "Q2",
+      "questionType": "theory_single_choice",
+      "maximumMarks": 15,
+      "correctOptionIds": [
+        "D"
+      ],
+      "answerExplanation": {
+        "en": "Pausing and rechecking evidence, invalidation and risk protects the process when uncertainty appears.",
+        "zh": "出现不确定性时，暂停并重新核对证据、失效条件与风险能够保护交易流程。"
+      },
+      "modelAnswer": {
+        "en": null,
+        "zh": null
+      },
+      "rubric": [
+        {
+          "id": "correct_selection",
+          "criterion": {
+            "en": "Selects the correct answer using the stated decision rule",
+            "zh": "按照规定的决策规则选择正确答案"
+          },
+          "maximumMarks": 15
+        }
+      ],
+      "commonMistakes": {
+        "en": [
+          "Treating one signal as certainty",
+          "Ignoring invalidation or transaction cost",
+          "Increasing risk to recover a prior loss"
+        ],
+        "zh": [
+          "将单一信号视为确定结果",
+          "忽略失效条件或交易成本",
+          "为弥补之前亏损而增加风险"
+        ]
+      },
+      "seedVersion": "coursework_100_themes_v1",
+      "version": 1,
+      "managedBySeed": true,
+      "createdBy": "system_seed",
+      "updatedBy": "system_seed",
+      "contentHash": "0211e8397a547ecdc75c9f634dc2782ea1b7cc067df7293efa403b7fae19bc88"
+    },
+    {
+      "themeId": "CW-090",
+      "questionId": "Q3",
+      "questionType": "chart_interpretation",
+      "maximumMarks": 20,
+      "correctOptionIds": [],
+      "correctZoneIds": [
+        "zone_b"
+      ],
+      "answerExplanation": {
+        "en": "The configured zone best combines the visible reaction area with a measurable invalidation boundary in this synthetic scenario.",
+        "zh": "在该合成情境中，设定区域最能结合可见反应区与可衡量的失效边界。"
+      },
+      "modelAnswer": {
+        "en": null,
+        "zh": null
+      },
+      "rubric": [
+        {
+          "id": "correct_zone",
+          "criterion": {
+            "en": "Selects the configured decision zone",
+            "zh": "选择设定的决策区域"
+          },
+          "maximumMarks": 20
+        }
+      ],
+      "commonMistakes": {
+        "en": [
+          "Treating one signal as certainty",
+          "Ignoring invalidation or transaction cost",
+          "Increasing risk to recover a prior loss"
+        ],
+        "zh": [
+          "将单一信号视为确定结果",
+          "忽略失效条件或交易成本",
+          "为弥补之前亏损而增加风险"
+        ]
+      },
+      "seedVersion": "coursework_100_themes_v1",
+      "version": 1,
+      "managedBySeed": true,
+      "createdBy": "system_seed",
+      "updatedBy": "system_seed",
+      "contentHash": "33ec75eb6369abb6549987d45f43e429b76f8583046e27ba1d04a3f45735f58a"
+    },
+    {
+      "themeId": "CW-090",
+      "questionId": "Q4",
+      "questionType": "self_analysis_kbat",
+      "maximumMarks": 25,
+      "correctOptionIds": [],
+      "answerExplanation": {
+        "en": "Responses are evaluated for evidence, comparison, invalidation, risk awareness and logical clarity rather than for predicting one direction.",
+        "zh": "评分依据是证据、比较、失效条件、风险意识与逻辑清晰度，而不是预测单一方向。"
+      },
+      "modelAnswer": {
+        "en": "A strong analysis of designing an emotional recovery plan before stress escalates identifies market context, tests competing scenarios, justifies key levels, defines invalidation and concludes whether action or no trade is appropriate.",
+        "zh": "高质量的在压力升级前设计情绪恢复计划分析应识别市场语境、检验相互竞争的情境、论证关键价位、定义失效条件，并判断采取行动或不交易是否合适。"
+      },
+      "rubric": [
+        {
+          "id": "market_context",
+          "criterion": {
+            "en": "Market-context identification",
+            "zh": "市场语境识别"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "structure_analysis",
+          "criterion": {
+            "en": "Structure and evidence analysis",
+            "zh": "结构与证据分析"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "key_level_justification",
+          "criterion": {
+            "en": "Key-level justification",
+            "zh": "关键价位论证"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "risk_invalidation",
+          "criterion": {
+            "en": "Risk and invalidation explanation",
+            "zh": "风险与失效条件说明"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "conclusion_clarity",
+          "criterion": {
+            "en": "Logical conclusion and clarity",
+            "zh": "逻辑结论与清晰度"
+          },
+          "maximumMarks": 5
+        }
+      ],
+      "commonMistakes": {
+        "en": [
+          "Treating one signal as certainty",
+          "Ignoring invalidation or transaction cost",
+          "Increasing risk to recover a prior loss"
+        ],
+        "zh": [
+          "将单一信号视为确定结果",
+          "忽略失效条件或交易成本",
+          "为弥补之前亏损而增加风险"
+        ]
+      },
+      "seedVersion": "coursework_100_themes_v1",
+      "version": 1,
+      "managedBySeed": true,
+      "createdBy": "system_seed",
+      "updatedBy": "system_seed",
+      "contentHash": "bfd1b8ed0fa10a1f59a0aac4e1435d9d3b180dbda5e2d4a5423d0c910b533457"
+    },
+    {
+      "themeId": "CW-090",
+      "questionId": "Q5",
+      "questionType": "practical_demonstration",
+      "maximumMarks": 25,
+      "correctOptionIds": [],
+      "answerExplanation": {
+        "en": "The evidence must demonstrate the assigned skill on an approved platform and show coherent entry, invalidation, target and risk logic.",
+        "zh": "证据必须在获准平台上展示指定技能，并呈现连贯的入场、失效、目标与风险逻辑。"
+      },
+      "modelAnswer": {
+        "en": "A complete demonstration clearly annotates designing an emotional recovery plan before stress escalates, identifies the entry condition, places the stop beyond logical invalidation, plans a feasible target and explains controlled position risk.",
+        "zh": "完整展示应清晰标注在压力升级前设计情绪恢复计划，识别入场条件，将止损置于逻辑失效范围之外，规划可行目标并解释受控仓位风险。"
+      },
+      "rubric": [
+        {
+          "id": "chart_annotation",
+          "criterion": {
+            "en": "Correct and readable chart annotation",
+            "zh": "正确且清晰的图表标注"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "entry_justification",
+          "criterion": {
+            "en": "Entry condition and justification",
+            "zh": "入场条件与理由"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "stop_placement",
+          "criterion": {
+            "en": "Logical stop-loss and invalidation placement",
+            "zh": "合理的止损与失效位置"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "target_planning",
+          "criterion": {
+            "en": "Feasible take-profit planning",
+            "zh": "可行的止盈规划"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "risk_explanation",
+          "criterion": {
+            "en": "Risk-management explanation",
+            "zh": "风险管理说明"
+          },
+          "maximumMarks": 5
+        }
+      ],
+      "commonMistakes": {
+        "en": [
+          "Treating one signal as certainty",
+          "Ignoring invalidation or transaction cost",
+          "Increasing risk to recover a prior loss"
+        ],
+        "zh": [
+          "将单一信号视为确定结果",
+          "忽略失效条件或交易成本",
+          "为弥补之前亏损而增加风险"
+        ]
+      },
+      "seedVersion": "coursework_100_themes_v1",
+      "version": 1,
+      "managedBySeed": true,
+      "createdBy": "system_seed",
+      "updatedBy": "system_seed",
+      "contentHash": "14709f801d6ddabb182571ee3a34461a07b38aa4e0c4129cf6277970774d085e"
+    }
+  ]
+}

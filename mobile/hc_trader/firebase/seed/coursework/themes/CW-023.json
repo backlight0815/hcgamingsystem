@@ -1,0 +1,642 @@
+{
+  "theme": {
+    "id": "CW-023",
+    "code": "CW-023",
+    "title": {
+      "en": "Combining Candle Bodies and Wicks into Practical Decision Zones",
+      "zh": "将K线实体与影线结合为实用决策区"
+    },
+    "shortTitle": {
+      "en": "body and wick",
+      "zh": "将K线实体与影线结合为实用决策区"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates combining candle bodies and wicks into practical decision zones using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示将K线实体与影线结合为实用决策区。"
+    },
+    "categoryId": "key_levels",
+    "categoryName": {
+      "en": "Support, Resistance and Key Levels",
+      "zh": "支撑、阻力与关键价位"
+    },
+    "difficulty": "beginner",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind combining candle bodies and wicks into practical decision zones.",
+        "Apply combining candle bodies and wicks into practical decision zones to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释将K线实体与影线结合为实用决策区背后的核心决策规则。",
+        "将将K线实体与影线结合为实用决策区应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "body and wick",
+      "zone",
+      "price level",
+      "EURUSD",
+      "Support, Resistance and Key Levels"
+    ],
+    "searchTokens": [
+      "cw-023",
+      "CW-023",
+      "key_levels",
+      "support, resistance and key levels",
+      "支撑、阻力与关键价位",
+      "combining",
+      "candle",
+      "bodies",
+      "and",
+      "wicks",
+      "into",
+      "practical",
+      "decision",
+      "zones",
+      "将K线实体与影线结合为实用决策区",
+      "body",
+      "wick",
+      "zone",
+      "price",
+      "level",
+      "eurusd",
+      "support,",
+      "resistance",
+      "key",
+      "levels"
+    ],
+    "difficultyOrder": 1,
+    "estimatedMinutes": 55,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 23,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "08f78d5395f41de43489e24c178531e783e12d695e4475fa861fbff3d893b291"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-023",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for body and wick",
+        "zh": "将K线实体与影线结合为实用决策区的核心决策规则"
+      },
+      "prompt": {
+        "en": "What should a learner verify first when evaluating combining candle bodies and wicks into practical decision zones?",
+        "zh": "评估将K线实体与影线结合为实用决策区时，学习者首先应核实什么？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing combining candle bodies and wicks into practical decision zones.",
+            "zh": "评估将K线实体与影线结合为实用决策区时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "3d3eeb43783f2960859fad2ccb0f707120e935ced435c80c5dff4feca3afe1bb"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-023",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying body and wick Under Uncertainty",
+        "zh": "在不确定性下应用将K线实体与影线结合为实用决策区"
+      },
+      "prompt": {
+        "en": "A setup involving combining candle bodies and wicks into practical decision zones offers poor risk-to-reward after costs. What should the learner do?",
+        "zh": "涉及将K线实体与影线结合为实用决策区的形态在计入成本后风险回报不佳。学习者应怎么做？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "38464cb75d3bdf8f3e67c5b39f875e840e4f1aab1a961733896283ff34216f34"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-023",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "EURUSD Chart Interpretation for body and wick",
+        "zh": "EURUSD图表中的将K线实体与影线结合为实用决策区解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational EURUSD H1 chart. Which labelled zone is the strongest decision area for evaluating combining candle bodies and wicks into practical decision zones while keeping invalidation visible?",
+        "zh": "研究合成教学用EURUSD H1图表。哪个标记区域最适合评估将K线实体与影线结合为实用决策区，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "EURUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 1.084,
+            "high": 1.08471,
+            "low": 1.08206,
+            "close": 1.08369
+          },
+          {
+            "timeIndex": 1,
+            "open": 1.08369,
+            "high": 1.08519,
+            "low": 1.08215,
+            "close": 1.08352
+          },
+          {
+            "timeIndex": 2,
+            "open": 1.08352,
+            "high": 1.08559,
+            "low": 1.08279,
+            "close": 1.08392
+          },
+          {
+            "timeIndex": 3,
+            "open": 1.08392,
+            "high": 1.0866,
+            "low": 1.08259,
+            "close": 1.0855
+          },
+          {
+            "timeIndex": 4,
+            "open": 1.0855,
+            "high": 1.08938,
+            "low": 1.08387,
+            "close": 1.0882
+          },
+          {
+            "timeIndex": 5,
+            "open": 1.0882,
+            "high": 1.0927,
+            "low": 1.08679,
+            "close": 1.09102
+          },
+          {
+            "timeIndex": 6,
+            "open": 1.09102,
+            "high": 1.09415,
+            "low": 1.09023,
+            "close": 1.09273
+          },
+          {
+            "timeIndex": 7,
+            "open": 1.09273,
+            "high": 1.09367,
+            "low": 1.09144,
+            "close": 1.09287
+          },
+          {
+            "timeIndex": 8,
+            "open": 1.09287,
+            "high": 1.09441,
+            "low": 1.09042,
+            "close": 1.09204
+          },
+          {
+            "timeIndex": 9,
+            "open": 1.09204,
+            "high": 1.09368,
+            "low": 1.08982,
+            "close": 1.09126
+          },
+          {
+            "timeIndex": 10,
+            "open": 1.09126,
+            "high": 1.09227,
+            "low": 1.0902,
+            "close": 1.09104
+          },
+          {
+            "timeIndex": 11,
+            "open": 1.09104,
+            "high": 1.09259,
+            "low": 1.08979,
+            "close": 1.09133
+          },
+          {
+            "timeIndex": 12,
+            "open": 1.09133,
+            "high": 1.09373,
+            "low": 1.08971,
+            "close": 1.09204
+          },
+          {
+            "timeIndex": 13,
+            "open": 1.09204,
+            "high": 1.09476,
+            "low": 1.09056,
+            "close": 1.0934
+          },
+          {
+            "timeIndex": 14,
+            "open": 1.0934,
+            "high": 1.09653,
+            "low": 1.0925,
+            "close": 1.09565
+          },
+          {
+            "timeIndex": 15,
+            "open": 1.09565,
+            "high": 1.09992,
+            "low": 1.09445,
+            "close": 1.09834
+          },
+          {
+            "timeIndex": 16,
+            "open": 1.09834,
+            "high": 1.10199,
+            "low": 1.09673,
+            "close": 1.10039
+          },
+          {
+            "timeIndex": 17,
+            "open": 1.10039,
+            "high": 1.10182,
+            "low": 1.09888,
+            "close": 1.1009
+          },
+          {
+            "timeIndex": 18,
+            "open": 1.1009,
+            "high": 1.10222,
+            "low": 1.09905,
+            "close": 1.1
+          },
+          {
+            "timeIndex": 19,
+            "open": 1.1,
+            "high": 1.1017,
+            "low": 1.09762,
+            "close": 1.09877
+          },
+          {
+            "timeIndex": 20,
+            "open": 1.09877,
+            "high": 1.10007,
+            "low": 1.09668,
+            "close": 1.09828
+          },
+          {
+            "timeIndex": 21,
+            "open": 1.09828,
+            "high": 1.09977,
+            "low": 1.09674,
+            "close": 1.0988
+          },
+          {
+            "timeIndex": 22,
+            "open": 1.0988,
+            "high": 1.10161,
+            "low": 1.0978,
+            "close": 1.09999
+          },
+          {
+            "timeIndex": 23,
+            "open": 1.09999,
+            "high": 1.10308,
+            "low": 1.09889,
+            "close": 1.10152
+          },
+          {
+            "timeIndex": 24,
+            "open": 1.10152,
+            "high": 1.10427,
+            "low": 1.09995,
+            "close": 1.10343
+          },
+          {
+            "timeIndex": 25,
+            "open": 1.10343,
+            "high": 1.10709,
+            "low": 1.10187,
+            "close": 1.10569
+          },
+          {
+            "timeIndex": 26,
+            "open": 1.10569,
+            "high": 1.10943,
+            "low": 1.10464,
+            "close": 1.10774
+          },
+          {
+            "timeIndex": 27,
+            "open": 1.10774,
+            "high": 1.10988,
+            "low": 1.10669,
+            "close": 1.10865
+          },
+          {
+            "timeIndex": 28,
+            "open": 1.10865,
+            "high": 1.1097,
+            "low": 1.1065,
+            "close": 1.10805
+          },
+          {
+            "timeIndex": 29,
+            "open": 1.10805,
+            "high": 1.1097,
+            "low": 1.10505,
+            "close": 1.10663
+          },
+          {
+            "timeIndex": 30,
+            "open": 1.10663,
+            "high": 1.10815,
+            "low": 1.10458,
+            "close": 1.10569
+          },
+          {
+            "timeIndex": 31,
+            "open": 1.10569,
+            "high": 1.10683,
+            "low": 1.1047,
+            "close": 1.10607
+          },
+          {
+            "timeIndex": 32,
+            "open": 1.10607,
+            "high": 1.10906,
+            "low": 1.10454,
+            "close": 1.10761
+          },
+          {
+            "timeIndex": 33,
+            "open": 1.10761,
+            "high": 1.11126,
+            "low": 1.10601,
+            "close": 1.10958
+          },
+          {
+            "timeIndex": 34,
+            "open": 1.10958,
+            "high": 1.11265,
+            "low": 1.10842,
+            "close": 1.1115
+          },
+          {
+            "timeIndex": 35,
+            "open": 1.1115,
+            "high": 1.11447,
+            "low": 1.11056,
+            "close": 1.11334
+          },
+          {
+            "timeIndex": 36,
+            "open": 1.11334,
+            "high": 1.1167,
+            "low": 1.11184,
+            "close": 1.11502
+          },
+          {
+            "timeIndex": 37,
+            "open": 1.11502,
+            "high": 1.11753,
+            "low": 1.11342,
+            "close": 1.11606
+          },
+          {
+            "timeIndex": 38,
+            "open": 1.11606,
+            "high": 1.1168,
+            "low": 1.11469,
+            "close": 1.1159
+          },
+          {
+            "timeIndex": 39,
+            "open": 1.1159,
+            "high": 1.1174,
+            "low": 1.11379,
+            "close": 1.11468
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 1.08348,
+            "maximumPrice": 1.08844,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 1.09199,
+            "maximumPrice": 1.09696,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 1.10263,
+            "maximumPrice": 1.1076,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 1.11115,
+            "maximumPrice": 1.11611,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "4862d880bf1c853a18192020a5f18e73effd1c31a6f0ab6d47c55c3587125dbc"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-023",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: body and wick",
+        "zh": "独立情境分析：将K线实体与影线结合为实用决策区"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of combining candle bodies and wicks into practical decision zones using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析将K线实体与影线结合为实用决策区的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "27ecfbddd9aaeb15b5f6c09ef66ceb26b6d0dae554f6423fa79474b0890e623c"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-023",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: body and wick",
+        "zh": "实践展示：将K线实体与影线结合为实用决策区"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate combining candle bodies and wicks into practical decision zones. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示将K线实体与影线结合为实用决策区。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "07222e2277e43242849449ab42393ccc147018864cc30e84deb781776493c9fc"
+    }
+  ]
+}

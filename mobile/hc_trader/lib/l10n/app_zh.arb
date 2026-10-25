@@ -1,0 +1,15 @@
+{
+  "@@locale": "zh",
+  "appTitle": "HC Trader",
+  "currentRoles": "\u5f53\u524d\u89d2\u8272",
+  "noRoleAssigned": "\u5c1a\u672a\u5206\u914d\u89d2\u8272",
+  "roleSuperAdmin": "\u8d85\u7ea7\u7ba1\u7406\u5458",
+  "roleSubAdmin": "\u5b50\u7ba1\u7406\u5458",
+  "roleMarketAnalyst": "\u5e02\u573a\u5206\u6790\u5e08",
+  "roleSignalProvider": "\u4fe1\u53f7\u63d0\u4f9b\u8005",
+  "roleFinancialDepartment": "\u8d22\u52a1\u90e8\u95e8",
+  "roleLeader": "\u56e2\u961f\u9886\u5bfc",
+  "roleRecruiter": "\u62db\u52df\u5458",
+  "roleTrader": "\u4ea4\u6613\u5458",
+  "roleLeadClient": "\u6f5c\u5728\u5ba2\u6237"
+}

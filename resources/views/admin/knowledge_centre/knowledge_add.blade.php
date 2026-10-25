@@ -45,7 +45,7 @@
 .knowledge-card .card-header small {
     font-weight: normal;
     font-size: 0.85rem;
-    color: #6c757d;
+    color: #475569;
 }
 
 /* Form Inputs */
@@ -103,7 +103,7 @@
 }
 </style>
 
-<div class="page-content">
+<div class="page-content knowledge-form-page">
     <div class="container-fluid">
 
         <!-- Header with Back Button -->

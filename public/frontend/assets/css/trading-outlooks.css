@@ -1,0 +1,19 @@
+.th-outlook-card{min-width:0;display:flex;flex-direction:column;align-items:flex-start;padding:28px;background:var(--th-surface);border:1px solid var(--th-border)}
+.th-outlook-card h3{font-size:clamp(22px,2.3vw,30px);line-height:1.2;letter-spacing:-.04em;margin:16px 0 12px;overflow-wrap:anywhere}
+.th-outlook-card h3 a:hover,.th-featured-copy h2 a:hover{text-decoration:underline}
+.th-outlook-card p{color:var(--th-muted);margin:0 0 18px;line-height:1.7}
+.th-outlook-card time{font-size:12px;color:var(--th-muted);margin-top:auto}
+.th-outlook-card .th-text-link{margin-top:18px}
+.th-outlook-access{margin-top:55px;padding:clamp(24px,4vw,44px);background:var(--th-surface);border:1px solid var(--th-border)}
+.th-outlook-access h2{font-size:clamp(26px,3vw,38px);line-height:1.2;margin:0 0 12px}
+.th-outlook-access p,.th-outlook-restricted p{color:var(--th-muted);margin-bottom:22px}
+.th-outlook-reading{max-width:850px;padding-top:55px;padding-bottom:75px}
+.th-outlook-reading section{border-top:1px solid var(--th-border);padding-bottom:10px}
+.th-outlook-reading h2{margin-top:30px}
+.th-outlook-restricted{max-width:760px}
+.th-outlook-restricted h1{font-size:clamp(34px,5vw,60px);line-height:1.1;letter-spacing:-.05em}
+.th-outlook-restricted .th-text-link{display:inline-block;margin-left:20px}
+.th-outlook-pagination{margin-top:30px;overflow-x:auto}
+.th-outlook-pagination nav{color:var(--th-muted)}
+.th-outlook-pagination a{color:var(--th-blue)}
+@media(max-width:600px){.th-outlook-restricted .th-text-link{display:block;margin:20px 0 0}}

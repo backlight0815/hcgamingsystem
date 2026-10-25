@@ -1,0 +1,2468 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function owns(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function userIsActive(user) {
+      return !(user.get('account_status', 'active') in [
+          'inactive', 'disabled', 'suspended', 'revoked', 'deleted',
+          'deletionInProgress', 'deletion_in_progress'
+        ])
+        && user.get('is_suspended', false) != true
+        && !(user.get('accessStatus', '') in [
+          'suspended', 'revoked', 'deleted'
+        ])
+        && !(user.get('access_status', '') in [
+          'suspended', 'revoked', 'deleted'
+        ]);
+    }
+
+    function userHasAnyRole(user, roleIds) {
+      return user.get('role_id', null) in roleIds
+        || (
+          user.get('role_ids', []) is list
+          && user.get('role_ids', []).hasAny(roleIds)
+        );
+    }
+
+    function activeUser() {
+      let user = get(
+        /databases/$(database)/documents/users/$(request.auth.uid)
+      ).data;
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && userIsActive(user);
+    }
+
+    function ownsActive(userId) {
+      return owns(userId) && activeUser();
+    }
+
+    function hasAnyRole(roleIds) {
+      let user = get(
+        /databases/$(database)/documents/users/$(request.auth.uid)
+      ).data;
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && userHasAnyRole(user, roleIds);
+    }
+
+    function approvedUser() {
+      let user = get(
+        /databases/$(database)/documents/users/$(request.auth.uid)
+      ).data;
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && userIsActive(user)
+        && (
+          user.get('is_admin', false) == true
+          || userHasAnyRole(user, [1, 2, 3, '1', '2', '3'])
+          || user.get('accessStatus', '') == 'approved'
+          || user.get('access_status', '') == 'approved'
+        );
+    }
+
+    function ownsApproved(userId) {
+      return owns(userId) && approvedUser();
+    }
+
+    function isAdmin() {
+      let user = get(
+        /databases/$(database)/documents/users/$(request.auth.uid)
+      ).data;
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && userIsActive(user)
+        && (
+          user.get('is_admin', false) == true
+          || userHasAnyRole(user, [1, 2, 3, '1', '2', '3'])
+        );
+    }
+
+    function isSuperAdmin() {
+      let user = get(
+        /databases/$(database)/documents/users/$(request.auth.uid)
+      ).data;
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && userIsActive(user)
+        && userHasAnyRole(user, [1, '1']);
+    }
+
+    function isSubAdmin() {
+      let user = get(
+        /databases/$(database)/documents/users/$(request.auth.uid)
+      ).data;
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && userIsActive(user)
+        && userHasAnyRole(user, [2, '2']);
+    }
+
+    function isSuperOrSubAdmin() {
+      return isSuperAdmin() || isSubAdmin();
+    }
+
+    function hasPermissionOverride(permission, expectedValue) {
+      let user = get(
+        /databases/$(database)/documents/users/$(request.auth.uid)
+      ).data;
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && (
+          (
+            'permission_overrides' in user
+            && user.permission_overrides is map
+            && user.permission_overrides.get(permission, null) == expectedValue
+          ) || (
+            'permissionOverrides' in user
+            && user.permissionOverrides is map
+            && user.permissionOverrides.get(permission, null) == expectedValue
+          )
+        );
+    }
+
+    function hasCourseworkOverride(user, permission, expectedValue) {
+      return (
+        'permission_overrides' in user
+        && user.permission_overrides is map
+        && user.permission_overrides.get(permission, null) == expectedValue
+      ) || (
+        'permissionOverrides' in user
+        && user.permissionOverrides is map
+        && user.permissionOverrides.get(permission, null) == expectedValue
+      );
+    }
+
+    function hasCourseworkPermission(permission) {
+      let user = get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && userIsActive(user)
+        && !hasCourseworkOverride(user, permission, false)
+        && (
+          userHasAnyRole(user, [1, '1'])
+          || hasCourseworkOverride(user, permission, true)
+          || (
+            permission in [
+              'coursework.viewAssignedSubmissions', 'coursework.grade',
+              'coursework.requestRevision', 'coursework.finaliseGrade'
+            ] && userHasAnyRole(user, [2, 3, 501, '2', '3', '501'])
+          )
+          || (
+            permission in ['coursework.assignThemes', 'coursework.viewReports']
+            && userHasAnyRole(user, [2, 3, '2', '3'])
+          )
+          || (
+            permission in [
+              'coursework.manageThemes', 'coursework.publishThemes',
+              'coursework.manageSettings'
+            ] && userHasAnyRole(user, [3, '3'])
+          )
+        );
+    }
+
+    function courseworkAttemptOwner(attemptId) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/coursework_attempts/$(attemptId))
+        && get(/databases/$(database)/documents/coursework_attempts/$(attemptId)).data.user_id == request.auth.uid;
+    }
+
+    function courseworkAttemptEditable(attemptId) {
+      return courseworkAttemptOwner(attemptId)
+        && get(/databases/$(database)/documents/coursework_attempts/$(attemptId)).data.status in [
+          'notStarted', 'inProgress', 'draft', 'revisionRequested'
+        ];
+    }
+
+    function canReadPublishedCourseworkTheme(themeId) {
+      let theme = get(/databases/$(database)/documents/coursework_themes/$(themeId)).data;
+      return approvedUser()
+        && featureEnabled('trading_exams')
+        && theme.status == 'published'
+        && theme.isActive == true;
+    }
+
+    function canReadPublishedCourseworkResource() {
+      return approvedUser()
+        && featureEnabled('trading_exams')
+        && resource.data.status == 'published'
+        && resource.data.isActive == true;
+    }
+
+    function courseworkSeedMetadataUnchanged() {
+      return !('managedBySeed' in resource.data) || (
+        'managedBySeed' in request.resource.data
+        && 'seedVersion' in request.resource.data
+        && 'contentHash' in request.resource.data
+        && 'createdBy' in request.resource.data
+        && request.resource.data.managedBySeed == resource.data.managedBySeed
+        && request.resource.data.seedVersion == resource.data.seedVersion
+        && request.resource.data.contentHash == resource.data.contentHash
+        && request.resource.data.createdBy == resource.data.createdBy
+      );
+    }
+
+    function courseworkPublicQuestionHasNoMarkingKey() {
+      return !request.resource.data.keys().hasAny([
+        'correctOptionIds', 'correct_option_ids', 'correctZoneIds',
+        'correct_zone_ids', 'acceptedAnswers', 'accepted_answers',
+        'answerExplanation', 'answer_explanation', 'modelAnswer',
+        'model_answer', 'sampleAnswer', 'sample_answer', 'reviewerGuidance',
+        'reviewer_guidance', 'rubric', 'gradingRubric', 'grading_rubric',
+        'commonMistakes', 'common_mistakes'
+      ]);
+    }
+
+    function featureEnabled(feature) {
+      return (
+          exists(/databases/$(database)/documents/featureConfigurations/$(feature))
+          && get(
+            /databases/$(database)/documents/featureConfigurations/$(feature)
+          ).data.get('mode', 'enabled') in ['enabled', 'readOnly', 'beta']
+        )
+        || (
+          !exists(/databases/$(database)/documents/featureConfigurations/$(feature))
+          && (
+            !exists(/databases/$(database)/documents/app_configuration/modules)
+            || get(/databases/$(database)/documents/app_configuration/modules).data[feature] != false
+          )
+        );
+    }
+
+    function featureWritable(feature) {
+      return (
+          exists(/databases/$(database)/documents/featureConfigurations/$(feature))
+          && get(
+            /databases/$(database)/documents/featureConfigurations/$(feature)
+          ).data.get('mode', 'enabled') in ['enabled', 'beta']
+        )
+        || (
+          !exists(/databases/$(database)/documents/featureConfigurations/$(feature))
+          && (
+            !exists(/databases/$(database)/documents/app_configuration/modules)
+            || get(/databases/$(database)/documents/app_configuration/modules).data[feature] != false
+          )
+        );
+    }
+
+    function contentIsPublished(data) {
+      return data.get('publication_status', 'published') == 'published'
+        && data.get('status', 'published') in [true, 1, 'published', 'approved']
+        && data.get('approval_status', 'approved') != 'rejected';
+    }
+
+    // Signal lifecycle transactions validate three documents at once. These
+    // compact predicates avoid repeating the generic role-resolution graph and
+    // keep evaluation below Firestore's 1,000-expression limit.
+    function signalPermissionValue(user, permission) {
+      return user.get('permission_overrides', {}).get(
+        permission,
+        user.get('permissionOverrides', {}).get(permission, null)
+      );
+    }
+
+    function activeSignalActor(user) {
+      return signedIn()
+        && user.get('account_status', 'active') in ['active', 'approved']
+        && user.get('is_suspended', false) != true
+        && !(user.get('accessStatus', '') in ['suspended', 'revoked', 'deleted'])
+        && !(user.get('access_status', '') in ['suspended', 'revoked', 'deleted']);
+    }
+
+    function signalActorHasRole(user, roleIds) {
+      return user.get('role_id', 0) in roleIds
+        || (
+          user.get('role_ids', []) is list
+          && user.get('role_ids', []).hasAny(roleIds)
+        );
+    }
+
+    function canCreateSignal() {
+      let user = get(
+        /databases/$(database)/documents/users/$(request.auth.uid)
+      ).data;
+      return activeSignalActor(user)
+        && signalPermissionValue(user, 'signals.publishOwn') != false
+        && signalPermissionValue(user, 'trading_signal.create') != false
+        && (
+          signalActorHasRole(user, [1, 3, 201, 202, 502, '1', '3', '201', '202', '502'])
+          || signalPermissionValue(user, 'signals.publishOwn') == true
+          || signalPermissionValue(user, 'trading_signal.create') == true
+        );
+    }
+
+    function signalAssignedToActor(signal) {
+      let directOwnerIds = [
+        signal.get('created_by', ''),
+        signal.get('created_by_id', ''),
+        signal.get('provider_id', ''),
+        signal.get('assigned_provider_id', ''),
+        signal.get('assignedProviderId', ''),
+        signal.get('user_id', '')
+      ];
+      return directOwnerIds.hasAny([request.auth.uid])
+        || (
+          signal.get('assigned_provider_ids', []) is list
+          && request.auth.uid in signal.get('assigned_provider_ids', [])
+        )
+        || (
+          signal.get('assignedProviderIds', []) is list
+          && request.auth.uid in signal.get('assignedProviderIds', [])
+        );
+    }
+
+    function canOperateSignal(signal) {
+      let user = get(
+        /databases/$(database)/documents/users/$(request.auth.uid)
+      ).data;
+      let manager = signalActorHasRole(
+        user,
+        [1, 3, 502, '1', '3', '502']
+      ) || signalPermissionValue(user, 'signals.manageAll') == true
+        || signalPermissionValue(user, 'trading_signal.edit') == true;
+      let ownPublisher = signalAssignedToActor(signal) && (
+        signalActorHasRole(
+          user,
+          [1, 3, 201, 202, 502, '1', '3', '201', '202', '502']
+        ) || signalPermissionValue(user, 'signals.updateOwn') == true
+          || signalPermissionValue(user, 'signals.publishOwn') == true
+      );
+      return activeSignalActor(user) && (
+        (
+          manager
+          && signalPermissionValue(user, 'signals.manageAll') != false
+          && signalPermissionValue(user, 'trading_signal.edit') != false
+        )
+        || (
+          ownPublisher
+          && signalPermissionValue(user, 'signals.updateOwn') != false
+          && signalPermissionValue(user, 'signals.publishOwn') != false
+        )
+      );
+    }
+
+    function isSignalSuperAdmin() {
+      let user = get(
+        /databases/$(database)/documents/users/$(request.auth.uid)
+      ).data;
+      return activeSignalActor(user)
+        && signalActorHasRole(user, [1, '1']);
+    }
+
+    function isMarketAnalyst() {
+      return activeUser()
+        && !hasPermissionOverride('marketAnalysis.publishOwn', false)
+        && !hasPermissionOverride('market_analyst.create', false)
+        && (
+          isSuperAdmin()
+          || hasAnyRole([3, 501, '3', '501'])
+          || hasPermissionOverride('marketAnalysis.publishOwn', true)
+          || hasPermissionOverride('market_analyst.create', true)
+        );
+    }
+
+    function isMarketAnalysisManager() {
+      return activeUser()
+        && !hasPermissionOverride('marketAnalysis.manageAll', false)
+        && !hasPermissionOverride('market_analyst.edit', false)
+        && (
+          isSuperAdmin()
+          || hasAnyRole([3, '3'])
+          || hasPermissionOverride('marketAnalysis.manageAll', true)
+          || hasPermissionOverride('market_analyst.edit', true)
+        );
+    }
+
+    function validPublisherLocalization(data) {
+      return !('primary_language' in data) || (
+        data.primary_language in ['en', 'zh']
+        && 'available_languages' in data
+        && data.available_languages is list
+        && data.available_languages.hasOnly(['en', 'zh'])
+        && data.available_languages.hasAny([data.primary_language])
+      );
+    }
+
+    function nonEmptyPublisherText(value) {
+      return value is string && value.size() > 0;
+    }
+
+    function localizedPublisherText(localized, primaryLanguage) {
+      return localized is map
+        && localized.get(primaryLanguage, '') is string
+        && localized.get(primaryLanguage, '').size() > 0;
+    }
+
+    function completeTradingSignalPrimary(data) {
+      return nonEmptyPublisherText(data.get('trading_pair', ''))
+        && data.get('immediate_action', '') in ['BUY', 'SELL']
+        && nonEmptyPublisherText(data.get('entry_price', ''))
+        && nonEmptyPublisherText(data.get('stop_loss', ''))
+        && nonEmptyPublisherText(data.get('target_1', ''))
+        && localizedPublisherText(
+          data.get('signal_title_i18n', data.get('title_i18n', {})),
+          data.primary_language
+        )
+        && localizedPublisherText(
+          data.get('disclaimer_i18n', {}),
+          data.primary_language
+        );
+    }
+
+    function completeMarketAnalysisPrimary(data) {
+      return nonEmptyPublisherText(data.get('market', ''))
+        && localizedPublisherText(
+          data.get('title_i18n', {}),
+          data.primary_language
+        )
+        && localizedPublisherText(
+          data.get('market_overview_i18n', {}),
+          data.primary_language
+        )
+        && localizedPublisherText(
+          data.get('trading_plan_i18n', {}),
+          data.primary_language
+        );
+    }
+
+    function validTradingSignal(data, requireLocalization) {
+      return data.created_by is string
+        && data.created_by.size() > 0
+        && (!('status' in data) || data.status in [
+          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15
+        ])
+        && (!('lifecycle_status' in data) || data.lifecycle_status in [
+          'draft', 'scheduled', 'published', 'pending', 'pending_entry',
+          'active', 'partially_closed', 'break_even', 'trailing',
+          'completed', 'closed', 'cancelled', 'expired', 'archived',
+          'take_profit', 'stop_loss', 'stop_loss_hit', 'break_even_hit'
+        ])
+        && validPublisherLocalization(data)
+        && (!requireLocalization || 'primary_language' in data)
+        && (
+          (!(data.get('lifecycle_status', '') in [
+              'published', 'pending', 'pending_entry', 'active'
+            ]) && data.get('status', 0) != 1)
+          || completeTradingSignalPrimary(data)
+        );
+    }
+
+    function signalPublicationEventExists(documentId) {
+      let updateId = request.resource.data.get('last_update_id', '');
+      let event = getAfter(
+        /databases/$(database)/documents/trading_signals/$(documentId)/updates/$(updateId)
+      ).data;
+      let audit = getAfter(
+        /databases/$(database)/documents/trading_signals/$(documentId)/audit_logs/$(updateId)
+      ).data;
+      return updateId == 'publication-v0'
+        && request.resource.data.get('last_audit_id', '') == updateId
+        && request.resource.data.get('version', -1) == 0
+        && request.resource.data.created_at == request.time
+        && request.resource.data.updated_at == request.time
+        && request.resource.data.published_at == request.time
+        && event.update_id == updateId
+        && event.signal_id == documentId
+        && event.update_type == 'published'
+        && event.created_by == request.auth.uid
+        && event.lifecycle_from == 'draft'
+        && event.lifecycle_to == request.resource.data.lifecycle_status
+        && event.version_from == -1
+        && event.version_to == 0
+        && event.created_at == request.time
+        && event.effective_at == request.time
+        && audit.audit_id == updateId
+        && audit.update_id == updateId
+        && audit.signal_id == documentId
+        && audit.actor_id == request.auth.uid
+        && audit.action == 'published'
+        && audit.lifecycle_from == 'draft'
+        && audit.lifecycle_to == request.resource.data.lifecycle_status
+        && audit.version_from == -1
+        && audit.version_to == 0
+        && audit.created_at == request.time;
+    }
+
+    function signalFlag(value) {
+      return value == true || value == 1 || value == '1' || value == 'true';
+    }
+
+    function storedSignalLifecycle(data) {
+      let explicit = data.get('lifecycle_status', '');
+      let status = data.get('status', 0);
+      return signalFlag(data.get('archived', false)) ? 'archived'
+        : explicit in ['pending', 'pending_order'] ? 'pending_entry'
+        : explicit == 'activated' ? 'active'
+        : explicit in ['partial', 'partial_close'] ? 'partially_closed'
+        : explicit in ['breakeven', 'be'] ? 'break_even'
+        : explicit in ['closed', 'done', 'take_profit', 'tp', 'win'] ? 'completed'
+        : explicit in ['stop_loss', 'sl', 'loss'] ? 'stop_loss_hit'
+        : explicit == 'be_hit' ? 'break_even_hit'
+        : explicit in ['canceled', 'invalidated'] ? 'cancelled'
+        : explicit != '' ? explicit
+        : signalFlag(data.get('is_done', data.get('IsDone', false))) ? 'completed'
+        : signalFlag(data.get('IsBE', false)) || status == 15 ? 'break_even_hit'
+        : status == 12 ? 'cancelled'
+        : status == 13 ? 'stop_loss_hit'
+        : status in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11] ? 'partially_closed'
+        : signalFlag(data.get('IsSetBE', false)) ? 'break_even'
+        : status == 1 ? 'active'
+        : 'draft';
+    }
+
+    function validSignalTransition(from, to) {
+      return from == to
+        || (from == 'active' && to in [
+          'partially_closed', 'break_even', 'trailing', 'completed',
+          'stop_loss_hit', 'break_even_hit', 'cancelled', 'expired'
+        ])
+        || (from == 'partially_closed' && to in [
+          'active', 'break_even', 'trailing', 'completed', 'stop_loss_hit',
+          'break_even_hit', 'cancelled'
+        ])
+        || (from == 'break_even' && to in [
+          'partially_closed', 'trailing', 'completed', 'stop_loss_hit',
+          'break_even_hit', 'cancelled'
+        ])
+        || (from == 'trailing' && to in [
+          'partially_closed', 'completed', 'stop_loss_hit',
+          'break_even_hit', 'cancelled'
+        ])
+        || (from == 'draft' && to in [
+          'scheduled', 'published', 'pending_entry', 'active', 'cancelled'
+        ])
+        || (from == 'scheduled' && to in [
+          'published', 'pending_entry', 'active', 'cancelled', 'expired'
+        ])
+        || (from == 'published' && to in [
+          'pending_entry', 'active', 'cancelled', 'expired'
+        ])
+        || (from in ['pending', 'pending_entry'] && to in [
+          'active', 'cancelled', 'expired'
+        ])
+        || (from in [
+          'completed', 'closed', 'stop_loss_hit', 'break_even_hit',
+          'cancelled', 'expired'
+        ] && to == 'archived');
+    }
+
+    function signalCriticalFieldsChanged() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasAny([
+        'lifecycle_status', 'status', 'entry_price', 'current_entry_price',
+        'entry_min', 'entry_max', 'stop_loss', 'current_stop_loss',
+        'break_even_price', 'targets_hit', 'current_target_index',
+        'percentage_remaining', 'is_done', 'IsBE', 'IsSetBE', 'archived',
+        'activated_at', 'completed_at', 'cancelled_at', 'expired_at',
+        'signal_title', 'title', 'signal_title_i18n', 'title_i18n',
+        'timeframe', 'risk_level', 'expiry_time', 'disclaimer',
+        'disclaimer_i18n'
+      ]);
+    }
+
+    function signalIdentityUnchanged() {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+        'created_by', 'created_by_id', 'provider_id', 'user_id',
+        'published_by', 'created_at',
+        'assigned_provider_id', 'assignedProviderId',
+        'assigned_provider_ids', 'assignedProviderIds',
+        'original_entry_price', 'original_stop_loss'
+      ]);
+    }
+
+    function signalContentFieldsChanged() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasAny([
+        'trading_pair', 'immediate_action', 'signal_title', 'title',
+        'signal_title_i18n', 'title_i18n', 'disclaimer',
+        'disclaimer_i18n', 'primary_language', 'available_languages'
+      ]);
+    }
+
+    function validSignalLifecycleShape(data) {
+      return data.get('status', 0) in [
+          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15
+        ]
+        && data.get('lifecycle_status', 'draft') in [
+          'draft', 'scheduled', 'published', 'pending', 'pending_entry',
+          'active', 'partially_closed', 'break_even', 'trailing',
+          'completed', 'closed', 'cancelled', 'expired', 'archived',
+          'take_profit', 'stop_loss', 'stop_loss_hit', 'break_even_hit'
+        ];
+    }
+
+    function signalLifecycleEventExists(documentId) {
+      let updateId = request.resource.data.get('last_update_id', '');
+      let event = getAfter(
+        /databases/$(database)/documents/trading_signals/$(documentId)/updates/$(updateId)
+      ).data;
+      let audit = getAfter(
+        /databases/$(database)/documents/trading_signals/$(documentId)/audit_logs/$(updateId)
+      ).data;
+      return updateId is string
+        && updateId.size() > 0
+        && request.resource.data.version == resource.data.get('version', 0) + 1
+        && request.resource.data.updated_at == request.time
+        && request.resource.data.last_update_id != resource.data.get('last_update_id', '')
+        && request.resource.data.get('last_audit_id', '') == updateId
+        && event.update_id == updateId
+        && event.signal_id == documentId
+        && event.created_by == request.auth.uid
+        && event.version_from == resource.data.get('version', 0)
+        && event.version_to == request.resource.data.version
+        && event.lifecycle_from == storedSignalLifecycle(resource.data)
+        && event.lifecycle_to == request.resource.data.lifecycle_status
+        && event.created_at == request.time
+        && audit.audit_id == updateId
+        && audit.update_id == updateId
+        && audit.signal_id == documentId
+        && audit.actor_id == request.auth.uid
+        && audit.action == event.update_type
+        && audit.created_at == request.time
+        && (event.lifecycle_to != 'archived' || isSignalSuperAdmin())
+        && (
+          validSignalTransition(event.lifecycle_from, event.lifecycle_to)
+          || (
+            isSignalSuperAdmin()
+            && (
+              event.is_correction == true
+              || event.update_type in ['correction', 'restored']
+            )
+          )
+        );
+    }
+
+    function validSignalUpdateEvent(documentId, updateId) {
+      let data = request.resource.data;
+      let signal = getAfter(
+        /databases/$(database)/documents/trading_signals/$(documentId)
+      ).data;
+      return data.update_id == updateId
+        && data.signal_id == documentId
+        && data.created_by == request.auth.uid
+        && data.notification_requested is bool
+        && data.notification_sent == false
+        && data.is_correction is bool
+        && data.created_at == request.time
+        && signal.last_update_id == updateId
+        && signal.get('last_audit_id', '') == updateId
+        && signal.get(
+          'last_updated_by',
+          signal.get('created_by', '')
+        ) == request.auth.uid
+        && signal.get('version', 0) == data.version_to
+        && signal.get('lifecycle_status', 'draft') == data.lifecycle_to
+        && (!data.is_correction || isSignalSuperAdmin());
+    }
+
+    function validSignalAudit(documentId, auditId) {
+      let data = request.resource.data;
+      let updateId = data.get('update_id', '');
+      let signal = getAfter(
+        /databases/$(database)/documents/trading_signals/$(documentId)
+      ).data;
+      return data.audit_id == auditId
+        && data.signal_id == documentId
+        && updateId is string
+        && updateId.size() > 0
+        && data.actor_id == request.auth.uid
+        && signal.get('last_update_id', '') == updateId
+        && signal.get('last_audit_id', '') == updateId
+        && signal.get(
+          'last_updated_by',
+          signal.get('created_by', '')
+        ) == request.auth.uid
+        && signal.get('version', 0) == data.version_to
+        && data.created_at == request.time;
+    }
+
+    function validPublisherActorCreate(data) {
+      return (!('updated_by' in data) || data.updated_by == request.auth.uid)
+        && (!('published_by' in data) || data.published_by == request.auth.uid);
+    }
+
+    function validPublisherActorUpdate(data) {
+      return (!('updated_by' in data) || data.updated_by == request.auth.uid)
+        && (
+          !request.resource.data.diff(resource.data).affectedKeys()
+            .hasAny(['published_by'])
+          || data.published_by == request.auth.uid
+        );
+    }
+
+    function validMarketAnalysis(data, requireLocalization) {
+      return data.created_by is string
+        && data.created_by.size() > 0
+        && (!('status' in data) || data.status in [
+          'draft', 'scheduled', 'published', 'archived', 'cancelled'
+        ])
+        && validPublisherLocalization(data)
+        && (!requireLocalization || 'primary_language' in data)
+        && (
+          data.get('status', 'draft') != 'published'
+          || completeMarketAnalysisPrimary(data)
+        );
+    }
+
+    function safePublicRole() {
+      return request.resource.data.role_id in [700, 750, '700', '750'];
+    }
+
+    function referralIdentityNotClientSupplied() {
+      return !request.resource.data.keys().hasAny([
+        'invited_by', 'referrer_id', 'referred_by_user_id', 'upline_id',
+        'leader_id', 'recruiter_id', 'team_ids', 'organisation_id',
+        'campaign_id', 'referral_code_used', 'referral_code_type',
+        'created_by_referral_type', 'referral_code',
+        'referral_code_type_generated', 'referral_registered_at',
+        'registration_campaign_id', 'registration_source',
+        'registration_entry_point', 'referrerId', 'uplineId', 'sponsorId',
+        'sponsor_id', 'referralCodeUsed', 'referredBy',
+        'referralRelationshipId', 'referral_relationship_id'
+      ]);
+    }
+
+    function referralIdentityUnchanged() {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+        'invited_by', 'referrer_id', 'referred_by_user_id', 'upline_id',
+        'leader_id', 'recruiter_id', 'team_ids', 'organisation_id',
+        'campaign_id', 'referral_code_used', 'referral_code_type',
+        'created_by_referral_type', 'referral_code',
+        'referral_code_type_generated', 'referral_registered_at',
+        'registration_campaign_id', 'registration_source',
+        'registration_entry_point', 'referrerId', 'uplineId', 'sponsorId',
+        'sponsor_id', 'referralCodeUsed', 'referredBy',
+        'referralRelationshipId', 'referral_relationship_id'
+      ]);
+    }
+
+    function validPublishedQuiz() {
+      return !(request.resource.data.status in ['approved', 'published'])
+        || (
+          'question_type' in request.resource.data
+          && request.resource.data.question_type in [
+            'multiple_choice', 'chart_multiple_choice',
+            'chart_screenshot_analysis'
+          ]
+          && 'version' in request.resource.data
+          && request.resource.data.version is int
+          && request.resource.data.version > 0
+          && (
+            (
+              'chart_image_url' in request.resource.data
+              && request.resource.data.chart_image_url is string
+              && request.resource.data.chart_image_url.size() > 0
+            )
+            || (
+              'chart_candles' in request.resource.data
+              && request.resource.data.chart_candles is list
+              && request.resource.data.chart_candles.size() >= 4
+            )
+          )
+        );
+    }
+
+    function validOwnAnalystProfileCreate(profileId) {
+      return owns(profileId)
+        && hasAnyRole([501, '501'])
+        && request.resource.data.keys().hasOnly([
+          'display_name', 'role_title', 'avatar_url', 'bio', 'methodology',
+          'markets', 'years_experience', 'verified', 'follower_count',
+          'created_at', 'updated_at'
+        ])
+        && (
+          !('verified' in request.resource.data)
+          || request.resource.data.verified != true
+        )
+        && (
+          !('follower_count' in request.resource.data)
+          || request.resource.data.follower_count == 0
+        );
+    }
+
+    function validOwnAnalystProfileUpdate(profileId) {
+      return owns(profileId)
+        && hasAnyRole([501, '501'])
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'display_name', 'role_title', 'avatar_url', 'bio', 'methodology',
+          'markets', 'years_experience', 'updated_at'
+        ]);
+    }
+
+    function validOwnPersonalDocument(userId) {
+      return ownsActive(userId)
+        && request.resource.data.user_id == userId;
+    }
+
+    function ownerProfileUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+        'name',
+        'email',
+        'email_lowercase',
+        'pending_email',
+        'pending_email_requested_at',
+        'phoneNumber',
+        'phone_number',
+        'tradingDataDisplayMode',
+        'trading_data_display_mode',
+        'main_mt5_account_key',
+        'mainMt5AccountKey',
+        'main_mt5_account_id',
+        'mainMt5AccountId',
+        'main_mt5_account_login',
+        'mainMt5AccountLogin',
+        'main_mt5_account_updated_at',
+        'mainMt5AccountUpdatedAt',
+        'announcementNotificationsEnabled',
+        'announcement_notifications_enabled',
+        'signal_notifications_enabled',
+        'financial_daily_report_notifications_enabled',
+        'photo_url',
+        'avatar_url',
+        'personality_active_attempt_id',
+        'personality_active_version',
+        'personality_active_updated_at',
+        'updated_at'
+      ])
+      && validOwnerMainMt5AccountUpdate();
+    }
+
+    function adminBasicProfileUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+        'name', 'email', 'email_lowercase', 'phoneNumber', 'phone_number',
+        'photo_url', 'avatar_url', 'updated_at'
+      ]);
+    }
+
+    function validOwnerOnboardingCreate(userId) {
+      return owns(userId)
+        && request.resource.data.user_id == userId
+        && request.resource.data.status == 'pending'
+        && (
+          !('reviewed_by' in request.resource.data)
+          || request.resource.data.reviewed_by == null
+        )
+        && (
+          !('reviewed_at' in request.resource.data)
+          || request.resource.data.reviewed_at == null
+        );
+    }
+
+    function validOwnerOnboardingUpdate(userId) {
+      return owns(userId)
+        && request.resource.data.user_id == userId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'user_id',
+          'status',
+          'is_client',
+          'has_deposit',
+          'deposit_amount',
+          'discord_username',
+          'broker_uid',
+          'broker_email',
+          'trader_note',
+          'allow_resubmission',
+          'submitted_at',
+          'rejection_reason',
+          'rejection_note',
+          'reviewed_by',
+          'reviewed_at',
+          'document_url',
+          'document_storage_path',
+          'document_firestore_path',
+          'document_backend',
+          'document_name',
+          'document_size',
+          'updated_at'
+        ])
+        && (
+          (
+            resource.data.status == 'approved'
+            && request.resource.data.status == 'approved'
+            && request.resource.data.reviewed_by == resource.data.reviewed_by
+            && request.resource.data.reviewed_at == resource.data.reviewed_at
+          )
+          || (
+            resource.data.status in [
+              'not_submitted',
+              'rejected_resubmittable',
+              'rejected_new_application'
+            ]
+            && resource.data.allow_resubmission != false
+            && request.resource.data.status == 'pending'
+            && request.resource.data.reviewed_by == null
+            && request.resource.data.reviewed_at == null
+          )
+        );
+    }
+
+    function validPositionApplicationCreate(userId) {
+      return owns(userId)
+        && approvedUser()
+        && request.resource.data.user_id == userId
+        && request.resource.data.status == 'pending'
+        && request.resource.data.mt5_account_id is string
+        && request.resource.data.mt5_account_id ==
+          get(/databases/$(database)/documents/users/$(userId)).data.mainMt5AccountId
+        && exists(
+          /databases/$(database)/documents/users/$(userId)/mt5_accounts/$(request.resource.data.mt5_account_id)
+        );
+    }
+
+    function mainMt5AccountKeysChanged() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasAny([
+        'main_mt5_account_key',
+        'mainMt5AccountKey',
+        'main_mt5_account_id',
+        'mainMt5AccountId',
+        'main_mt5_account_login',
+        'mainMt5AccountLogin',
+        'main_mt5_account_updated_at',
+        'mainMt5AccountUpdatedAt'
+      ]);
+    }
+
+    function mainMt5AccountCleared() {
+      return !('mainMt5AccountId' in request.resource.data)
+        && !('main_mt5_account_id' in request.resource.data)
+        && !('mainMt5AccountKey' in request.resource.data)
+        && !('main_mt5_account_key' in request.resource.data)
+        && !('mainMt5AccountLogin' in request.resource.data)
+        && !('main_mt5_account_login' in request.resource.data);
+    }
+
+    function validOwnerMainMt5AccountUpdate() {
+      return !mainMt5AccountKeysChanged()
+        || mainMt5AccountCleared()
+        || (
+          approvedUser()
+          &&
+          request.resource.data.mainMt5AccountId is string
+          && request.resource.data.mainMt5AccountId == request.resource.data.main_mt5_account_id
+          && request.resource.data.mainMt5AccountId == request.resource.data.mainMt5AccountKey
+          && request.resource.data.mainMt5AccountId == request.resource.data.main_mt5_account_key
+          && request.resource.data.mainMt5AccountLogin is int
+          && request.resource.data.mainMt5AccountLogin == request.resource.data.main_mt5_account_login
+          && existsAfter(/databases/$(database)/documents/users/$(request.auth.uid)/mt5_accounts/$(request.resource.data.mainMt5AccountId))
+          && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)/mt5_accounts/$(request.resource.data.mainMt5AccountId)).data.user_id == request.auth.uid
+          && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)/mt5_accounts/$(request.resource.data.mainMt5AccountId)).data.account_key == request.resource.data.mainMt5AccountId
+          && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)/mt5_accounts/$(request.resource.data.mainMt5AccountId)).data.mt5_login == request.resource.data.mainMt5AccountLogin
+          && getAfter(/databases/$(database)/documents/users/$(request.auth.uid)/mt5_accounts/$(request.resource.data.mainMt5AccountId)).data.is_active != false
+          && (
+            !('is_deleted' in getAfter(/databases/$(database)/documents/users/$(request.auth.uid)/mt5_accounts/$(request.resource.data.mainMt5AccountId)).data)
+            || getAfter(/databases/$(database)/documents/users/$(request.auth.uid)/mt5_accounts/$(request.resource.data.mainMt5AccountId)).data.is_deleted != true
+          )
+          && (
+            !('is_archived' in getAfter(/databases/$(database)/documents/users/$(request.auth.uid)/mt5_accounts/$(request.resource.data.mainMt5AccountId)).data)
+            || getAfter(/databases/$(database)/documents/users/$(request.auth.uid)/mt5_accounts/$(request.resource.data.mainMt5AccountId)).data.is_archived != true
+          )
+        );
+    }
+
+    function reapplicableAccessStatus(status) {
+      return status in [
+        'public',
+        'unapproved',
+        'notSubmitted',
+        'not_submitted',
+        'rejected',
+        'denied',
+        'moreInfoRequired',
+        'more_info_required',
+        'changesRequested',
+        'changes_requested',
+        'withdrawn',
+        'withdraw',
+        'cancelled',
+        'canceled'
+      ];
+    }
+
+    function ownerAccessRequestUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+        'name',
+        'email',
+        'email_lowercase',
+        'phoneNumber',
+        'phone_number',
+        'accessStatus',
+        'access_status',
+        'accessRequestedAt',
+        'access_requested_at',
+        'accessUpdatedAt',
+        'access_updated_at',
+        'updated_at'
+      ])
+      && reapplicableAccessStatus(
+        resource.data.get(
+          'accessStatus',
+          resource.data.get('access_status', 'notSubmitted')
+        )
+      )
+      && request.resource.data.accessStatus == 'pendingReview'
+      && request.resource.data.access_status == 'pendingReview';
+    }
+
+    function validOwnerAccessRequestCreate() {
+      return signedIn()
+        && request.resource.data.user_id == request.auth.uid
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'pendingReview'
+        && request.resource.data.accessStatus == 'pendingReview'
+        && request.resource.data.access_status == 'pendingReview'
+        && request.resource.data.name is string
+        && request.resource.data.email is string
+        && request.resource.data.phone_number is string
+        && request.resource.data.phoneNumber == request.resource.data.phone_number
+        && request.resource.data.keys().hasOnly([
+          'userId',
+          'user_id',
+          'name',
+          'email',
+          'phoneNumber',
+          'phone_number',
+          'status',
+          'accessStatus',
+          'access_status',
+          'createdAt',
+          'created_at',
+          'updatedAt',
+          'updated_at',
+          'reviewedBy',
+          'reviewed_by',
+          'reviewedAt',
+          'reviewed_at',
+          'adminNote',
+          'admin_note'
+        ]);
+    }
+
+    function validOwnerAccessRequestUpdate(requestId) {
+      return signedIn()
+        && requestId == request.auth.uid
+        && (
+          resource.data.user_id == request.auth.uid
+          || resource.data.userId == request.auth.uid
+          || requestId == request.auth.uid
+        )
+        && request.resource.data.user_id == request.auth.uid
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'pendingReview'
+        && request.resource.data.accessStatus == 'pendingReview'
+        && request.resource.data.access_status == 'pendingReview'
+        && reapplicableAccessStatus(
+          resource.data.get(
+            'status',
+            resource.data.get(
+              'accessStatus',
+              resource.data.get('access_status', 'notSubmitted')
+            )
+          )
+        )
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'userId',
+          'user_id',
+          'name',
+          'email',
+          'phoneNumber',
+          'phone_number',
+          'status',
+          'accessStatus',
+          'access_status',
+          'createdAt',
+          'created_at',
+          'updatedAt',
+          'updated_at',
+          'reviewedBy',
+          'reviewed_by',
+          'reviewedAt',
+          'reviewed_at',
+          'adminNote',
+          'admin_note'
+        ]);
+    }
+
+    function ownerFinalExamCompletionUpdate(userId) {
+      return owns(userId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'final_exam_passed',
+          'requires_final_exam',
+          'final_exam_last_attempt_id',
+          'updated_at'
+        ])
+        && request.resource.data.final_exam_passed == true
+        && request.resource.data.requires_final_exam == false
+        && request.resource.data.final_exam_last_attempt_id is string
+        && getAfter(
+          /databases/$(database)/documents/users/$(userId)/final_exam_attempts/$(request.resource.data.final_exam_last_attempt_id)
+        ).data.user_id == userId
+        && getAfter(
+          /databases/$(database)/documents/users/$(userId)/final_exam_attempts/$(request.resource.data.final_exam_last_attempt_id)
+        ).data.status == 'passed';
+    }
+
+    function isVisibleDownlineProfile() {
+      return signedIn()
+        && (
+          resource.data.upline_id == request.auth.uid
+          || resource.data.referrer_id == request.auth.uid
+          || resource.data.invited_by == request.auth.uid
+        );
+    }
+
+    function isAssignedProfile(userId) {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && (
+          (
+            'assigned_client_ids' in get(/databases/$(database)/documents/users/$(request.auth.uid)).data
+            && userId in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.assigned_client_ids
+          )
+          || (
+            'assigned_evaluation_user_ids' in get(/databases/$(database)/documents/users/$(request.auth.uid)).data
+            && userId in get(/databases/$(database)/documents/users/$(request.auth.uid)).data.assigned_evaluation_user_ids
+          )
+          || (
+            'team_ids' in resource.data
+            && 'team_ids' in get(/databases/$(database)/documents/users/$(request.auth.uid)).data
+            && resource.data.team_ids.hasAny(
+              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.team_ids
+            )
+          )
+        );
+    }
+
+    function announcementVisible() {
+      return signedIn()
+        && resource.data.status == 'published'
+        && (
+          !('audience' in resource.data)
+          || resource.data.audience == 'all'
+          || (
+            resource.data.audience == 'approved_clients'
+            && approvedUser()
+          )
+          || (
+            resource.data.audience == 'pending_users'
+            && !approvedUser()
+          )
+          || (
+            resource.data.audience == 'roles'
+            && userHasAnyRole(
+              get(/databases/$(database)/documents/users/$(request.auth.uid)).data,
+              resource.data.target_role_ids
+            )
+          )
+          || (
+            resource.data.audience == 'users'
+            && request.auth.uid in resource.data.target_user_ids
+          )
+          || (
+            resource.data.audience == 'prop_firm_groups'
+            && get(
+              /databases/$(database)/documents/users/$(request.auth.uid)
+            ).data.get('prop_firm_group_ids', []).hasAny(
+              resource.data.get('target_prop_firm_group_ids', [])
+            )
+          )
+          || (
+            resource.data.audience == 'subscription_levels'
+            && get(
+              /databases/$(database)/documents/users/$(request.auth.uid)
+            ).data.get('subscription_level',
+              get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('access_level', '')
+            ) in resource.data.get('target_access_levels', [])
+          )
+        );
+    }
+
+    function validMt5SyncRefreshType(refreshType) {
+      return refreshType in [
+        'full_refresh',
+        'account_info',
+        'open_positions',
+        'pending_orders',
+        'latest_history',
+        'selected_history_range',
+        'trading_statistics',
+        'manual_refresh',
+        'background_sync'
+      ];
+    }
+
+    function validMt5SyncJobCreate(userId) {
+      return owns(userId)
+        && approvedUser()
+        && request.resource.data.keys().hasOnly([
+          'job_id',
+          'jobId',
+          'client_request_id',
+          'clientRequestId',
+          'dedupe_key',
+          'dedupeKey',
+          'user_id',
+          'userId',
+          'mt5_account_id',
+          'mt5AccountId',
+          'account_key',
+          'accountKey',
+          'account_number',
+          'accountNumber',
+          'mt5_login',
+          'broker_server',
+          'brokerServer',
+          'refresh_type',
+          'refreshType',
+          'status',
+          'priority',
+          'requested_by',
+          'requestedBy',
+          'requested_from',
+          'requestedFrom',
+          'retry_count',
+          'retryCount',
+          'requested_date_from',
+          'requestedDateFrom',
+          'requested_date_to',
+          'requestedDateTo',
+          'created_at',
+          'createdAt',
+          'updated_at',
+          'updatedAt'
+        ])
+        && request.resource.data.user_id == userId
+        && request.resource.data.userId == userId
+        && request.resource.data.requested_by == request.auth.uid
+        && request.resource.data.requestedBy == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.requested_from == 'flutter_mobile'
+        && request.resource.data.requestedFrom == 'flutter_mobile'
+        && request.resource.data.mt5_account_id is string
+        && request.resource.data.mt5AccountId == request.resource.data.mt5_account_id
+        && request.resource.data.account_key == request.resource.data.mt5_account_id
+        && request.resource.data.accountKey == request.resource.data.account_key
+        && request.resource.data.mt5_login is int
+        && request.resource.data.account_number == request.resource.data.mt5_login
+        && request.resource.data.accountNumber == request.resource.data.account_number
+        && request.resource.data.broker_server is string
+        && request.resource.data.brokerServer == request.resource.data.broker_server
+        && request.resource.data.refreshType == request.resource.data.refresh_type
+        && validMt5SyncRefreshType(request.resource.data.refresh_type)
+        && request.resource.data.retry_count == 0
+        && request.resource.data.retryCount == 0
+        && exists(/databases/$(database)/documents/users/$(userId)/mt5_accounts/$(request.resource.data.mt5_account_id));
+    }
+
+    function validOwnerMt5AccountCreate(userId, accountId) {
+      return owns(userId)
+        && approvedUser()
+        && request.resource.data.user_id == userId
+        && request.resource.data.userId == userId
+        && request.resource.data.ownerUid == userId
+        && request.resource.data.account_key == accountId
+        && request.resource.data.mt5_account_id == accountId
+        && request.resource.data.mt5AccountId == accountId
+        && request.resource.data.mt5_login is int
+        && request.resource.data.mt5_login > 0
+        && request.resource.data.broker_server is string
+        && request.resource.data.broker_server.size() > 0
+        && request.resource.data.is_active == true
+        && request.resource.data.is_primary is bool
+        && request.resource.data.isPrimary == request.resource.data.is_primary
+        && (
+          request.resource.data.is_primary == false
+          || (
+            getAfter(/databases/$(database)/documents/users/$(userId)).data.mainMt5AccountId == accountId
+            && getAfter(/databases/$(database)/documents/users/$(userId)).data.main_mt5_account_id == accountId
+          )
+        )
+        && request.resource.data.keys().hasOnly([
+          'ownerUid', 'userId', 'user_id',
+          'mt5AccountId', 'mt5_account_id', 'account_key',
+          'mt5_login', 'broker_server', 'display_name', 'sync_machine_type',
+          'is_active', 'is_primary', 'isPrimary',
+          'sync_status', 'display_status', 'last_error', 'sync_error_code',
+          'balance', 'equity', 'leverage', 'margin', 'free_margin',
+          'currency', 'created_at', 'updated_at'
+        ]);
+    }
+
+    function ownerMt5IdentityUnchanged(userId, accountId) {
+      return owns(userId)
+        && resource.data.user_id == userId
+        && request.resource.data.user_id == resource.data.user_id
+        && request.resource.data.account_key == resource.data.account_key
+        && request.resource.data.account_key == accountId
+        && request.resource.data.mt5_login == resource.data.mt5_login
+        && request.resource.data.broker_server == resource.data.broker_server;
+    }
+
+    function validOwnerMt5AccountUpdate(userId, accountId) {
+      return approvedUser()
+        && ownerMt5IdentityUnchanged(userId, accountId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'display_name',
+          'sync_machine_type',
+          'is_active',
+          'is_primary',
+          'isPrimary',
+          'updated_at'
+        ])
+        && validOwnerMt5PrimaryMarker(userId, accountId);
+    }
+
+    function validOwnerMt5PrimaryMarker(userId, accountId) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+          'is_primary', 'isPrimary'
+        ])
+        || (
+          request.resource.data.is_primary is bool
+          && request.resource.data.isPrimary == request.resource.data.is_primary
+          && (
+            request.resource.data.is_primary == false
+            || (
+              getAfter(/databases/$(database)/documents/users/$(userId)).data.mainMt5AccountId == accountId
+              && getAfter(/databases/$(database)/documents/users/$(userId)).data.main_mt5_account_id == accountId
+            )
+          )
+        );
+    }
+
+    match /registration_roles/{roleId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /roles/{roleId} {
+      allow read: if signedIn();
+      allow write: if false;
+
+      match /permissions/{permissionId} {
+        allow read: if signedIn();
+        allow write: if false;
+      }
+    }
+
+    match /performance_rating_config/{configId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    match /app_configuration/{documentId} {
+      allow read: if signedIn();
+      // Mirrored by the version-checked feature configuration callables.
+      allow create, update, delete: if false;
+    }
+
+    match /featureConfigurations/{featureKey} {
+      allow read: if signedIn();
+      // Configuration writes use version-checked callable functions.
+      allow write: if false;
+
+      match /history/{versionId} {
+        allow read: if isAdmin();
+        allow write: if false;
+      }
+    }
+
+    match /featureConfigurationAudit/{auditId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /leaderboardPeriods/{periodId} {
+      allow read: if approvedUser() && featureEnabled('leaderboard');
+      allow write: if false;
+
+      match /entries/{userId} {
+        allow read: if approvedUser() && featureEnabled('leaderboard');
+        allow write: if false;
+      }
+    }
+
+    match /stocks/{symbol} {
+      allow read: if approvedUser() && featureEnabled('stock_information');
+      allow write: if false;
+
+      match /quotes/{quoteId} {
+        allow read: if approvedUser() && featureEnabled('stock_information');
+        allow write: if false;
+      }
+
+      match /news/{newsId} {
+        allow read: if approvedUser() && featureEnabled('stock_information');
+        allow write: if false;
+      }
+
+      match /priceHistory/{pointId} {
+        allow read: if approvedUser() && featureEnabled('stock_information');
+        allow write: if false;
+      }
+
+      match /reports/{reportId} {
+        allow read: if isAdmin() || (
+          approvedUser()
+          && featureEnabled('stock_report_publishing')
+          && resource.data.report_status == 'published'
+        );
+        allow write: if false;
+      }
+    }
+
+    // Required for the admin report collection-group view. The symbol marker
+    // prevents this rule from granting access to unrelated report collections.
+    match /{stockPath=**}/reports/{reportId} {
+      allow read: if resource.data.symbol is string && (
+        isAdmin() || (
+          approvedUser()
+          && featureEnabled('stock_report_publishing')
+          && resource.data.report_status == 'published'
+        )
+      );
+      allow write: if false;
+    }
+
+    match /notificationEvents/{eventId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /notificationDeliveries/{deliveryId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /scheduledJobs/{jobId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /rateLimits/{bucketId} {
+      allow read, write: if false;
+    }
+
+    match /audit_logs/{logId} {
+      allow read: if isAdmin();
+      allow create, update, delete: if false;
+    }
+
+    match /admin_audit_logs/{logId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /deletedUsers/{userId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /account_deletion_jobs/{jobId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /personality_question_sets/{versionId} {
+      allow read: if isAdmin() || (
+        signedIn() && resource.data.status == 'published'
+      );
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin()
+        && resource.data.status != 'published';
+
+      match /questions/{questionId} {
+        allow read: if isAdmin() || (
+          signedIn()
+          && get(/databases/$(database)/documents/personality_question_sets/$(versionId)).data.status == 'published'
+        );
+        allow create, update, delete: if isAdmin()
+          && get(/databases/$(database)/documents/personality_question_sets/$(versionId)).data.status != 'published';
+      }
+    }
+
+    match /delete_requests/{requestId} {
+      allow read: if isAdmin() || (
+        signedIn() && resource.data.requester_id == request.auth.uid
+      );
+      allow create: if signedIn()
+        && request.resource.data.requester_id == request.auth.uid
+        && request.resource.data.status == 'pending'
+        && request.resource.data.target_type in ['market_analyses', 'trading_resources'];
+      allow update: if isSuperOrSubAdmin();
+      allow delete: if false;
+    }
+
+    match /usernames/{username} {
+      allow read: if true;
+      allow create: if signedIn() && request.resource.data.uid == request.auth.uid;
+      allow update: if false;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    match /referral_codes/{code} {
+      allow read: if signedIn() && (
+        isAdmin()
+        || resource.data.owner_user_id == request.auth.uid
+        || resource.data.user_id == request.auth.uid
+      );
+      allow write: if false;
+    }
+
+    match /referral_relationships/{relationshipId} {
+      allow read: if isAdmin()
+        || (
+          signedIn()
+          && (
+            resource.data.user_id == request.auth.uid
+            || resource.data.referrer_id == request.auth.uid
+          )
+        );
+      allow write: if false;
+    }
+
+    match /recruitments/{recruitmentId} {
+      allow read: if isAdmin() || (
+        signedIn()
+        && (
+          resource.data.recruitedByUid == request.auth.uid
+          || resource.data.recruitedUserId == request.auth.uid
+        )
+      );
+      allow write: if false;
+    }
+
+    match /users/{userId} {
+      allow create: if owns(userId)
+        && featureWritable('user_registrations')
+        && request.resource.data.is_admin == false
+        && request.resource.data.status == 1
+        && request.resource.data.account_status == 'active'
+        && request.resource.data.is_suspended == false
+        && request.resource.data.accessStatus == 'notSubmitted'
+        && request.resource.data.access_status == 'notSubmitted'
+        && safePublicRole()
+        && referralIdentityNotClientSupplied();
+      allow read: if owns(userId) || isAdmin() || isVisibleDownlineProfile()
+        || isAssignedProfile(userId);
+      allow update: if (isAdmin() && adminBasicProfileUpdate()
+          && referralIdentityUnchanged())
+        || (owns(userId) && ownerProfileUpdate()
+          && referralIdentityUnchanged())
+        || (owns(userId) && ownerAccessRequestUpdate())
+        || ownerFinalExamCompletionUpdate(userId);
+      allow delete: if false;
+
+      match /admin_notes/{noteId} {
+        allow read: if isAdmin();
+        // Notes and their matching audit records are created by Cloud Functions.
+        allow create, update, delete: if false;
+      }
+
+      match /trading_journals/{journalId} {
+        allow read: if ownsActive(userId) || isAdmin();
+        allow create, update: if validOwnPersonalDocument(userId) || isAdmin();
+        allow delete: if ownsActive(userId) || isAdmin();
+      }
+
+      match /capitals/{capitalId} {
+        allow read: if ownsActive(userId) || isAdmin();
+        allow create, update: if validOwnPersonalDocument(userId) || isAdmin();
+        allow delete: if ownsActive(userId) || isAdmin();
+      }
+
+      match /trading_accounts/{accountId} {
+        allow read, write: if ownsApproved(userId) || isAdmin();
+      }
+
+      // Multiple Account Strategy data is private to the authenticated owner.
+      // The workspace is a document so every nested path remains a valid
+      // collection/document pair.
+      match /multiple_account_strategy/{workspaceId} {
+        allow read: if owns(userId) || isAdmin();
+        allow create, update: if (owns(userId)
+            && request.resource.data.owner_uid == userId
+            && request.resource.data.schema_version is int
+            && request.resource.data.updated_at is timestamp)
+          || isAdmin();
+        allow delete: if false;
+
+        match /accounts/{accountId} {
+          allow read: if owns(userId) || isAdmin();
+          allow create, update: if (owns(userId)
+              && request.resource.data.owner_uid == userId
+              && request.resource.data.id == accountId
+              && request.resource.data.schema_version is int
+              && request.resource.data.account_size is number
+              && request.resource.data.starting_balance is number
+              && request.resource.data.current_balance is number
+              && request.resource.data.daily_loss_limit is number
+              && request.resource.data.maximum_loss_limit is number
+              && (!('daily_trade_limit_enabled' in request.resource.data)
+                || request.resource.data.daily_trade_limit_enabled is bool)
+              && (!('daily_trade_limit' in request.resource.data)
+                || (request.resource.data.daily_trade_limit is int
+                  && request.resource.data.daily_trade_limit >= 1
+                  && request.resource.data.daily_trade_limit <= 100))
+              && (!('daily_trade_count' in request.resource.data)
+                || (request.resource.data.daily_trade_count is int
+                  && request.resource.data.daily_trade_count >= 0))
+              && request.resource.data.updated_at is timestamp)
+            || isAdmin();
+          // Account documents are recoverable records. Clients archive them;
+          // they must never erase the only server copy of a strategy account.
+          allow delete: if false;
+        }
+
+        match /configuration/{configurationId} {
+          allow read: if owns(userId) || isAdmin();
+          allow create, update: if (owns(userId)
+              && request.resource.data.owner_uid == userId
+              && request.resource.data.schema_version is int
+              && request.resource.data.updated_at is timestamp)
+            || isAdmin();
+          allow delete: if false;
+        }
+
+        match /sessions/{sessionId} {
+          allow read: if owns(userId) || isAdmin();
+          allow create, update: if (owns(userId)
+              && request.resource.data.owner_uid == userId
+              && request.resource.data.id == sessionId
+              && request.resource.data.schema_version is int
+              && request.resource.data.updated_at is timestamp)
+            || isAdmin();
+          allow delete: if false;
+
+          match /account_snapshots/{accountId} {
+            allow read: if owns(userId) || isAdmin();
+            allow create: if (owns(userId)
+                && request.resource.data.owner_uid == userId
+                && request.resource.data.id == accountId
+                && request.resource.data.rule_configuration_version is int)
+              || isAdmin();
+            // Session account snapshots are immutable history.
+            allow update, delete: if false;
+          }
+
+          match /events/{eventId} {
+            allow read: if owns(userId) || isAdmin();
+            allow create, update: if (owns(userId)
+                && request.resource.data.owner_uid == userId
+                && request.resource.data.id == eventId
+                && request.resource.data.schema_version is int)
+              || isAdmin();
+            allow delete: if false;
+          }
+
+          match /results/{resultId} {
+            allow read: if owns(userId) || isAdmin();
+            allow create, update: if (owns(userId)
+                && request.resource.data.owner_uid == userId
+                && request.resource.data.created_by == userId
+                && request.resource.data.id == resultId
+                && request.resource.data.session_id == sessionId
+                && request.resource.data.schema_version is int
+                && request.resource.data.normalized_amount is number
+                && request.resource.data.balance_before is number
+                && request.resource.data.balance_after is number)
+              || isAdmin();
+            allow delete: if false;
+          }
+        }
+
+        match /history/{historyId} {
+          allow read: if owns(userId) || isAdmin();
+          allow create, update: if (owns(userId)
+              && request.resource.data.owner_uid == userId
+              && request.resource.data.id == historyId
+              && request.resource.data.schema_version is int)
+            || isAdmin();
+          allow delete: if false;
+        }
+      }
+
+      match /trading_plans/{planId} {
+        allow read: if ownsActive(userId) || isAdmin();
+        allow create, update: if validOwnPersonalDocument(userId) || isAdmin();
+        allow delete: if ownsActive(userId) || isAdmin();
+      }
+
+      match /trading_strategies/{strategyId} {
+        allow read: if ownsActive(userId) || isAdmin();
+        allow create, update: if validOwnPersonalDocument(userId) || isAdmin();
+        allow delete: if ownsActive(userId) || isAdmin();
+      }
+
+      match /psychology_checks/{checkId} {
+        allow read: if ownsActive(userId) || isAdmin();
+        allow create, update: if validOwnPersonalDocument(userId) || isAdmin();
+        allow delete: if ownsActive(userId) || isAdmin();
+      }
+
+      match /personality_assessments/{attemptId} {
+        allow read: if owns(userId) || isAdmin();
+        allow create: if ownsActive(userId)
+          && request.resource.data.user_id == userId
+          && request.resource.data.attempt_id == attemptId;
+        allow update: if ownsActive(userId)
+          && resource.data.user_id == userId
+          && request.resource.data.user_id == userId
+          && request.resource.data.attempt_id == attemptId
+          && resource.data.status != 'completed';
+        allow delete: if isAdmin();
+      }
+
+      match /trading_plan_versions/{versionId} {
+        allow read: if ownsActive(userId) || isAdmin();
+        allow write: if false;
+      }
+
+      match /performance_ratings/{ratingId} {
+        allow read: if ownsActive(userId) || isAdmin();
+        allow write: if false;
+      }
+
+      match /mt5_accounts/{accountId} {
+        allow read: if ownsApproved(userId) || isAdmin();
+        allow create: if isAdmin()
+          || validOwnerMt5AccountCreate(userId, accountId);
+        allow update: if isAdmin()
+          || validOwnerMt5AccountUpdate(userId, accountId);
+        allow delete: if isAdmin();
+
+        match /trades/{tradeId} {
+          allow read: if ownsApproved(userId) || isAdmin();
+          allow write: if isAdmin();
+        }
+
+        match /orders/{orderId} {
+          allow read: if ownsApproved(userId) || isAdmin();
+          allow write: if isAdmin();
+        }
+
+        match /deals/{dealId} {
+          allow read: if ownsApproved(userId) || isAdmin();
+          allow write: if false;
+        }
+
+        match /balance_transactions/{transactionId} {
+          allow read: if ownsApproved(userId) || isAdmin();
+          allow write: if false;
+        }
+
+        match /import_batches/{batchId} {
+          allow read: if ownsApproved(userId) || isAdmin();
+          allow write: if false;
+
+          match /source_chunks/{chunkId} {
+            allow read: if ownsApproved(userId) || isAdmin();
+            allow write: if false;
+          }
+        }
+
+        match /journal_annotations/{annotationId} {
+          allow read: if ownsApproved(userId) || isAdmin();
+          allow create, update: if ownsApproved(userId)
+            && request.resource.data.ownerUid == userId
+            && request.resource.data.user_id == userId
+            && request.resource.data.mt5_account_id == accountId
+            && request.resource.data.account_key == accountId
+            && request.resource.data.lifecycle_key is string
+            && request.resource.data.lifecycle_key.size() > 0
+            && request.resource.data.keys().hasOnly([
+              'ownerUid', 'user_id', 'mt5_account_id', 'account_key',
+              'lifecycle_key', 'trade_id', 'mood', 'emotion',
+              'psychology_notes', 'confidence', 'discipline',
+              'followed_trading_plan', 'mistake_reason', 'lesson_learned',
+              'entry_reason', 'exit_review', 'strategy_id', 'trading_plan_id',
+              'trading_plan_name', 'setup', 'notes', 'screenshot_url',
+              'attachment_urls', 'custom_tags', 'annotation_version',
+              'created_at', 'updated_at'
+            ]);
+          allow delete: if ownsApproved(userId) || isAdmin();
+        }
+
+        match /sync_state/{stateId} {
+          allow read: if ownsApproved(userId) || isAdmin();
+          allow write: if isAdmin();
+        }
+      }
+
+      match /mt5_sync_jobs/{jobId} {
+        allow read: if ownsApproved(userId) || isAdmin();
+        allow create: if featureWritable('mt5_sync')
+          && validMt5SyncJobCreate(userId);
+        allow update, delete: if isAdmin();
+      }
+
+      match /prop_firm_challenges/{challengeId} {
+        allow read, write: if ownsApproved(userId) || isAdmin();
+
+        match /daily_snapshots/{snapshotId} {
+          allow read, write: if owns(userId) || isAdmin();
+        }
+
+        match /metrics/{metricId} {
+          allow read, write: if owns(userId) || isAdmin();
+        }
+
+        match /events/{eventId} {
+          allow read, write: if owns(userId) || isAdmin();
+        }
+      }
+
+      match /trader_onboarding/{documentId} {
+        allow read: if owns(userId) || isAdmin();
+        allow create: if isAdmin() || validOwnerOnboardingCreate(userId);
+        allow update: if isAdmin() || validOwnerOnboardingUpdate(userId);
+        allow delete: if isAdmin();
+      }
+
+      match /onboarding_documents/{documentId} {
+        allow read, write: if owns(userId) || isAdmin();
+      }
+
+      match /readiness_checklist/{itemId} {
+        allow read, write: if owns(userId) || isAdmin();
+      }
+
+      match /trading_position_applications/{applicationId} {
+        allow read: if owns(userId) || isAdmin();
+        allow create: if isAdmin() || validPositionApplicationCreate(userId);
+        allow update, delete: if isAdmin();
+      }
+
+      match /trading_exam_attempts/{attemptId} {
+        allow read: if owns(userId) || isAdmin();
+        // Submission, scoring, review, and notifications are trusted callable
+        // operations. Client writes cannot forge scores or reviewer fields.
+        allow create, update, delete: if false;
+      }
+
+      match /final_exam_attempts/{attemptId} {
+        allow read, write: if owns(userId) || isAdmin();
+      }
+
+      match /downlines/{downlineId} {
+        allow read: if owns(userId) || isAdmin();
+        allow write: if false;
+      }
+
+      match /notification_tokens/{tokenId} {
+        allow read, write: if owns(userId);
+      }
+
+      match /devices/{deviceId} {
+        allow read, create, update, delete: if owns(userId);
+      }
+
+      match /notificationPreferences/{preferenceId} {
+        allow read: if owns(userId) || isAdmin();
+        allow create, update: if owns(userId)
+          && preferenceId == 'default'
+          && request.resource.data.keys().hasOnly([
+            'signals', 'new_signals', 'entry_activation',
+            'stop_loss_updates', 'breakeven_updates', 'take_profit_events',
+            'signal_cancellation', 'signal_closure',
+            'important_signal_notes', 'market_analysis', 'recordings',
+            'knowledge_centre', 'appointments', 'announcements',
+            'financial_daily_reports', 'stock_watchlist_updates',
+            'sound', 'vibration', 'quiet_hours_enabled',
+            'quiet_hours_start_minutes', 'quiet_hours_end_minutes',
+            'timezone', 'updated_at'
+          ]);
+        allow delete: if owns(userId) && preferenceId == 'default';
+      }
+
+      match /watchlist/{symbol} {
+        allow read: if ownsApproved(userId) || isAdmin();
+        allow create: if ownsApproved(userId)
+          && request.resource.data.symbol == symbol
+          && symbol.matches('^[A-Z0-9.\\-]{1,15}$')
+          && request.resource.data.keys().hasOnly([
+            'symbol', 'company_name', 'position', 'daily_reports_enabled',
+            'company_announcements_enabled', 'earnings_enabled',
+            'created_at', 'updated_at'
+          ]);
+        allow update: if ownsApproved(userId)
+          && request.resource.data.symbol == resource.data.symbol
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'company_name', 'position', 'daily_reports_enabled',
+            'company_announcements_enabled', 'earnings_enabled', 'updated_at'
+          ]);
+        allow delete: if ownsApproved(userId);
+      }
+
+      match /preferences/{preferenceId} {
+        allow read: if owns(userId) || isAdmin();
+        allow create, update: if ownsActive(userId)
+          && preferenceId == 'leaderboard'
+          && request.resource.data.keys().hasOnly([
+            'participate', 'hide_real_name', 'nickname',
+            'hide_exact_balance', 'percentage_only', 'hide_from_public',
+            'hide_avatar', 'updated_at'
+          ])
+          && request.resource.data.get('nickname', '').size() <= 40;
+        allow delete: if owns(userId) && preferenceId == 'leaderboard';
+      }
+
+      match /notifications/{notificationId} {
+        allow read: if owns(userId) || isAdmin();
+        allow update: if owns(userId)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'read_at', 'archived_at'
+          ]);
+        // Notification creation and deletion are trusted server operations.
+        allow create, delete: if false;
+      }
+
+      match /access_application_history/{applicationId} {
+        allow read: if owns(userId) || isAdmin();
+        allow create: if owns(userId)
+          && request.resource.data.user_id == userId
+          && reapplicableAccessStatus(
+            request.resource.data.get(
+              'status',
+              request.resource.data.get(
+                'accessStatus',
+                request.resource.data.get('access_status', 'notSubmitted')
+              )
+            )
+          );
+        allow update, delete: if false;
+      }
+    }
+
+    // Firestore collection-group queries are authorized through recursive
+    // matches. Direct user access remains governed by the nested rules above.
+    match /{parentPath=**}/trading_journals/{journalId} {
+      allow read, update: if isAdmin();
+    }
+
+    match /{parentPath=**}/capitals/{capitalId} {
+      allow read: if isAdmin();
+    }
+
+    match /{parentPath=**}/trader_onboarding/{documentId} {
+      allow read, update: if isAdmin();
+    }
+
+    match /{parentPath=**}/trading_position_applications/{applicationId} {
+      allow read, update: if isAdmin();
+    }
+
+    match /{parentPath=**}/trading_exam_attempts/{attemptId} {
+      allow read: if isAdmin();
+    }
+
+    match /{parentPath=**}/final_exam_attempts/{attemptId} {
+      allow read: if isAdmin();
+    }
+
+    match /accessRequests/{requestId} {
+      allow read: if isAdmin()
+        || (signedIn() && requestId == request.auth.uid)
+        || (
+          signedIn()
+          && (
+            resource.data.user_id == request.auth.uid
+            || resource.data.userId == request.auth.uid
+          )
+        );
+      allow create: if requestId == request.auth.uid
+        && validOwnerAccessRequestCreate();
+      // Admin decisions and owner withdrawals are trusted callable operations
+      // using the Admin SDK. Clients may only resubmit their own eligible item.
+      allow update: if validOwnerAccessRequestUpdate(requestId);
+      allow delete: if false;
+    }
+
+    match /knowledge_centre_categories/{categoryId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /announcements/{announcementId} {
+      allow read: if isAdmin() || announcementVisible();
+      allow create, update, delete: if isAdmin();
+
+      match /reads/{userId} {
+        allow read: if owns(userId) || isAdmin();
+        allow create, update: if owns(userId)
+          && request.resource.data.user_id == userId
+          && request.resource.data.keys().hasOnly([
+            'user_id', 'read_at', 'acknowledged_at', 'dismissed_at'
+          ]);
+        allow delete: if false;
+      }
+    }
+
+    match /contents/{documentId} {
+      allow read: if isAdmin() || (
+        signedIn()
+        && featureEnabled('content_publishing')
+        && contentIsPublished(resource.data)
+      );
+      allow create, update: if isAdmin()
+        && (!contentIsPublished(request.resource.data)
+          || featureWritable('content_publishing'));
+      allow delete: if isAdmin();
+    }
+
+    match /trading_pairs/{documentId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /trading_blogs/{documentId} {
+      allow read: if isAdmin() || (
+        signedIn() && featureEnabled('trading_blog')
+        && contentIsPublished(resource.data)
+      );
+      allow create, update: if isAdmin()
+        && (!contentIsPublished(request.resource.data)
+          || featureWritable('content_publishing'));
+      allow delete: if isAdmin();
+    }
+
+    match /trading_news/{documentId} {
+      allow read: if isAdmin() || (
+        signedIn() && featureEnabled('trading_news')
+        && contentIsPublished(resource.data)
+      );
+      allow create, update: if isAdmin()
+        && (!contentIsPublished(request.resource.data)
+          || featureWritable('content_publishing'));
+      allow delete: if isAdmin();
+    }
+
+    match /market_analyses/{documentId} {
+      allow read: if isAdmin() || (
+        approvedUser() && featureEnabled('market_analyst')
+        && contentIsPublished(resource.data)
+      );
+      allow create: if isMarketAnalyst()
+        && (!contentIsPublished(request.resource.data)
+          || featureWritable('content_publishing'))
+        && request.resource.data.created_by == request.auth.uid
+        && validPublisherActorCreate(request.resource.data)
+        && validMarketAnalysis(request.resource.data, true);
+      allow update: if (
+        isMarketAnalysisManager() || (
+        isMarketAnalyst()
+        && resource.data.created_by == request.auth.uid
+        )
+      )
+        && (!contentIsPublished(request.resource.data)
+          || featureWritable('content_publishing'))
+        && request.resource.data.created_by == resource.data.created_by
+        && validPublisherActorUpdate(request.resource.data)
+        && validMarketAnalysis(
+          request.resource.data,
+          'primary_language' in resource.data
+            || 'primary_language' in request.resource.data
+        );
+      allow delete: if isSuperAdmin();
+    }
+
+    match /market_analyst_profiles/{analystId} {
+      allow read: if approvedUser();
+      allow create: if isAdmin() || validOwnAnalystProfileCreate(analystId);
+      allow update: if isAdmin() || validOwnAnalystProfileUpdate(analystId);
+      allow delete: if isSuperAdmin();
+    }
+
+    match /market_analysts/{analystId}/followers/{followerId} {
+      allow read: if isAdmin() || owns(followerId) || owns(analystId);
+      // Follow state and denormalized counts are kept consistent by a callable.
+      allow write: if false;
+    }
+
+    match /trading_signals/{documentId} {
+      allow read: if approvedUser() && featureEnabled('trading_signals');
+      allow create: if featureWritable('trading_signals')
+        && canCreateSignal()
+        && request.resource.data.created_by == request.auth.uid
+        && validPublisherActorCreate(request.resource.data)
+        && validTradingSignal(request.resource.data, true)
+        && (
+          request.resource.data.get('lifecycle_status', 'draft') == 'draft'
+          || signalPublicationEventExists(documentId)
+        );
+      allow update: if featureWritable('trading_signals')
+        && canOperateSignal(resource.data)
+        && signalIdentityUnchanged()
+        && validPublisherActorUpdate(request.resource.data)
+        && validSignalLifecycleShape(request.resource.data)
+        && (
+          !signalContentFieldsChanged()
+          || validTradingSignal(
+            request.resource.data,
+            'primary_language' in resource.data
+              || 'primary_language' in request.resource.data
+          )
+        )
+        && (!signalCriticalFieldsChanged() || signalLifecycleEventExists(documentId));
+      allow delete: if isSignalSuperAdmin()
+        && resource.data.get('lifecycle_status', 'draft') == 'draft';
+
+      match /updates/{updateId} {
+        allow read: if approvedUser() && featureEnabled('trading_signals');
+        allow create: if validSignalUpdateEvent(documentId, updateId);
+        // Update events are immutable. Notification delivery uses Admin SDK.
+        allow update, delete: if false;
+      }
+
+      match /events/{eventId} {
+        allow read: if approvedUser() && featureEnabled('trading_signals');
+        // Immutable delivery mirrors are created by Cloud Functions.
+        allow write: if false;
+      }
+
+      match /audit_logs/{auditId} {
+        allow read: if canOperateSignal(
+          get(
+            /databases/$(database)/documents/trading_signals/$(documentId)
+          ).data
+        );
+        allow create: if validSignalAudit(documentId, auditId);
+        allow update, delete: if false;
+      }
+    }
+
+    match /trading_resources/{documentId} {
+      allow read: if isAdmin() || (
+        signedIn() && featureEnabled('marketing_resources')
+        && contentIsPublished(resource.data)
+      );
+      allow create, update: if isAdmin()
+        && (!contentIsPublished(request.resource.data)
+          || featureWritable('content_publishing'));
+      allow delete: if isAdmin();
+    }
+
+    match /trading_recordings/{documentId} {
+      allow read: if isAdmin() || (
+        signedIn() && featureEnabled('recording_classes')
+        && contentIsPublished(resource.data)
+      );
+      allow create, update: if isAdmin()
+        && (!contentIsPublished(request.resource.data)
+          || featureWritable('content_publishing'));
+      allow delete: if isAdmin();
+    }
+
+    match /knowledge_centres/{documentId} {
+      allow read: if isAdmin() || (
+        signedIn() && featureEnabled('knowledge_centre')
+        && contentIsPublished(resource.data)
+      );
+      allow create, update: if isAdmin()
+        && (!contentIsPublished(request.resource.data)
+          || featureWritable('content_publishing'));
+      allow delete: if isAdmin();
+    }
+
+    match /knowledgeCentres/{documentId} {
+      allow read: if isAdmin() || (
+        signedIn() && featureEnabled('knowledge_centre')
+        && contentIsPublished(resource.data)
+      );
+      allow create, update: if isAdmin()
+        && (!contentIsPublished(request.resource.data)
+          || featureWritable('content_publishing'));
+      allow delete: if isAdmin();
+    }
+
+    match /trading_exam_questions/{documentId} {
+      allow read: if signedIn() && featureEnabled('trading_exams');
+      allow create, update: if isAdmin() && validPublishedQuiz();
+      allow delete: if isAdmin();
+    }
+
+    // Coursework replaces the legacy Daily Exam. Correct answers and reviewer
+    // guidance live in *_keys collections, which are never candidate-readable.
+    match /coursework_themes/{themeId} {
+      allow read: if canReadPublishedCourseworkResource()
+        || hasCourseworkPermission('coursework.manageThemes')
+        || hasCourseworkPermission('coursework.viewReports');
+      allow create: if hasCourseworkPermission('coursework.manageThemes')
+        && (!('managedBySeed' in request.resource.data)
+          || request.resource.data.managedBySeed != true);
+      allow update: if hasCourseworkPermission('coursework.manageThemes')
+        && courseworkSeedMetadataUnchanged();
+      allow delete: if false;
+
+      match /questions/{questionId} {
+        allow read: if canReadPublishedCourseworkTheme(themeId)
+          || hasCourseworkPermission('coursework.manageThemes')
+          || hasCourseworkPermission('coursework.viewReports');
+        allow create: if hasCourseworkPermission('coursework.manageThemes')
+          && courseworkPublicQuestionHasNoMarkingKey()
+          && (!('managedBySeed' in request.resource.data)
+            || request.resource.data.managedBySeed != true);
+        allow update: if hasCourseworkPermission('coursework.manageThemes')
+          && courseworkPublicQuestionHasNoMarkingKey()
+          && courseworkSeedMetadataUnchanged();
+        allow delete: if false;
+      }
+    }
+
+    match /coursework_theme_keys/{themeId} {
+      allow read: if hasCourseworkPermission('coursework.viewAssignedSubmissions')
+        || hasCourseworkPermission('coursework.manageThemes');
+      allow write: if false;
+
+      match /questions/{questionId} {
+        allow read: if hasCourseworkPermission('coursework.viewAssignedSubmissions')
+          || hasCourseworkPermission('coursework.manageThemes');
+        allow write: if false;
+      }
+    }
+
+    match /coursework_assignment_keys/{assignmentId} {
+      allow read, write: if false;
+    }
+
+    match /coursework_attempt_keys/{attemptId} {
+      allow read, write: if false;
+    }
+
+    match /coursework_assignments/{assignmentId} {
+      allow read: if signedIn() && (
+        resource.data.assigned_to_user_id == request.auth.uid
+        || hasCourseworkPermission('coursework.viewAssignedSubmissions')
+      );
+      allow create, update, delete: if false;
+    }
+
+    match /coursework_attempts/{attemptId} {
+      allow read: if signedIn() && (
+        resource.data.user_id == request.auth.uid
+        || hasCourseworkPermission('coursework.viewAssignedSubmissions')
+      );
+      allow create, delete: if false;
+      allow update: if courseworkAttemptEditable(attemptId)
+        && request.resource.data.user_id == resource.data.user_id
+        && request.resource.data.assignment_id == resource.data.assignment_id
+        && request.resource.data.status in ['inProgress', 'draft', 'revisionRequested']
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'status', 'current_question_number', 'completed_question_count',
+          'last_saved_at', 'updated_at'
+        ]);
+
+      match /answers/{questionId} {
+        allow read: if courseworkAttemptOwner(attemptId)
+          || hasCourseworkPermission('coursework.viewAssignedSubmissions');
+        allow create, update: if courseworkAttemptEditable(attemptId)
+          && request.resource.data.question_id == questionId
+          && request.resource.data.attempt_id == attemptId
+          && request.resource.data.keys().hasOnly([
+            'question_id', 'attempt_id', 'question_number', 'question_type',
+            'text_answer', 'selected_option_ids', 'selected_chart_zone',
+            'selected_minimum_price', 'selected_maximum_price',
+            'market_analysis_data', 'order_management_data', 'attachments',
+            'is_completed', 'is_flagged', 'maximum_mark', 'client_version',
+            'saved_at', 'updated_at'
+          ]);
+        allow delete: if false;
+      }
+
+      match /attachments/{attachmentId} {
+        allow read: if courseworkAttemptOwner(attemptId)
+          || hasCourseworkPermission('coursework.viewAssignedSubmissions');
+        allow create: if courseworkAttemptEditable(attemptId)
+          && request.resource.data.owner_user_id == request.auth.uid
+          && request.resource.data.attempt_id == attemptId
+          && request.resource.data.attachment_id == attachmentId;
+        allow update, delete: if false;
+      }
+
+      match /grading/{gradingId} {
+        allow read: if courseworkAttemptOwner(attemptId)
+          || hasCourseworkPermission('coursework.viewAssignedSubmissions');
+        allow write: if false;
+      }
+    }
+
+    match /coursework_results/{resultId} {
+      allow read: if signedIn() && (
+        resource.data.user_id == request.auth.uid
+        || hasCourseworkPermission('coursework.viewReports')
+      );
+      allow write: if false;
+    }
+
+    match /assessment_results/{resultId} {
+      allow read: if signedIn() && (
+        resource.data.user_id == request.auth.uid
+        || hasCourseworkPermission('coursework.viewReports')
+      );
+      allow write: if false;
+      match /history/{historyId} {
+        allow read: if hasCourseworkPermission('coursework.viewReports');
+        allow write: if false;
+      }
+    }
+
+    match /assessment_settings/{settingId} {
+      allow read: if signedIn();
+      allow create, update: if hasCourseworkPermission('coursework.manageSettings');
+      allow delete: if false;
+    }
+
+    match /assessment_audit_logs/{logId} {
+      allow read: if hasCourseworkPermission('coursework.viewReports');
+      allow write: if false;
+    }
+
+    match /final_exam_questions/{documentId} {
+      allow read: if signedIn() && featureEnabled('trading_exams');
+      allow write: if isAdmin();
+    }
+
+    match /final_exam_question_banks/{documentId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /mt5_sync_jobs/{jobId} {
+      allow read: if isAdmin()
+        || (approvedUser() && resource.data.user_id == request.auth.uid);
+      allow create: if featureWritable('mt5_sync')
+        && signedIn() && validMt5SyncJobCreate(request.auth.uid);
+      allow update, delete: if isAdmin();
+    }
+
+    match /prop_firm_models/{documentId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /trading_competitions/{documentId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /trading_appointment_slots/{slotId} {
+      allow read: if signedIn() && featureEnabled('appointments');
+      allow create: if featureEnabled('appointments') && isAdmin();
+      allow delete: if isAdmin();
+      allow update: if featureEnabled('appointments') && (isAdmin() || (
+        signedIn()
+        && resource.data.status == 'active'
+        && request.resource.data.status == 'booked'
+        && request.resource.data.booked_by == request.auth.uid
+        && request.resource.data.appointment_id is string
+        && getAfter(
+          /databases/$(database)/documents/trading_appointments/$(request.resource.data.appointment_id)
+        ).data.appointment_slot_id == slotId
+        && getAfter(
+          /databases/$(database)/documents/trading_appointments/$(request.resource.data.appointment_id)
+        ).data.requester_id == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status', 'booked_by', 'appointment_id', 'updated_at'])
+      ) || (
+        signedIn()
+        && resource.data.status == 'booked'
+        && (
+          resource.data.booked_by == request.auth.uid
+          || request.auth.uid in get(
+            /databases/$(database)/documents/trading_appointments/$(resource.data.appointment_id)
+          ).data.participant_ids
+        )
+        && request.resource.data.status == 'active'
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status', 'booked_by', 'appointment_id', 'updated_at'])
+      ));
+    }
+
+    match /appointment_hosts/{hostId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /trading_appointments/{appointmentId} {
+      allow read: if featureEnabled('appointments') && (isAdmin() || (
+        signedIn() && request.auth.uid in resource.data.participant_ids
+      ));
+      allow create: if featureEnabled('appointments') && signedIn()
+        && request.resource.data.requester_id == request.auth.uid
+        && request.resource.data.host_user_id != request.auth.uid
+        && request.resource.data.participant_ids.size() == 2
+        && request.auth.uid in request.resource.data.participant_ids
+        && request.resource.data.host_user_id in request.resource.data.participant_ids
+        && request.resource.data.scheduled_start_at > request.time
+        && (
+          (
+            request.resource.data.request_type == 'preferred'
+            && request.resource.data.status == 'pending'
+          ) || (
+            request.resource.data.request_type == 'slot'
+            && request.resource.data.status == 'approved'
+            && request.resource.data.appointment_slot_id is string
+            && getAfter(
+              /databases/$(database)/documents/trading_appointment_slots/$(request.resource.data.appointment_slot_id)
+            ).data.status == 'booked'
+            && getAfter(
+              /databases/$(database)/documents/trading_appointment_slots/$(request.resource.data.appointment_slot_id)
+            ).data.booked_by == request.auth.uid
+            && getAfter(
+              /databases/$(database)/documents/trading_appointment_slots/$(request.resource.data.appointment_slot_id)
+            ).data.appointment_id == appointmentId
+          )
+        );
+      allow update: if featureEnabled('appointments') && (isAdmin() || (
+        signedIn()
+        && request.auth.uid in resource.data.participant_ids
+        && request.resource.data.requester_id == resource.data.requester_id
+        && request.resource.data.host_user_id == resource.data.host_user_id
+        && request.resource.data.participant_ids == resource.data.participant_ids
+        && resource.data.status in ['pending', 'approved']
+        && request.resource.data.status == 'cancelled'
+        && request.resource.data.cancelled_by == request.auth.uid
+        && resource.data.scheduled_start_at > request.time
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'status', 'cancelled_by', 'cancelled_at', 'cancellation_reason', 'updated_at'
+        ])
+      ));
+      allow delete: if isAdmin();
+    }
+
+    match /support_tickets/{ticketId} {
+      allow read: if featureEnabled('support_tickets') && (isAdmin() || (
+        signedIn() && resource.data.user_id == request.auth.uid
+      ));
+      allow create: if featureEnabled('support_tickets') && signedIn()
+        && request.resource.data.user_id == request.auth.uid;
+      allow update: if featureEnabled('support_tickets') && (isAdmin() || (
+        signedIn()
+        && resource.data.user_id == request.auth.uid
+        && request.resource.data.user_id == resource.data.user_id
+      ));
+      allow delete: if isAdmin();
+
+      match /messages/{messageId} {
+        allow read: if featureEnabled('support_tickets') && (isAdmin() || (
+          signedIn()
+          && get(/databases/$(database)/documents/support_tickets/$(ticketId)).data.user_id == request.auth.uid
+        ));
+        allow create: if featureEnabled('support_tickets') && signedIn()
+          && request.resource.data.user_id == request.auth.uid
+          && (
+            isAdmin()
+            || getAfter(/databases/$(database)/documents/support_tickets/$(ticketId)).data.user_id == request.auth.uid
+          );
+      }
+    }
+
+    match /community_documents/{documentId} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

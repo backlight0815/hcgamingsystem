@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title">
+  <title id="title">Trading discipline checklist Diagram</title>
+  <rect width="1600" height="900" rx="0" fill="#F8FAFC"/>
+  <rect x="54" y="44" width="1492" height="772" rx="36" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+  <rect x="130" y="285" width="300" height="150" rx="30" fill="#6D28D9" opacity=".15" stroke="#6D28D9" stroke-width="5"/>
+  <text x="164" y="353" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#6D28D9">Plan</text>
+  <line x1="434" y1="361" x2="458" y2="396" stroke="#64748B" stroke-width="9" stroke-linecap="round"/><polygon points="458,396 438.1532203353969,386.5076168985498 456.2972550760084,374.06599307641625" fill="#64748B"/><rect x="466" y="320" width="300" height="150" rx="30" fill="#22C55E" opacity=".15" stroke="#22C55E" stroke-width="5"/>
+  <text x="500" y="388" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#22C55E">Rules</text>
+  <line x1="770" y1="396" x2="794" y2="361" stroke="#64748B" stroke-width="9" stroke-linecap="round"/><polygon points="794,361 792.2972550760084,382.93400692358375 774.1532203353969,370.4923831014502" fill="#64748B"/><rect x="802" y="285" width="300" height="150" rx="30" fill="#F97316" opacity=".15" stroke="#F97316" stroke-width="5"/>
+  <text x="836" y="353" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#F97316">Risk</text>
+  <line x1="1106" y1="361" x2="1130" y2="396" stroke="#64748B" stroke-width="9" stroke-linecap="round"/><polygon points="1130,396 1110.1532203353968,386.5076168985498 1128.2972550760085,374.06599307641625" fill="#64748B"/><rect x="1138" y="320" width="300" height="150" rx="30" fill="#334155" opacity=".15" stroke="#334155" stroke-width="5"/>
+  <text x="1172" y="388" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#334155">Journal</text>
+  
+  <text x="430" y="640" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#64748B">Trading discipline checklist</text>
+  <rect x="84" y="842" width="290" height="18" rx="9" fill="#6D28D9" opacity=".22"/>
+  <rect x="412" y="842" width="404" height="18" rx="9" fill="#22C55E" opacity=".20"/>
+  <rect x="852" y="842" width="664" height="18" rx="9" fill="#334155" opacity=".10"/>
+</svg>

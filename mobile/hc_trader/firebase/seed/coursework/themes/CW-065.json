@@ -1,0 +1,637 @@
+{
+  "theme": {
+    "id": "CW-065",
+    "code": "CW-065",
+    "title": {
+      "en": "Evaluating Risk-to-Reward Before Accepting a Setup",
+      "zh": "接受交易形态前评估风险回报比"
+    },
+    "shortTitle": {
+      "en": "risk-to-reward ratio",
+      "zh": "接受交易形态前评估风险回报比"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates evaluating risk-to-reward before accepting a setup using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示接受交易形态前评估风险回报比。"
+    },
+    "categoryId": "risk_management",
+    "categoryName": {
+      "en": "Risk and Money Management",
+      "zh": "风险与资金管理"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind evaluating risk-to-reward before accepting a setup.",
+        "Apply evaluating risk-to-reward before accepting a setup to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释接受交易形态前评估风险回报比背后的核心决策规则。",
+        "将接受交易形态前评估风险回报比应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "risk-to-reward ratio",
+      "reward",
+      "setup",
+      "EURUSD",
+      "Risk and Money Management"
+    ],
+    "searchTokens": [
+      "cw-065",
+      "CW-065",
+      "risk_management",
+      "risk and money management",
+      "风险与资金管理",
+      "evaluating",
+      "risk",
+      "to",
+      "reward",
+      "before",
+      "accepting",
+      "a",
+      "setup",
+      "接受交易形态前评估风险回报比",
+      "risk-to-reward",
+      "ratio",
+      "eurusd",
+      "and",
+      "money",
+      "management"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 65,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "32d0a00c62ad8e1e48f1759f959d9de020af7386782a95a11a39657f0332f51b"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-065",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for risk-to-reward ratio",
+        "zh": "接受交易形态前评估风险回报比的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which observation provides the strongest objective basis for evaluating risk-to-reward before accepting a setup?",
+        "zh": "哪项观察为接受交易形态前评估风险回报比提供最强的客观依据？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing evaluating risk-to-reward before accepting a setup.",
+            "zh": "评估接受交易形态前评估风险回报比时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "11cf38bc5a25759ea35a18c5708f51aafe5cc817b552b20f470299b5c8ba737d"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-065",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying risk-to-reward ratio Under Uncertainty",
+        "zh": "在不确定性下应用接受交易形态前评估风险回报比"
+      },
+      "prompt": {
+        "en": "A previous example of evaluating risk-to-reward before accepting a setup was profitable, but current evidence is incomplete. What is the sound conclusion?",
+        "zh": "之前的接受交易形态前评估风险回报比案例曾盈利，但当前证据不完整。合理结论是什么？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "b4e70084e7f29570cc0f24685a531d7093ca8987953bed9234451ed25902e1f5"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-065",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "EURUSD Chart Interpretation for risk-to-reward ratio",
+        "zh": "EURUSD图表中的接受交易形态前评估风险回报比解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational EURUSD H1 chart. Which labelled zone is the strongest decision area for evaluating evaluating risk-to-reward before accepting a setup while keeping invalidation visible?",
+        "zh": "研究合成教学用EURUSD H1图表。哪个标记区域最适合评估接受交易形态前评估风险回报比，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "EURUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 1.07424,
+            "high": 1.07828,
+            "low": 1.07318,
+            "close": 1.07667
+          },
+          {
+            "timeIndex": 1,
+            "open": 1.07667,
+            "high": 1.0797,
+            "low": 1.07563,
+            "close": 1.07813
+          },
+          {
+            "timeIndex": 2,
+            "open": 1.07813,
+            "high": 1.07899,
+            "low": 1.07646,
+            "close": 1.07801
+          },
+          {
+            "timeIndex": 3,
+            "open": 1.07801,
+            "high": 1.07939,
+            "low": 1.07518,
+            "close": 1.07676
+          },
+          {
+            "timeIndex": 4,
+            "open": 1.07676,
+            "high": 1.07845,
+            "low": 1.07448,
+            "close": 1.0756
+          },
+          {
+            "timeIndex": 5,
+            "open": 1.0756,
+            "high": 1.07683,
+            "low": 1.07453,
+            "close": 1.07551
+          },
+          {
+            "timeIndex": 6,
+            "open": 1.07551,
+            "high": 1.0776,
+            "low": 1.07399,
+            "close": 1.07656
+          },
+          {
+            "timeIndex": 7,
+            "open": 1.07656,
+            "high": 1.07984,
+            "low": 1.07496,
+            "close": 1.07819
+          },
+          {
+            "timeIndex": 8,
+            "open": 1.07819,
+            "high": 1.08152,
+            "low": 1.07702,
+            "close": 1.07999
+          },
+          {
+            "timeIndex": 9,
+            "open": 1.07999,
+            "high": 1.08272,
+            "low": 1.07907,
+            "close": 1.08195
+          },
+          {
+            "timeIndex": 10,
+            "open": 1.08195,
+            "high": 1.08543,
+            "low": 1.08046,
+            "close": 1.08398
+          },
+          {
+            "timeIndex": 11,
+            "open": 1.08398,
+            "high": 1.0872,
+            "low": 1.08237,
+            "close": 1.08552
+          },
+          {
+            "timeIndex": 12,
+            "open": 1.08552,
+            "high": 1.08698,
+            "low": 1.0843,
+            "close": 1.08582
+          },
+          {
+            "timeIndex": 13,
+            "open": 1.08582,
+            "high": 1.08694,
+            "low": 1.08393,
+            "close": 1.08481
+          },
+          {
+            "timeIndex": 14,
+            "open": 1.08481,
+            "high": 1.08648,
+            "low": 1.08194,
+            "close": 1.0834
+          },
+          {
+            "timeIndex": 15,
+            "open": 1.0834,
+            "high": 1.08487,
+            "low": 1.08126,
+            "close": 1.08288
+          },
+          {
+            "timeIndex": 16,
+            "open": 1.08288,
+            "high": 1.08458,
+            "low": 1.08162,
+            "close": 1.08386
+          },
+          {
+            "timeIndex": 17,
+            "open": 1.08386,
+            "high": 1.08739,
+            "low": 1.08304,
+            "close": 1.08589
+          },
+          {
+            "timeIndex": 18,
+            "open": 1.08589,
+            "high": 1.08975,
+            "low": 1.08447,
+            "close": 1.08809
+          },
+          {
+            "timeIndex": 19,
+            "open": 1.08809,
+            "high": 1.09106,
+            "low": 1.08647,
+            "close": 1.08998
+          },
+          {
+            "timeIndex": 20,
+            "open": 1.08998,
+            "high": 1.09274,
+            "low": 1.08867,
+            "close": 1.09154
+          },
+          {
+            "timeIndex": 21,
+            "open": 1.09154,
+            "high": 1.09446,
+            "low": 1.09078,
+            "close": 1.09278
+          },
+          {
+            "timeIndex": 22,
+            "open": 1.09278,
+            "high": 1.0947,
+            "low": 1.09139,
+            "close": 1.09328
+          },
+          {
+            "timeIndex": 23,
+            "open": 1.09328,
+            "high": 1.09409,
+            "low": 1.09108,
+            "close": 1.09271
+          },
+          {
+            "timeIndex": 24,
+            "open": 1.09271,
+            "high": 1.09426,
+            "low": 1.09008,
+            "close": 1.09143
+          },
+          {
+            "timeIndex": 25,
+            "open": 1.09143,
+            "high": 1.09307,
+            "low": 1.08987,
+            "close": 1.09058
+          },
+          {
+            "timeIndex": 26,
+            "open": 1.09058,
+            "high": 1.09219,
+            "low": 1.08923,
+            "close": 1.09118
+          },
+          {
+            "timeIndex": 27,
+            "open": 1.09118,
+            "high": 1.09455,
+            "low": 1.08955,
+            "close": 1.09328
+          },
+          {
+            "timeIndex": 28,
+            "open": 1.09328,
+            "high": 1.09763,
+            "low": 1.09189,
+            "close": 1.09593
+          },
+          {
+            "timeIndex": 29,
+            "open": 1.09593,
+            "high": 1.09946,
+            "low": 1.09517,
+            "close": 1.09811
+          },
+          {
+            "timeIndex": 30,
+            "open": 1.09811,
+            "high": 1.10035,
+            "low": 1.0968,
+            "close": 1.09945
+          },
+          {
+            "timeIndex": 31,
+            "open": 1.09945,
+            "high": 1.10179,
+            "low": 1.09782,
+            "close": 1.1002
+          },
+          {
+            "timeIndex": 32,
+            "open": 1.1002,
+            "high": 1.10213,
+            "low": 1.09877,
+            "close": 1.10053
+          },
+          {
+            "timeIndex": 33,
+            "open": 1.10053,
+            "high": 1.10145,
+            "low": 1.09946,
+            "close": 1.10028
+          },
+          {
+            "timeIndex": 34,
+            "open": 1.10028,
+            "high": 1.10162,
+            "low": 1.09816,
+            "close": 1.09942
+          },
+          {
+            "timeIndex": 35,
+            "open": 1.09942,
+            "high": 1.10112,
+            "low": 1.09696,
+            "close": 1.09858
+          },
+          {
+            "timeIndex": 36,
+            "open": 1.09858,
+            "high": 1.10008,
+            "low": 1.09712,
+            "close": 1.09879
+          },
+          {
+            "timeIndex": 37,
+            "open": 1.09879,
+            "high": 1.10157,
+            "low": 1.09791,
+            "close": 1.10059
+          },
+          {
+            "timeIndex": 38,
+            "open": 1.10059,
+            "high": 1.10505,
+            "low": 1.09937,
+            "close": 1.10342
+          },
+          {
+            "timeIndex": 39,
+            "open": 1.10342,
+            "high": 1.10761,
+            "low": 1.10181,
+            "close": 1.10605
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 1.07456,
+            "maximumPrice": 1.07938,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 1.08282,
+            "maximumPrice": 1.08764,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 1.09315,
+            "maximumPrice": 1.09797,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 1.10141,
+            "maximumPrice": 1.10623,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "674d80b5459c628c4c87aa2e4fed896c79cfddde5471c020d26102a069729ee9"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-065",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: risk-to-reward ratio",
+        "zh": "独立情境分析：接受交易形态前评估风险回报比"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of evaluating risk-to-reward before accepting a setup using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析接受交易形态前评估风险回报比的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "29dc6e7844f8c9f3ac46c5706e40926ade435b64b23fa2a0dbe82ac3799db548"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-065",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: risk-to-reward ratio",
+        "zh": "实践展示：接受交易形态前评估风险回报比"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate evaluating risk-to-reward before accepting a setup. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示接受交易形态前评估风险回报比。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "9a60a274da3d9da80944c0f83b8a37cd8cb3b5c2b44800a605bf4ec3699607e1"
+    }
+  ]
+}

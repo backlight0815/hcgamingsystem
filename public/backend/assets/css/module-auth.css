@@ -1,0 +1,20 @@
+.module-signins { margin-top: 28px; padding-top: 22px; border-top: 1px solid #d9e1eb; color: #172b45; }
+.module-signins h2 { margin: 0 0 12px; font-size: 14px; line-height: 1.5; font-weight: 600; color: #43546c; }
+.module-signins ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.module-signins a { display: flex; gap: 12px; align-items: center; min-height: 68px; padding: 12px 14px; border: 1px solid #cdd8e5; border-radius: 10px; background: #f7f9fc; color: #172b45; text-decoration: none; }
+.module-signins a:hover { background: #edf3fc; border-color: #6389bd; color: #172b45; }
+.module-signins a:focus-visible, .module-auth-page a:focus-visible, .module-auth-page button:focus-visible { outline: 3px solid #2458a6 !important; outline-offset: 3px; }
+.module-signins-icon { display: grid; place-items: center; flex: 0 0 34px; height: 34px; border-radius: 8px; background: #e0e9f6; color: #244a80; font-size: 12px; font-weight: 700; }
+.module-signins-label { flex: 1; min-width: 0; }
+.module-signins strong, .module-signins small { display: block; line-height: 1.4; }
+.module-signins strong { font-size: 14px; }
+.module-signins small { margin-top: 3px; font-size: 12px; color: #506079; }
+.module-signins svg { flex-shrink: 0; }
+.module-auth-page .wrapper-page { position: relative; top: auto; left: auto; transform: none; width: calc(100% - 32px); max-width: 480px; margin: 40px auto; }
+.module-auth-page .form-label { color: #34455d; }
+.module-auth-page .password-toggle-icon { border: 0; background: transparent; color: #34455d; min-width: 44px; min-height: 44px; }
+.module-auth-page #password { padding-right: 58px; }
+.module-auth-page .auth-register { color: #2458a6; }
+.module-auth-page #loginbutton { background: #2458a6; border-color: #2458a6; color: #fff; }
+.module-auth-page #loginbutton:hover { background: #19447f; }
+@media (max-width: 480px) { .module-auth-page .wrapper-page { margin: 16px auto; } .module-auth-page .card-body { padding: 18px 10px; } }

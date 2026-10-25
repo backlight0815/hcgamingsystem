@@ -15,13 +15,20 @@ class ContactController extends Controller
 
     }//End Methods
     public function StoreMessage(Request $request){
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:120'],
+            'email' => ['required', 'email', 'max:190'],
+            'subject' => ['required', 'string', 'max:190'],
+            'phone' => ['nullable', 'string', 'max:40'],
+            'message' => ['required', 'string', 'max:5000'],
+        ]);
 
         Contact::Insert([
-       'name' => $request->name,
-       'email' => $request->email,
-       'subject' => $request->subject,
-       'phone' => $request->phone,
-       'message' => $request->message,
+       'name' => $data['name'],
+       'email' => $data['email'],
+       'subject' => $data['subject'],
+       'phone' => $data['phone'] ?? null,
+       'message' => $data['message'],
        'created_at' => Carbon::now(),
 
 
@@ -29,7 +36,7 @@ class ContactController extends Controller
         ]);
 
         $notification = array(
-            'message' =>'Your Meesage Submited Successfully',
+            'message' =>'Your message was sent successfully.',
             'alert-type' => 'success'
         );
         return redirect()->back()->with($notification);

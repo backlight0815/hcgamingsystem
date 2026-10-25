@@ -1,0 +1,634 @@
+{
+  "theme": {
+    "id": "CW-052",
+    "code": "CW-052",
+    "title": {
+      "en": "Mapping H4 Major Structure for Session Direction",
+      "zh": "绘制H4主要结构以判断时段方向"
+    },
+    "shortTitle": {
+      "en": "H4",
+      "zh": "绘制H4主要结构以判断时段方向"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates mapping h4 major structure for session direction using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示绘制H4主要结构以判断时段方向。"
+    },
+    "categoryId": "multi_timeframe",
+    "categoryName": {
+      "en": "Multi-Timeframe Analysis",
+      "zh": "多时间周期分析"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind mapping h4 major structure for session direction.",
+        "Apply mapping h4 major structure for session direction to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释绘制H4主要结构以判断时段方向背后的核心决策规则。",
+        "将绘制H4主要结构以判断时段方向应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "H4",
+      "major structure",
+      "bias",
+      "GBPUSD",
+      "Multi-Timeframe Analysis"
+    ],
+    "searchTokens": [
+      "cw-052",
+      "CW-052",
+      "multi_timeframe",
+      "multi-timeframe analysis",
+      "多时间周期分析",
+      "mapping",
+      "h4",
+      "major",
+      "structure",
+      "for",
+      "session",
+      "direction",
+      "绘制H4主要结构以判断时段方向",
+      "bias",
+      "gbpusd",
+      "multi-timeframe",
+      "analysis"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 52,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "b785bcaa328cdaf40ea91407ba2bf53d2144fbd6bf7c57eb8501904c7ce239a8"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-052",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for H4",
+        "zh": "绘制H4主要结构以判断时段方向的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which decision rule is most consistent with disciplined use of mapping h4 major structure for session direction?",
+        "zh": "哪项决策规则最符合有纪律地运用绘制H4主要结构以判断时段方向？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing mapping h4 major structure for session direction.",
+            "zh": "评估绘制H4主要结构以判断时段方向时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "a836f26928c7eda98d99f11d3dcda69b2a6145f092a7c2e5a54b81c4bb8e513e"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-052",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying H4 Under Uncertainty",
+        "zh": "在不确定性下应用绘制H4主要结构以判断时段方向"
+      },
+      "prompt": {
+        "en": "Two signals related to mapping h4 major structure for session direction conflict before entry. Which response best protects decision quality?",
+        "zh": "入场前与绘制H4主要结构以判断时段方向相关的两个信号互相冲突。哪种做法最能保护决策质量？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "331bfba2ad52f6d9573bc4a949ea2db69cb99469628cb012a1440ca3f3a2f2dc"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-052",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "GBPUSD Chart Interpretation for H4",
+        "zh": "GBPUSD图表中的绘制H4主要结构以判断时段方向解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational GBPUSD H1 chart. Which labelled zone is the strongest decision area for evaluating mapping h4 major structure for session direction while keeping invalidation visible?",
+        "zh": "研究合成教学用GBPUSD H1图表。哪个标记区域最适合评估绘制H4主要结构以判断时段方向，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "GBPUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 1.27963,
+            "high": 1.28139,
+            "low": 1.27491,
+            "close": 1.2767
+          },
+          {
+            "timeIndex": 1,
+            "open": 1.2767,
+            "high": 1.27886,
+            "low": 1.27442,
+            "close": 1.27541
+          },
+          {
+            "timeIndex": 2,
+            "open": 1.27541,
+            "high": 1.27776,
+            "low": 1.27373,
+            "close": 1.27615
+          },
+          {
+            "timeIndex": 3,
+            "open": 1.27615,
+            "high": 1.2792,
+            "low": 1.27406,
+            "close": 1.2779
+          },
+          {
+            "timeIndex": 4,
+            "open": 1.2779,
+            "high": 1.28119,
+            "low": 1.27607,
+            "close": 1.27909
+          },
+          {
+            "timeIndex": 5,
+            "open": 1.27909,
+            "high": 1.28106,
+            "low": 1.27783,
+            "close": 1.27888
+          },
+          {
+            "timeIndex": 6,
+            "open": 1.27888,
+            "high": 1.2799,
+            "low": 1.27593,
+            "close": 1.27754
+          },
+          {
+            "timeIndex": 7,
+            "open": 1.27754,
+            "high": 1.27937,
+            "low": 1.27359,
+            "close": 1.27567
+          },
+          {
+            "timeIndex": 8,
+            "open": 1.27567,
+            "high": 1.27783,
+            "low": 1.27158,
+            "close": 1.27346
+          },
+          {
+            "timeIndex": 9,
+            "open": 1.27346,
+            "high": 1.27497,
+            "low": 1.26971,
+            "close": 1.27083
+          },
+          {
+            "timeIndex": 10,
+            "open": 1.27083,
+            "high": 1.27224,
+            "low": 1.26663,
+            "close": 1.26818
+          },
+          {
+            "timeIndex": 11,
+            "open": 1.26818,
+            "high": 1.27031,
+            "low": 1.26448,
+            "close": 1.26654
+          },
+          {
+            "timeIndex": 12,
+            "open": 1.26654,
+            "high": 1.26867,
+            "low": 1.26463,
+            "close": 1.26676
+          },
+          {
+            "timeIndex": 13,
+            "open": 1.26676,
+            "high": 1.26938,
+            "low": 1.26556,
+            "close": 1.26847
+          },
+          {
+            "timeIndex": 14,
+            "open": 1.26847,
+            "high": 1.27207,
+            "low": 1.26698,
+            "close": 1.27017
+          },
+          {
+            "timeIndex": 15,
+            "open": 1.27017,
+            "high": 1.27252,
+            "low": 1.26812,
+            "close": 1.27039
+          },
+          {
+            "timeIndex": 16,
+            "open": 1.27039,
+            "high": 1.2718,
+            "low": 1.26689,
+            "close": 1.26885
+          },
+          {
+            "timeIndex": 17,
+            "open": 1.26885,
+            "high": 1.27035,
+            "low": 1.2651,
+            "close": 1.26636
+          },
+          {
+            "timeIndex": 18,
+            "open": 1.26636,
+            "high": 1.26852,
+            "low": 1.26243,
+            "close": 1.26385
+          },
+          {
+            "timeIndex": 19,
+            "open": 1.26385,
+            "high": 1.26569,
+            "low": 1.25957,
+            "close": 1.26159
+          },
+          {
+            "timeIndex": 20,
+            "open": 1.26159,
+            "high": 1.2626,
+            "low": 1.25755,
+            "close": 1.25953
+          },
+          {
+            "timeIndex": 21,
+            "open": 1.25953,
+            "high": 1.2615,
+            "low": 1.25668,
+            "close": 1.25802
+          },
+          {
+            "timeIndex": 22,
+            "open": 1.25802,
+            "high": 1.26012,
+            "low": 1.25641,
+            "close": 1.25777
+          },
+          {
+            "timeIndex": 23,
+            "open": 1.25777,
+            "high": 1.26032,
+            "low": 1.25577,
+            "close": 1.25901
+          },
+          {
+            "timeIndex": 24,
+            "open": 1.25901,
+            "high": 1.26243,
+            "low": 1.257,
+            "close": 1.26083
+          },
+          {
+            "timeIndex": 25,
+            "open": 1.26083,
+            "high": 1.26376,
+            "low": 1.25942,
+            "close": 1.26159
+          },
+          {
+            "timeIndex": 26,
+            "open": 1.26159,
+            "high": 1.26335,
+            "low": 1.25905,
+            "close": 1.26034
+          },
+          {
+            "timeIndex": 27,
+            "open": 1.26034,
+            "high": 1.26146,
+            "low": 1.25554,
+            "close": 1.2575
+          },
+          {
+            "timeIndex": 28,
+            "open": 1.2575,
+            "high": 1.25953,
+            "low": 1.25237,
+            "close": 1.2544
+          },
+          {
+            "timeIndex": 29,
+            "open": 1.2544,
+            "high": 1.25647,
+            "low": 1.25056,
+            "close": 1.25203
+          },
+          {
+            "timeIndex": 30,
+            "open": 1.25203,
+            "high": 1.25323,
+            "low": 1.24926,
+            "close": 1.25048
+          },
+          {
+            "timeIndex": 31,
+            "open": 1.25048,
+            "high": 1.25217,
+            "low": 1.24757,
+            "close": 1.2495
+          },
+          {
+            "timeIndex": 32,
+            "open": 1.2495,
+            "high": 1.25167,
+            "low": 1.24713,
+            "close": 1.24919
+          },
+          {
+            "timeIndex": 33,
+            "open": 1.24919,
+            "high": 1.25155,
+            "low": 1.24765,
+            "close": 1.24988
+          },
+          {
+            "timeIndex": 34,
+            "open": 1.24988,
+            "high": 1.25255,
+            "low": 1.24873,
+            "close": 1.25133
+          },
+          {
+            "timeIndex": 35,
+            "open": 1.25133,
+            "high": 1.25443,
+            "low": 1.24944,
+            "close": 1.25236
+          },
+          {
+            "timeIndex": 36,
+            "open": 1.25236,
+            "high": 1.25437,
+            "low": 1.24957,
+            "close": 1.25165
+          },
+          {
+            "timeIndex": 37,
+            "open": 1.25165,
+            "high": 1.25274,
+            "low": 1.24735,
+            "close": 1.24894
+          },
+          {
+            "timeIndex": 38,
+            "open": 1.24894,
+            "high": 1.25072,
+            "low": 1.2443,
+            "close": 1.24538
+          },
+          {
+            "timeIndex": 39,
+            "open": 1.24538,
+            "high": 1.24754,
+            "low": 1.24065,
+            "close": 1.2425
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 1.24228,
+            "maximumPrice": 1.24798,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 1.25206,
+            "maximumPrice": 1.25776,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 1.26428,
+            "maximumPrice": 1.26998,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 1.27406,
+            "maximumPrice": 1.27976,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "908d40c1165b8997153f25bd53f8e34acfec0848a18563aa16154923fec4fb04"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-052",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: H4",
+        "zh": "独立情境分析：绘制H4主要结构以判断时段方向"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of mapping h4 major structure for session direction using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析绘制H4主要结构以判断时段方向的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "cec0ed6f858e0a5c1596580389768d92735536cce13229f97bd3aefec8d746da"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-052",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: H4",
+        "zh": "实践展示：绘制H4主要结构以判断时段方向"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate mapping h4 major structure for session direction. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示绘制H4主要结构以判断时段方向。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "96a35aa6ddda16168a9beaeec514bc21542d28a113bf0564b140491d38cdaf5f"
+    }
+  ]
+}

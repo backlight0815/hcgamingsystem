@@ -1,0 +1,634 @@
+{
+  "theme": {
+    "id": "CW-005",
+    "code": "CW-005",
+    "title": {
+      "en": "Connecting Lot Size, Contract Size and Monetary Exposure",
+      "zh": "连接手数、合约规模与资金敞口"
+    },
+    "shortTitle": {
+      "en": "lot size",
+      "zh": "连接手数、合约规模与资金敞口"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates connecting lot size, contract size and monetary exposure using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示连接手数、合约规模与资金敞口。"
+    },
+    "categoryId": "market_foundations",
+    "categoryName": {
+      "en": "Trading Market Foundations",
+      "zh": "交易市场基础"
+    },
+    "difficulty": "beginner",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind connecting lot size, contract size and monetary exposure.",
+        "Apply connecting lot size, contract size and monetary exposure to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释连接手数、合约规模与资金敞口背后的核心决策规则。",
+        "将连接手数、合约规模与资金敞口应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "lot size",
+      "contract size",
+      "exposure",
+      "AUDUSD",
+      "Trading Market Foundations"
+    ],
+    "searchTokens": [
+      "cw-005",
+      "CW-005",
+      "market_foundations",
+      "trading market foundations",
+      "交易市场基础",
+      "connecting",
+      "lot",
+      "size",
+      "contract",
+      "and",
+      "monetary",
+      "exposure",
+      "连接手数、合约规模与资金敞口",
+      "audusd",
+      "trading",
+      "market",
+      "foundations"
+    ],
+    "difficultyOrder": 1,
+    "estimatedMinutes": 55,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 5,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "6f3ad79804c0ead25f918a1ddeb8196ce17ab446173272cccd8a879d03ca90e3"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-005",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for lot size",
+        "zh": "连接手数、合约规模与资金敞口的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which observation provides the strongest objective basis for connecting lot size, contract size and monetary exposure?",
+        "zh": "哪项观察为连接手数、合约规模与资金敞口提供最强的客观依据？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing connecting lot size, contract size and monetary exposure.",
+            "zh": "评估连接手数、合约规模与资金敞口时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "264e3275e2ab43d95d3879908f9cfbe9331682d8c64eb777554a27bc0c5cf591"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-005",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying lot size Under Uncertainty",
+        "zh": "在不确定性下应用连接手数、合约规模与资金敞口"
+      },
+      "prompt": {
+        "en": "A previous example of connecting lot size, contract size and monetary exposure was profitable, but current evidence is incomplete. What is the sound conclusion?",
+        "zh": "之前的连接手数、合约规模与资金敞口案例曾盈利，但当前证据不完整。合理结论是什么？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "5a1840e8369cca6c71cec63d360d313085a6c952552d128ec6976c61d2e10ceb"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-005",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "AUDUSD Chart Interpretation for lot size",
+        "zh": "AUDUSD图表中的连接手数、合约规模与资金敞口解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational AUDUSD H1 chart. Which labelled zone is the strongest decision area for evaluating connecting lot size, contract size and monetary exposure while keeping invalidation visible?",
+        "zh": "研究合成教学用AUDUSD H1图表。哪个标记区域最适合评估连接手数、合约规模与资金敞口，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "AUDUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 0.662,
+            "high": 0.6651,
+            "low": 0.66085,
+            "close": 0.66383
+          },
+          {
+            "timeIndex": 1,
+            "open": 0.66383,
+            "high": 0.66785,
+            "low": 0.66316,
+            "close": 0.66639
+          },
+          {
+            "timeIndex": 2,
+            "open": 0.66639,
+            "high": 0.6696,
+            "low": 0.66517,
+            "close": 0.66859
+          },
+          {
+            "timeIndex": 3,
+            "open": 0.66859,
+            "high": 0.67056,
+            "low": 0.66717,
+            "close": 0.66957
+          },
+          {
+            "timeIndex": 4,
+            "open": 0.66957,
+            "high": 0.67103,
+            "low": 0.66813,
+            "close": 0.66932
+          },
+          {
+            "timeIndex": 5,
+            "open": 0.66932,
+            "high": 0.6706,
+            "low": 0.66798,
+            "close": 0.6686
+          },
+          {
+            "timeIndex": 6,
+            "open": 0.6686,
+            "high": 0.66925,
+            "low": 0.66694,
+            "close": 0.66812
+          },
+          {
+            "timeIndex": 7,
+            "open": 0.66812,
+            "high": 0.66944,
+            "low": 0.66665,
+            "close": 0.66807
+          },
+          {
+            "timeIndex": 8,
+            "open": 0.66807,
+            "high": 0.6698,
+            "low": 0.66686,
+            "close": 0.66835
+          },
+          {
+            "timeIndex": 9,
+            "open": 0.66835,
+            "high": 0.66999,
+            "low": 0.66768,
+            "close": 0.66906
+          },
+          {
+            "timeIndex": 10,
+            "open": 0.66906,
+            "high": 0.6716,
+            "low": 0.66792,
+            "close": 0.67054
+          },
+          {
+            "timeIndex": 11,
+            "open": 0.67054,
+            "high": 0.67427,
+            "low": 0.66912,
+            "close": 0.6728
+          },
+          {
+            "timeIndex": 12,
+            "open": 0.6728,
+            "high": 0.67634,
+            "low": 0.67155,
+            "close": 0.67511
+          },
+          {
+            "timeIndex": 13,
+            "open": 0.67511,
+            "high": 0.67718,
+            "low": 0.67439,
+            "close": 0.67646
+          },
+          {
+            "timeIndex": 14,
+            "open": 0.67646,
+            "high": 0.67782,
+            "low": 0.67527,
+            "close": 0.67637
+          },
+          {
+            "timeIndex": 15,
+            "open": 0.67637,
+            "high": 0.6778,
+            "low": 0.67398,
+            "close": 0.67539
+          },
+          {
+            "timeIndex": 16,
+            "open": 0.67539,
+            "high": 0.67626,
+            "low": 0.67325,
+            "close": 0.67453
+          },
+          {
+            "timeIndex": 17,
+            "open": 0.67453,
+            "high": 0.67565,
+            "low": 0.67368,
+            "close": 0.67445
+          },
+          {
+            "timeIndex": 18,
+            "open": 0.67445,
+            "high": 0.67657,
+            "low": 0.67338,
+            "close": 0.67509
+          },
+          {
+            "timeIndex": 19,
+            "open": 0.67509,
+            "high": 0.67732,
+            "low": 0.67368,
+            "close": 0.67614
+          },
+          {
+            "timeIndex": 20,
+            "open": 0.67614,
+            "high": 0.67834,
+            "low": 0.67483,
+            "close": 0.67754
+          },
+          {
+            "timeIndex": 21,
+            "open": 0.67754,
+            "high": 0.6808,
+            "low": 0.67673,
+            "close": 0.6794
+          },
+          {
+            "timeIndex": 22,
+            "open": 0.6794,
+            "high": 0.68288,
+            "low": 0.67839,
+            "close": 0.68149
+          },
+          {
+            "timeIndex": 23,
+            "open": 0.68149,
+            "high": 0.68383,
+            "low": 0.68009,
+            "close": 0.68304
+          },
+          {
+            "timeIndex": 24,
+            "open": 0.68304,
+            "high": 0.68451,
+            "low": 0.68171,
+            "close": 0.68333
+          },
+          {
+            "timeIndex": 25,
+            "open": 0.68333,
+            "high": 0.68481,
+            "low": 0.68154,
+            "close": 0.68241
+          },
+          {
+            "timeIndex": 26,
+            "open": 0.68241,
+            "high": 0.68353,
+            "low": 0.68024,
+            "close": 0.68122
+          },
+          {
+            "timeIndex": 27,
+            "open": 0.68122,
+            "high": 0.68209,
+            "low": 0.67943,
+            "close": 0.68081
+          },
+          {
+            "timeIndex": 28,
+            "open": 0.68081,
+            "high": 0.68297,
+            "low": 0.67946,
+            "close": 0.68155
+          },
+          {
+            "timeIndex": 29,
+            "open": 0.68155,
+            "high": 0.68437,
+            "low": 0.68063,
+            "close": 0.68301
+          },
+          {
+            "timeIndex": 30,
+            "open": 0.68301,
+            "high": 0.68538,
+            "low": 0.68208,
+            "close": 0.68466
+          },
+          {
+            "timeIndex": 31,
+            "open": 0.68466,
+            "high": 0.68755,
+            "low": 0.6833,
+            "close": 0.68632
+          },
+          {
+            "timeIndex": 32,
+            "open": 0.68632,
+            "high": 0.68947,
+            "low": 0.68494,
+            "close": 0.68799
+          },
+          {
+            "timeIndex": 33,
+            "open": 0.68799,
+            "high": 0.69047,
+            "low": 0.68703,
+            "close": 0.68942
+          },
+          {
+            "timeIndex": 34,
+            "open": 0.68942,
+            "high": 0.69094,
+            "low": 0.68853,
+            "close": 0.69
+          },
+          {
+            "timeIndex": 35,
+            "open": 0.69,
+            "high": 0.69145,
+            "low": 0.68807,
+            "close": 0.68941
+          },
+          {
+            "timeIndex": 36,
+            "open": 0.68941,
+            "high": 0.69073,
+            "low": 0.68679,
+            "close": 0.68818
+          },
+          {
+            "timeIndex": 37,
+            "open": 0.68818,
+            "high": 0.68882,
+            "low": 0.6864,
+            "close": 0.68741
+          },
+          {
+            "timeIndex": 38,
+            "open": 0.68741,
+            "high": 0.68919,
+            "low": 0.68657,
+            "close": 0.68791
+          },
+          {
+            "timeIndex": 39,
+            "open": 0.68791,
+            "high": 0.69104,
+            "low": 0.68659,
+            "close": 0.68958
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 0.66207,
+            "maximumPrice": 0.66636,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 0.66942,
+            "maximumPrice": 0.6737,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 0.6786,
+            "maximumPrice": 0.68288,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 0.68594,
+            "maximumPrice": 0.69023,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "3fe2cf24013e217b519a641749696c8744ec488c918b1b9dcd0e6492eacd3268"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-005",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: lot size",
+        "zh": "独立情境分析：连接手数、合约规模与资金敞口"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of connecting lot size, contract size and monetary exposure using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析连接手数、合约规模与资金敞口的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "43bae9b40e64db81c7c888721c1482992b508643f50446b99130879d132c7950"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-005",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: lot size",
+        "zh": "实践展示：连接手数、合约规模与资金敞口"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate connecting lot size, contract size and monetary exposure. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示连接手数、合约规模与资金敞口。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "b692dc8b65ae936eee6c08478324e23986fb4bf6989d8cbdbb76290f1b32200b"
+    }
+  ]
+}

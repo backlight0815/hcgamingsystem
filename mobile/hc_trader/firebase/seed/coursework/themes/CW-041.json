@@ -1,0 +1,636 @@
+{
+  "theme": {
+    "id": "CW-041",
+    "code": "CW-041",
+    "title": {
+      "en": "Identifying Trend Quality Through Structure, Slope and Participation",
+      "zh": "通过结构、斜率与参与度识别趋势质量"
+    },
+    "shortTitle": {
+      "en": "trend identification",
+      "zh": "通过结构、斜率与参与度识别趋势质量"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates identifying trend quality through structure, slope and participation using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示通过结构、斜率与参与度识别趋势质量。"
+    },
+    "categoryId": "trend_indicators",
+    "categoryName": {
+      "en": "Trend, Momentum and Indicators",
+      "zh": "趋势、动量与指标"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind identifying trend quality through structure, slope and participation.",
+        "Apply identifying trend quality through structure, slope and participation to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释通过结构、斜率与参与度识别趋势质量背后的核心决策规则。",
+        "将通过结构、斜率与参与度识别趋势质量应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "trend identification",
+      "slope",
+      "structure",
+      "US30",
+      "Trend, Momentum and Indicators"
+    ],
+    "searchTokens": [
+      "cw-041",
+      "CW-041",
+      "trend_indicators",
+      "trend, momentum and indicators",
+      "趋势、动量与指标",
+      "identifying",
+      "trend",
+      "quality",
+      "through",
+      "structure",
+      "slope",
+      "and",
+      "participation",
+      "通过结构、斜率与参与度识别趋势质量",
+      "identification",
+      "us30",
+      "trend,",
+      "momentum",
+      "indicators"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 41,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "2dcbddc53188f1a10d348972572c66a27e99fa9845676f78bba62fafea81db2a"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-041",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for trend identification",
+        "zh": "通过结构、斜率与参与度识别趋势质量的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which evidence most reliably shows that identifying trend quality through structure, slope and participation is being applied correctly?",
+        "zh": "哪项证据最可靠地表明已正确应用通过结构、斜率与参与度识别趋势质量？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing identifying trend quality through structure, slope and participation.",
+            "zh": "评估通过结构、斜率与参与度识别趋势质量时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "0150c50e737edbb2953ac3d5d5d4f9e1f7d31e22276757f13edeb09f918b4e13"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-041",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying trend identification Under Uncertainty",
+        "zh": "在不确定性下应用通过结构、斜率与参与度识别趋势质量"
+      },
+      "prompt": {
+        "en": "A trader finds evidence for identifying trend quality through structure, slope and participation, but the planned invalidation has already been breached. What is the best response?",
+        "zh": "交易者发现支持通过结构、斜率与参与度识别趋势质量的证据，但计划失效条件已经被突破。最佳做法是什么？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "509769b90ddaffb3a3ffd364563e0fea1d446d207e84641d03e832ddfb92d455"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-041",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "US30 Chart Interpretation for trend identification",
+        "zh": "US30图表中的通过结构、斜率与参与度识别趋势质量解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational US30 H1 chart. Which labelled zone is the strongest decision area for evaluating identifying trend quality through structure, slope and participation while keeping invalidation visible?",
+        "zh": "研究合成教学用US30 H1图表。哪个标记区域最适合评估通过结构、斜率与参与度识别趋势质量，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "US30",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 39200,
+            "high": 39261.1,
+            "low": 39156.6,
+            "close": 39213.8
+          },
+          {
+            "timeIndex": 1,
+            "open": 39213.8,
+            "high": 39239.1,
+            "low": 39146.1,
+            "close": 39199.6
+          },
+          {
+            "timeIndex": 2,
+            "open": 39199.6,
+            "high": 39249.7,
+            "low": 39136,
+            "close": 39182.4
+          },
+          {
+            "timeIndex": 3,
+            "open": 39182.4,
+            "high": 39236.4,
+            "low": 39146,
+            "close": 39172.2
+          },
+          {
+            "timeIndex": 4,
+            "open": 39172.2,
+            "high": 39206.2,
+            "low": 39125.5,
+            "close": 39167.5
+          },
+          {
+            "timeIndex": 5,
+            "open": 39167.5,
+            "high": 39215.3,
+            "low": 39114.2,
+            "close": 39174.7
+          },
+          {
+            "timeIndex": 6,
+            "open": 39174.7,
+            "high": 39267,
+            "low": 39127.1,
+            "close": 39211.5
+          },
+          {
+            "timeIndex": 7,
+            "open": 39211.5,
+            "high": 39332.5,
+            "low": 39183.4,
+            "close": 39287.1
+          },
+          {
+            "timeIndex": 8,
+            "open": 39287.1,
+            "high": 39410.2,
+            "low": 39246.7,
+            "close": 39382
+          },
+          {
+            "timeIndex": 9,
+            "open": 39382,
+            "high": 39507.3,
+            "low": 39329.1,
+            "close": 39455.7
+          },
+          {
+            "timeIndex": 10,
+            "open": 39455.7,
+            "high": 39531.8,
+            "low": 39407,
+            "close": 39478.8
+          },
+          {
+            "timeIndex": 11,
+            "open": 39478.8,
+            "high": 39510.1,
+            "low": 39427.9,
+            "close": 39457.8
+          },
+          {
+            "timeIndex": 12,
+            "open": 39457.8,
+            "high": 39500.7,
+            "low": 39386.4,
+            "close": 39425.3
+          },
+          {
+            "timeIndex": 13,
+            "open": 39425.3,
+            "high": 39481,
+            "low": 39357,
+            "close": 39409.6
+          },
+          {
+            "timeIndex": 14,
+            "open": 39409.6,
+            "high": 39459.4,
+            "low": 39360,
+            "close": 39416.1
+          },
+          {
+            "timeIndex": 15,
+            "open": 39416.1,
+            "high": 39469.1,
+            "low": 39384.4,
+            "close": 39438.2
+          },
+          {
+            "timeIndex": 16,
+            "open": 39438.2,
+            "high": 39528.9,
+            "low": 39400.9,
+            "close": 39476.1
+          },
+          {
+            "timeIndex": 17,
+            "open": 39476.1,
+            "high": 39590.2,
+            "low": 39424,
+            "close": 39538.4
+          },
+          {
+            "timeIndex": 18,
+            "open": 39538.4,
+            "high": 39650.7,
+            "low": 39487.9,
+            "close": 39622.1
+          },
+          {
+            "timeIndex": 19,
+            "open": 39622.1,
+            "high": 39745.2,
+            "low": 39588.6,
+            "close": 39700.1
+          },
+          {
+            "timeIndex": 20,
+            "open": 39700.1,
+            "high": 39792.9,
+            "low": 39664.6,
+            "close": 39737.3
+          },
+          {
+            "timeIndex": 21,
+            "open": 39737.3,
+            "high": 39778.3,
+            "low": 39670.7,
+            "close": 39722.1
+          },
+          {
+            "timeIndex": 22,
+            "open": 39722.1,
+            "high": 39755.8,
+            "low": 39628.2,
+            "close": 39679.4
+          },
+          {
+            "timeIndex": 23,
+            "open": 39679.4,
+            "high": 39733.3,
+            "low": 39614.5,
+            "close": 39649.7
+          },
+          {
+            "timeIndex": 24,
+            "open": 39649.7,
+            "high": 39706,
+            "low": 39615.8,
+            "close": 39655.7
+          },
+          {
+            "timeIndex": 25,
+            "open": 39655.7,
+            "high": 39717.6,
+            "low": 39605,
+            "close": 39691.9
+          },
+          {
+            "timeIndex": 26,
+            "open": 39691.9,
+            "high": 39789.2,
+            "low": 39640,
+            "close": 39742.2
+          },
+          {
+            "timeIndex": 27,
+            "open": 39742.2,
+            "high": 39855.8,
+            "low": 39705.2,
+            "close": 39800.6
+          },
+          {
+            "timeIndex": 28,
+            "open": 39800.6,
+            "high": 39907.8,
+            "low": 39768.6,
+            "close": 39869.2
+          },
+          {
+            "timeIndex": 29,
+            "open": 39869.2,
+            "high": 39975.4,
+            "low": 39819.4,
+            "close": 39939.2
+          },
+          {
+            "timeIndex": 30,
+            "open": 39939.2,
+            "high": 40039.2,
+            "low": 39886.7,
+            "close": 39984.5
+          },
+          {
+            "timeIndex": 31,
+            "open": 39984.5,
+            "high": 40033.2,
+            "low": 39944.5,
+            "close": 39983.1
+          },
+          {
+            "timeIndex": 32,
+            "open": 39983.1,
+            "high": 40006.3,
+            "low": 39912,
+            "close": 39942.3
+          },
+          {
+            "timeIndex": 33,
+            "open": 39942.3,
+            "high": 39991.2,
+            "low": 39851.1,
+            "close": 39900
+          },
+          {
+            "timeIndex": 34,
+            "open": 39900,
+            "high": 39954.6,
+            "low": 39841.6,
+            "close": 39894.5
+          },
+          {
+            "timeIndex": 35,
+            "open": 39894.5,
+            "high": 39970.8,
+            "low": 39854.3,
+            "close": 39934.8
+          },
+          {
+            "timeIndex": 36,
+            "open": 39934.8,
+            "high": 40039.4,
+            "low": 39906.4,
+            "close": 40000.6
+          },
+          {
+            "timeIndex": 37,
+            "open": 40000.6,
+            "high": 40122.9,
+            "low": 39952.8,
+            "close": 40067.7
+          },
+          {
+            "timeIndex": 38,
+            "open": 40067.7,
+            "high": 40174.6,
+            "low": 40014.4,
+            "close": 40127.7
+          },
+          {
+            "timeIndex": 39,
+            "open": 40127.7,
+            "high": 40208.3,
+            "low": 40086.1,
+            "close": 40182.2
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 39158,
+            "maximumPrice": 39311.1,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 39420.5,
+            "maximumPrice": 39573.7,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 39748.8,
+            "maximumPrice": 39902,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 40011.4,
+            "maximumPrice": 40164.5,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "df995a557f4b3c556c2b81a75127e117bd7e136fce054aceac353aa716757970"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-041",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: trend identification",
+        "zh": "独立情境分析：通过结构、斜率与参与度识别趋势质量"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of identifying trend quality through structure, slope and participation using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析通过结构、斜率与参与度识别趋势质量的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "28c8d73b183c09f7410d0c0cdaee5ae492980f9369ef1152ce8a3b9ef082fb4d"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-041",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: trend identification",
+        "zh": "实践展示：通过结构、斜率与参与度识别趋势质量"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate identifying trend quality through structure, slope and participation. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示通过结构、斜率与参与度识别趋势质量。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "bb850dc294d221e83fb10095e6542b9d9ecb1073a93fa3e8551aa90cdcb697f5"
+    }
+  ]
+}

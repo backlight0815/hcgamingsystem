@@ -1,0 +1,640 @@
+{
+  "theme": {
+    "id": "CW-066",
+    "code": "CW-066",
+    "title": {
+      "en": "Applying a Daily Loss Limit to Prevent Decision Deterioration",
+      "zh": "使用单日亏损上限防止决策恶化"
+    },
+    "shortTitle": {
+      "en": "daily loss limit",
+      "zh": "使用单日亏损上限防止决策恶化"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates applying a daily loss limit to prevent decision deterioration using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示使用单日亏损上限防止决策恶化。"
+    },
+    "categoryId": "risk_management",
+    "categoryName": {
+      "en": "Risk and Money Management",
+      "zh": "风险与资金管理"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind applying a daily loss limit to prevent decision deterioration.",
+        "Apply applying a daily loss limit to prevent decision deterioration to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释使用单日亏损上限防止决策恶化背后的核心决策规则。",
+        "将使用单日亏损上限防止决策恶化应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "daily loss limit",
+      "discipline",
+      "stop rule",
+      "GBPUSD",
+      "Risk and Money Management"
+    ],
+    "searchTokens": [
+      "cw-066",
+      "CW-066",
+      "risk_management",
+      "risk and money management",
+      "风险与资金管理",
+      "applying",
+      "a",
+      "daily",
+      "loss",
+      "limit",
+      "to",
+      "prevent",
+      "decision",
+      "deterioration",
+      "使用单日亏损上限防止决策恶化",
+      "discipline",
+      "stop",
+      "rule",
+      "gbpusd",
+      "risk",
+      "and",
+      "money",
+      "management"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 66,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "dd8ae733d868008871b1068c6f62db1510c2e8c1d3687e53af0df02303d93a58"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-066",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for daily loss limit",
+        "zh": "使用单日亏损上限防止决策恶化的核心决策规则"
+      },
+      "prompt": {
+        "en": "How should applying a daily loss limit to prevent decision deterioration influence a planned trading decision?",
+        "zh": "使用单日亏损上限防止决策恶化应如何影响有计划的交易决策？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing applying a daily loss limit to prevent decision deterioration.",
+            "zh": "评估使用单日亏损上限防止决策恶化时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "bfa88bd70246f9c3bf2fea1e75da99513d40046e9c54e3263c2129ed49655f10"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-066",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying daily loss limit Under Uncertainty",
+        "zh": "在不确定性下应用使用单日亏损上限防止决策恶化"
+      },
+      "prompt": {
+        "en": "A learner wants to increase size because applying a daily loss limit to prevent decision deterioration appears convincing. What must happen first?",
+        "zh": "学习者因使用单日亏损上限防止决策恶化看似有说服力而想增加仓位。首先必须做什么？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "a01c1a5bce7364d916e970afdd8c7eacf5fc4c9b444d5006158c2b2ffe9feb1d"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-066",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "GBPUSD Chart Interpretation for daily loss limit",
+        "zh": "GBPUSD图表中的使用单日亏损上限防止决策恶化解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational GBPUSD H1 chart. Which labelled zone is the strongest decision area for evaluating applying a daily loss limit to prevent decision deterioration while keeping invalidation visible?",
+        "zh": "研究合成教学用GBPUSD H1图表。哪个标记区域最适合评估使用单日亏损上限防止决策恶化，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "GBPUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 1.26437,
+            "high": 1.26812,
+            "low": 1.2628,
+            "close": 1.26617
+          },
+          {
+            "timeIndex": 1,
+            "open": 1.26617,
+            "high": 1.26715,
+            "low": 1.2639,
+            "close": 1.26596
+          },
+          {
+            "timeIndex": 2,
+            "open": 1.26596,
+            "high": 1.26782,
+            "low": 1.26211,
+            "close": 1.26402
+          },
+          {
+            "timeIndex": 3,
+            "open": 1.26402,
+            "high": 1.26617,
+            "low": 1.26053,
+            "close": 1.26171
+          },
+          {
+            "timeIndex": 4,
+            "open": 1.26171,
+            "high": 1.26319,
+            "low": 1.25875,
+            "close": 1.26026
+          },
+          {
+            "timeIndex": 5,
+            "open": 1.26026,
+            "high": 1.2617,
+            "low": 1.25791,
+            "close": 1.25996
+          },
+          {
+            "timeIndex": 6,
+            "open": 1.25996,
+            "high": 1.26252,
+            "low": 1.25801,
+            "close": 1.26038
+          },
+          {
+            "timeIndex": 7,
+            "open": 1.26038,
+            "high": 1.2632,
+            "low": 1.25913,
+            "close": 1.26131
+          },
+          {
+            "timeIndex": 8,
+            "open": 1.26131,
+            "high": 1.26386,
+            "low": 1.25987,
+            "close": 1.26293
+          },
+          {
+            "timeIndex": 9,
+            "open": 1.26293,
+            "high": 1.26707,
+            "low": 1.2609,
+            "close": 1.26515
+          },
+          {
+            "timeIndex": 10,
+            "open": 1.26515,
+            "high": 1.26917,
+            "low": 1.26317,
+            "close": 1.26705
+          },
+          {
+            "timeIndex": 11,
+            "open": 1.26705,
+            "high": 1.26876,
+            "low": 1.26573,
+            "close": 1.26738
+          },
+          {
+            "timeIndex": 12,
+            "open": 1.26738,
+            "high": 1.26892,
+            "low": 1.26435,
+            "close": 1.26573
+          },
+          {
+            "timeIndex": 13,
+            "open": 1.26573,
+            "high": 1.26789,
+            "low": 1.26108,
+            "close": 1.26308
+          },
+          {
+            "timeIndex": 14,
+            "open": 1.26308,
+            "high": 1.2649,
+            "low": 1.25907,
+            "close": 1.26108
+          },
+          {
+            "timeIndex": 15,
+            "open": 1.26108,
+            "high": 1.26212,
+            "low": 1.25929,
+            "close": 1.26068
+          },
+          {
+            "timeIndex": 16,
+            "open": 1.26068,
+            "high": 1.2636,
+            "low": 1.25937,
+            "close": 1.26162
+          },
+          {
+            "timeIndex": 17,
+            "open": 1.26162,
+            "high": 1.26517,
+            "low": 1.25964,
+            "close": 1.26307
+          },
+          {
+            "timeIndex": 18,
+            "open": 1.26307,
+            "high": 1.26589,
+            "low": 1.26104,
+            "close": 1.26461
+          },
+          {
+            "timeIndex": 19,
+            "open": 1.26461,
+            "high": 1.26787,
+            "low": 1.26316,
+            "close": 1.26624
+          },
+          {
+            "timeIndex": 20,
+            "open": 1.26624,
+            "high": 1.26993,
+            "low": 1.265,
+            "close": 1.26776
+          },
+          {
+            "timeIndex": 21,
+            "open": 1.26776,
+            "high": 1.27008,
+            "low": 1.26582,
+            "close": 1.26835
+          },
+          {
+            "timeIndex": 22,
+            "open": 1.26835,
+            "high": 1.2695,
+            "low": 1.2652,
+            "close": 1.26725
+          },
+          {
+            "timeIndex": 23,
+            "open": 1.26725,
+            "high": 1.26929,
+            "low": 1.26325,
+            "close": 1.26476
+          },
+          {
+            "timeIndex": 24,
+            "open": 1.26476,
+            "high": 1.26681,
+            "low": 1.26115,
+            "close": 1.26232
+          },
+          {
+            "timeIndex": 25,
+            "open": 1.26232,
+            "high": 1.26349,
+            "low": 1.25953,
+            "close": 1.26143
+          },
+          {
+            "timeIndex": 26,
+            "open": 1.26143,
+            "high": 1.26417,
+            "low": 1.25936,
+            "close": 1.26246
+          },
+          {
+            "timeIndex": 27,
+            "open": 1.26246,
+            "high": 1.26667,
+            "low": 1.26088,
+            "close": 1.2645
+          },
+          {
+            "timeIndex": 28,
+            "open": 1.2645,
+            "high": 1.26807,
+            "low": 1.2634,
+            "close": 1.26642
+          },
+          {
+            "timeIndex": 29,
+            "open": 1.26642,
+            "high": 1.26904,
+            "low": 1.26457,
+            "close": 1.26778
+          },
+          {
+            "timeIndex": 30,
+            "open": 1.26778,
+            "high": 1.27077,
+            "low": 1.2657,
+            "close": 1.26868
+          },
+          {
+            "timeIndex": 31,
+            "open": 1.26868,
+            "high": 1.27104,
+            "low": 1.26705,
+            "close": 1.26904
+          },
+          {
+            "timeIndex": 32,
+            "open": 1.26904,
+            "high": 1.2701,
+            "low": 1.26732,
+            "close": 1.26835
+          },
+          {
+            "timeIndex": 33,
+            "open": 1.26835,
+            "high": 1.27015,
+            "low": 1.26457,
+            "close": 1.26638
+          },
+          {
+            "timeIndex": 34,
+            "open": 1.26638,
+            "high": 1.26855,
+            "low": 1.26185,
+            "close": 1.26394
+          },
+          {
+            "timeIndex": 35,
+            "open": 1.26394,
+            "high": 1.26549,
+            "low": 1.26085,
+            "close": 1.26254
+          },
+          {
+            "timeIndex": 36,
+            "open": 1.26254,
+            "high": 1.26455,
+            "low": 1.26159,
+            "close": 1.26319
+          },
+          {
+            "timeIndex": 37,
+            "open": 1.26319,
+            "high": 1.2676,
+            "low": 1.26142,
+            "close": 1.26548
+          },
+          {
+            "timeIndex": 38,
+            "open": 1.26548,
+            "high": 1.26994,
+            "low": 1.26339,
+            "close": 1.268
+          },
+          {
+            "timeIndex": 39,
+            "open": 1.268,
+            "high": 1.27053,
+            "low": 1.26626,
+            "close": 1.26958
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 1.25844,
+            "maximumPrice": 1.26027,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 1.26159,
+            "maximumPrice": 1.26342,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 1.26553,
+            "maximumPrice": 1.26736,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 1.26868,
+            "maximumPrice": 1.27051,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "8540f9cb87672d114a69f202218ca122ed3318d9c77bc9fcea4c1777b1c4d1bb"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-066",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: daily loss limit",
+        "zh": "独立情境分析：使用单日亏损上限防止决策恶化"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of applying a daily loss limit to prevent decision deterioration using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析使用单日亏损上限防止决策恶化的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "fffb252f1737023b92032b8faf3e26fd431cc1f205b5523be00a2e95a26b856d"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-066",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: daily loss limit",
+        "zh": "实践展示：使用单日亏损上限防止决策恶化"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate applying a daily loss limit to prevent decision deterioration. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示使用单日亏损上限防止决策恶化。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "72874aa6410c9070367bfdfde1498eb5898c2bd625b50c243e0c7c8f52012e7b"
+    }
+  ]
+}

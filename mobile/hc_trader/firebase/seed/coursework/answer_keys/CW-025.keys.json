@@ -1,0 +1,302 @@
+{
+  "themeKey": {
+    "themeId": "CW-025",
+    "code": "CW-025",
+    "questionCount": 5,
+    "totalMarks": 100,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "f3687a1c1fbed66c48968c133b8ebb9e0a1eb23a254f9976fe12102da36e8233"
+  },
+  "questions": [
+    {
+      "themeId": "CW-025",
+      "questionId": "Q1",
+      "questionType": "theory_single_choice",
+      "maximumMarks": 15,
+      "correctOptionIds": [
+        "B"
+      ],
+      "answerExplanation": {
+        "en": "The correct response combines observable evidence, a written rule and invalidation when assessing validating key zones through departure, return and context.",
+        "zh": "正确回答在评估通过离开、回测与语境验证关键区域时结合可观察证据、书面规则与失效条件。"
+      },
+      "modelAnswer": {
+        "en": null,
+        "zh": null
+      },
+      "rubric": [
+        {
+          "id": "correct_selection",
+          "criterion": {
+            "en": "Selects the correct answer using the stated decision rule",
+            "zh": "按照规定的决策规则选择正确答案"
+          },
+          "maximumMarks": 15
+        }
+      ],
+      "commonMistakes": {
+        "en": [
+          "Treating one signal as certainty",
+          "Ignoring invalidation or transaction cost",
+          "Increasing risk to recover a prior loss"
+        ],
+        "zh": [
+          "将单一信号视为确定结果",
+          "忽略失效条件或交易成本",
+          "为弥补之前亏损而增加风险"
+        ]
+      },
+      "seedVersion": "coursework_100_themes_v1",
+      "version": 1,
+      "managedBySeed": true,
+      "createdBy": "system_seed",
+      "updatedBy": "system_seed",
+      "contentHash": "b8b6215e2c4e8d1b9763736498bc400fd0f0dc36d618b48054ba951140859286"
+    },
+    {
+      "themeId": "CW-025",
+      "questionId": "Q2",
+      "questionType": "theory_single_choice",
+      "maximumMarks": 15,
+      "correctOptionIds": [
+        "C"
+      ],
+      "answerExplanation": {
+        "en": "Pausing and rechecking evidence, invalidation and risk protects the process when uncertainty appears.",
+        "zh": "出现不确定性时，暂停并重新核对证据、失效条件与风险能够保护交易流程。"
+      },
+      "modelAnswer": {
+        "en": null,
+        "zh": null
+      },
+      "rubric": [
+        {
+          "id": "correct_selection",
+          "criterion": {
+            "en": "Selects the correct answer using the stated decision rule",
+            "zh": "按照规定的决策规则选择正确答案"
+          },
+          "maximumMarks": 15
+        }
+      ],
+      "commonMistakes": {
+        "en": [
+          "Treating one signal as certainty",
+          "Ignoring invalidation or transaction cost",
+          "Increasing risk to recover a prior loss"
+        ],
+        "zh": [
+          "将单一信号视为确定结果",
+          "忽略失效条件或交易成本",
+          "为弥补之前亏损而增加风险"
+        ]
+      },
+      "seedVersion": "coursework_100_themes_v1",
+      "version": 1,
+      "managedBySeed": true,
+      "createdBy": "system_seed",
+      "updatedBy": "system_seed",
+      "contentHash": "bbca16f32678e34adc46de88c81bf8e8993686179312b8ea02c1276277a209ef"
+    },
+    {
+      "themeId": "CW-025",
+      "questionId": "Q3",
+      "questionType": "chart_interpretation",
+      "maximumMarks": 20,
+      "correctOptionIds": [],
+      "correctZoneIds": [
+        "zone_a"
+      ],
+      "answerExplanation": {
+        "en": "The configured zone best combines the visible reaction area with a measurable invalidation boundary in this synthetic scenario.",
+        "zh": "在该合成情境中，设定区域最能结合可见反应区与可衡量的失效边界。"
+      },
+      "modelAnswer": {
+        "en": null,
+        "zh": null
+      },
+      "rubric": [
+        {
+          "id": "correct_zone",
+          "criterion": {
+            "en": "Selects the configured decision zone",
+            "zh": "选择设定的决策区域"
+          },
+          "maximumMarks": 20
+        }
+      ],
+      "commonMistakes": {
+        "en": [
+          "Treating one signal as certainty",
+          "Ignoring invalidation or transaction cost",
+          "Increasing risk to recover a prior loss"
+        ],
+        "zh": [
+          "将单一信号视为确定结果",
+          "忽略失效条件或交易成本",
+          "为弥补之前亏损而增加风险"
+        ]
+      },
+      "seedVersion": "coursework_100_themes_v1",
+      "version": 1,
+      "managedBySeed": true,
+      "createdBy": "system_seed",
+      "updatedBy": "system_seed",
+      "contentHash": "51890bc70b387180096baa4cc816fe2908c4e363032af2fa4be43474e88d5244"
+    },
+    {
+      "themeId": "CW-025",
+      "questionId": "Q4",
+      "questionType": "self_analysis_kbat",
+      "maximumMarks": 25,
+      "correctOptionIds": [],
+      "answerExplanation": {
+        "en": "Responses are evaluated for evidence, comparison, invalidation, risk awareness and logical clarity rather than for predicting one direction.",
+        "zh": "评分依据是证据、比较、失效条件、风险意识与逻辑清晰度，而不是预测单一方向。"
+      },
+      "modelAnswer": {
+        "en": "A strong analysis of validating key zones through departure, return and context identifies market context, tests competing scenarios, justifies key levels, defines invalidation and concludes whether action or no trade is appropriate.",
+        "zh": "高质量的通过离开、回测与语境验证关键区域分析应识别市场语境、检验相互竞争的情境、论证关键价位、定义失效条件，并判断采取行动或不交易是否合适。"
+      },
+      "rubric": [
+        {
+          "id": "market_context",
+          "criterion": {
+            "en": "Market-context identification",
+            "zh": "市场语境识别"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "structure_analysis",
+          "criterion": {
+            "en": "Structure and evidence analysis",
+            "zh": "结构与证据分析"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "key_level_justification",
+          "criterion": {
+            "en": "Key-level justification",
+            "zh": "关键价位论证"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "risk_invalidation",
+          "criterion": {
+            "en": "Risk and invalidation explanation",
+            "zh": "风险与失效条件说明"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "conclusion_clarity",
+          "criterion": {
+            "en": "Logical conclusion and clarity",
+            "zh": "逻辑结论与清晰度"
+          },
+          "maximumMarks": 5
+        }
+      ],
+      "commonMistakes": {
+        "en": [
+          "Treating one signal as certainty",
+          "Ignoring invalidation or transaction cost",
+          "Increasing risk to recover a prior loss"
+        ],
+        "zh": [
+          "将单一信号视为确定结果",
+          "忽略失效条件或交易成本",
+          "为弥补之前亏损而增加风险"
+        ]
+      },
+      "seedVersion": "coursework_100_themes_v1",
+      "version": 1,
+      "managedBySeed": true,
+      "createdBy": "system_seed",
+      "updatedBy": "system_seed",
+      "contentHash": "dfd3d8ae0e3fce76797ff178edd038d6c643e881c3d33ba53b0c3283af22f2b8"
+    },
+    {
+      "themeId": "CW-025",
+      "questionId": "Q5",
+      "questionType": "practical_demonstration",
+      "maximumMarks": 25,
+      "correctOptionIds": [],
+      "answerExplanation": {
+        "en": "The evidence must demonstrate the assigned skill on an approved platform and show coherent entry, invalidation, target and risk logic.",
+        "zh": "证据必须在获准平台上展示指定技能，并呈现连贯的入场、失效、目标与风险逻辑。"
+      },
+      "modelAnswer": {
+        "en": "A complete demonstration clearly annotates validating key zones through departure, return and context, identifies the entry condition, places the stop beyond logical invalidation, plans a feasible target and explains controlled position risk.",
+        "zh": "完整展示应清晰标注通过离开、回测与语境验证关键区域，识别入场条件，将止损置于逻辑失效范围之外，规划可行目标并解释受控仓位风险。"
+      },
+      "rubric": [
+        {
+          "id": "chart_annotation",
+          "criterion": {
+            "en": "Correct and readable chart annotation",
+            "zh": "正确且清晰的图表标注"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "entry_justification",
+          "criterion": {
+            "en": "Entry condition and justification",
+            "zh": "入场条件与理由"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "stop_placement",
+          "criterion": {
+            "en": "Logical stop-loss and invalidation placement",
+            "zh": "合理的止损与失效位置"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "target_planning",
+          "criterion": {
+            "en": "Feasible take-profit planning",
+            "zh": "可行的止盈规划"
+          },
+          "maximumMarks": 5
+        },
+        {
+          "id": "risk_explanation",
+          "criterion": {
+            "en": "Risk-management explanation",
+            "zh": "风险管理说明"
+          },
+          "maximumMarks": 5
+        }
+      ],
+      "commonMistakes": {
+        "en": [
+          "Treating one signal as certainty",
+          "Ignoring invalidation or transaction cost",
+          "Increasing risk to recover a prior loss"
+        ],
+        "zh": [
+          "将单一信号视为确定结果",
+          "忽略失效条件或交易成本",
+          "为弥补之前亏损而增加风险"
+        ]
+      },
+      "seedVersion": "coursework_100_themes_v1",
+      "version": 1,
+      "managedBySeed": true,
+      "createdBy": "system_seed",
+      "updatedBy": "system_seed",
+      "contentHash": "f05ffa8bb65f52fa789576af34d84235b71c2e042415cc1582300bec53f45c86"
+    }
+  ]
+}

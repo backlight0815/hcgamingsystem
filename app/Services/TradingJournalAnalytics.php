@@ -8,18 +8,35 @@ use Illuminate\Support\Collection;
 class TradingJournalAnalytics
 {
     public const BEST_DAY_LIMIT_PERCENT = 40.0;
+
     public const MIN_GROSS_PROFIT_PERCENT = 2.0;
+
     public const DAILY_LOSS_LIMIT_PERCENT = 5.0;
+
     public const MAXIMUM_LOSS_LIMIT_PERCENT = 10.0;
+
     public const LOT_AVERAGE_DEVIATION_MEDIUM_RATIO = 1.5;
+
     public const LOT_AVERAGE_DEVIATION_HIGH_RATIO = 2.0;
+
     public const DURATION_DEVIATION_MEDIUM_RATIO = 0.35;
+
     public const DURATION_DEVIATION_HIGH_RATIO = 0.20;
+
     public const XAUUSD_LEVERAGE = 30.0;
+
     public const XAUUSD_CONTRACT_SIZE = 100.0;
+
     public const MARGIN_PRESSURE_MEDIUM_PERCENT = 35.0;
+
     public const MARGIN_PRESSURE_HIGH_PERCENT = 60.0;
+
     public const MARGIN_PRESSURE_EXTREME_PERCENT = 80.0;
+
+    public const DEFAULT_TRADING_DAY_RESET_TIME = '05:00:00';
+
+    public const DEFAULT_TRADING_DAY_TIMEZONE = 'Asia/Kuala_Lumpur';
+
     private const LAYERING_WINDOW_MINUTES = 90;
 
     public function bestDayRule(Collection $trades): array
@@ -104,7 +121,7 @@ class TradingJournalAnalytics
         $hedgedTradeMap = collect();
 
         $normalizedTrades
-            ->groupBy(fn (array $trade): string => ($trade['user_id'] ?? 'account') . ':' . $trade['pair'])
+            ->groupBy(fn (array $trade): string => ($trade['user_id'] ?? 'account').':'.$trade['pair'])
             ->each(function (Collection $pairTrades) use (&$overlaps, &$hedgedTradeKeys, &$hedgedTradeMap): void {
                 $pairTrades = $pairTrades->sortBy('opened_at')->values();
                 $count = $pairTrades->count();
@@ -344,38 +361,46 @@ class TradingJournalAnalytics
     public function formatMinutes(int $minutes): string
     {
         if ($minutes < 60) {
-            return $minutes . 'm';
+            return $minutes.'m';
         }
 
         $hours = intdiv($minutes, 60);
         $remainingMinutes = $minutes % 60;
 
         if ($hours < 24) {
-            return $remainingMinutes > 0 ? $hours . 'h ' . $remainingMinutes . 'm' : $hours . 'h';
+            return $remainingMinutes > 0 ? $hours.'h '.$remainingMinutes.'m' : $hours.'h';
         }
 
         $days = intdiv($hours, 24);
         $remainingHours = $hours % 24;
 
-        return $remainingHours > 0 ? $days . 'd ' . $remainingHours . 'h' : $days . 'd';
+        return $remainingHours > 0 ? $days.'d '.$remainingHours.'h' : $days.'d';
     }
 
-    public function dailyProfitLoss(Collection $trades): Collection
-    {
+    public function dailyProfitLoss(
+        Collection $trades,
+        string $resetTime = self::DEFAULT_TRADING_DAY_RESET_TIME,
+        string $timezone = self::DEFAULT_TRADING_DAY_TIMEZONE
+    ): Collection {
         return $trades
             ->filter(fn ($trade): bool => $this->tradeClosedAt($trade) instanceof Carbon)
-            ->groupBy(fn ($trade): string => $this->tradeClosedAt($trade)->toDateString())
+            ->groupBy(fn ($trade): string => $this->tradingDayKey($this->tradeClosedAtValue($trade), $resetTime, $timezone))
             ->map(fn (Collection $dayTrades): float => round((float) $dayTrades->sum(fn ($trade): float => (float) $this->value($trade, 'profit_loss', 0)), 2));
     }
 
-    public function profitableDayRule(Collection $trades, int $requiredDays = 3, float $threshold = 0.0): array
-    {
+    public function profitableDayRule(
+        Collection $trades,
+        int $requiredDays = 3,
+        float $threshold = 0.0,
+        string $resetTime = self::DEFAULT_TRADING_DAY_RESET_TIME,
+        string $timezone = self::DEFAULT_TRADING_DAY_TIMEZONE
+    ): array {
         $requiredDays = max(0, $requiredDays);
         $threshold = round(max(0, $threshold), 2);
 
         $dailyBreakdown = $trades
             ->filter(fn ($trade): bool => $this->tradeClosedAt($trade) instanceof Carbon)
-            ->groupBy(fn ($trade): string => $this->tradeClosedAt($trade)->toDateString())
+            ->groupBy(fn ($trade): string => $this->tradingDayKey($this->tradeClosedAtValue($trade), $resetTime, $timezone))
             ->map(function (Collection $dayTrades, string $date) use ($threshold): array {
                 $profitLoss = round((float) $dayTrades->sum(fn ($trade): float => (float) $this->value($trade, 'profit_loss', 0)), 2);
 
@@ -397,8 +422,10 @@ class TradingJournalAnalytics
         return [
             'threshold' => $threshold,
             'threshold_label' => $threshold > 0
-                ? 'Net daily P/L >= ' . number_format($threshold, 2)
+                ? 'Net daily P/L >= '.number_format($threshold, 2)
                 : 'Net daily P/L > 0 after all closed trades',
+            'trading_day_reset_time' => $resetTime,
+            'timezone' => $timezone,
             'profitable_days' => $profitableDays->count(),
             'required_days' => $requiredDays,
             'has_profitable_day' => $hasProfitableDay,
@@ -408,6 +435,28 @@ class TradingJournalAnalytics
         ];
     }
 
+    public function tradingDayKey($value, string $resetTime = self::DEFAULT_TRADING_DAY_RESET_TIME, string $timezone = self::DEFAULT_TRADING_DAY_TIMEZONE): ?string
+    {
+        $closedAt = is_string($value)
+            ? Carbon::parse($value, $timezone)
+            : $this->parseDate($value);
+
+        if (! $closedAt instanceof Carbon) {
+            return null;
+        }
+
+        $closedAt = $closedAt->copy();
+        [$hour, $minute, $second] = array_pad(array_map('intval', explode(':', $resetTime)), 3, 0);
+        $resetSeconds = ($hour * 3600) + ($minute * 60) + $second;
+        $closedSeconds = ((int) $closedAt->format('H') * 3600) + ((int) $closedAt->format('i') * 60) + (int) $closedAt->format('s');
+
+        if ($closedSeconds < $resetSeconds) {
+            $closedAt->subDay();
+        }
+
+        return $closedAt->toDateString();
+    }
+
     public function grossProfit(Collection $trades): float
     {
         return round((float) $trades->sum(fn ($trade): float => max(0, (float) $this->value($trade, 'profit_loss', 0))), 2);
@@ -415,40 +464,44 @@ class TradingJournalAnalytics
 
     public function behavioralRiskProfile(Collection $trades, float $accountBalance = 0): array
     {
-        $revenge = $this->revengeTradingProfile($trades);
-        $gambling = $this->gamblingBehaviorProfile($trades, $accountBalance);
         $layering = $this->layeringProfile($trades);
+        $professionalDetection = $this->professionalBehaviorDetectionProfile($trades, $accountBalance);
+        $revenge = $professionalDetection['revenge'];
+        $gambling = $professionalDetection['gambling'];
 
-        $riskScore = round(min(100, ($revenge['score'] * 0.35) + ($gambling['score'] * 0.40) + ($layering['score'] * 0.25)), 2);
-        $tone = $riskScore >= 70 ? 'danger' : ($riskScore >= 40 ? 'warning' : ($trades->isEmpty() ? 'secondary' : 'success'));
+        $riskScore = round((float) $professionalDetection['final_score'], 2);
+        $rawRiskScore = round((float) ($professionalDetection['raw_final_score'] ?? $riskScore), 2);
+        $behaviorRecovery = (array) ($professionalDetection['behavior_recovery'] ?? $this->emptyProfessionalBehaviorRecoveryAdjustment($rawRiskScore));
+        $tier = (string) $professionalDetection['tier'];
+        $tone = $this->professionalTierTone($tier, $trades->isEmpty());
         $riskLevel = match (true) {
             $trades->isEmpty() => 'No Data',
-            $riskScore >= 70 => 'High Behavioral Risk',
-            $riskScore >= 40 => 'Watchlist',
-            $riskScore >= 20 => 'Mild Risk',
+            $tier === 'critical' => 'Critical Behavioral Risk',
+            $tier === 'high' => 'High Behavioral Risk',
+            $tier === 'mid' => 'Watchlist',
+            $tier === 'low' => 'Mild Risk',
             default => 'Controlled',
         };
 
         $styleTags = collect([
-            $revenge['detected'] ? ($revenge['tier_label'] ?? 'Low') . '-tier revenge' : null,
-            $gambling['detected'] ? ($gambling['tier_label'] ?? 'Low') . '-tier gambling' : null,
-            $gambling['overtrading_days'] > 0 ? 'Overtrading bursts' : null,
-            $gambling['oversized_loss_count'] > 0 ? 'Oversized losses' : null,
-            $gambling['lot_spike_count'] > 0 ? 'Lot-size spikes' : null,
-            $gambling['rapid_trade_count'] > 0 ? 'Rapid-fire entries' : null,
+            $revenge['detected'] ? ($revenge['tier_label'] ?? 'Low').'-tier revenge' : null,
+            $gambling['detected'] ? ($gambling['tier_label'] ?? 'Low').'-tier gambling' : null,
+            $professionalDetection['planned_layer_count'] > 0 ? 'Planned layer within risk' : null,
+            ($professionalDetection['low_confidence_count'] ?? 0) > 0 ? 'Reduced confidence data' : null,
+            (float) data_get($behaviorRecovery, 'total_reduction_percent', 0) > 0 ? 'Behavior recovery block adjustment' : null,
             $layering['detected'] ? 'Layering' : null,
             $layering['adverse_layer_count'] > 0 ? 'Averaging into adverse price' : null,
-            $layering['max_active_layers'] >= 3 ? 'Stacked exposure' : null,
+            $layering['max_active_layers'] >= 3 ? 'Stacked exposure review' : null,
         ])->filter()->values();
 
         $styleLabel = match (true) {
             $trades->isEmpty() => 'No Trading Style Yet',
-            $layering['score'] >= 70 && ($revenge['score'] >= 55 || $gambling['score'] >= 55) => 'Stacked High-Variance Trader',
-            $revenge['score'] >= 65 && $gambling['score'] >= 55 => 'Emotional High-Variance Trader',
-            $layering['score'] >= 65 => 'Layering / Averaging Trader',
-            $revenge['score'] >= 65 => 'Reactive Revenge Trader',
-            $gambling['score'] >= 65 => 'High-Variance Gambling Style',
-            $gambling['score'] >= 40 || $revenge['score'] >= 40 || $layering['score'] >= 40 => 'Aggressive Watchlist Trader',
+            (string) $professionalDetection['label'] === 'Planned Layer / Controlled Risk' => 'Planned Layer / Controlled Risk',
+            in_array($tier, ['critical', 'high'], true) && $revenge['score'] > $gambling['score'] => 'Reactive Revenge Trader',
+            in_array($tier, ['critical', 'high'], true) && $gambling['score'] >= $revenge['score'] => 'High-Variance Gambling Style',
+            $tier === 'mid' && $revenge['score'] > $gambling['score'] => 'Revenge Watchlist Trader',
+            $tier === 'mid' && $gambling['score'] >= $revenge['score'] => 'Discipline Watchlist Trader',
+            $tier === 'low' => 'Mild Behaviour Watchlist',
             default => 'Controlled Trader',
         };
 
@@ -456,13 +509,1004 @@ class TradingJournalAnalytics
             'style_label' => $styleLabel,
             'risk_level' => $riskLevel,
             'risk_score' => $riskScore,
+            'final_score' => $riskScore,
+            'raw_risk_score' => $rawRiskScore,
+            'behavior_recovery' => $behaviorRecovery,
+            'tier' => $tier,
+            'tier_label' => $this->professionalTierLabel($tier),
+            'label' => $professionalDetection['label'],
+            'confidence_score' => $professionalDetection['confidence_score'],
+            'reasons' => $professionalDetection['reasons'],
+            'planned_layer_count' => $professionalDetection['planned_layer_count'],
+            'low_confidence_count' => $professionalDetection['low_confidence_count'],
             'tone' => $tone,
-            'summary' => $this->behaviorSummary($styleLabel, $riskScore, $revenge, $gambling, $layering, $styleTags),
+            'summary' => $this->behaviorSummary($styleLabel, $riskScore, $revenge, $gambling, $layering, $styleTags, $behaviorRecovery),
             'style_tags' => $styleTags,
             'revenge' => $revenge,
             'gambling' => $gambling,
             'layering' => $layering,
         ];
+    }
+
+    private function professionalBehaviorDetectionProfile(Collection $trades, float $accountBalance): array
+    {
+        $normalizedTrades = $this->normalizedTrades($trades)
+            ->filter(fn (array $trade): bool => ($trade['opened_at'] ?? null) instanceof Carbon || ($trade['closed_at'] ?? null) instanceof Carbon)
+            ->sortBy(fn (array $trade): string => (($trade['opened_at'] ?? $trade['closed_at']) instanceof Carbon ? ($trade['opened_at'] ?? $trade['closed_at'])->format('Y-m-d H:i:s') : '').':'.$trade['key'])
+            ->values();
+
+        if ($normalizedTrades->isEmpty()) {
+            return $this->emptyProfessionalBehaviorDetectionProfile();
+        }
+
+        $detector = new TradingBehaviourDetectionService();
+        $results = $normalizedTrades
+            ->map(function (array $trade) use ($normalizedTrades, $accountBalance, $detector): array {
+                $accountStats = $this->professionalAccountStatsForTrade($trade, $normalizedTrades, $accountBalance);
+                $result = $detector->detect($this->professionalTradePayload($trade), null, $accountStats);
+
+                return array_merge($result, [
+                    'trade_key' => $trade['key'],
+                    'trade_label' => $this->tradeLabel($trade),
+                    'pair' => $trade['pair'],
+                    'direction' => $trade['direction'] === 1 ? 'Buy' : ($trade['direction'] === 2 ? 'Sell' : 'N/A'),
+                    'lot_size' => $trade['lot_size'],
+                    'profit_loss' => $trade['profit_loss'],
+                    'opened_at' => $trade['opened_at'],
+                    'closed_at' => $trade['closed_at'],
+                    'account_stats' => $accountStats,
+                ]);
+            })
+            ->values();
+
+        $rawGamblingScore = round((float) $results->max('gambling_score'), 2);
+        $rawRevengeScore = round((float) $results->max('revenge_score'), 2);
+        $behaviorRecovery = $this->professionalBehaviorRecoveryAdjustment($results, $detector);
+        $scoreMultiplier = (float) ($behaviorRecovery['score_multiplier'] ?? 1.0);
+        $gamblingScore = round(max(0, min(100, $rawGamblingScore * $scoreMultiplier)), 2);
+        $revengeScore = round(max(0, min(100, $rawRevengeScore * $scoreMultiplier)), 2);
+        $finalScore = round(max($gamblingScore, $revengeScore), 2);
+        $tier = $detector->getTier($finalScore);
+        $plannedLayerCount = $results->filter(fn (array $result): bool => (bool) ($result['is_planned_layer'] ?? false))->count();
+        $lowConfidenceCount = $results->filter(fn (array $result): bool => (float) ($result['confidence_score'] ?? 100) < 50)->count();
+        $confidenceScore = round((float) $results->avg('confidence_score'), 2);
+        $reasons = $results
+            ->pluck('reasons')
+            ->flatten()
+            ->unique()
+            ->values();
+        $label = $this->professionalAggregateLabel($tier, $gamblingScore, $revengeScore, $plannedLayerCount, $confidenceScore, $reasons);
+
+        return [
+            'gambling_score' => $gamblingScore,
+            'revenge_score' => $revengeScore,
+            'final_score' => $finalScore,
+            'raw_gambling_score' => $rawGamblingScore,
+            'raw_revenge_score' => $rawRevengeScore,
+            'raw_final_score' => round(max($rawGamblingScore, $rawRevengeScore), 2),
+            'behavior_recovery' => $behaviorRecovery,
+            'tier' => $tier,
+            'label' => $label,
+            'confidence_score' => $confidenceScore,
+            'reasons' => $reasons->take(10)->values(),
+            'planned_layer_count' => $plannedLayerCount,
+            'low_confidence_count' => $lowConfidenceCount,
+            'revenge' => $this->professionalBehaviorComponent('revenge', $revengeScore, $results, $rawRevengeScore, $behaviorRecovery),
+            'gambling' => $this->professionalBehaviorComponent('gambling', $gamblingScore, $results, $rawGamblingScore, $behaviorRecovery),
+        ];
+    }
+
+    private function emptyProfessionalBehaviorDetectionProfile(): array
+    {
+        return [
+            'gambling_score' => 0.0,
+            'revenge_score' => 0.0,
+            'final_score' => 0.0,
+            'raw_gambling_score' => 0.0,
+            'raw_revenge_score' => 0.0,
+            'raw_final_score' => 0.0,
+            'behavior_recovery' => $this->emptyProfessionalBehaviorRecoveryAdjustment(0.0),
+            'tier' => 'normal',
+            'label' => 'Normal Trading Behaviour',
+            'confidence_score' => 0.0,
+            'reasons' => collect(),
+            'planned_layer_count' => 0,
+            'low_confidence_count' => 0,
+            'revenge' => $this->professionalBehaviorComponent('revenge', 0, collect()),
+            'gambling' => $this->professionalBehaviorComponent('gambling', 0, collect()),
+        ];
+    }
+
+    private function professionalBehaviorComponent(string $behavior, float $score, Collection $results, ?float $rawScore = null, array $behaviorRecovery = []): array
+    {
+        $rawScore = $rawScore ?? $score;
+        $tier = (new TradingBehaviourDetectionService())->getTier($score);
+        $meta = $this->professionalTierMeta($tier);
+        $scoreKey = $behavior.'_score';
+        $examples = $results
+            ->filter(fn (array $result): bool => (float) ($result[$scoreKey] ?? 0) >= 25)
+            ->sortByDesc(fn (array $result): float => (float) ($result[$scoreKey] ?? 0))
+            ->values();
+        $tradeMap = $examples->mapWithKeys(function (array $result) use ($behavior, $scoreKey): array {
+            $tier = (new TradingBehaviourDetectionService())->getTier((float) ($result[$scoreKey] ?? 0));
+            $meta = $this->professionalTierMeta($tier);
+            $reasons = collect($result['reasons'] ?? [])->values();
+
+            return [
+                $result['trade_key'] => [
+                    'is_'.$behavior => true,
+                    'status' => $this->professionalBehaviorStatus(ucfirst($behavior), $tier),
+                    'tier' => $tier,
+                    'tier_rank' => $meta['tier_rank'],
+                    'tier_label' => $meta['tier_label'],
+                    'tier_short' => $meta['tier_short'],
+                    'tier_tone' => $meta['tier_tone'],
+                    'event_count' => 1,
+                    'pair' => $result['pair'] ?? 'N/A',
+                    'role' => 'response',
+                    'reasons' => $reasons,
+                    'reason_labels' => $reasons->implode(', '),
+                    'confidence_score' => (float) ($result['confidence_score'] ?? 0),
+                ],
+            ];
+        });
+
+        $preparedExamples = $behavior === 'revenge'
+            ? $examples->map(fn (array $result): array => $this->professionalRevengeExample($result))->take(10)->values()
+            : $examples->map(fn (array $result): array => $this->professionalGamblingExample($result))->take(10)->values();
+
+        $checks = $behavior === 'revenge'
+            ? $this->professionalRevengeChecks($score, $results, $examples)
+            : $this->professionalGamblingChecks($score, $results, $examples);
+
+        return [
+            'detected' => $score >= 25,
+            'status' => $this->professionalBehaviorStatus(ucfirst($behavior), $tier),
+            'tone' => $meta['tier_tone'],
+            'score' => round($score, 2),
+            'raw_score' => round($rawScore, 2),
+            'recovery_adjusted' => abs($rawScore - $score) > 0.01,
+            'recovery_reduction_percent' => round((float) data_get($behaviorRecovery, 'total_reduction_percent', 0), 2),
+            'recovery_reduction_points' => round(max(0, $rawScore - $score), 2),
+            'tier' => $tier,
+            'tier_rank' => $meta['tier_rank'],
+            'tier_label' => $meta['tier_label'],
+            'tier_short' => $meta['tier_short'],
+            'tier_tone' => $meta['tier_tone'],
+            'tier_description' => $this->professionalTierDescription($behavior, $tier),
+            'event_count' => $examples->count(),
+            'quick_reentry_count' => $this->professionalReasonCount($results, 'New trade opened during cooldown after a loss.'),
+            'lot_increase_count' => $this->professionalReasonCount($results, 'Lot size increased after previous losing trade.'),
+            'loss_streak_reaction_count' => $this->professionalReasonCount($results, 'Loss streak detected.'),
+            'average_delay_minutes' => $this->professionalAverageRevengeDelay($examples),
+            'average_delay_label' => $this->formatMinutes($this->professionalAverageRevengeDelay($examples)),
+            'affected_pairs' => $examples->pluck('pair')->unique()->values(),
+            'examples' => $preparedExamples,
+            'checks' => $checks,
+            'trade_map' => $tradeMap,
+            'trade_count' => $results->count(),
+            'active_days' => $this->professionalActiveDays($results),
+            'average_trades_per_day' => $this->professionalAverageTradesPerDay($results),
+            'max_trades_per_day' => $this->professionalMaxTradesPerDay($results),
+            'overtrading_days' => $this->professionalOvertradingDays($results),
+            'rapid_trade_count' => $this->professionalReasonCount($results, 'New trade opened during cooldown after a loss.'),
+            'lot_spike_count' => $this->professionalRiskIncreaseCount($results),
+            'oversized_loss_count' => $this->professionalReasonCount($results, 'Order risk exceeded planned risk.'),
+            'oversized_losses' => collect(),
+            'lot_deviation_event_count' => $this->professionalRiskIncreaseCount($results),
+            'lot_deviation_events' => collect(),
+            'duration_deviation_event_count' => 0,
+            'duration_deviation_events' => collect(),
+            'layering_exposure_event_count' => $results->filter(fn (array $result): bool => (bool) ($result['is_planned_layer'] ?? false))->count(),
+            'layering_exposure_events' => collect(),
+            'margin_pressure_event_count' => $this->professionalReasonCount($results, 'Margin exposure is high.'),
+            'max_margin_percent' => round((float) $results->map(fn (array $result): float => (float) data_get($result, 'account_stats.margin_used_percent', 0))->max(), 2),
+            'margin_pressure_events' => collect(),
+        ];
+    }
+
+    private function professionalBehaviorRecoveryAdjustment(Collection $results, TradingBehaviourDetectionService $detector): array
+    {
+        $rawFinalScore = round((float) $results
+            ->map(fn (array $result): float => max(
+                (float) ($result['final_score'] ?? 0),
+                (float) ($result['gambling_score'] ?? 0),
+                (float) ($result['revenge_score'] ?? 0)
+            ))
+            ->max(), 2);
+
+        $blockSize = max(1, (int) config('trading_detection.behavior_recovery_block_size', 8));
+
+        if ($results->isEmpty()) {
+            return $this->emptyProfessionalBehaviorRecoveryAdjustment($rawFinalScore, $blockSize);
+        }
+
+        $sortedResults = $results
+            ->sortBy(function (array $result): string {
+                $timestamp = ($result['opened_at'] ?? null) instanceof Carbon
+                    ? $result['opened_at']
+                    : (($result['closed_at'] ?? null) instanceof Carbon ? $result['closed_at'] : null);
+
+                return ($timestamp instanceof Carbon ? $timestamp->format('Y-m-d H:i:s') : '').':'.($result['trade_key'] ?? '');
+            })
+            ->values();
+
+        $priorPeakRank = 0;
+        $firstBehaviorIndex = null;
+        $buffer = collect();
+        $blocks = collect();
+        $multiplier = 1.0;
+        $blockNumber = 0;
+
+        foreach ($sortedResults as $index => $result) {
+            $resultRank = $this->professionalResultBehaviorTierRank($result, $detector);
+
+            if ($priorPeakRank <= 0) {
+                if ($resultRank > 0) {
+                    $priorPeakRank = $resultRank;
+                    $firstBehaviorIndex = $index;
+                }
+
+                continue;
+            }
+
+            $buffer->push($result);
+
+            if ($buffer->count() < $blockSize) {
+                continue;
+            }
+
+            $blockNumber++;
+            $blockRank = (int) $buffer
+                ->map(fn (array $blockResult): int => $this->professionalResultBehaviorTierRank($blockResult, $detector))
+                ->max();
+            $blockScore = round((float) $buffer
+                ->map(fn (array $blockResult): float => max(
+                    (float) ($blockResult['final_score'] ?? 0),
+                    (float) ($blockResult['gambling_score'] ?? 0),
+                    (float) ($blockResult['revenge_score'] ?? 0)
+                ))
+                ->max(), 2);
+            $reductionPercent = $this->professionalBehaviorRecoveryReductionPercent($blockRank, $priorPeakRank);
+            $scoreBefore = round($rawFinalScore * $multiplier, 2);
+
+            if ($reductionPercent > 0) {
+                $multiplier *= max(0, 1 - ($reductionPercent / 100));
+            }
+
+            $scoreAfter = round($rawFinalScore * $multiplier, 2);
+            $blockTier = $this->professionalTierMeta($this->professionalTierNameFromRank($blockRank));
+
+            $blocks->push([
+                'block_number' => $blockNumber,
+                'trade_count' => $buffer->count(),
+                'block_size' => $blockSize,
+                'tier' => $blockTier['tier'],
+                'tier_rank' => $blockTier['tier_rank'],
+                'tier_label' => $blockTier['tier_label'],
+                'tier_tone' => $blockTier['tier_tone'],
+                'max_score' => $blockScore,
+                'prior_peak_tier_rank' => $priorPeakRank,
+                'prior_peak_tier_label' => $this->professionalTierMeta($this->professionalTierNameFromRank($priorPeakRank))['tier_label'],
+                'reduction_percent' => $reductionPercent,
+                'score_before' => $scoreBefore,
+                'score_after' => $scoreAfter,
+                'first_trade_label' => (string) data_get($buffer->first(), 'trade_label', 'N/A'),
+                'last_trade_label' => (string) data_get($buffer->last(), 'trade_label', 'N/A'),
+            ]);
+
+            $priorPeakRank = max($priorPeakRank, $blockRank);
+            $buffer = collect();
+        }
+
+        if ($firstBehaviorIndex === null) {
+            return $this->emptyProfessionalBehaviorRecoveryAdjustment($rawFinalScore, $blockSize);
+        }
+
+        $totalReductionPercent = round((1 - $multiplier) * 100, 2);
+        $totalReductionPoints = round($rawFinalScore - ($rawFinalScore * $multiplier), 2);
+        $appliedBlocks = $blocks->filter(fn (array $block): bool => (float) ($block['reduction_percent'] ?? 0) > 0)->count();
+        $eligibleTradeCount = max(0, $sortedResults->count() - $firstBehaviorIndex - 1);
+        $completedBlocks = $blocks->count();
+        $remainingTrades = $buffer->count();
+
+        $status = match (true) {
+            $appliedBlocks > 0 => 'Behavior Recovery Applied',
+            $completedBlocks > 0 => 'Behavior Recovery Not Qualified',
+            default => 'Waiting For 8-Trade Recovery Block',
+        };
+
+        $summary = match (true) {
+            $appliedBlocks > 0 => 'Behavior recovery applied across '.$appliedBlocks.' completed '.$blockSize.'-trade block(s). Raw behavior score '
+                .number_format($rawFinalScore, 2).'/100 was reduced by '.number_format($totalReductionPercent, 2).'% to '
+                .number_format($rawFinalScore * $multiplier, 2).'/100.',
+            $completedBlocks > 0 => 'Completed '.$blockSize.'-trade block(s) exist after the behavior event, but none qualified for score reduction. Mid blocks only reduce after prior high/critical behavior; high blocks only reduce after prior critical behavior.',
+            default => 'Behavior recovery waits for a complete '.$blockSize.'-trade block after gambling or revenge behavior appears.',
+        };
+
+        return [
+            'enabled' => true,
+            'block_size' => $blockSize,
+            'raw_final_score' => $rawFinalScore,
+            'adjusted_final_score' => round($rawFinalScore * $multiplier, 2),
+            'score_multiplier' => round($multiplier, 4),
+            'total_reduction_percent' => $totalReductionPercent,
+            'total_reduction_points' => $totalReductionPoints,
+            'first_behavior_trade_index' => $firstBehaviorIndex,
+            'eligible_trade_count' => $eligibleTradeCount,
+            'completed_blocks' => $completedBlocks,
+            'applied_blocks' => $appliedBlocks,
+            'remaining_trades' => $remainingTrades,
+            'status' => $status,
+            'summary' => $summary,
+            'rules' => $this->professionalBehaviorRecoveryRules(),
+            'blocks' => $blocks->values(),
+        ];
+    }
+
+    private function emptyProfessionalBehaviorRecoveryAdjustment(float $rawFinalScore, ?int $blockSize = null): array
+    {
+        $blockSize = $blockSize ?? max(1, (int) config('trading_detection.behavior_recovery_block_size', 8));
+
+        return [
+            'enabled' => true,
+            'block_size' => $blockSize,
+            'raw_final_score' => round($rawFinalScore, 2),
+            'adjusted_final_score' => round($rawFinalScore, 2),
+            'score_multiplier' => 1.0,
+            'total_reduction_percent' => 0.0,
+            'total_reduction_points' => 0.0,
+            'first_behavior_trade_index' => null,
+            'eligible_trade_count' => 0,
+            'completed_blocks' => 0,
+            'applied_blocks' => 0,
+            'remaining_trades' => 0,
+            'status' => 'No Behavior Recovery Needed',
+            'summary' => 'No gambling or revenge behavior tier is active, so behavior recovery is not needed.',
+            'rules' => $this->professionalBehaviorRecoveryRules(),
+            'blocks' => collect(),
+        ];
+    }
+
+    private function professionalBehaviorRecoveryReductionPercent(int $blockRank, int $priorPeakRank): float
+    {
+        if ($priorPeakRank <= 0) {
+            return 0.0;
+        }
+
+        $reductions = (array) config('trading_detection.behavior_recovery_reductions', []);
+
+        return match ($blockRank) {
+            0 => (float) ($reductions['normal'] ?? 25.0),
+            1 => (float) ($reductions['low'] ?? 20.0),
+            2 => $priorPeakRank >= 3 ? (float) ($reductions['mid'] ?? 10.0) : 0.0,
+            3 => $priorPeakRank >= 4 ? (float) ($reductions['high'] ?? 5.0) : 0.0,
+            default => 0.0,
+        };
+    }
+
+    private function professionalResultBehaviorTierRank(array $result, TradingBehaviourDetectionService $detector): int
+    {
+        $score = max(
+            (float) ($result['final_score'] ?? 0),
+            (float) ($result['gambling_score'] ?? 0),
+            (float) ($result['revenge_score'] ?? 0)
+        );
+
+        return (int) $this->professionalTierMeta($detector->getTier($score))['tier_rank'];
+    }
+
+    private function professionalTierNameFromRank(int $rank): string
+    {
+        return match (max(0, min(4, $rank))) {
+            4 => 'critical',
+            3 => 'high',
+            2 => 'mid',
+            1 => 'low',
+            default => 'normal',
+        };
+    }
+
+    private function professionalBehaviorRecoveryRules(): array
+    {
+        $blockSize = max(1, (int) config('trading_detection.behavior_recovery_block_size', 8));
+        $reductions = (array) config('trading_detection.behavior_recovery_reductions', []);
+
+        return [
+            'block_size' => $blockSize,
+            'normal' => 'Every completed '.$blockSize.'-trade block with no gambling or revenge tier reduces the behavior score by '.number_format((float) ($reductions['normal'] ?? 25.0), 0).'%.',
+            'low' => 'Every completed '.$blockSize.'-trade block with only low behavior tier reduces the behavior score by '.number_format((float) ($reductions['low'] ?? 20.0), 0).'%.',
+            'mid' => 'A mid-tier '.$blockSize.'-trade block reduces the behavior score by '.number_format((float) ($reductions['mid'] ?? 10.0), 0).'% only when a prior high or critical tier exists.',
+            'high' => 'A high-tier '.$blockSize.'-trade block reduces the behavior score by '.number_format((float) ($reductions['high'] ?? 5.0), 0).'% only when a prior critical tier exists.',
+            'critical' => 'Critical-tier blocks do not reduce the behavior score.',
+        ];
+    }
+
+    private function professionalAggregateLabel(string $tier, float $gamblingScore, float $revengeScore, int $plannedLayerCount, float $confidenceScore, Collection $reasons): string
+    {
+        if ($reasons->contains('Daily loss limit exceeded.')) {
+            return 'Critical Risk: Daily Loss Limit Exceeded';
+        }
+
+        if ($confidenceScore < 50 && $tier !== 'high' && $tier !== 'critical') {
+            return 'Low Confidence Detection';
+        }
+
+        if ($plannedLayerCount > 0 && $tier === 'normal') {
+            return 'Planned Layer / Controlled Risk';
+        }
+
+        if ($revengeScore > $gamblingScore && $tier !== 'normal') {
+            return 'Possible Revenge Trading Behaviour';
+        }
+
+        if ($gamblingScore >= $revengeScore && $tier !== 'normal') {
+            return 'Possible Gambling Trading Behaviour';
+        }
+
+        return 'Normal Trading Behaviour';
+    }
+
+    private function professionalTradePayload(array $trade): array
+    {
+        $payload = [
+            'id' => $trade['id'],
+            'source' => $trade['source'],
+            'user_id' => $trade['user_id'],
+            'pair' => $trade['pair'],
+            'symbol' => $trade['pair'],
+            'direction' => $trade['direction'],
+            'entry_price' => $trade['entry_price'],
+            'exit_price' => $trade['exit_price'],
+            'lot_size' => $trade['lot_size'],
+            'profit_loss' => $trade['profit_loss'],
+            'pips' => $trade['pips'],
+            'opened_at' => $trade['opened_at'],
+            'closed_at' => $trade['closed_at'],
+        ];
+
+        foreach ($this->professionalOptionalTradeFields() as $field) {
+            if (array_key_exists($field, $trade)) {
+                $payload[$field] = $trade[$field];
+            }
+        }
+
+        return $payload;
+    }
+
+    private function professionalAccountStatsForTrade(array $trade, Collection $trades, float $accountBalance): array
+    {
+        $stats = [];
+        $openedAt = $trade['opened_at'] ?? null;
+        $userKey = (string) ($trade['user_id'] ?? 'account');
+
+        if ($openedAt instanceof Carbon) {
+            $dayTrades = $trades
+                ->filter(fn (array $candidate): bool => (string) ($candidate['user_id'] ?? 'account') === $userKey
+                    && ($candidate['opened_at'] ?? null) instanceof Carbon
+                    && $candidate['opened_at']->isSameDay($openedAt));
+
+            $stats['orders_today'] = $dayTrades->count();
+
+            if ($accountBalance > 0) {
+                $dayProfitLoss = (float) $dayTrades->sum('profit_loss');
+                $stats['daily_loss_percent'] = $dayProfitLoss < 0 ? round((abs($dayProfitLoss) / $accountBalance) * 100, 2) : 0.0;
+            }
+
+            $marginPercent = $this->professionalMarginUsedPercent($trade, $trades, $accountBalance);
+            if ($marginPercent !== null) {
+                $stats['margin_used_percent'] = $marginPercent;
+            }
+
+            $previousLoss = $this->professionalPreviousLosingTrade($trade, $trades);
+            $previousClosedTrade = $this->professionalPreviousClosedTrade($trade, $trades);
+
+            if ($previousClosedTrade) {
+                $stats['last_trade_result'] = (float) ($previousClosedTrade['profit_loss'] ?? 0) < 0 ? 'loss' : ((float) ($previousClosedTrade['profit_loss'] ?? 0) > 0 ? 'win' : 'breakeven');
+                $stats['last_closed_trade_profit_loss'] = (float) ($previousClosedTrade['profit_loss'] ?? 0);
+            }
+
+            if ($previousLoss) {
+                $stats['previous_losing_trade_key'] = $previousLoss['key'];
+                $stats['previous_losing_trade_label'] = $this->tradeLabel($previousLoss);
+                $stats['previous_losing_trade_lot_size'] = (float) ($previousLoss['lot_size'] ?? 0);
+                $stats['previous_losing_trade_symbol'] = $previousLoss['pair'] ?? null;
+                $stats['previous_losing_trade_direction'] = $previousLoss['direction'] ?? null;
+                $stats['previous_losing_trade_closed_at'] = $previousLoss['closed_at'] ?? null;
+                $stats['previous_losing_trade_profit_loss'] = (float) ($previousLoss['profit_loss'] ?? 0);
+                $stats['previous_losing_trade_exit_reason'] = $previousLoss['exit_reason'] ?? null;
+                $stats['previous_losing_trade_risk_percent'] = $previousLoss['risk_percent'] ?? null;
+                $stats['minutes_since_last_loss'] = max(0, $previousLoss['closed_at']->diffInMinutes($openedAt));
+
+                if (($previousClosedTrade['key'] ?? null) === ($previousLoss['key'] ?? null)) {
+                    $stats['last_trade_result'] = 'loss';
+                    $stats['last_closed_trade_profit_loss'] = (float) ($previousLoss['profit_loss'] ?? 0);
+                }
+            }
+
+            $stats['loss_streak'] = $this->professionalLossStreakBefore($trade, $trades);
+            $stats['symbols_traded_short_time'] = $this->professionalRecentDistinctCount($trade, $trades, 'pair');
+            $stats['strategies_switched_short_time'] = $this->professionalRecentDistinctCount($trade, $trades, 'strategy_id');
+        }
+
+        foreach (['risk_reward_ratio', 'actual_total_setup_risk_percent', 'setup_symbol', 'setup_direction'] as $field) {
+            if (array_key_exists($field, $trade)) {
+                $stats[$field] = $trade[$field];
+            }
+        }
+
+        if (! array_key_exists('actual_total_setup_risk_percent', $stats)) {
+            $setupRisk = $this->professionalSetupRiskPercent($trade, $trades);
+            if ($setupRisk !== null) {
+                $stats['actual_total_setup_risk_percent'] = $setupRisk;
+            }
+        }
+
+        if (! array_key_exists('setup_symbol', $stats) && array_key_exists('setup_id', $trade)) {
+            $stats['setup_symbol'] = $this->professionalSetupValue($trade, $trades, 'pair');
+        }
+
+        if (! array_key_exists('setup_direction', $stats) && array_key_exists('setup_id', $trade)) {
+            $stats['setup_direction'] = $this->professionalSetupValue($trade, $trades, 'direction');
+        }
+
+        return array_filter($stats, fn ($value): bool => $value !== null);
+    }
+
+    private function professionalOptionalTradeFields(): array
+    {
+        return [
+            'trade_plan_id',
+            'setup_id',
+            'standalone_trade',
+            'is_standalone_trade',
+            'is_layer',
+            'planned_layer',
+            'order_number',
+            'layer_number',
+            'risk_percent',
+            'order_risk_percent',
+            'actual_total_setup_risk_percent',
+            'stop_loss',
+            'sl',
+            'take_profit',
+            'tp',
+            'entry_reason',
+            'reason_for_entry',
+            'strategy_id',
+            'trading_strategy_id',
+            'exit_plan',
+            'risk_reward_ratio',
+            'margin_used_percent',
+            'daily_loss_percent',
+            'emotion_tag',
+            'setup_symbol',
+            'setup_direction',
+            'exit_reason',
+        ];
+    }
+
+    private function professionalMarginUsedPercent(array $trade, Collection $trades, float $accountBalance): ?float
+    {
+        $openedAt = $trade['opened_at'] ?? null;
+
+        if ($accountBalance <= 0 || ! $openedAt instanceof Carbon || strtoupper((string) ($trade['pair'] ?? '')) !== 'XAUUSD') {
+            return null;
+        }
+
+        $timedTrades = $trades
+            ->filter(fn (array $candidate): bool => ($candidate['opened_at'] ?? null) instanceof Carbon && strtoupper((string) ($candidate['pair'] ?? '')) === 'XAUUSD')
+            ->values();
+        $activeTrades = $this->activeSameDirectionTradesAt($timedTrades, $trade, $openedAt);
+        $activeLot = round((float) $activeTrades->sum('lot_size'), 4);
+        $referencePrice = $this->marginReferencePrice($trade, $activeTrades);
+
+        if ($activeLot <= 0 || $referencePrice <= 0) {
+            return null;
+        }
+
+        $requiredMargin = ($activeLot * self::XAUUSD_CONTRACT_SIZE * $referencePrice) / self::XAUUSD_LEVERAGE;
+
+        return round(($requiredMargin / $accountBalance) * 100, 2);
+    }
+
+    private function professionalPreviousLosingTrade(array $trade, Collection $trades): ?array
+    {
+        $openedAt = $trade['opened_at'] ?? null;
+
+        if (! $openedAt instanceof Carbon) {
+            return null;
+        }
+
+        return $trades
+            ->filter(fn (array $candidate): bool => (string) ($candidate['user_id'] ?? 'account') === (string) ($trade['user_id'] ?? 'account')
+                && ($candidate['closed_at'] ?? null) instanceof Carbon
+                && $candidate['closed_at']->lte($openedAt)
+                && (float) ($candidate['profit_loss'] ?? 0) < 0)
+            ->sortByDesc(fn (array $candidate): int => $candidate['closed_at']->timestamp)
+            ->first();
+    }
+
+    private function professionalPreviousClosedTrade(array $trade, Collection $trades): ?array
+    {
+        $openedAt = $trade['opened_at'] ?? null;
+
+        if (! $openedAt instanceof Carbon) {
+            return null;
+        }
+
+        return $trades
+            ->filter(fn (array $candidate): bool => (string) ($candidate['user_id'] ?? 'account') === (string) ($trade['user_id'] ?? 'account')
+                && ($candidate['closed_at'] ?? null) instanceof Carbon
+                && $candidate['closed_at']->lte($openedAt))
+            ->sortByDesc(fn (array $candidate): int => $candidate['closed_at']->timestamp)
+            ->first();
+    }
+
+    private function professionalLossStreakBefore(array $trade, Collection $trades): int
+    {
+        $openedAt = $trade['opened_at'] ?? null;
+
+        if (! $openedAt instanceof Carbon) {
+            return 0;
+        }
+
+        $closedTrades = $trades
+            ->filter(fn (array $candidate): bool => (string) ($candidate['user_id'] ?? 'account') === (string) ($trade['user_id'] ?? 'account')
+                && ($candidate['closed_at'] ?? null) instanceof Carbon
+                && $candidate['closed_at']->lte($openedAt))
+            ->sortByDesc(fn (array $candidate): int => $candidate['closed_at']->timestamp)
+            ->values();
+        $streak = 0;
+
+        foreach ($closedTrades as $closedTrade) {
+            if ((float) ($closedTrade['profit_loss'] ?? 0) >= 0) {
+                break;
+            }
+
+            $streak++;
+        }
+
+        return $streak;
+    }
+
+    private function professionalRecentDistinctCount(array $trade, Collection $trades, string $field): int
+    {
+        $openedAt = $trade['opened_at'] ?? null;
+
+        if (! $openedAt instanceof Carbon) {
+            return 0;
+        }
+
+        return $trades
+            ->filter(fn (array $candidate): bool => (string) ($candidate['user_id'] ?? 'account') === (string) ($trade['user_id'] ?? 'account')
+                && ($candidate['opened_at'] ?? null) instanceof Carbon
+                && $candidate['opened_at']->gte($openedAt->copy()->subMinutes(60))
+                && $candidate['opened_at']->lte($openedAt)
+                && isset($candidate[$field]))
+            ->pluck($field)
+            ->filter()
+            ->unique()
+            ->count();
+    }
+
+    private function professionalSetupRiskPercent(array $trade, Collection $trades): ?float
+    {
+        if (! array_key_exists('setup_id', $trade) || ! array_key_exists('risk_percent', $trade) || ! $trade['setup_id']) {
+            return null;
+        }
+
+        $openedAt = $trade['opened_at'] ?? null;
+
+        return round((float) $trades
+            ->filter(fn (array $candidate): bool => (string) ($candidate['user_id'] ?? 'account') === (string) ($trade['user_id'] ?? 'account')
+                && (string) ($candidate['setup_id'] ?? '') === (string) $trade['setup_id']
+                && array_key_exists('risk_percent', $candidate)
+                && (! $openedAt instanceof Carbon || ! ($candidate['opened_at'] ?? null) instanceof Carbon || $candidate['opened_at']->lte($openedAt)))
+            ->sum(fn (array $candidate): float => (float) ($candidate['risk_percent'] ?? 0)), 2);
+    }
+
+    private function professionalSetupValue(array $trade, Collection $trades, string $field)
+    {
+        if (! array_key_exists('setup_id', $trade) || ! $trade['setup_id']) {
+            return null;
+        }
+
+        return $trades
+            ->first(fn (array $candidate): bool => (string) ($candidate['user_id'] ?? 'account') === (string) ($trade['user_id'] ?? 'account')
+                && (string) ($candidate['setup_id'] ?? '') === (string) $trade['setup_id']
+                && ! empty($candidate[$field]))[$field] ?? null;
+    }
+
+    private function professionalRevengeExample(array $result): array
+    {
+        $stats = $result['account_stats'] ?? [];
+        $tier = (new TradingBehaviourDetectionService())->getTier((float) ($result['revenge_score'] ?? 0));
+        $meta = $this->professionalTierMeta($tier);
+        $signals = collect($result['reasons'] ?? [])
+            ->filter(fn (string $reason): bool => str_contains($reason, 'loss') || str_contains($reason, 'cooldown') || str_contains($reason, 'streak') || str_contains($reason, 'emotion'))
+            ->values();
+
+        return [
+            'trigger_trade_key' => $stats['previous_losing_trade_key'] ?? null,
+            'trigger_trade_label' => $stats['previous_losing_trade_label'] ?? 'Previous losing trade',
+            'response_trade_key' => $result['trade_key'],
+            'response_trade_label' => $result['trade_label'],
+            'pair' => $result['pair'],
+            'delay_minutes' => (int) ($stats['minutes_since_last_loss'] ?? 0),
+            'delay_label' => isset($stats['minutes_since_last_loss']) ? $this->formatMinutes((int) $stats['minutes_since_last_loss']) : 'N/A',
+            'loss_amount' => abs((float) ($stats['previous_losing_trade_profit_loss'] ?? 0)),
+            'response_profit_loss' => (float) ($result['profit_loss'] ?? 0),
+            'previous_lot' => (float) ($stats['previous_losing_trade_lot_size'] ?? 0),
+            'response_lot' => (float) ($result['lot_size'] ?? 0),
+            'lot_ratio' => ((float) ($stats['previous_losing_trade_lot_size'] ?? 0)) > 0
+                ? round((float) ($result['lot_size'] ?? 0) / (float) $stats['previous_losing_trade_lot_size'], 2)
+                : 0.0,
+            'same_pair' => in_array('Same symbol was traded again during post-loss cooldown.', $result['reasons'] ?? [], true),
+            'opposite_direction' => false,
+            'signals' => $signals,
+            'score' => (float) ($result['revenge_score'] ?? 0),
+            'tier' => $tier,
+            'tier_rank' => $meta['tier_rank'],
+            'tier_label' => $meta['tier_label'],
+            'tier_short' => $meta['tier_short'],
+            'tier_tone' => $meta['tier_tone'],
+            'tier_description' => $this->professionalTierDescription('revenge', $tier),
+            'trigger_closed_at' => $stats['previous_losing_trade_closed_at'] ?? null,
+            'response_opened_at' => $result['opened_at'] ?? null,
+        ];
+    }
+
+    private function professionalGamblingExample(array $result): array
+    {
+        $tier = (new TradingBehaviourDetectionService())->getTier((float) ($result['gambling_score'] ?? 0));
+        $meta = $this->professionalTierMeta($tier);
+        $reasons = collect($result['reasons'] ?? [])->values();
+
+        return [
+            'trade_key' => $result['trade_key'],
+            'trade_label' => $result['trade_label'],
+            'pair' => $result['pair'],
+            'direction' => $result['direction'],
+            'lot_size' => (float) ($result['lot_size'] ?? 0),
+            'profit_loss' => (float) ($result['profit_loss'] ?? 0),
+            'pips' => 0,
+            'opened_at' => $result['opened_at'] ?? null,
+            'closed_at' => $result['closed_at'] ?? null,
+            'reasons' => $reasons,
+            'evidence' => $reasons,
+            'reason' => $reasons->first() ?: 'Professional behaviour score threshold reached',
+            'evidence_label' => $reasons->implode(' '),
+            'score' => (float) ($result['gambling_score'] ?? 0),
+            'tier' => $tier,
+            'tier_rank' => $meta['tier_rank'],
+            'tier_label' => $meta['tier_label'],
+            'tier_short' => $meta['tier_short'],
+            'tier_tone' => $meta['tier_tone'],
+            'tier_description' => $this->professionalTierDescription('gambling', $tier),
+        ];
+    }
+
+    private function professionalRevengeChecks(float $score, Collection $results, Collection $examples): Collection
+    {
+        return collect([
+            [
+                'name' => 'Recent Loss Evidence',
+                'value' => $this->professionalReasonCount($results, 'New trade opened during cooldown after a loss.').' cooldown break(s)',
+                'status' => $this->professionalReasonCount($results, 'New trade opened during cooldown after a loss.') > 0 ? 'Detected' : 'Clear',
+                'tone' => $this->professionalReasonCount($results, 'New trade opened during cooldown after a loss.') > 0 ? 'danger' : 'success',
+                'description' => 'Revenge trading needs post-loss evidence such as cooldown breaks, not just another order.',
+            ],
+            [
+                'name' => 'Risk Or Lot Increase After Loss',
+                'value' => ($this->professionalReasonCount($results, 'Risk increased after previous losing trade.') + $this->professionalReasonCount($results, 'Lot size increased after previous losing trade.')).' event(s)',
+                'status' => ($this->professionalReasonCount($results, 'Risk increased after previous losing trade.') + $this->professionalReasonCount($results, 'Lot size increased after previous losing trade.')) > 0 ? 'Detected' : 'Clear',
+                'tone' => ($this->professionalReasonCount($results, 'Risk increased after previous losing trade.') + $this->professionalReasonCount($results, 'Lot size increased after previous losing trade.')) > 0 ? 'danger' : 'success',
+                'description' => 'Flags when risk or lot size increases after a loss.',
+            ],
+            [
+                'name' => 'Daily Loss Limit',
+                'value' => $this->professionalReasonCount($results, 'Daily loss limit exceeded.').' breach(es)',
+                'status' => $this->professionalReasonCount($results, 'Daily loss limit exceeded.') > 0 ? 'Critical' : 'Clear',
+                'tone' => $this->professionalReasonCount($results, 'Daily loss limit exceeded.') > 0 ? 'danger' : 'success',
+                'description' => 'Daily loss limit breaches force critical revenge-risk handling.',
+            ],
+            [
+                'name' => 'Overall Revenge Score',
+                'value' => number_format($score, 2).'/100',
+                'status' => $this->professionalTierLabel((new TradingBehaviourDetectionService())->getTier($score)),
+                'tone' => $this->professionalTierTone((new TradingBehaviourDetectionService())->getTier($score), false),
+                'description' => 'Final revenge score is evaluated separately from gambling and then compared by max score.',
+            ],
+        ]);
+    }
+
+    private function professionalGamblingChecks(float $score, Collection $results, Collection $examples): Collection
+    {
+        return collect([
+            [
+                'name' => 'Plan And Entry Discipline',
+                'value' => ($this->professionalReasonCount($results, 'Trade has no clear plan.') + $this->professionalReasonCount($results, 'Trade has no entry reason.')).' warning(s)',
+                'points' => min(25, (float) $examples->sum('gambling_score')),
+                'max_points' => 100,
+                'status' => $this->professionalReasonCount($results, 'Trade has no clear plan.') > 0 ? 'Watch' : 'Clear',
+                'tone' => $this->professionalReasonCount($results, 'Trade has no clear plan.') > 0 ? 'warning' : 'success',
+                'description' => 'Checks whether trades have a plan, setup, strategy, and entry reason when that data is available.',
+            ],
+            [
+                'name' => 'Stop Loss And Risk Limits',
+                'value' => ($this->professionalReasonCount($results, 'Trade has no stop loss.') + $this->professionalReasonCount($results, 'Order risk exceeded planned risk.') + $this->professionalReasonCount($results, 'Total setup risk exceeded trading plan.')).' warning(s)',
+                'points' => round($score, 2),
+                'max_points' => 100,
+                'status' => $score >= 65 ? 'High' : ($score >= 45 ? 'Watch' : 'Clear'),
+                'tone' => $score >= 65 ? 'danger' : ($score >= 45 ? 'warning' : 'success'),
+                'description' => 'Risk breaks, missing stop loss, and setup-risk breaches drive gambling score more than order count.',
+            ],
+            [
+                'name' => 'Margin Exposure',
+                'value' => number_format((float) $results->map(fn (array $result): float => (float) data_get($result, 'account_stats.margin_used_percent', 0))->max(), 2).'% max',
+                'points' => $this->professionalReasonCount($results, 'Margin exposure is high.') > 0 ? 25 : 0,
+                'max_points' => 25,
+                'status' => $this->professionalReasonCount($results, 'Margin exposure is high.') > 0 ? 'High' : 'Clear',
+                'tone' => $this->professionalReasonCount($results, 'Margin exposure is high.') > 0 ? 'danger' : 'success',
+                'description' => 'Only dangerous margin pressure contributes to gambling detection; safe margin is treated as controlled.',
+            ],
+            [
+                'name' => 'Planned Layer Protection',
+                'value' => $results->filter(fn (array $result): bool => (bool) ($result['is_planned_layer'] ?? false))->count().' valid planned layer(s)',
+                'points' => 0,
+                'max_points' => 0,
+                'status' => $results->filter(fn (array $result): bool => (bool) ($result['is_planned_layer'] ?? false))->count() > 0 ? 'Protected' : 'No Data',
+                'tone' => $results->filter(fn (array $result): bool => (bool) ($result['is_planned_layer'] ?? false))->count() > 0 ? 'success' : 'secondary',
+                'description' => 'A layer within plan, risk, stop-loss, setup, and margin limits reduces gambling and revenge scores.',
+            ],
+            [
+                'name' => 'Confidence',
+                'value' => number_format((float) $results->avg('confidence_score'), 2).'/100',
+                'points' => 0,
+                'max_points' => 100,
+                'status' => ((float) $results->avg('confidence_score')) < 50 ? 'Reduced' : 'Usable',
+                'tone' => ((float) $results->avg('confidence_score')) < 50 ? 'warning' : 'success',
+                'description' => 'Missing plan/risk/margin/emotion/previous-trade data lowers confidence and blocks high tier unless strong evidence exists.',
+            ],
+        ]);
+    }
+
+    private function professionalReasonCount(Collection $results, string $reason): int
+    {
+        return $results
+            ->filter(fn (array $result): bool => collect($result['reasons'] ?? [])->contains($reason))
+            ->count();
+    }
+
+    private function professionalRiskIncreaseCount(Collection $results): int
+    {
+        return $this->professionalReasonCount($results, 'Risk increased after previous losing trade.')
+            + $this->professionalReasonCount($results, 'Lot size increased after previous losing trade.');
+    }
+
+    private function professionalAverageRevengeDelay(Collection $examples): int
+    {
+        $delays = $examples
+            ->map(fn (array $result): ?float => data_get($result, 'account_stats.minutes_since_last_loss'))
+            ->filter(fn ($delay): bool => $delay !== null);
+
+        return $delays->isNotEmpty() ? (int) round((float) $delays->avg()) : 0;
+    }
+
+    private function professionalActiveDays(Collection $results): int
+    {
+        return $results
+            ->map(fn (array $result): ?string => ($result['opened_at'] ?? null) instanceof Carbon ? $result['opened_at']->toDateString() : null)
+            ->filter()
+            ->unique()
+            ->count();
+    }
+
+    private function professionalAverageTradesPerDay(Collection $results): float
+    {
+        $activeDays = $this->professionalActiveDays($results);
+
+        return $activeDays > 0 ? round($results->count() / $activeDays, 2) : 0.0;
+    }
+
+    private function professionalMaxTradesPerDay(Collection $results): int
+    {
+        return (int) $results
+            ->groupBy(fn (array $result): string => ($result['opened_at'] ?? null) instanceof Carbon ? $result['opened_at']->toDateString() : 'unknown')
+            ->map(fn (Collection $dayResults): int => $dayResults->count())
+            ->max();
+    }
+
+    private function professionalOvertradingDays(Collection $results): int
+    {
+        $maxOrders = (int) config('trading_detection.max_orders_per_day', 8);
+
+        return $results
+            ->groupBy(fn (array $result): string => ($result['opened_at'] ?? null) instanceof Carbon ? $result['opened_at']->toDateString() : 'unknown')
+            ->filter(fn (Collection $dayResults): bool => $dayResults->count() > $maxOrders)
+            ->count();
+    }
+
+    private function professionalTierMeta(string $tier): array
+    {
+        return match ($tier) {
+            'critical' => [
+                'tier' => 'critical',
+                'tier_rank' => 4,
+                'tier_label' => 'Critical',
+                'tier_short' => 'C',
+                'tier_tone' => 'danger',
+            ],
+            'high' => [
+                'tier' => 'high',
+                'tier_rank' => 3,
+                'tier_label' => 'High',
+                'tier_short' => 'H',
+                'tier_tone' => 'danger',
+            ],
+            'mid' => [
+                'tier' => 'mid',
+                'tier_rank' => 2,
+                'tier_label' => 'Mid',
+                'tier_short' => 'M',
+                'tier_tone' => 'warning',
+            ],
+            'low' => [
+                'tier' => 'low',
+                'tier_rank' => 1,
+                'tier_label' => 'Low',
+                'tier_short' => 'L',
+                'tier_tone' => 'primary',
+            ],
+            default => [
+                'tier' => 'normal',
+                'tier_rank' => 0,
+                'tier_label' => 'Normal',
+                'tier_short' => 'N',
+                'tier_tone' => 'success',
+            ],
+        };
+    }
+
+    private function professionalBehaviorStatus(string $behavior, string $tier): string
+    {
+        if ($tier === 'normal') {
+            return 'Clear';
+        }
+
+        return $this->professionalTierLabel($tier).' '.$behavior.' Tier';
+    }
+
+    private function professionalTierLabel(string $tier): string
+    {
+        return $this->professionalTierMeta($tier)['tier_label'];
+    }
+
+    private function professionalTierTone(string $tier, bool $empty): string
+    {
+        return $empty ? 'secondary' : $this->professionalTierMeta($tier)['tier_tone'];
+    }
+
+    private function professionalTierDescription(string $behavior, string $tier): string
+    {
+        if ($behavior === 'gambling') {
+            return match ($tier) {
+                'critical' => 'Critical tier: severe risk discipline break, dangerous exposure, or daily loss breach evidence is present.',
+                'high' => 'High tier: trading plan, stop-loss, risk limit, setup-risk, margin, or random-trading evidence is strongly stacked.',
+                'mid' => 'Mid tier: meaningful discipline warnings are present, but not enough for high tier.',
+                'low' => 'Low tier: mild discipline warning that should be reviewed without treating the trade as gambling.',
+                default => 'Normal tier: no strong gambling-style evidence. Order count, layer count, and holding time alone are not enough.',
+            };
+        }
+
+        return match ($tier) {
+            'critical' => 'Critical tier: daily loss limit was exceeded or severe post-loss escalation is present.',
+            'high' => 'High tier: post-loss evidence stacks with cooldown breach, risk increase, lot increase, same-symbol pressure, or loss streak.',
+            'mid' => 'Mid tier: revenge markers are meaningful but not the strongest level.',
+            'low' => 'Low tier: mild post-loss warning without enough evidence for high revenge classification.',
+            default => 'Normal tier: no clear loss-chasing evidence. Another order alone is not revenge trading.',
+        };
     }
 
     public function behaviorScorePenalty(array $behaviorProfile, float $baseScore): array
@@ -494,13 +1538,16 @@ class TradingJournalAnalytics
             ? $triggers->implode(' + ')
             : 'Clear or low revenge/gambling tier';
         $tone = $percent >= 10 ? 'danger' : ($percent > 0 ? 'warning' : 'success');
+        $recoverySummary = (float) data_get($behaviorProfile, 'behavior_recovery.total_reduction_percent', 0) > 0
+            ? ' '.(string) data_get($behaviorProfile, 'behavior_recovery.summary')
+            : '';
 
         return [
             'base_score' => $baseScore,
             'adjusted_score' => $adjustedScore,
             'percent' => $percent,
             'points' => $points,
-            'status' => $percent > 0 ? number_format($percent, 0) . '% Behaviour Penalty' : 'No Behaviour Penalty',
+            'status' => $percent > 0 ? number_format($percent, 0).'% Behaviour Penalty' : 'No Behaviour Penalty',
             'tone' => $tone,
             'tier' => $highestTier['tier'],
             'tier_rank' => $highestTier['tier_rank'],
@@ -508,7 +1555,7 @@ class TradingJournalAnalytics
             'tier_short' => $highestTier['tier_short'],
             'tier_tone' => $highestTier['tier_tone'],
             'trigger_label' => $triggerLabel,
-            'summary' => $this->behaviorPenaltySummary($percent, $triggerLabel),
+            'summary' => $this->behaviorPenaltySummary($percent, $triggerLabel).$recoverySummary,
             'behaviors' => $behaviors->all(),
         ];
     }
@@ -593,7 +1640,7 @@ class TradingJournalAnalytics
             ->filter(fn (array $trade): bool => in_array($trade['direction'], [1, 2], true)
                 && $trade['opened_at'] instanceof Carbon
                 && $trade['pair'] !== 'N/A')
-            ->sortBy(fn (array $trade): string => $trade['opened_at']->format('Y-m-d H:i:s') . ':' . $trade['key'])
+            ->sortBy(fn (array $trade): string => $trade['opened_at']->format('Y-m-d H:i:s').':'.$trade['key'])
             ->values();
 
         if ($normalizedTrades->count() < 2) {
@@ -629,7 +1676,7 @@ class TradingJournalAnalytics
         $maxActiveLayers = 0;
 
         $normalizedTrades
-            ->groupBy(fn (array $trade): string => ($trade['user_id'] ?? 'account') . ':' . $trade['pair'] . ':' . $trade['direction'])
+            ->groupBy(fn (array $trade): string => ($trade['user_id'] ?? 'account').':'.$trade['pair'].':'.$trade['direction'])
             ->each(function (Collection $pairTrades) use (&$events, &$layeredTradeKeys, &$layeredTradeMap, &$overlapCount, &$fastLayerCount, &$lotIncreaseCount, &$adverseLayerCount, &$maxActiveLayers): void {
                 $pairTrades = $pairTrades->sortBy('opened_at')->values();
                 $count = $pairTrades->count();
@@ -691,7 +1738,7 @@ class TradingJournalAnalytics
                         }
 
                         if ($activeLayers >= 3) {
-                            $signals->push($activeLayers . ' active same-direction layers');
+                            $signals->push($activeLayers.' active same-direction layers');
                             $eventScore += 18;
                         } elseif ($activeLayers >= 2) {
                             $signals->push('Multiple same-direction layers');
@@ -800,7 +1847,7 @@ class TradingJournalAnalytics
     {
         $normalizedTrades = $this->normalizedTrades($trades)
             ->filter(fn (array $trade): bool => $trade['opened_at'] instanceof Carbon || $trade['closed_at'] instanceof Carbon)
-            ->sortBy(fn (array $trade): string => ($trade['opened_at'] ?? $trade['closed_at'])->format('Y-m-d H:i:s') . ':' . $trade['key'])
+            ->sortBy(fn (array $trade): string => ($trade['opened_at'] ?? $trade['closed_at'])->format('Y-m-d H:i:s').':'.$trade['key'])
             ->values();
 
         if ($normalizedTrades->count() < 2) {
@@ -916,7 +1963,7 @@ class TradingJournalAnalytics
             }
 
             if ($lossStreak >= 2) {
-                $signals->push($lossStreak . '-loss streak reaction');
+                $signals->push($lossStreak.'-loss streak reaction');
                 $eventScore += 14;
                 $lossStreakReactionCount++;
             }
@@ -1027,7 +2074,7 @@ class TradingJournalAnalytics
     {
         $normalizedTrades = $this->normalizedTrades($trades)
             ->filter(fn (array $trade): bool => $trade['opened_at'] instanceof Carbon || $trade['closed_at'] instanceof Carbon)
-            ->sortBy(fn (array $trade): string => ($trade['opened_at'] ?? $trade['closed_at'])->format('Y-m-d H:i:s') . ':' . $trade['key'])
+            ->sortBy(fn (array $trade): string => ($trade['opened_at'] ?? $trade['closed_at'])->format('Y-m-d H:i:s').':'.$trade['key'])
             ->values();
 
         $tradeCount = $normalizedTrades->count();
@@ -1088,7 +2135,7 @@ class TradingJournalAnalytics
         $overtradingPoints = min(25, ($overtradingDays * 8) + max(0, $maxTradesPerDay - 8) * 2);
         $checks->push([
             'name' => 'Overtrading Bursts',
-            'value' => $overtradingDays . ' day(s), max ' . $maxTradesPerDay . ' trades/day',
+            'value' => $overtradingDays.' day(s), max '.$maxTradesPerDay.' trades/day',
             'points' => round($overtradingPoints, 2),
             'max_points' => 25,
             'status' => $overtradingPoints >= 15 ? 'High' : ($overtradingPoints > 0 ? 'Watch' : 'Clear'),
@@ -1099,7 +2146,7 @@ class TradingJournalAnalytics
         $lotVariationPoints = min(25, max(0, ((float) $positionProfile['coefficient_of_variation'] - 35) * 0.35) + max(0, ((float) $positionProfile['range_ratio'] - 2.5) * 5));
         $checks->push([
             'name' => 'Position Size Instability',
-            'value' => number_format((float) $positionProfile['coefficient_of_variation'], 2) . '% CV, ' . number_format((float) $positionProfile['range_ratio'], 2) . 'x range',
+            'value' => number_format((float) $positionProfile['coefficient_of_variation'], 2).'% CV, '.number_format((float) $positionProfile['range_ratio'], 2).'x range',
             'points' => round($lotVariationPoints, 2),
             'max_points' => 25,
             'status' => $lotVariationPoints >= 15 ? 'High' : ($lotVariationPoints > 0 ? 'Watch' : 'Clear'),
@@ -1114,7 +2161,7 @@ class TradingJournalAnalytics
         $lotDeviationPoints = min(20, ($highLotDeviationCount * 10) + max(0, $lotDeviationEvents->count() - $highLotDeviationCount) * 6);
         $checks->push([
             'name' => 'Account Average Lot Deviation',
-            'value' => $lotDeviationEvents->count() . ' trade(s), max ' . number_format($maxAverageLotRatio, 2) . 'x average lot',
+            'value' => $lotDeviationEvents->count().' trade(s), max '.number_format($maxAverageLotRatio, 2).'x average lot',
             'points' => round($lotDeviationPoints, 2),
             'max_points' => 20,
             'status' => $highLotDeviationCount > 0 ? 'High' : ($lotDeviationEvents->isNotEmpty() ? 'Watch' : 'Clear'),
@@ -1125,7 +2172,7 @@ class TradingJournalAnalytics
         $oversizedLossPoints = min(20, $oversizedLosses->count() * 7);
         $checks->push([
             'name' => 'Oversized Losses',
-            'value' => $accountBalance > 0 ? $oversizedLosses->count() . ' loss(es) above 3% capital' : 'Capital unavailable',
+            'value' => $accountBalance > 0 ? $oversizedLosses->count().' loss(es) above 3% capital' : 'Capital unavailable',
             'points' => round($oversizedLossPoints, 2),
             'max_points' => 20,
             'status' => $oversizedLossPoints >= 14 ? 'High' : ($oversizedLossPoints > 0 ? 'Watch' : 'No Data'),
@@ -1141,7 +2188,7 @@ class TradingJournalAnalytics
         $checks->push([
             'name' => 'XAUUSD Margin Pressure',
             'value' => $accountBalance > 0
-                ? $marginPressureEvents->count() . ' setup(s), max ' . number_format($maxMarginPercent, 2) . '% margin use'
+                ? $marginPressureEvents->count().' setup(s), max '.number_format($maxMarginPercent, 2).'% margin use'
                 : 'Capital unavailable',
             'points' => round($marginPressurePoints, 2),
             'max_points' => 25,
@@ -1153,7 +2200,7 @@ class TradingJournalAnalytics
         $rapidTradePoints = min(15, $rapidTradeCount * 3);
         $checks->push([
             'name' => 'Rapid-fire Entries',
-            'value' => $rapidTradeCount . ' entries within 10 minutes',
+            'value' => $rapidTradeCount.' entries within 10 minutes',
             'points' => round($rapidTradePoints, 2),
             'max_points' => 15,
             'status' => $rapidTradePoints >= 9 ? 'High' : ($rapidTradePoints > 0 ? 'Watch' : 'Clear'),
@@ -1167,7 +2214,7 @@ class TradingJournalAnalytics
         $layeringPressurePoints = min(20, ($highLayeringCount * 10) + max(0, $layeringExposureEvents->count() - $highLayeringCount) * 5);
         $checks->push([
             'name' => 'Layered Exposure',
-            'value' => $layeringExposureEvents->count() . ' layer setup(s)',
+            'value' => $layeringExposureEvents->count().' layer setup(s)',
             'points' => round($layeringPressurePoints, 2),
             'max_points' => 20,
             'status' => $highLayeringCount > 0 ? 'High' : ($layeringExposureEvents->isNotEmpty() ? 'Watch' : 'Clear'),
@@ -1180,7 +2227,7 @@ class TradingJournalAnalytics
             : 0;
         $checks->push([
             'name' => 'Profit Concentration',
-            'value' => number_format((float) ($bestDayRule['score_percent'] ?? 0), 2) . '% best-day concentration',
+            'value' => number_format((float) ($bestDayRule['score_percent'] ?? 0), 2).'% best-day concentration',
             'points' => round($concentrationPoints, 2),
             'max_points' => 10,
             'status' => $concentrationPoints >= 6 ? 'High' : ($concentrationPoints > 0 ? 'Watch' : 'Clear'),
@@ -1194,7 +2241,7 @@ class TradingJournalAnalytics
         $durationPoints = min(15, ($highDurationDeviationCount * 8) + max(0, $durationDeviationEvents->count() - $highDurationDeviationCount) * 5);
         $checks->push([
             'name' => 'Duration Deviation',
-            'value' => $durationDeviationEvents->count() . ' trade(s), account median ' . $durationProfile['median_label'],
+            'value' => $durationDeviationEvents->count().' trade(s), account median '.$durationProfile['median_label'],
             'points' => round($durationPoints, 2),
             'max_points' => 15,
             'status' => $highDurationDeviationCount > 0 ? 'High' : ($durationDeviationEvents->isNotEmpty() ? 'Watch' : 'Clear'),
@@ -1262,8 +2309,8 @@ class TradingJournalAnalytics
             $openedAt = $this->tradeOpenedAt($trade);
             $closedAt = $this->tradeClosedAt($trade);
 
-            return [
-                'key' => $source . ':' . $id,
+            $normalized = [
+                'key' => $source.':'.$id,
                 'id' => $id,
                 'source' => $source,
                 'user_id' => $this->value($trade, 'user_id'),
@@ -1277,6 +2324,14 @@ class TradingJournalAnalytics
                 'opened_at' => $openedAt,
                 'closed_at' => $closedAt,
             ];
+
+            foreach ($this->professionalOptionalTradeFields() as $field) {
+                if ($this->tradeFieldExists($trade, $field)) {
+                    $normalized[$field] = $this->value($trade, $field);
+                }
+            }
+
+            return $normalized;
         });
     }
 
@@ -1310,11 +2365,11 @@ class TradingJournalAnalytics
     private function behaviorPenaltySummary(float $percent, string $triggerLabel): string
     {
         if ($percent >= 10) {
-            return 'High revenge or gambling tier reached. The total score is reduced by 10% from the base score. Trigger: ' . $triggerLabel . '.';
+            return 'High revenge or gambling tier reached. The total score is reduced by 10% from the base score. Trigger: '.$triggerLabel.'.';
         }
 
         if ($percent >= 5) {
-            return 'Medium revenge or gambling tier reached. The total score is reduced by 5% from the base score. Trigger: ' . $triggerLabel . '.';
+            return 'Mid revenge or gambling tier reached. The total score is reduced by 5% from the base score. Trigger: '.$triggerLabel.'.';
         }
 
         return 'Clear and low revenge/gambling tiers do not reduce the trading journal score.';
@@ -1336,7 +2391,7 @@ class TradingJournalAnalytics
 
     private function periodLabel(Carbon $start, Carbon $end): string
     {
-        return $start->format('M j') . ' - ' . $end->format('M j, Y');
+        return $start->format('M j').' - '.$end->format('M j, Y');
     }
 
     private function behaviorTrendMetric(
@@ -1364,11 +2419,11 @@ class TradingJournalAnalytics
             default => ['Needs Attention', 'danger', 'Increased'],
         };
 
-        $changeLabel = ($change > 0 ? '+' : '') . number_format($change, 2) . ' pts';
-        $changeAbsLabel = number_format(abs($change), 2) . ' pts';
+        $changeLabel = ($change > 0 ? '+' : '').number_format($change, 2).' pts';
+        $changeAbsLabel = number_format(abs($change), 2).' pts';
         $changePercent = $previousScore > 0 ? round(($change / $previousScore) * 100, 2) : null;
-        $currentTier = $tierPath ? (string) data_get($currentProfile, $tierPath . '.tier_label', 'N/A') : (string) data_get($currentProfile, 'style_label', 'N/A');
-        $previousTier = $tierPath ? (string) data_get($previousProfile, $tierPath . '.tier_label', 'N/A') : (string) data_get($previousProfile, 'style_label', 'N/A');
+        $currentTier = $tierPath ? (string) data_get($currentProfile, $tierPath.'.tier_label', 'N/A') : (string) data_get($currentProfile, 'style_label', 'N/A');
+        $previousTier = $tierPath ? (string) data_get($previousProfile, $tierPath.'.tier_label', 'N/A') : (string) data_get($previousProfile, 'style_label', 'N/A');
 
         return [
             'label' => $label,
@@ -1398,32 +2453,36 @@ class TradingJournalAnalytics
         }
 
         if ($hasCurrent && ! $hasPrevious) {
-            return 'This is the first weekly baseline for ' . strtolower($label) . '.';
+            return 'This is the first weekly baseline for '.strtolower($label).'.';
         }
 
-        return $label . ' ' . strtolower($direction) . ' by ' . $changeLabel . ' compared with the previous week.';
+        return $label.' '.strtolower($direction).' by '.$changeLabel.' compared with the previous week.';
     }
 
-    private function behaviorSummary(string $styleLabel, float $riskScore, array $revenge, array $gambling, array $layering, Collection $styleTags): string
+    private function behaviorSummary(string $styleLabel, float $riskScore, array $revenge, array $gambling, array $layering, Collection $styleTags, array $behaviorRecovery = []): string
     {
         if ($styleLabel === 'No Trading Style Yet') {
             return 'No trading behavior profile is available until journal records are added.';
         }
 
-        if ($riskScore < 20) {
-            return 'The trader currently looks controlled: no strong revenge trading or gambling-style risk markers were detected in the selected records.';
+        $recoverySuffix = (float) data_get($behaviorRecovery, 'total_reduction_percent', 0) > 0
+            ? ' Behavior recovery reduced the raw behavior score by '.number_format((float) data_get($behaviorRecovery, 'total_reduction_percent', 0), 2).'% after completed 8-trade improvement block(s).'
+            : '';
+
+        if ($riskScore < 25) {
+            return 'The trader currently looks controlled: no strong revenge trading or gambling-style risk markers were detected. Planned layers and order count are not treated as gambling or revenge by themselves.'.$recoverySuffix;
         }
 
         $markers = $styleTags->isNotEmpty()
             ? $styleTags->implode(', ')
             : 'mixed risk markers';
 
-        return 'Detected style: ' . $styleLabel . '. Main markers: ' . $markers . '. Revenge '
-            . ($revenge['tier_label'] ?? 'Clear') . ' tier score '
-            . number_format((float) $revenge['score'], 2) . '/100, gambling '
-            . ($gambling['tier_label'] ?? 'Clear') . ' tier score '
-            . number_format((float) $gambling['score'], 2) . '/100, layering score '
-            . number_format((float) $layering['score'], 2) . '/100.';
+        return 'Detected style: '.$styleLabel.'. Main markers: '.$markers.'. Final behaviour score is max(revenge, gambling), not a layer-count penalty. Revenge '
+            .($revenge['tier_label'] ?? 'Clear').' tier score '
+            .number_format((float) $revenge['score'], 2).'/100, gambling '
+            .($gambling['tier_label'] ?? 'Clear').' tier score '
+            .number_format((float) $gambling['score'], 2).'/100. Layering remains a separate review score at '
+            .number_format((float) $layering['score'], 2).'/100.'.$recoverySuffix;
     }
 
     private function layeringChecks(float $score, int $eventCount, int $overlapCount, int $fastLayerCount, int $lotIncreaseCount, int $adverseLayerCount, Collection $events): Collection
@@ -1433,49 +2492,49 @@ class TradingJournalAnalytics
         return collect([
             [
                 'name' => 'Same-direction Layering',
-                'value' => $eventCount . ' event(s)',
+                'value' => $eventCount.' event(s)',
                 'status' => $eventCount > 0 ? 'Detected' : 'Clear',
                 'tone' => $eventCount > 0 ? 'warning' : 'success',
                 'description' => 'Looks for multiple same-pair, same-direction orders opened close together or while exposure overlaps.',
             ],
             [
                 'name' => 'Overlapping Exposure',
-                'value' => $overlapCount . ' overlap(s)',
+                'value' => $overlapCount.' overlap(s)',
                 'status' => $overlapCount > 0 ? 'Detected' : 'Clear',
                 'tone' => $overlapCount > 0 ? 'warning' : 'success',
                 'description' => 'Flags when an additional same-direction trade is opened before the earlier trade is closed.',
             ],
             [
                 'name' => 'Fast Layer Additions',
-                'value' => $fastLayerCount . ' fast layer(s)',
+                'value' => $fastLayerCount.' fast layer(s)',
                 'status' => $fastLayerCount > 0 ? 'Detected' : 'Clear',
                 'tone' => $fastLayerCount > 0 ? 'warning' : 'success',
                 'description' => 'Adds weight when the next same-direction order is opened within 60 minutes, especially within 15 minutes.',
             ],
             [
                 'name' => 'Lot Increase On Layer',
-                'value' => $lotIncreaseCount . ' lot increase event(s)',
+                'value' => $lotIncreaseCount.' lot increase event(s)',
                 'status' => $lotIncreaseCount > 0 ? 'Detected' : 'Clear',
                 'tone' => $lotIncreaseCount > 0 ? 'danger' : 'success',
                 'description' => 'Flags cases where the added layer is 50% larger or more than the previous layer.',
             ],
             [
                 'name' => 'Adverse Price Layering',
-                'value' => $adverseLayerCount . ' adverse layer(s)',
+                'value' => $adverseLayerCount.' adverse layer(s)',
                 'status' => $adverseLayerCount > 0 ? 'Detected' : 'Clear',
                 'tone' => $adverseLayerCount > 0 ? 'danger' : 'success',
                 'description' => 'For buys, this means adding lower; for sells, adding higher. This can indicate averaging into a losing move.',
             ],
             [
                 'name' => 'Maximum Active Layers',
-                'value' => $maxActiveLayers . ' active layer(s)',
+                'value' => $maxActiveLayers.' active layer(s)',
                 'status' => $maxActiveLayers >= 3 ? 'High' : ($maxActiveLayers >= 2 ? 'Watch' : 'Clear'),
                 'tone' => $maxActiveLayers >= 3 ? 'danger' : ($maxActiveLayers >= 2 ? 'warning' : 'success'),
                 'description' => 'Shows the largest number of same-pair, same-direction trades active at the same time.',
             ],
             [
                 'name' => 'Overall Layering Score',
-                'value' => number_format($score, 2) . '/100',
+                'value' => number_format($score, 2).'/100',
                 'status' => $score >= 70 ? 'High' : ($score >= 40 ? 'Watch' : ($events->isNotEmpty() ? 'Mild' : 'Clear')),
                 'tone' => $score >= 70 ? 'danger' : ($score >= 40 ? 'warning' : ($events->isNotEmpty() ? 'primary' : 'success')),
                 'description' => 'Weighted score from overlap, speed, lot increase, adverse price layering, and stacked exposure.',
@@ -1488,35 +2547,35 @@ class TradingJournalAnalytics
         return collect([
             [
                 'name' => 'Post-loss Re-entry',
-                'value' => $eventCount . ' event(s)',
+                'value' => $eventCount.' event(s)',
                 'status' => $eventCount > 0 ? 'Detected' : 'Clear',
                 'tone' => $eventCount > 0 ? 'warning' : 'success',
-                'description' => 'Looks for new trades opened within 3 hours after a losing trade.',
+                'description' => 'Looks for new trades opened during the configured cooldown after a losing trade.',
             ],
             [
                 'name' => 'Fast Reaction',
-                'value' => $quickReentryCount . ' fast re-entry event(s)',
+                'value' => $quickReentryCount.' fast re-entry event(s)',
                 'status' => $quickReentryCount > 0 ? 'Detected' : 'Clear',
                 'tone' => $quickReentryCount > 0 ? 'warning' : 'success',
-                'description' => 'Flags re-entries within 60 minutes after a losing trade, with stronger weight inside 15 minutes.',
+                'description' => 'Flags fast post-loss re-entries, with strongest weight when opened within 5 minutes.',
             ],
             [
                 'name' => 'Lot Increase After Loss',
-                'value' => $lotIncreaseCount . ' lot increase event(s)',
+                'value' => $lotIncreaseCount.' lot increase event(s)',
                 'status' => $lotIncreaseCount > 0 ? 'Detected' : 'Clear',
                 'tone' => $lotIncreaseCount > 0 ? 'danger' : 'success',
                 'description' => 'Flags cases where the next trade increases lot size by 50% or more after a loss.',
             ],
             [
                 'name' => 'Loss Streak Reaction',
-                'value' => $lossStreakReactionCount . ' streak reaction(s)',
+                'value' => $lossStreakReactionCount.' streak reaction(s)',
                 'status' => $lossStreakReactionCount > 0 ? 'Detected' : 'Clear',
                 'tone' => $lossStreakReactionCount > 0 ? 'danger' : 'success',
                 'description' => 'Flags reactions after two or more consecutive losses.',
             ],
             [
                 'name' => 'Overall Revenge Score',
-                'value' => number_format($score, 2) . '/100',
+                'value' => number_format($score, 2).'/100',
                 'status' => $score >= 70 ? 'High' : ($score >= 40 ? 'Watch' : ($events->isNotEmpty() ? 'Mild' : 'Clear')),
                 'tone' => $score >= 70 ? 'danger' : ($score >= 40 ? 'warning' : ($events->isNotEmpty() ? 'primary' : 'success')),
                 'description' => 'Weighted score from fast re-entry, lot increase, same-pair/direction flip, and loss-streak reactions.',
@@ -1673,11 +2732,11 @@ class TradingJournalAnalytics
                         }
 
                         $level = $deviationRatio >= self::LOT_AVERAGE_DEVIATION_HIGH_RATIO ? 'high' : 'medium';
-                        $evidence = 'Lot size ' . number_format($lotSize, 4) . ' is '
-                            . number_format($averageRatio, 2) . 'x the account average lot ('
-                            . number_format($averageLot, 4) . ') and '
-                            . number_format($medianRatio, 2) . 'x the median lot ('
-                            . number_format($medianLot, 4) . ').';
+                        $evidence = 'Lot size '.number_format($lotSize, 4).' is '
+                            .number_format($averageRatio, 2).'x the account average lot ('
+                            .number_format($averageLot, 4).') and '
+                            .number_format($medianRatio, 2).'x the median lot ('
+                            .number_format($medianLot, 4).').';
 
                         return [
                             'trade_key' => $trade['key'],
@@ -1749,9 +2808,9 @@ class TradingJournalAnalytics
                         }
 
                         $level = $durationRatio <= self::DURATION_DEVIATION_HIGH_RATIO ? 'high' : 'medium';
-                        $evidence = 'Held for ' . $this->formatMinutes($holdMinutes)
-                            . ' versus account median ' . $this->formatMinutes($medianMinutes)
-                            . ' and average ' . $this->formatMinutes($averageMinutes) . '.';
+                        $evidence = 'Held for '.$this->formatMinutes($holdMinutes)
+                            .' versus account median '.$this->formatMinutes($medianMinutes)
+                            .' and average '.$this->formatMinutes($averageMinutes).'.';
 
                         return [
                             'trade_key' => $trade['key'],
@@ -1794,7 +2853,7 @@ class TradingJournalAnalytics
 
         $timedTrades = $normalizedTrades
             ->filter(fn (array $trade): bool => ($trade['opened_at'] ?? null) instanceof Carbon)
-            ->sortBy(fn (array $trade): string => $trade['opened_at']->format('Y-m-d H:i:s') . ':' . $trade['key'])
+            ->sortBy(fn (array $trade): string => $trade['opened_at']->format('Y-m-d H:i:s').':'.$trade['key'])
             ->values();
 
         return $timedTrades
@@ -1823,10 +2882,10 @@ class TradingJournalAnalytics
                     default => 'low',
                 };
 
-                $evidence = $activeCount . ' same-pair, same-direction trade(s) were active with '
-                    . number_format($activeLot, 4) . ' total lot(s)'
-                    . ($activeLotRatio !== null ? ', about ' . number_format($activeLotRatio, 2) . 'x the account average lot' : '')
-                    . '.';
+                $evidence = $activeCount.' same-pair, same-direction trade(s) were active with '
+                    .number_format($activeLot, 4).' total lot(s)'
+                    .($activeLotRatio !== null ? ', about '.number_format($activeLotRatio, 2).'x the account average lot' : '')
+                    .'.';
 
                 return [
                     'trade_key' => $trade['key'],
@@ -1861,7 +2920,7 @@ class TradingJournalAnalytics
 
         $timedTrades = $normalizedTrades
             ->filter(fn (array $trade): bool => ($trade['opened_at'] ?? null) instanceof Carbon && strtoupper((string) ($trade['pair'] ?? '')) === 'XAUUSD')
-            ->sortBy(fn (array $trade): string => $trade['opened_at']->format('Y-m-d H:i:s') . ':' . $trade['key'])
+            ->sortBy(fn (array $trade): string => $trade['opened_at']->format('Y-m-d H:i:s').':'.$trade['key'])
             ->values();
 
         return $timedTrades
@@ -1893,11 +2952,11 @@ class TradingJournalAnalytics
                     return null;
                 }
 
-                $evidence = 'XAUUSD active exposure of ' . number_format($activeLot, 4)
-                    . ' lot(s) at price ' . number_format($referencePrice, 2)
-                    . ' needs about ' . number_format($requiredMargin, 2)
-                    . 'u margin at 1:' . number_format(self::XAUUSD_LEVERAGE, 0)
-                    . ', equal to ' . number_format($marginPercent, 2) . '% of capital.';
+                $evidence = 'XAUUSD active exposure of '.number_format($activeLot, 4)
+                    .' lot(s) at price '.number_format($referencePrice, 2)
+                    .' needs about '.number_format($requiredMargin, 2)
+                    .'u margin at 1:'.number_format(self::XAUUSD_LEVERAGE, 0)
+                    .', equal to '.number_format($marginPercent, 2).'% of capital.';
 
                 return [
                     'trade_key' => $trade['key'],
@@ -1973,8 +3032,7 @@ class TradingJournalAnalytics
         Collection $durationDeviationEvents,
         Collection $layeringExposureEvents,
         Collection $marginPressureEvents
-    ): Collection
-    {
+    ): Collection {
         $events = collect();
 
         $pushEvent = function (array $trade, string $reason, string $evidence, array $attributes = []) use (&$events): void {
@@ -2047,7 +3105,7 @@ class TradingJournalAnalytics
                 $pushEvent(
                     $trade,
                     'Oversized loss',
-                    'Loss was ' . number_format((float) ($loss['loss_amount'] ?? 0), 2) . 'u, about ' . number_format((float) ($loss['loss_percent'] ?? 0), 2) . '% of capital.',
+                    'Loss was '.number_format((float) ($loss['loss_amount'] ?? 0), 2).'u, about '.number_format((float) ($loss['loss_percent'] ?? 0), 2).'% of capital.',
                     [
                         'loss_percent' => (float) ($loss['loss_percent'] ?? 0),
                         'score' => 18,
@@ -2172,12 +3230,12 @@ class TradingJournalAnalytics
 
             if ($contextualLotEscalation) {
                 $baselineEvidence = $baselineLot
-                    ? ' Recent baseline is about ' . number_format($baselineLot, 4) . ' lots.'
+                    ? ' Recent baseline is about '.number_format($baselineLot, 4).' lots.'
                     : '';
                 $pushEvent(
                     $trade,
                     $lotSize >= ($previousLot * 2) ? 'Lot-size spike' : 'Lot-size increase',
-                    'Lot increased from ' . number_format((float) $previousLot, 4) . ' to ' . number_format($lotSize, 4) . ' lots.' . $baselineEvidence,
+                    'Lot increased from '.number_format((float) $previousLot, 4).' to '.number_format($lotSize, 4).' lots.'.$baselineEvidence,
                     [
                         'previous_lot' => $previousLot,
                         'baseline_lot' => $baselineLot,
@@ -2193,7 +3251,7 @@ class TradingJournalAnalytics
                 $pushEvent(
                     $trade,
                     'Rapid-fire entry',
-                    'Opened ' . $this->formatMinutes($delayMinutes) . ' after the previous trade.',
+                    'Opened '.$this->formatMinutes($delayMinutes).' after the previous trade.',
                     [
                         'rapid_delay_minutes' => $delayMinutes,
                         'previous_lot' => $previousLot,
@@ -2211,7 +3269,7 @@ class TradingJournalAnalytics
                 $pushEvent(
                     $trade,
                     'Ultra-short hold',
-                    'Trade was held for ' . $this->formatMinutes($holdMinutes) . '.',
+                    'Trade was held for '.$this->formatMinutes($holdMinutes).'.',
                     [
                         'hold_minutes' => $holdMinutes,
                         'score' => 8,
@@ -2240,12 +3298,12 @@ class TradingJournalAnalytics
 
             $normalizedTrades
                 ->filter(fn (array $trade): bool => ($trade['opened_at'] ?? null) instanceof Carbon && $trade['opened_at']->toDateString() === $day)
-                ->sortBy(fn (array $trade): string => $trade['opened_at']->format('Y-m-d H:i:s') . ':' . $trade['key'])
+                ->sortBy(fn (array $trade): string => $trade['opened_at']->format('Y-m-d H:i:s').':'.$trade['key'])
                 ->each(function (array $trade) use ($pushEvent, $dayTradeCount, $day): void {
                     $pushEvent(
                         $trade,
                         'Overtrading burst',
-                        $dayTradeCount . ' trades were opened on ' . $day . '.',
+                        $dayTradeCount.' trades were opened on '.$day.'.',
                         [
                             'day_trade_count' => $dayTradeCount,
                             'score' => 9,
@@ -2279,7 +3337,14 @@ class TradingJournalAnalytics
 
     private function behaviorTier(int $rank): array
     {
-        return match (max(0, min(3, $rank))) {
+        return match (max(0, min(4, $rank))) {
+            4 => [
+                'tier' => 'critical',
+                'tier_rank' => 4,
+                'tier_label' => 'Critical',
+                'tier_short' => 'C',
+                'tier_tone' => 'danger',
+            ],
             3 => [
                 'tier' => 'high',
                 'tier_rank' => 3,
@@ -2288,9 +3353,9 @@ class TradingJournalAnalytics
                 'tier_tone' => 'danger',
             ],
             2 => [
-                'tier' => 'medium',
+                'tier' => 'mid',
                 'tier_rank' => 2,
-                'tier_label' => 'Medium',
+                'tier_label' => 'Mid',
                 'tier_short' => 'M',
                 'tier_tone' => 'warning',
             ],
@@ -2314,7 +3379,7 @@ class TradingJournalAnalytics
     private function behaviorTierStatus(string $behavior, array $tier): string
     {
         return ((int) ($tier['tier_rank'] ?? 0)) > 0
-            ? ($tier['tier_label'] ?? 'Low') . ' ' . $behavior . ' Tier'
+            ? ($tier['tier_label'] ?? 'Low').' '.$behavior.' Tier'
             : 'Clear';
     }
 
@@ -2568,10 +3633,10 @@ class TradingJournalAnalytics
         $id = (string) ($trade['id'] ?? 'N/A');
 
         if ($source === 'journal') {
-            return '#' . $id;
+            return '#'.$id;
         }
 
-        return $source . ' #' . $id;
+        return $source.' #'.$id;
     }
 
     private function bestDayGrade(float $scorePercent, float $totalGeneratedProfit): string
@@ -2642,11 +3707,11 @@ class TradingJournalAnalytics
         }
 
         if ($score >= 85) {
-            return 'Strong consistency: most trades stay around the main lot size of ' . number_format($anchorLot, 4) . ' lots, with ' . number_format($nearAnchorShare, 2) . '% near that anchor.';
+            return 'Strong consistency: most trades stay around the main lot size of '.number_format($anchorLot, 4).' lots, with '.number_format($nearAnchorShare, 2).'% near that anchor.';
         }
 
         if ($score >= 70) {
-            return 'Good consistency: the trader has a clear main position size, with ' . number_format($anchorShare, 2) . '% exact anchor usage and some controlled variation.';
+            return 'Good consistency: the trader has a clear main position size, with '.number_format($anchorShare, 2).'% exact anchor usage and some controlled variation.';
         }
 
         if ($score >= 55) {
@@ -2680,12 +3745,15 @@ class TradingJournalAnalytics
 
     private function tradeClosedAt($trade): ?Carbon
     {
-        return $this->parseDate(
-            $this->value($trade, 'closed_at')
+        return $this->parseDate($this->tradeClosedAtValue($trade));
+    }
+
+    private function tradeClosedAtValue($trade)
+    {
+        return $this->value($trade, 'closed_at')
             ?? $this->value($trade, 'close_date')
             ?? $this->value($trade, 'trade_date')
-            ?? $this->value($trade, 'created_at')
-        );
+            ?? $this->value($trade, 'created_at');
     }
 
     private function parseDate($value): ?Carbon
@@ -2703,6 +3771,23 @@ class TradingJournalAnalytics
         } catch (\Throwable $exception) {
             return null;
         }
+    }
+
+    private function tradeFieldExists($trade, string $key): bool
+    {
+        if (is_array($trade)) {
+            return array_key_exists($key, $trade);
+        }
+
+        if (is_object($trade)) {
+            if (method_exists($trade, 'getAttributes') && array_key_exists($key, $trade->getAttributes())) {
+                return true;
+            }
+
+            return property_exists($trade, $key) || isset($trade->{$key});
+        }
+
+        return false;
     }
 
     private function value($trade, string $key, $default = null)

@@ -1,0 +1,636 @@
+{
+  "theme": {
+    "id": "CW-085",
+    "code": "CW-085",
+    "title": {
+      "en": "Containing Greed Through Planned Targets and Position Risk",
+      "zh": "通过计划目标与仓位风险约束贪婪"
+    },
+    "shortTitle": {
+      "en": "greed",
+      "zh": "通过计划目标与仓位风险约束贪婪"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates containing greed through planned targets and position risk using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示通过计划目标与仓位风险约束贪婪。"
+    },
+    "categoryId": "trading_psychology",
+    "categoryName": {
+      "en": "Trading Psychology and Discipline",
+      "zh": "交易心理与纪律"
+    },
+    "difficulty": "advanced",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind containing greed through planned targets and position risk.",
+        "Apply containing greed through planned targets and position risk to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释通过计划目标与仓位风险约束贪婪背后的核心决策规则。",
+        "将通过计划目标与仓位风险约束贪婪应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "greed",
+      "target",
+      "position risk",
+      "XAUUSD",
+      "Trading Psychology and Discipline"
+    ],
+    "searchTokens": [
+      "cw-085",
+      "CW-085",
+      "trading_psychology",
+      "trading psychology and discipline",
+      "交易心理与纪律",
+      "containing",
+      "greed",
+      "through",
+      "planned",
+      "targets",
+      "and",
+      "position",
+      "risk",
+      "通过计划目标与仓位风险约束贪婪",
+      "target",
+      "xauusd",
+      "trading",
+      "psychology",
+      "discipline"
+    ],
+    "difficultyOrder": 3,
+    "estimatedMinutes": 90,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 85,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "88a8dec96ea9070128e55bb1dcafe67f82fd8a59c29021eb28fd11ffc188b2c7"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-085",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for greed",
+        "zh": "通过计划目标与仓位风险约束贪婪的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which observation provides the strongest objective basis for containing greed through planned targets and position risk?",
+        "zh": "哪项观察为通过计划目标与仓位风险约束贪婪提供最强的客观依据？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing containing greed through planned targets and position risk.",
+            "zh": "评估通过计划目标与仓位风险约束贪婪时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "7919618d9e95af6913da3b47e3e35d157dc1484891bedf1f9941d0cc33ae2b4f"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-085",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying greed Under Uncertainty",
+        "zh": "在不确定性下应用通过计划目标与仓位风险约束贪婪"
+      },
+      "prompt": {
+        "en": "A previous example of containing greed through planned targets and position risk was profitable, but current evidence is incomplete. What is the sound conclusion?",
+        "zh": "之前的通过计划目标与仓位风险约束贪婪案例曾盈利，但当前证据不完整。合理结论是什么？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "f466d6d1abf82d8ea1c5edf30ac8296019dab3339ecdff8c89e77f28b0fc4d85"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-085",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "XAUUSD Chart Interpretation for greed",
+        "zh": "XAUUSD图表中的通过计划目标与仓位风险约束贪婪解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational XAUUSD H1 chart. Which labelled zone is the strongest decision area for evaluating containing greed through planned targets and position risk while keeping invalidation visible?",
+        "zh": "研究合成教学用XAUUSD H1图表。哪个标记区域最适合评估通过计划目标与仓位风险约束贪婪，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "XAUUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 2321.02,
+            "high": 2322.98,
+            "low": 2319.26,
+            "close": 2321.1
+          },
+          {
+            "timeIndex": 1,
+            "open": 2321.1,
+            "high": 2323.69,
+            "low": 2318.96,
+            "close": 2322.65
+          },
+          {
+            "timeIndex": 2,
+            "open": 2322.65,
+            "high": 2326.45,
+            "low": 2320.81,
+            "close": 2324.43
+          },
+          {
+            "timeIndex": 3,
+            "open": 2324.43,
+            "high": 2326.96,
+            "low": 2323.4,
+            "close": 2324.81
+          },
+          {
+            "timeIndex": 4,
+            "open": 2324.81,
+            "high": 2326.15,
+            "low": 2321.41,
+            "close": 2323.11
+          },
+          {
+            "timeIndex": 5,
+            "open": 2323.11,
+            "high": 2324.75,
+            "low": 2317.94,
+            "close": 2320.07
+          },
+          {
+            "timeIndex": 6,
+            "open": 2320.07,
+            "high": 2322.3,
+            "low": 2315.16,
+            "close": 2317.05
+          },
+          {
+            "timeIndex": 7,
+            "open": 2317.05,
+            "high": 2318.85,
+            "low": 2313.71,
+            "close": 2314.81
+          },
+          {
+            "timeIndex": 8,
+            "open": 2314.81,
+            "high": 2315.96,
+            "low": 2311.66,
+            "close": 2313.3
+          },
+          {
+            "timeIndex": 9,
+            "open": 2313.3,
+            "high": 2315.38,
+            "low": 2310.22,
+            "close": 2312.34
+          },
+          {
+            "timeIndex": 10,
+            "open": 2312.34,
+            "high": 2314.45,
+            "low": 2310.25,
+            "close": 2312.19
+          },
+          {
+            "timeIndex": 11,
+            "open": 2312.19,
+            "high": 2314.37,
+            "low": 2311.01,
+            "close": 2313.14
+          },
+          {
+            "timeIndex": 12,
+            "open": 2313.14,
+            "high": 2316.44,
+            "low": 2311.57,
+            "close": 2314.71
+          },
+          {
+            "timeIndex": 13,
+            "open": 2314.71,
+            "high": 2317.72,
+            "low": 2312.6,
+            "close": 2315.5
+          },
+          {
+            "timeIndex": 14,
+            "open": 2315.5,
+            "high": 2317.21,
+            "low": 2312.33,
+            "close": 2314.3
+          },
+          {
+            "timeIndex": 15,
+            "open": 2314.3,
+            "high": 2315.56,
+            "low": 2309.98,
+            "close": 2311.23
+          },
+          {
+            "timeIndex": 16,
+            "open": 2311.23,
+            "high": 2313.35,
+            "low": 2306.13,
+            "close": 2307.64
+          },
+          {
+            "timeIndex": 17,
+            "open": 2307.64,
+            "high": 2309.7,
+            "low": 2302.91,
+            "close": 2305
+          },
+          {
+            "timeIndex": 18,
+            "open": 2305,
+            "high": 2306.12,
+            "low": 2301.74,
+            "close": 2303.75
+          },
+          {
+            "timeIndex": 19,
+            "open": 2303.75,
+            "high": 2305.57,
+            "low": 2302.1,
+            "close": 2303.42
+          },
+          {
+            "timeIndex": 20,
+            "open": 2303.42,
+            "high": 2305.75,
+            "low": 2301.98,
+            "close": 2303.53
+          },
+          {
+            "timeIndex": 21,
+            "open": 2303.53,
+            "high": 2305.7,
+            "low": 2301.47,
+            "close": 2304.08
+          },
+          {
+            "timeIndex": 22,
+            "open": 2304.08,
+            "high": 2306.44,
+            "low": 2302.04,
+            "close": 2305.07
+          },
+          {
+            "timeIndex": 23,
+            "open": 2305.07,
+            "high": 2307.97,
+            "low": 2303.68,
+            "close": 2305.8
+          },
+          {
+            "timeIndex": 24,
+            "open": 2305.8,
+            "high": 2307.8,
+            "low": 2303.74,
+            "close": 2305.12
+          },
+          {
+            "timeIndex": 25,
+            "open": 2305.12,
+            "high": 2306.12,
+            "low": 2300.42,
+            "close": 2302.46
+          },
+          {
+            "timeIndex": 26,
+            "open": 2302.46,
+            "high": 2304.36,
+            "low": 2296.6,
+            "close": 2298.67
+          },
+          {
+            "timeIndex": 27,
+            "open": 2298.67,
+            "high": 2300.88,
+            "low": 2293.99,
+            "close": 2295.45
+          },
+          {
+            "timeIndex": 28,
+            "open": 2295.45,
+            "high": 2296.97,
+            "low": 2292.65,
+            "close": 2293.96
+          },
+          {
+            "timeIndex": 29,
+            "open": 2293.96,
+            "high": 2295.52,
+            "low": 2291.95,
+            "close": 2294.05
+          },
+          {
+            "timeIndex": 30,
+            "open": 2294.05,
+            "high": 2296.96,
+            "low": 2291.96,
+            "close": 2294.76
+          },
+          {
+            "timeIndex": 31,
+            "open": 2294.76,
+            "high": 2297.32,
+            "low": 2293.24,
+            "close": 2295.38
+          },
+          {
+            "timeIndex": 32,
+            "open": 2295.38,
+            "high": 2296.78,
+            "low": 2294.15,
+            "close": 2295.83
+          },
+          {
+            "timeIndex": 33,
+            "open": 2295.83,
+            "high": 2298.03,
+            "low": 2293.86,
+            "close": 2296.06
+          },
+          {
+            "timeIndex": 34,
+            "open": 2296.06,
+            "high": 2298.24,
+            "low": 2293.38,
+            "close": 2295.49
+          },
+          {
+            "timeIndex": 35,
+            "open": 2295.49,
+            "high": 2296.91,
+            "low": 2291.81,
+            "close": 2293.4
+          },
+          {
+            "timeIndex": 36,
+            "open": 2293.4,
+            "high": 2294.97,
+            "low": 2288.76,
+            "close": 2289.92
+          },
+          {
+            "timeIndex": 37,
+            "open": 2289.92,
+            "high": 2292.13,
+            "low": 2284.43,
+            "close": 2286.35
+          },
+          {
+            "timeIndex": 38,
+            "open": 2286.35,
+            "high": 2288.21,
+            "low": 2282.19,
+            "close": 2284.31
+          },
+          {
+            "timeIndex": 39,
+            "open": 2284.31,
+            "high": 2285.41,
+            "low": 2282.66,
+            "close": 2284.34
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 2283.98,
+            "maximumPrice": 2290.25,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 2294.73,
+            "maximumPrice": 2300.99,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 2308.16,
+            "maximumPrice": 2314.42,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 2318.9,
+            "maximumPrice": 2325.17,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "eac0ea4f50020c13f719ffd0c19aac1d37d4ee5de43af97ffd32a71f77dfcdd0"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-085",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: greed",
+        "zh": "独立情境分析：通过计划目标与仓位风险约束贪婪"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of containing greed through planned targets and position risk using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析通过计划目标与仓位风险约束贪婪的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "fe27f55dfb101eebc0c3487b6dc925d9df6dc8f1fd1b653e1ecc021c7f4d8746"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-085",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: greed",
+        "zh": "实践展示：通过计划目标与仓位风险约束贪婪"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate containing greed through planned targets and position risk. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示通过计划目标与仓位风险约束贪婪。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "fd8b4f9fd976a6dde1bf029a2a69c43431971367b52347104dbc65278d6923a9"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title">
+  <title id="title">Economic calendar event impact Diagram</title>
+  <rect width="1600" height="900" rx="0" fill="#F8FAFC"/>
+  <rect x="54" y="44" width="1492" height="772" rx="36" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+  <rect x="160" y="250" width="360" height="220" rx="30" fill="#2563EB" opacity=".15" stroke="#2563EB" stroke-width="5"/>
+  <text x="194" y="318" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#2563EB">Calendar</text>
+  <text x="194" y="378" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="800" fill="#334155">CPI / NFP / FOMC</text>
+  <line x1="545" y1="360" x2="785" y2="360" stroke="#F59E0B" stroke-width="9" stroke-linecap="round"/><polygon points="785,360 765.9474411167423,371 765.9474411167423,349" fill="#F59E0B"/>
+  <rect x="825" y="250" width="300" height="220" rx="30" fill="#F59E0B" opacity=".15" stroke="#F59E0B" stroke-width="5"/>
+  <text x="859" y="318" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#F59E0B">Event</text>
+  <text x="859" y="378" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="800" fill="#334155">High impact</text>
+  <line x1="1148" y1="360" x2="1325" y2="360" stroke="#F59E0B" stroke-width="9" stroke-linecap="round"/><polygon points="1325,360 1305.9474411167423,371 1305.9474411167423,349" fill="#F59E0B"/>
+  <rect x="1180" y="180" width="320" height="310" rx="26" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+  <line x1="1215" y1="430" x2="1465" y2="430" stroke="#E2E8F0" stroke-width="3"/>
+  <line x1="1210" y1="180" x2="1210" y2="356" stroke="#16A34A" stroke-width="7" stroke-linecap="round"/><rect x="1193" y="250" width="34" height="36" rx="5" fill="#16A34A" opacity=".92"/><line x1="1270" y1="192" x2="1270" y2="287" stroke="#DC2626" stroke-width="7" stroke-linecap="round"/><rect x="1253" y="232" width="34" height="18" rx="5" fill="#DC2626" opacity=".92"/><line x1="1320" y1="150" x2="1320" y2="305" stroke="#16A34A" stroke-width="7" stroke-linecap="round"/><rect x="1303" y="190" width="34" height="73" rx="5" fill="#16A34A" opacity=".92"/><line x1="1370" y1="102" x2="1370" y2="432" stroke="#DC2626" stroke-width="7" stroke-linecap="round"/><rect x="1353" y="172" width="34" height="218" rx="5" fill="#DC2626" opacity=".92"/><line x1="1440" y1="190" x2="1440" y2="478" stroke="#16A34A" stroke-width="7" stroke-linecap="round"/><rect x="1423" y="230" width="34" height="178" rx="5" fill="#16A34A" opacity=".92"/>
+  <polyline points="1210,250 1270,245 1320,190 1370,390 1440,230" fill="none" stroke="#334155" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="1218" y="235" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#334155">Volatility</text>
+  <rect x="84" y="842" width="290" height="18" rx="9" fill="#2563EB" opacity=".22"/>
+  <rect x="412" y="842" width="404" height="18" rx="9" fill="#10B981" opacity=".20"/>
+  <rect x="852" y="842" width="664" height="18" rx="9" fill="#334155" opacity=".10"/>
+</svg>

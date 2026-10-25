@@ -1,199 +1,27 @@
 @extends('frontend.main_master')
+@section('title', 'Journal | HC Gaming')
+@section('meta_description', 'Explore the latest articles and stories from HC Gaming.')
 @section('main')
-
-
-@section('title')
-Blog | HC_Gaming Studio Websites
-
-@endsection
-<main>
-
-<!-- breadcrumb-area -->
-<section class="breadcrumb__wrap">
-<div class="container custom-container">
-    <div class="row justify-content-center">
-        <div class="col-xl-6 col-lg-8 col-md-10">
-            <div class="breadcrumb__wrap__content">
-                <h2 class="title">Blogs</h2>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Blogs</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
+<div class="es-page">
+    <header class="es-page-hero"><div class="es-shell"><nav class="es-breadcrumb" aria-label="Breadcrumb"><a href="{{ route('store.home') }}">Home</a><span>/</span><span>Journal</span></nav><span class="es-eyebrow">The HC Gaming journal</span><h1 class="es-title">Stories worth<br>exploring.</h1><p class="es-lead">Ideas, updates, and perspectives from HC Gaming.</p></div></header>
+    <div class="es-shell es-blog-controls">
+        <form class="es-blog-search" action="{{ request()->routeIs('category.blog') ? route('category.blog', $categoryId) : route('home.blog') }}" method="GET" role="search">
+            @if($categoryId && !request()->routeIs('category.blog'))<input type="hidden" name="category" value="{{ $categoryId }}">@endif
+            <label class="visually-hidden" for="blog-search">Search articles</label><input id="blog-search" name="q" type="search" value="{{ $search }}" maxlength="80" placeholder="Search articles"><button type="submit" aria-label="Search articles"><i class="fas fa-search" aria-hidden="true"></i></button>
+            @if($search !== '')<a class="es-clear" href="{{ $categoryId ? route('category.blog', $categoryId) : route('home.blog') }}">Clear</a>@endif
+        </form>
+        <nav class="es-category-nav" aria-label="Article categories"><a href="{{ route('home.blog', $search !== '' ? ['q' => $search] : []) }}" @if(!$categoryId) aria-current="page" @endif>All articles</a>@foreach($categories as $category)<a href="{{ route('category.blog', ['id' => $category->id] + ($search !== '' ? ['q' => $search] : [])) }}" @if($categoryId === $category->id) aria-current="page" @endif>{{ $category->blog_category }}</a>@endforeach</nav>
     </div>
+    <section class="es-section" style="padding-top:40px"><div class="es-shell">
+        @php($archiveItems = $featured && $search === '' ? $allblogs->getCollection()->slice(1) : $allblogs->getCollection())
+        @if($featured && $search === '')
+        <article class="es-featured-blog"><a href="{{ route('blog.details', $featured->id) }}" aria-label="Read {{ $featured->blog_title }}">@if($featured->blog_image && is_file(public_path($featured->blog_image)))<img src="{{ asset($featured->blog_image) }}" alt="" width="900" height="600">@else<span class="es-article-fallback" aria-hidden="true">HC / Journal</span>@endif</a><div class="es-featured-copy"><span class="es-eyebrow">Latest story</span><div class="es-article-meta">@if($featured->category && !$featured->category->trashed() && !in_array($featured->category->blog_category, ['?', '??', ''])){{ $featured->category->blog_category }} · @endif<time datetime="{{ $featured->created_at?->toDateString() }}">{{ $featured->created_at?->format('d M Y') }}</time></div><h2><a href="{{ route('blog.details', $featured->id) }}" style="color:inherit">{{ $featured->blog_title }}</a></h2><p>{{ \Illuminate\Support\Str::limit(strip_tags($featured->blog_description ?? ''), 230) }}</p><a class="es-text-link" href="{{ route('blog.details', $featured->id) }}">Read article <span aria-hidden="true">↗</span></a></div></article>
+        @endif
+        @if($archiveItems->isNotEmpty() || $search !== '' || $categoryId)<div class="es-archive-head"><h2>{{ $search !== '' ? 'Search results' : ($categoryId ? 'Category articles' : 'All articles') }}</h2><span>{{ $allblogs->total() }} {{ \Illuminate\Support\Str::plural('article', $allblogs->total()) }}</span></div>@endif
+        @if($archiveItems->isNotEmpty())<div class="es-article-grid @if($archiveItems->count() < 3) es-article-grid-simple @endif">@foreach($archiveItems as $item)@include('frontend.partials.article_card')@endforeach</div><div class="es-pagination">{{ $allblogs->links('pagination::bootstrap-5') }}</div>
+        @elseif($featured && $search === '')
+        <div class="es-pagination">{{ $allblogs->links('pagination::bootstrap-5') }}</div>
+        @else<div class="es-empty"><h2>No articles found.</h2><p>Try another search or browse all articles.</p><a class="es-button" href="{{ route('home.blog') }}">Browse all articles</a></div>@endif
+    </div></section>
 </div>
-<div class="breadcrumb__wrap__icon">
-    <ul>
-        <li><img src="{{ asset('frontend/assets/img/icons/breadcrumb_icon01.png') }}" alt=""></li>
-        <li><img src="{{ asset('frontend/assets/img/icons/breadcrumb_icon02.png') }}" alt=""></li>
-        <li><img src="{{ asset('frontend/assets/img/icons/breadcrumb_icon03.png') }}" alt=""></li>
-        <li><img src="{{ asset('frontend/assets/img/icons/breadcrumb_icon04.png') }}" alt=""></li>
-        <li><img src="{{ asset('frontend/assets/img/icons/breadcrumb_icon05.png') }}" alt=""></li>
-        <li><img src="{{ asset('frontend/assets/img/icons/breadcrumb_icon06.png') }}" alt=""></li>
-    </ul>
-</div>
-</section>
-<!-- breadcrumb-area-end -->
-
-
-<!-- blog-area -->
-<section class="standard__blog">
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8">
-
-@foreach($allblogs as $item)
-
-            <div class="standard__blog__post">
-                <div class="standard__blog__thumb">
-                    <a href="{{ route('blog.details',$item->id) }}"><img src="{{ asset($item->blog_image) }}" alt=""></a>
-                    <a href="{{ route('blog.details',$item->id) }}" class="blog__link"><i class="far fa-long-arrow-right"></i></a>
-                </div>
-                <div class="standard__blog__content">
-                    <div class="blog__post__avatar">
-                        <div class="thumb"><img src="{{ asset($item->blog_image) }}" alt=""></div>
-                        <span class="post__by">By : <a href="{{ route('blog.details',$item->id) }}">Halina Spond</a></span>
-                    </div>
-                    <h2 class="title"><a href="{{ route('blog.details',$item->id) }}">{{ $item->blog_title }}</a></h2>
-                    <p>{!!  Str::limit($item->blog_description,200)!!}</p>
-                    <br>
-                    <p><b>View Count:</b> {{ $item->page_views }}</p>
-                    <ul class="blog__post__meta">
-                        <li><i class="fal fa-calendar-alt"></i> {{ Carbon\Carbon::parse($item->created_at)->diffForHumans() }}</li>
-                    </ul>
-                </div>
-            </div>
-
-            @endforeach
-
-
-    <div class="pagination-wrap">
-{{ $allblogs->links('vendor.pagination.custom') }}
-    </div>
-
-            {{-- <div class="pagination-wrap">
-                {{ $allblogs->links() }}
-
-            </div> --}}
-        </div>
-        <div class="col-lg-4">
-            <aside class="blog__sidebar">
-                <div class="widget">
-                    <form action="#" class="search-form">
-                        <input type="text" placeholder="Search">
-                        <button type="submit"><i class="fal fa-search"></i></button>
-                    </form>
-                </div>
-
-
-                <div class="widget">
-                    <h4 class="widget-title">Recent Blog</h4>
-                    <ul class="rc__post">
-
-
-
-                        @foreach($allblogs as $all )
-                        <li class="rc__post__item">
-                            <div class="rc__post__thumb">
-                                <a href="{{ route('blog.details',$item->id) }}"><img src="{{ asset($all->blog_image) }}" alt=""></a>
-                            </div>
-                            <div class="rc__post__content">
-                                <h5 class="title"><a href="{{ route('blog.details',$item->id) }}">{{ $all->blog_title }}</a></h5>
-                                <span class="post-date"><i class="fal fa-calendar-alt"></i> {{ Carbon\Carbon::parse($all->created_at)->diffForHumans() }}</span>
-                            </div>
-                        </li>
-@endforeach
-                    </ul>
-                </div>
-                <div class="widget">
-                    <h4 class="widget-title">Categories</h4>
-                    <ul class="sidebar__cat">
-                        @foreach($categories as $cat)
-                        <li class="sidebar__cat__item"><a href={{ route('category.blog',$cat->id) }}>{{ $cat->blog_category  }}</a></li>
-                        @endforeach
-                    </ul>
-                </div>
-
-{{--
-                <div class="widget">
-                    <h4 class="widget-title">Recent Comment</h4>
-                    <ul class="sidebar__comment">
-                        <li class="sidebar__comment__item">
-                            <a href="blog-details.html">Rasalina Sponde</a>
-                            <p>There are many variations of passages of lorem ipsum available, but the majority have</p>
-                        </li>
-                        <li class="sidebar__comment__item">
-                            <a href="blog-details.html">Rasalina Sponde</a>
-                            <p>There are many variations of passages of lorem ipsum available, but the majority have</p>
-                        </li>
-                        <li class="sidebar__comment__item">
-                            <a href="blog-details.html">Rasalina Sponde</a>
-                            <p>There are many variations of passages of lorem ipsum available, but the majority have</p>
-                        </li>
-                        <li class="sidebar__comment__item">
-                            <a href="blog-details.html">Rasalina Sponde</a>
-                            <p>There are many variations of passages of lorem ipsum available, but the majority have</p>
-                        </li>
-                    </ul>
-                </div> --}}
-                {{-- <div class="widget">
-                    <h4 class="widget-title">Popular Tags</h4>
-                    <ul class="sidebar__tags">
-                        <li><a href="blog.html">Business</a></li>
-                        <li><a href="blog.html">Design</a></li>
-                        <li><a href="blog.html">apps</a></li>
-                        <li><a href="blog.html">landing page</a></li>
-                        <li><a href="blog.html">data</a></li>
-                        <li><a href="blog.html">website</a></li>
-                        <li><a href="blog.html">book</a></li>
-                        <li><a href="blog.html">Design</a></li>
-                        <li><a href="blog.html">product design</a></li>
-                        <li><a href="blog.html">landing page</a></li>
-                        <li><a href="blog.html">data</a></li>
-                    </ul>
-                </div> --}}
-            </aside>
-        </div>
-    </div>
-</div>
-</section>
-<!-- blog-area-end -->
-
-
-<!-- contact-area -->
-    {{-- <section class="homeContact homeContact__style__two">
-        <div class="container">
-            <div class="homeContact__wrap">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="section__title">
-                            <span class="sub-title">07 - Say hello</span>
-                            <h2 class="title">Any questions? Feel free <br> to contact</h2>
-                        </div>
-                        <div class="homeContact__content">
-                            <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form</p>
-                            <h2 class="mail"><a href="mailto:Info@webmail.com">Info@webmail.com</a></h2>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="homeContact__form">
-                            <form action="#">
-                                <input type="text" placeholder="Enter name*">
-                                <input type="email" placeholder="Enter mail*">
-                                <input type="number" placeholder="Enter number*">
-                                <textarea name="message" placeholder="Enter Massage*"></textarea>
-                                <button type="submit">Send Message</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> --}}
-    <!-- contact-area-end -->
-
-</main>
 @endsection

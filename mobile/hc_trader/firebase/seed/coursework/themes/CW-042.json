@@ -1,0 +1,636 @@
+{
+  "theme": {
+    "id": "CW-042",
+    "code": "CW-042",
+    "title": {
+      "en": "Planning Trend Continuation After Controlled Pullbacks",
+      "zh": "在受控回调后规划趋势延续"
+    },
+    "shortTitle": {
+      "en": "trend continuation",
+      "zh": "在受控回调后规划趋势延续"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates planning trend continuation after controlled pullbacks using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示在受控回调后规划趋势延续。"
+    },
+    "categoryId": "trend_indicators",
+    "categoryName": {
+      "en": "Trend, Momentum and Indicators",
+      "zh": "趋势、动量与指标"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind planning trend continuation after controlled pullbacks.",
+        "Apply planning trend continuation after controlled pullbacks to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释在受控回调后规划趋势延续背后的核心决策规则。",
+        "将在受控回调后规划趋势延续应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "trend continuation",
+      "pullback",
+      "entry",
+      "NAS100",
+      "Trend, Momentum and Indicators"
+    ],
+    "searchTokens": [
+      "cw-042",
+      "CW-042",
+      "trend_indicators",
+      "trend, momentum and indicators",
+      "趋势、动量与指标",
+      "planning",
+      "trend",
+      "continuation",
+      "after",
+      "controlled",
+      "pullbacks",
+      "在受控回调后规划趋势延续",
+      "pullback",
+      "entry",
+      "nas100",
+      "trend,",
+      "momentum",
+      "and",
+      "indicators"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 42,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "6df0f00b04fb9a622f90c7fc1d7434944a381803249c3fe9dca97819d797be35"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-042",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for trend continuation",
+        "zh": "在受控回调后规划趋势延续的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which decision rule is most consistent with disciplined use of planning trend continuation after controlled pullbacks?",
+        "zh": "哪项决策规则最符合有纪律地运用在受控回调后规划趋势延续？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing planning trend continuation after controlled pullbacks.",
+            "zh": "评估在受控回调后规划趋势延续时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "cbd27a2685b564eed2967f5fcbcc496c65a85882df440790515a6020625fd927"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-042",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying trend continuation Under Uncertainty",
+        "zh": "在不确定性下应用在受控回调后规划趋势延续"
+      },
+      "prompt": {
+        "en": "Two signals related to planning trend continuation after controlled pullbacks conflict before entry. Which response best protects decision quality?",
+        "zh": "入场前与在受控回调后规划趋势延续相关的两个信号互相冲突。哪种做法最能保护决策质量？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "b318239275f680d83bbf51093b12fc793f81dd1e5b5b03aa3943ba150975a6cd"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-042",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "NAS100 Chart Interpretation for trend continuation",
+        "zh": "NAS100图表中的在受控回调后规划趋势延续解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational NAS100 H1 chart. Which labelled zone is the strongest decision area for evaluating planning trend continuation after controlled pullbacks while keeping invalidation visible?",
+        "zh": "研究合成教学用NAS100 H1图表。哪个标记区域最适合评估在受控回调后规划趋势延续，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "NAS100",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 19458.2,
+            "high": 19479.2,
+            "low": 19406.9,
+            "close": 19446.4
+          },
+          {
+            "timeIndex": 1,
+            "open": 19446.4,
+            "high": 19484.8,
+            "low": 19395.7,
+            "close": 19426.4
+          },
+          {
+            "timeIndex": 2,
+            "open": 19426.4,
+            "high": 19465.8,
+            "low": 19382.1,
+            "close": 19402.1
+          },
+          {
+            "timeIndex": 3,
+            "open": 19402.1,
+            "high": 19425.3,
+            "low": 19337.7,
+            "close": 19372.6
+          },
+          {
+            "timeIndex": 4,
+            "open": 19372.6,
+            "high": 19404.5,
+            "low": 19306.5,
+            "close": 19346.2
+          },
+          {
+            "timeIndex": 5,
+            "open": 19346.2,
+            "high": 19387.6,
+            "low": 19310.3,
+            "close": 19342.1
+          },
+          {
+            "timeIndex": 6,
+            "open": 19342.1,
+            "high": 19404.9,
+            "low": 19323.4,
+            "close": 19372.9
+          },
+          {
+            "timeIndex": 7,
+            "open": 19372.9,
+            "high": 19450.5,
+            "low": 19338.9,
+            "close": 19427.4
+          },
+          {
+            "timeIndex": 8,
+            "open": 19427.4,
+            "high": 19514.8,
+            "low": 19387.7,
+            "close": 19475.5
+          },
+          {
+            "timeIndex": 9,
+            "open": 19475.5,
+            "high": 19530.2,
+            "low": 19442.7,
+            "close": 19491.7
+          },
+          {
+            "timeIndex": 10,
+            "open": 19491.7,
+            "high": 19512.9,
+            "low": 19457.5,
+            "close": 19474.8
+          },
+          {
+            "timeIndex": 11,
+            "open": 19474.8,
+            "high": 19508.3,
+            "low": 19410.2,
+            "close": 19443.2
+          },
+          {
+            "timeIndex": 12,
+            "open": 19443.2,
+            "high": 19484.5,
+            "low": 19374.8,
+            "close": 19414.5
+          },
+          {
+            "timeIndex": 13,
+            "open": 19414.5,
+            "high": 19444.9,
+            "low": 19359.4,
+            "close": 19393.1
+          },
+          {
+            "timeIndex": 14,
+            "open": 19393.1,
+            "high": 19418.2,
+            "low": 19359.3,
+            "close": 19377.7
+          },
+          {
+            "timeIndex": 15,
+            "open": 19377.7,
+            "high": 19417.8,
+            "low": 19342.5,
+            "close": 19374.5
+          },
+          {
+            "timeIndex": 16,
+            "open": 19374.5,
+            "high": 19433,
+            "low": 19334.8,
+            "close": 19395.6
+          },
+          {
+            "timeIndex": 17,
+            "open": 19395.6,
+            "high": 19461.2,
+            "low": 19360.9,
+            "close": 19442.1
+          },
+          {
+            "timeIndex": 18,
+            "open": 19442.1,
+            "high": 19528.8,
+            "low": 19422.3,
+            "close": 19493.7
+          },
+          {
+            "timeIndex": 19,
+            "open": 19493.7,
+            "high": 19561.4,
+            "low": 19462.8,
+            "close": 19520.4
+          },
+          {
+            "timeIndex": 20,
+            "open": 19520.4,
+            "high": 19549,
+            "low": 19468.1,
+            "close": 19507.7
+          },
+          {
+            "timeIndex": 21,
+            "open": 19507.7,
+            "high": 19534.7,
+            "low": 19432.7,
+            "close": 19468.3
+          },
+          {
+            "timeIndex": 22,
+            "open": 19468.3,
+            "high": 19508.9,
+            "low": 19407.8,
+            "close": 19428.9
+          },
+          {
+            "timeIndex": 23,
+            "open": 19428.9,
+            "high": 19465.1,
+            "low": 19377.2,
+            "close": 19406.9
+          },
+          {
+            "timeIndex": 24,
+            "open": 19406.9,
+            "high": 19424.3,
+            "low": 19362.7,
+            "close": 19402
+          },
+          {
+            "timeIndex": 25,
+            "open": 19402,
+            "high": 19444.4,
+            "low": 19365.6,
+            "close": 19408
+          },
+          {
+            "timeIndex": 26,
+            "open": 19408,
+            "high": 19467,
+            "low": 19385.5,
+            "close": 19426.5
+          },
+          {
+            "timeIndex": 27,
+            "open": 19426.5,
+            "high": 19488.7,
+            "low": 19397.9,
+            "close": 19462.1
+          },
+          {
+            "timeIndex": 28,
+            "open": 19462.1,
+            "high": 19536.7,
+            "low": 19423.1,
+            "close": 19507.8
+          },
+          {
+            "timeIndex": 29,
+            "open": 19507.8,
+            "high": 19581.7,
+            "low": 19470.8,
+            "close": 19540.7
+          },
+          {
+            "timeIndex": 30,
+            "open": 19540.7,
+            "high": 19575.4,
+            "low": 19514.1,
+            "close": 19538
+          },
+          {
+            "timeIndex": 31,
+            "open": 19538,
+            "high": 19557.5,
+            "low": 19472.5,
+            "close": 19499.8
+          },
+          {
+            "timeIndex": 32,
+            "open": 19499.8,
+            "high": 19537.4,
+            "low": 19412.4,
+            "close": 19450.9
+          },
+          {
+            "timeIndex": 33,
+            "open": 19450.9,
+            "high": 19490.8,
+            "low": 19382.5,
+            "close": 19420.2
+          },
+          {
+            "timeIndex": 34,
+            "open": 19420.2,
+            "high": 19444.8,
+            "low": 19393,
+            "close": 19418.2
+          },
+          {
+            "timeIndex": 35,
+            "open": 19418.2,
+            "high": 19466.6,
+            "low": 19392.1,
+            "close": 19435.9
+          },
+          {
+            "timeIndex": 36,
+            "open": 19435.9,
+            "high": 19502.3,
+            "low": 19397.9,
+            "close": 19461
+          },
+          {
+            "timeIndex": 37,
+            "open": 19461,
+            "high": 19523.7,
+            "low": 19422.8,
+            "close": 19490.5
+          },
+          {
+            "timeIndex": 38,
+            "open": 19490.5,
+            "high": 19546.5,
+            "low": 19464,
+            "close": 19525
+          },
+          {
+            "timeIndex": 39,
+            "open": 19525,
+            "high": 19593.4,
+            "low": 19500.2,
+            "close": 19554.8
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 19318,
+            "maximumPrice": 19358.1,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 19386.8,
+            "maximumPrice": 19427,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 19472.9,
+            "maximumPrice": 19513.1,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 19541.8,
+            "maximumPrice": 19581.9,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "a3bd52c373cf7a9202b9972c8e9dd7ceafa63fa935dd71b5876625aa4ae2676b"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-042",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: trend continuation",
+        "zh": "独立情境分析：在受控回调后规划趋势延续"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of planning trend continuation after controlled pullbacks using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析在受控回调后规划趋势延续的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "7cdaf094eb39850ba61eb8d4e0e488e58a9c6fe5dccadb2bcc3c453f1a191a80"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-042",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: trend continuation",
+        "zh": "实践展示：在受控回调后规划趋势延续"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate planning trend continuation after controlled pullbacks. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示在受控回调后规划趋势延续。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "bbada55bb2b7fce03aacab447e2339605344bd36d8eceb15d37c27f880da361a"
+    }
+  ]
+}

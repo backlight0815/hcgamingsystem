@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Trading;
 
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use App\Models\Capital;
-use App\Models\TradingPositionApplication;
 use App\Models\TradingJournal;
 use App\Models\TradingJournalBackup;
+use App\Models\TradingPositionApplication;
 use App\Models\User;
+use App\Services\TraderLevelProfileService;
 use App\Services\TradingJournalAnalytics;
 use App\Services\TradingJournalTimeService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -20,6 +21,16 @@ use Illuminate\Support\Facades\Schema;
 
 class TradingStatisticsController extends Controller
 {
+    private const ACCOUNT_STAGE_PHASE_1 = 'phase1';
+
+    private const ACCOUNT_STAGE_PHASE_2 = 'phase2';
+
+    private const ACCOUNT_STAGE_OVERALL = 'overall';
+
+    private const ACCOUNT_STAGE_FUNDED = 'funded';
+
+    private const MIN_RELIABLE_SCORE_TRADES = 10;
+
     public function index(Request $request)
     {
         $currentUser = Auth::user();
@@ -43,6 +54,7 @@ class TradingStatisticsController extends Controller
         $month = $this->normalizeDateFilter($request->input('month'), 1, 12);
         $year = $this->normalizeDateFilter($request->input('year'), 2000, (int) now()->year);
         $selectedTraderId = $this->selectedTraderIdForStatistics($request, $currentUser, $visibleTraderIds, $canViewAll, $canViewGlobal);
+        $selectedAccountStage = $this->normalizeAccountStageFilter($request->input('account_stage'));
 
         $currentTrades = collect();
         $backupTrades = collect();
@@ -54,7 +66,8 @@ class TradingStatisticsController extends Controller
                 'Current Journal',
                 $selectedTraderId,
                 $month,
-                $year
+                $year,
+                $selectedAccountStage
             );
         }
 
@@ -65,17 +78,18 @@ class TradingStatisticsController extends Controller
                 'Backup Journal',
                 $selectedTraderId,
                 $month,
-                $year
+                $year,
+                $selectedAccountStage
             );
         }
 
-        $trades = $currentTrades
-            ->merge($backupTrades)
+        $trades = collect($currentTrades->all())
+            ->merge($backupTrades->all())
             ->sortBy(fn ($trade) => $trade['closed_at'] ?? $trade['opened_at'] ?? $trade['created_at'])
             ->values();
 
         $analytics = new TradingJournalAnalytics();
-        $capitalSummary = $this->capitalSummary($selectedTraderId, $month, $year);
+        $capitalSummary = $this->capitalSummary($selectedTraderId, $month, $year, $selectedAccountStage);
         $summary = $this->buildSummary($trades, $capitalSummary, $analytics);
         $dailyStats = $this->buildDailyStats($trades);
         $monthlyStats = $this->buildMonthlyStats($trades);
@@ -86,13 +100,13 @@ class TradingStatisticsController extends Controller
         $weekdayStats = $this->buildWeekdayStats($trades);
         $sessionStats = $this->buildSessionStats($trades, $selectedTimeView, $selectedTimeViewOffset);
         $behavioralProfile = $this->buildBehavioralProfile($summary, $directionStats);
-        $levelProfile = $this->buildLevelProfile($summary);
         $hedgingProfile = $analytics->hedgingProfile($trades);
         $positionProfile = $analytics->positionConsistency($trades);
         $durationProfile = $analytics->durationStats($trades);
         $traderStyleProfile = $analytics->behavioralRiskProfile($trades, (float) $capitalSummary['total_deposits']);
         $behaviorWeeklyProfile = $analytics->behaviorWeeklyComparison($trades, (float) $capitalSummary['total_deposits']);
-        $scoreEvaluationProfile = $this->buildScoreEvaluationProfile($summary, $traderStyleProfile);
+        $scoreEvaluationProfile = $this->buildScoreEvaluationProfile($summary, $traderStyleProfile, $positionProfile);
+        $levelProfile = $this->buildLevelProfile($summary, $scoreEvaluationProfile, $traderStyleProfile, $positionProfile);
         $performanceProfile = $this->buildPerformanceProfile($summary, $ruleMonitor);
         $traderResumeProfile = $this->buildTraderResumeProfile(
             $summary,
@@ -176,6 +190,10 @@ class TradingStatisticsController extends Controller
             'selectedMonth' => $month,
             'selectedYear' => $year,
             'selectedSource' => $source,
+            'selectedAccountStage' => $selectedAccountStage,
+            'accountStageOptions' => $this->accountStageOptions(),
+            'selectedAccountStageLabel' => $this->accountStageLabel($selectedAccountStage),
+            'selectedAccountStageDescription' => $this->accountStageDescription($selectedAccountStage),
             'selectedTimeView' => $selectedTimeView,
             'selectedTimeViewOffset' => $selectedTimeViewOffset,
             'availableYears' => $availableYears,
@@ -222,6 +240,7 @@ class TradingStatisticsController extends Controller
         $month = $this->normalizeDateFilter($request->input('month'), 1, 12);
         $year = $this->normalizeDateFilter($request->input('year'), 2000, (int) now()->year);
         $selectedTraderId = $this->selectedTraderIdForStatistics($request, $currentUser, $visibleTraderIds, $canViewAll, $canViewGlobal);
+        $selectedAccountStage = $this->normalizeAccountStageFilter($request->input('account_stage'));
 
         $currentTrades = collect();
         $backupTrades = collect();
@@ -233,7 +252,8 @@ class TradingStatisticsController extends Controller
                 'Current Journal',
                 $selectedTraderId,
                 $month,
-                $year
+                $year,
+                $selectedAccountStage
             );
         }
 
@@ -244,17 +264,18 @@ class TradingStatisticsController extends Controller
                 'Backup Journal',
                 $selectedTraderId,
                 $month,
-                $year
+                $year,
+                $selectedAccountStage
             );
         }
 
-        $trades = $currentTrades
-            ->merge($backupTrades)
+        $trades = collect($currentTrades->all())
+            ->merge($backupTrades->all())
             ->sortBy(fn ($trade) => $trade['closed_at'] ?? $trade['opened_at'] ?? $trade['created_at'])
             ->values();
 
         $analytics = new TradingJournalAnalytics();
-        $capitalSummary = $this->capitalSummary($selectedTraderId, $month, $year);
+        $capitalSummary = $this->capitalSummary($selectedTraderId, $month, $year, $selectedAccountStage);
         $summary = $this->buildSummary($trades, $capitalSummary, $analytics);
         $dailyStats = $this->buildDailyStats($trades);
         $monthlyStats = $this->buildMonthlyStats($trades);
@@ -265,13 +286,13 @@ class TradingStatisticsController extends Controller
         $weekdayStats = $this->buildWeekdayStats($trades);
         $sessionStats = $this->buildSessionStats($trades, $selectedTimeView, $selectedTimeViewOffset);
         $behavioralProfile = $this->buildBehavioralProfile($summary, $directionStats);
-        $levelProfile = $this->buildLevelProfile($summary);
         $hedgingProfile = $analytics->hedgingProfile($trades);
         $positionProfile = $analytics->positionConsistency($trades);
         $durationProfile = $analytics->durationStats($trades);
         $traderStyleProfile = $analytics->behavioralRiskProfile($trades, (float) $capitalSummary['total_deposits']);
         $behaviorWeeklyProfile = $analytics->behaviorWeeklyComparison($trades, (float) $capitalSummary['total_deposits']);
-        $scoreEvaluationProfile = $this->buildScoreEvaluationProfile($summary, $traderStyleProfile);
+        $scoreEvaluationProfile = $this->buildScoreEvaluationProfile($summary, $traderStyleProfile, $positionProfile);
+        $levelProfile = $this->buildLevelProfile($summary, $scoreEvaluationProfile, $traderStyleProfile, $positionProfile);
         $performanceProfile = $this->buildPerformanceProfile($summary, $ruleMonitor);
         $traderResumeProfile = $this->buildTraderResumeProfile(
             $summary,
@@ -326,6 +347,10 @@ class TradingStatisticsController extends Controller
             'selectedMonth' => $month,
             'selectedYear' => $year,
             'selectedSource' => $source,
+            'selectedAccountStage' => $selectedAccountStage,
+            'accountStageOptions' => $this->accountStageOptions(),
+            'selectedAccountStageLabel' => $this->accountStageLabel($selectedAccountStage),
+            'selectedAccountStageDescription' => $this->accountStageDescription($selectedAccountStage),
             'selectedTimeView' => $selectedTimeView,
             'selectedTimeViewOffset' => $selectedTimeViewOffset,
             'generatedAt' => now(),
@@ -346,12 +371,14 @@ class TradingStatisticsController extends Controller
             : 'all-years';
 
         if (! empty($payload['selectedMonth'])) {
-            $period .= '-' . str_pad((string) $payload['selectedMonth'], 2, '0', STR_PAD_LEFT);
+            $period .= '-'.str_pad((string) $payload['selectedMonth'], 2, '0', STR_PAD_LEFT);
         }
 
+        $stage = $this->normalizeAccountStageFilter($payload['selectedAccountStage'] ?? self::ACCOUNT_STAGE_OVERALL);
         $safeName = preg_replace('/[^A-Za-z0-9_-]+/', '-', strtolower((string) $name));
+        $safeStage = preg_replace('/[^A-Za-z0-9_-]+/', '-', strtolower((string) $stage));
 
-        return 'trading-journal-report-' . trim($safeName, '-') . '-' . $period . '.pdf';
+        return 'trading-journal-report-'.trim($safeName, '-').'-'.trim($safeStage, '-').'-'.$period.'.pdf';
     }
 
     private function canViewGlobalTraderStatistics(?User $user): bool
@@ -426,7 +453,7 @@ class TradingStatisticsController extends Controller
         return $this->canViewTradingStatistics($user);
     }
 
-    private function loadJournalTrades(Builder $query, string $table, string $sourceLabel, ?int $userId, ?int $month, ?int $year): Collection
+    private function loadJournalTrades(Builder $query, string $table, string $sourceLabel, ?int $userId, ?int $month, ?int $year, string $accountStage): Collection
     {
         $dateColumn = $this->journalDateColumn($table);
         $columns = Schema::getColumnListing($table);
@@ -436,6 +463,7 @@ class TradingStatisticsController extends Controller
         }
 
         $query = $this->tradeOnly($query, $table);
+        $query = $this->applyAccountStageFilter($query, $table, $accountStage);
 
         if ($month && $dateColumn) {
             $query->whereMonth($dateColumn, $month);
@@ -449,13 +477,17 @@ class TradingStatisticsController extends Controller
             $query->orderBy($dateColumn);
         }
 
-        return $query->with('user')->get()->map(function ($trade) use ($sourceLabel): array {
+        $mappedTrades = $query->with('user')->get()->map(function ($trade) use ($sourceLabel, $table): array {
             $openedAt = $this->parseDate($trade->open_date ?? $trade->trade_date ?? $trade->created_at);
             $closedAt = $this->parseDate($trade->close_date ?? $trade->trade_date ?? $trade->created_at);
+            $stage = $this->accountStageForTrade($trade, $table);
 
             return [
                 'id' => $trade->id,
                 'source' => $sourceLabel,
+                'account_stage' => $stage['key'],
+                'account_stage_label' => $stage['label'],
+                'prop_firm_phase' => $stage['phase'],
                 'user_id' => $trade->user_id ?? null,
                 'trader_name' => optional($trade->user)->name ?? optional($trade->user)->username ?? 'Unknown Trader',
                 'opened_at' => $openedAt,
@@ -474,6 +506,154 @@ class TradingStatisticsController extends Controller
                 'notes' => $trade->notes ?? null,
             ];
         });
+
+        return collect($mappedTrades->all())->values();
+    }
+
+    private function applyAccountStageFilter(Builder $query, string $table, string $accountStage): Builder
+    {
+        $accountStage = $this->normalizeAccountStageFilter($accountStage);
+
+        if ($table === 'trading_journals_backup' && Schema::hasColumn($table, 'prop_firm_phase')) {
+            return match ($accountStage) {
+                self::ACCOUNT_STAGE_PHASE_1 => $query->where('prop_firm_phase', 1),
+                self::ACCOUNT_STAGE_PHASE_2 => $query->where('prop_firm_phase', 2),
+                self::ACCOUNT_STAGE_FUNDED => $query->where('prop_firm_phase', 3),
+                default => $query->where(function (Builder $query): void {
+                    $query->whereIn('prop_firm_phase', [1, 2])
+                        ->orWhereNull('prop_firm_phase');
+                }),
+            };
+        }
+
+        if (Schema::hasColumn($table, 'user_id')) {
+            $query->whereHas('user', function (Builder $userQuery) use ($accountStage): void {
+                $this->applyUserAccountStageFilter($userQuery, $accountStage);
+            });
+        }
+
+        return $query;
+    }
+
+    private function applyUserAccountStageFilter(Builder $query, string $accountStage): void
+    {
+        $hasPhase = Schema::hasColumn('users', 'prop_firm_phase');
+
+        match ($accountStage) {
+            self::ACCOUNT_STAGE_PHASE_1 => $hasPhase
+                ? $query->where(function (Builder $query): void {
+                    $query->whereNull('prop_firm_phase')->orWhere('prop_firm_phase', '<=', 1);
+                })
+                : $query,
+            self::ACCOUNT_STAGE_PHASE_2 => $hasPhase
+                ? $query->where('prop_firm_phase', 2)
+                : $query->whereRaw('1 = 0'),
+            self::ACCOUNT_STAGE_FUNDED => $this->whereUserIsFunded($query),
+            default => $hasPhase
+                ? $query->where(function (Builder $query): void {
+                    $query->whereNull('prop_firm_phase')->orWhereIn('prop_firm_phase', [1, 2]);
+                })
+                : $this->whereUserIsNotFunded($query),
+        };
+
+        if ($accountStage !== self::ACCOUNT_STAGE_FUNDED) {
+            $this->whereUserIsNotFunded($query);
+        }
+    }
+
+    private function whereUserIsFunded(Builder $query): Builder
+    {
+        return $query->where(function (Builder $query): void {
+            $hasCondition = false;
+
+            if (Schema::hasColumn('users', 'prop_firm_phase')) {
+                $query->where('prop_firm_phase', '>=', 3);
+                $hasCondition = true;
+            }
+
+            if (Schema::hasColumn('users', 'funded_status')) {
+                $hasCondition
+                    ? $query->orWhere('funded_status', 1)
+                    : $query->where('funded_status', 1);
+                $hasCondition = true;
+            }
+
+            if (Schema::hasColumn('users', 'prop_firm_review_status')) {
+                $hasCondition
+                    ? $query->orWhere('prop_firm_review_status', 'funded_approved')
+                    : $query->where('prop_firm_review_status', 'funded_approved');
+                $hasCondition = true;
+            }
+
+            if (! $hasCondition) {
+                $query->whereRaw('1 = 0');
+            }
+        });
+    }
+
+    private function whereUserIsNotFunded(Builder $query): Builder
+    {
+        if (Schema::hasColumn('users', 'prop_firm_phase')) {
+            $query->where(function (Builder $query): void {
+                $query->whereNull('prop_firm_phase')->orWhere('prop_firm_phase', '<', 3);
+            });
+        }
+
+        if (Schema::hasColumn('users', 'funded_status')) {
+            $query->where(function (Builder $query): void {
+                $query->whereNull('funded_status')->orWhere('funded_status', '!=', 1);
+            });
+        }
+
+        if (Schema::hasColumn('users', 'prop_firm_review_status')) {
+            $query->where(function (Builder $query): void {
+                $query->whereNull('prop_firm_review_status')->orWhere('prop_firm_review_status', '!=', 'funded_approved');
+            });
+        }
+
+        return $query;
+    }
+
+    private function accountStageForTrade($trade, string $table): array
+    {
+        $phase = isset($trade->prop_firm_phase) ? (int) $trade->prop_firm_phase : null;
+
+        if ($table === 'trading_journals_backup' && $phase) {
+            return $this->accountStageMeta(match ($phase) {
+                1 => self::ACCOUNT_STAGE_PHASE_1,
+                2 => self::ACCOUNT_STAGE_PHASE_2,
+                3 => self::ACCOUNT_STAGE_FUNDED,
+                default => self::ACCOUNT_STAGE_OVERALL,
+            }, $phase);
+        }
+
+        $user = $trade->user;
+
+        if ($user && $this->userIsFundedStage($user)) {
+            return $this->accountStageMeta(self::ACCOUNT_STAGE_FUNDED, 3);
+        }
+
+        $currentPhase = $user ? (int) ($user->prop_firm_phase ?? 1) : 1;
+
+        return $this->accountStageMeta($currentPhase === 2 ? self::ACCOUNT_STAGE_PHASE_2 : self::ACCOUNT_STAGE_PHASE_1, $currentPhase);
+    }
+
+    private function accountStageMeta(string $stage, ?int $phase = null): array
+    {
+        $stage = $this->normalizeAccountStageFilter($stage);
+
+        return [
+            'key' => $stage,
+            'label' => $this->accountStageLabel($stage),
+            'phase' => $phase,
+        ];
+    }
+
+    private function userIsFundedStage(User $user): bool
+    {
+        return (int) ($user->prop_firm_phase ?? 0) >= 3
+            || (int) ($user->funded_status ?? 0) === 1
+            || (string) ($user->prop_firm_review_status ?? '') === 'funded_approved';
     }
 
     private function buildSummary(Collection $trades, array $capitalSummary, TradingJournalAnalytics $analytics): array
@@ -785,31 +965,14 @@ class TradingStatisticsController extends Controller
         ];
     }
 
-    private function buildLevelProfile(array $summary): array
+    private function buildLevelProfile(array $summary, array $scoreEvaluationProfile = [], array $traderStyleProfile = [], array $positionProfile = []): array
     {
-        $score = 0;
-        $score += $summary['growth_percent'] >= 10 ? 30 : ($summary['growth_percent'] >= 5 ? 20 : ($summary['growth_percent'] > 0 ? 10 : 0));
-        $score += $summary['max_drawdown_percent'] <= 5 ? 25 : ($summary['max_drawdown_percent'] <= 10 ? 15 : 0);
-        $score += $summary['win_rate'] >= 60 ? 20 : ($summary['win_rate'] >= 50 ? 12 : 0);
-        $score += is_numeric($summary['profit_factor']) && $summary['profit_factor'] >= 1.5 ? 15 : (is_numeric($summary['profit_factor']) && $summary['profit_factor'] >= 1 ? 8 : 0);
-        $score += ($summary['best_day_rule']['passed'] ?? false) ? 10 : 0;
-        $score += ($summary['gross_profit_rule']['passed'] ?? false) ? 5 : 0;
-
-        $level = match (true) {
-            $score >= 85 => 'Elite',
-            $score >= 70 => 'Gold',
-            $score >= 55 => 'Silver',
-            $score >= 35 => 'Bronze',
-            default => 'Evaluation',
-        };
-
-        return [
-            'level' => $level,
-            'score' => min(100, $score),
-            'reward' => round(max(0, $summary['net_profit_loss']) * 0.8, 2),
-            'highest_reward' => round(max(0, $summary['largest_win']) * 0.8, 2),
-            'count' => $summary['profitable_days'],
-        ];
+        return app(TraderLevelProfileService::class)->profile(
+            $summary,
+            $scoreEvaluationProfile,
+            $traderStyleProfile,
+            $positionProfile
+        );
     }
 
     private function buildTraderResumeProfile(
@@ -829,6 +992,9 @@ class TradingStatisticsController extends Controller
     ): array {
         $totalTrades = (int) ($summary['total_trades'] ?? 0);
         $score = (float) ($scoreEvaluationProfile['score'] ?? 0);
+        $scoreIsProvisional = (bool) ($scoreEvaluationProfile['score_is_provisional'] ?? false);
+        $sampleStatus = (string) ($scoreEvaluationProfile['sample_size_status'] ?? 'Reliable Sample');
+        $sampleNote = (string) ($scoreEvaluationProfile['sample_size_note'] ?? '');
         $behaviorRisk = (float) ($traderStyleProfile['risk_score'] ?? 0);
         $positionScore = (float) ($positionProfile['score'] ?? 0);
         $drawdownPercent = (float) ($summary['max_drawdown_percent'] ?? 0);
@@ -862,6 +1028,7 @@ class TradingStatisticsController extends Controller
         }
 
         $technicalSkill = match (true) {
+            $scoreIsProvisional && $netProfitLoss >= 0 => 'Provisional / Developing',
             $score >= 85 || ($netProfitLoss > 0 && is_numeric($profitFactor) && (float) $profitFactor >= 2.3 && $expectancy > 0) => 'Advanced',
             $score >= 70 || ($netProfitLoss > 0 && $expectancy > 0 && $winRate >= 50) => 'Strong',
             $score >= 50 || $netProfitLoss > 0 => 'Developing',
@@ -876,6 +1043,7 @@ class TradingStatisticsController extends Controller
         };
 
         [$verdict, $tone] = match (true) {
+            $scoreIsProvisional && $netProfitLoss >= 0 && $riskProfile !== 'High Risk' => ['Provisional Controlled Trader', 'primary'],
             $score >= 75 && $netProfitLoss > 0 && $riskProfile === 'Controlled' => ['Good Disciplined Trader', 'success'],
             $score >= 70 && $netProfitLoss > 0 && $behaviorRisk >= 40 => ['Skilled But Risky Trader', 'warning'],
             $score >= 60 && $netProfitLoss > 0 => ['Good Developing Trader', 'success'],
@@ -887,46 +1055,52 @@ class TradingStatisticsController extends Controller
         };
 
         $strengths = collect();
+        if ($scoreIsProvisional && $netProfitLoss >= 0) {
+            $strengths->push($sampleStatus.': losses are not being treated as final underperformance because only '.number_format($totalTrades).' trade(s) are available.');
+        }
         if ($netProfitLoss > 0) {
-            $strengths->push('Positive net P/L of ' . number_format($netProfitLoss, 2) . 'u.');
+            $strengths->push('Positive net P/L of '.number_format($netProfitLoss, 2).'u.');
         }
         if ($winRate >= 55) {
-            $strengths->push('Healthy win rate at ' . number_format($winRate, 2) . '%.');
+            $strengths->push('Healthy win rate at '.number_format($winRate, 2).'%.');
         }
         if (is_numeric($profitFactor) && (float) $profitFactor >= 1.5) {
-            $strengths->push('Favorable profit factor of ' . number_format((float) $profitFactor, 2) . '.');
+            $strengths->push('Favorable profit factor of '.number_format((float) $profitFactor, 2).'.');
         }
         if ($expectancy > 0) {
-            $strengths->push('Positive expectancy of ' . number_format($expectancy, 2) . 'u per trade.');
+            $strengths->push('Positive expectancy of '.number_format($expectancy, 2).'u per trade.');
         }
         if (($summary['best_day_rule']['passed'] ?? false)) {
             $strengths->push('Best-day profit concentration is within the 40% consistency limit.');
         }
         if ($positionScore >= 70) {
-            $strengths->push('Position sizing is relatively consistent with a ' . number_format($positionScore, 2) . '/100 score.');
+            $strengths->push('Position sizing is relatively consistent with a '.number_format($positionScore, 2).'/100 score.');
         }
         if ($topPair) {
-            $strengths->push('Strongest instrument is ' . $topPair['pair'] . ' with ' . number_format((float) $topPair['profit_loss'], 2) . 'u net P/L.');
+            $strengths->push('Strongest instrument is '.$topPair['pair'].' with '.number_format((float) $topPair['profit_loss'], 2).'u net P/L.');
         }
         if ($bestSession && (int) ($bestSession['trades'] ?? 0) > 0) {
-            $strengths->push('Best session is ' . $bestSession['name'] . ' at ' . number_format((float) $bestSession['win_rate'], 2) . '% win rate.');
+            $strengths->push('Best session is '.$bestSession['name'].' at '.number_format((float) $bestSession['win_rate'], 2).'% win rate.');
         }
 
         $risks = collect();
+        if ($scoreIsProvisional) {
+            $risks->push('Sample size is still small; require more trades before making a final trader-quality judgment.');
+        }
         if ($netProfitLoss <= 0) {
             $risks->push('Account is not profitable under the selected filters.');
         }
         if ($drawdownPercent > 10) {
-            $risks->push('Drawdown is elevated at ' . number_format($drawdownPercent, 2) . '%.');
+            $risks->push('Drawdown is elevated at '.number_format($drawdownPercent, 2).'%.');
         }
         if ($behaviorRisk >= 40) {
-            $risks->push('Behavior risk is on watch at ' . number_format($behaviorRisk, 2) . '/100.');
+            $risks->push('Behavior risk is on watch at '.number_format($behaviorRisk, 2).'/100.');
         }
         if (($traderStyleProfile['revenge']['detected'] ?? false)) {
-            $risks->push(($traderStyleProfile['revenge']['status'] ?? 'Revenge-trading signals') . ' appeared after losses.');
+            $risks->push(($traderStyleProfile['revenge']['status'] ?? 'Revenge-trading signals').' appeared after losses.');
         }
         if (($traderStyleProfile['gambling']['detected'] ?? false)) {
-            $risks->push(($traderStyleProfile['gambling']['status'] ?? 'Gambling-style behavior markers') . ' were detected.');
+            $risks->push(($traderStyleProfile['gambling']['status'] ?? 'Gambling-style behavior markers').' were detected.');
         }
         if (($traderStyleProfile['layering']['detected'] ?? false)) {
             $risks->push('Layering/averaging behavior appeared in sample orders.');
@@ -937,11 +1111,11 @@ class TradingStatisticsController extends Controller
         if ($positionScore < 55 && $totalTrades >= 5) {
             $risks->push('Lot sizing is inconsistent and may indicate unstable risk planning.');
         }
-        if (! ($summary['best_day_rule']['passed'] ?? true) && $netProfitLoss > 0) {
+        if (! $scoreIsProvisional && ! ($summary['best_day_rule']['passed'] ?? true) && $netProfitLoss > 0) {
             $risks->push('Profit is too concentrated in the best day.');
         }
         if ($weakPair && (float) ($weakPair['profit_loss'] ?? 0) < 0) {
-            $risks->push('Weakest instrument is ' . $weakPair['pair'] . ' with ' . number_format((float) $weakPair['profit_loss'], 2) . 'u net P/L.');
+            $risks->push('Weakest instrument is '.$weakPair['pair'].' with '.number_format((float) $weakPair['profit_loss'], 2).'u net P/L.');
         }
 
         $coachingFocus = collect();
@@ -952,15 +1126,15 @@ class TradingStatisticsController extends Controller
             $coachingFocus->push('Define a clear rule for when layering is allowed, maximum layers, and total exposure limit.');
         }
         if (($traderStyleProfile['gambling']['detected'] ?? false)) {
-            $coachingFocus->push('Set daily trade limits and fixed risk-per-trade rules to reduce ' . strtolower((string) ($traderStyleProfile['gambling']['status'] ?? 'high-variance execution')) . '.');
+            $coachingFocus->push('Set daily trade limits and fixed risk-per-trade rules to reduce '.strtolower((string) ($traderStyleProfile['gambling']['status'] ?? 'high-variance execution')).'.');
         }
-        if ($positionScore < 70) {
+        if ($positionScore < 70 && ! $scoreIsProvisional) {
             $coachingFocus->push('Standardize lot sizing around a planned risk model.');
         }
         if ($drawdownPercent > 5) {
             $coachingFocus->push('Reduce drawdown pressure before scaling account size.');
         }
-        if (! ($summary['best_day_rule']['passed'] ?? true)) {
+        if (! $scoreIsProvisional && ! ($summary['best_day_rule']['passed'] ?? true)) {
             $coachingFocus->push('Build more balanced profit across multiple days instead of depending on one strong day.');
         }
         if ($expectancy <= 0) {
@@ -978,6 +1152,7 @@ class TradingStatisticsController extends Controller
         $primarySkillSentence = match ($technicalSkill) {
             'Advanced' => 'The trader shows advanced technical ability and can extract profit from the market.',
             'Strong' => 'The trader shows a strong foundation with positive execution quality.',
+            'Provisional / Developing' => 'The trader has a small but controlled sample, so the score should be treated as provisional rather than a mature grade.',
             'Developing' => 'The trader has usable trading ability, but the edge is not fully stable yet.',
             default => 'The trader does not yet show enough stable edge under the selected data.',
         };
@@ -989,20 +1164,24 @@ class TradingStatisticsController extends Controller
             default => 'Risk is high enough that administration should review this trader before allowing scaling.',
         };
 
-        $personalitySentence = 'Their trading personality reads as ' . strtolower((string) ($traderStyleProfile['style_label'] ?? 'unclassified')) . ', with a ' . strtolower((string) ($behavioralProfile['label'] ?? 'balanced')) . ' directional bias, average holding time of ' . ($durationProfile['average_label'] ?? 'N/A') . ', and ' . number_format((float) ($summary['trading_days'] ?? 0)) . ' active trading day(s).';
+        $personalitySentence = 'Their trading personality reads as '.strtolower((string) ($traderStyleProfile['style_label'] ?? 'unclassified')).', with a '.strtolower((string) ($behavioralProfile['label'] ?? 'balanced')).' directional bias, average holding time of '.($durationProfile['average_label'] ?? 'N/A').', and '.number_format((float) ($summary['trading_days'] ?? 0)).' active trading day(s).';
 
-        $paragraph = $verdict . ': ' . $primarySkillSentence . ' The account score is '
-            . number_format($score, 2) . '/100 (' . ($scoreEvaluationProfile['rating'] ?? 'N/A') . '), with '
-            . number_format($winRate, 2) . '% win rate, '
-            . (is_numeric($profitFactor) ? number_format((float) $profitFactor, 2) : (string) $profitFactor)
-            . ' profit factor, ' . number_format($expectancy, 2) . 'u expectancy, '
-            . number_format($drawdownPercent, 2) . '% max drawdown, and '
-            . number_format($behaviorRisk, 2) . '/100 behavior risk. '
-            . $personalitySentence . ' ' . $riskSentence;
+        $paragraph = $verdict.': '.$primarySkillSentence.' The account score is '
+            .number_format($score, 2).'/100 ('.($scoreEvaluationProfile['rating'] ?? 'N/A').'), with '
+            .number_format($winRate, 2).'% win rate, '
+            .(is_numeric($profitFactor) ? number_format((float) $profitFactor, 2) : (string) $profitFactor)
+            .' profit factor, '.number_format($expectancy, 2).'u expectancy, '
+            .number_format($drawdownPercent, 2).'% max drawdown, and '
+            .number_format($behaviorRisk, 2).'/100 behavior risk. '
+            .$personalitySentence.' '.$riskSentence;
+
+        if ($scoreIsProvisional && $sampleNote !== '') {
+            $paragraph .= ' '.$sampleNote;
+        }
 
         $administrationAction = match ($tone) {
             'success' => 'Suitable for normal progression, with routine monitoring.',
-            'primary' => 'Keep under development review until consistency and sample size improve.',
+            'primary' => $scoreIsProvisional ? 'Keep trading under normal risk limits until at least '.self::MIN_RELIABLE_SCORE_TRADES.' trades are available for a reliable grade.' : 'Keep under development review until consistency and sample size improve.',
             'warning' => 'Allow trading with supervision and a clear improvement plan.',
             'danger' => 'Do not scale yet; require risk review, coaching notes, and follow-up evidence.',
             default => 'Collect more data before making an administration decision.',
@@ -1022,7 +1201,7 @@ class TradingStatisticsController extends Controller
         ];
     }
 
-    private function buildScoreEvaluationProfile(array $summary, array $traderStyleProfile = []): array
+    private function buildScoreEvaluationProfile(array $summary, array $traderStyleProfile = [], array $positionProfile = []): array
     {
         $totalTrades = (int) ($summary['total_trades'] ?? 0);
         $hasTrades = $totalTrades > 0;
@@ -1053,6 +1232,8 @@ class TradingStatisticsController extends Controller
             ? $this->bestDayConsistencyScore($currentGeneratedProfit, $consistencyPercent)
             : [0, 'N/A'];
 
+        [$positionConsistencyPoints, $positionConsistencyGrade, $positionConsistencyStatus, $positionConsistencyTone] = $this->positionConsistencyScore($positionProfile, $hasTrades);
+
         [$expectancyPoints, $expectancyGrade] = $hasTrades
             ? $this->expectancyScore((float) ($summary['expectancy'] ?? 0))
             : [0, 'N/A'];
@@ -1062,79 +1243,91 @@ class TradingStatisticsController extends Controller
             : [0, 'N/A'];
 
         $components = [
-                [
-                    'metric' => 'Win Rate',
-                    'value' => number_format((float) ($summary['win_rate'] ?? 0), 2) . '%',
-                    'grade' => $winRateGrade,
-                    'points' => $winRatePoints,
-                    'max_points' => 30,
-                    'is_penalty' => false,
-                    'status' => $winRateGrade === 'N/A' ? 'No Data' : ($winRatePoints >= 20 ? 'Strong' : 'Developing'),
-                    'tone' => $winRatePoints >= 20 ? 'success' : ($winRatePoints > 0 ? 'warning' : 'secondary'),
-                    'formula' => 'Winning trades divided by closed winning plus losing trades.',
-                    'calculation' => ($summary['winning_trades'] ?? 0) . ' wins / ' . (($summary['winning_trades'] ?? 0) + ($summary['losing_trades'] ?? 0)) . ' closed trades',
-                ],
-                [
-                    'metric' => 'Risk Reward',
-                    'value' => $riskRewardDisplay,
-                    'grade' => $riskRewardGrade,
-                    'points' => $riskRewardPoints,
-                    'max_points' => 30,
-                    'is_penalty' => false,
-                    'status' => $riskRewardGrade === 'N/A' ? 'No Data' : ($riskRewardPoints >= 20 ? 'Strong' : 'Developing'),
-                    'tone' => $riskRewardPoints >= 20 ? 'success' : ($riskRewardPoints > 0 ? 'warning' : 'secondary'),
-                    'formula' => 'Total winning P/L divided by total losing P/L.',
-                    'calculation' => number_format((float) ($summary['total_profit'] ?? 0), 2) . 'u profit / ' . number_format((float) ($summary['total_loss'] ?? 0), 2) . 'u loss',
-                ],
-                [
-                    'metric' => 'Recovery Factor',
-                    'value' => $recoveryDisplay,
-                    'grade' => $recoveryGrade,
-                    'points' => $recoveryPoints,
-                    'max_points' => 15,
-                    'is_penalty' => false,
-                    'status' => $recoveryStatus,
-                    'tone' => $recoveryTone,
-                    'formula' => 'Net P/L divided by maximum drawdown. Higher means profit was earned with less equity stress.',
-                    'calculation' => number_format((float) ($summary['net_profit_loss'] ?? 0), 2) . 'u / ' . number_format((float) ($summary['max_drawdown_amount'] ?? 0), 2) . 'u drawdown',
-                ],
-                [
-                    'metric' => 'Best Day Consistency',
-                    'value' => number_format($consistencyPercent, 2) . '%',
-                    'grade' => $consistencyGrade,
-                    'points' => $consistencyPoints,
-                    'max_points' => 15,
-                    'is_penalty' => false,
-                    'status' => (string) ($bestDayRule['status'] ?? 'N/A'),
-                    'tone' => ($bestDayRule['passed'] ?? false) ? 'success' : ($currentGeneratedProfit > 0 ? 'warning' : 'secondary'),
-                    'formula' => 'Biggest winning day divided by total generated profit. Lower concentration is better.',
-                    'calculation' => number_format((float) ($bestDayRule['best_winning_day'] ?? 0), 2) . 'u / ' . number_format($currentGeneratedProfit, 2) . 'u',
-                ],
-                [
-                    'metric' => 'Expectancy',
-                    'value' => number_format((float) ($summary['expectancy'] ?? 0), 2) . 'u',
-                    'grade' => $expectancyGrade,
-                    'points' => $expectancyPoints,
-                    'max_points' => 10,
-                    'is_penalty' => false,
-                    'status' => (float) ($summary['expectancy'] ?? 0) > 0 ? 'Positive' : ((float) ($summary['expectancy'] ?? 0) < 0 ? 'Negative' : 'Flat'),
-                    'tone' => (float) ($summary['expectancy'] ?? 0) > 0 ? 'success' : ((float) ($summary['expectancy'] ?? 0) < 0 ? 'danger' : 'secondary'),
-                    'formula' => '(Win rate x average win) - (loss rate x average loss).',
-                    'calculation' => number_format((float) ($summary['average_win'] ?? 0), 2) . 'u avg win / ' . number_format((float) ($summary['average_loss'] ?? 0), 2) . 'u avg loss',
-                ],
-                [
-                    'metric' => 'Drawdown Penalty',
-                    'value' => number_format((float) ($summary['overall_loss_percent'] ?? 0), 2) . '%',
-                    'grade' => $drawdownGrade,
-                    'points' => -$drawdownPenalty,
-                    'max_points' => 0,
-                    'is_penalty' => true,
-                    'status' => $drawdownPenalty > 0 ? 'Penalty' : 'No Penalty',
-                    'tone' => $drawdownPenalty > 0 ? 'danger' : 'success',
-                    'formula' => 'Journal score loss pressure percentage. Penalty points are subtracted from total score.',
-                    'calculation' => number_format((float) ($summary['overall_loss_percent'] ?? 0), 2) . '% current loss pressure',
-                ],
-            ];
+            [
+                'metric' => 'Win Rate',
+                'value' => number_format((float) ($summary['win_rate'] ?? 0), 2).'%',
+                'grade' => $winRateGrade,
+                'points' => $winRatePoints,
+                'max_points' => 30,
+                'is_penalty' => false,
+                'status' => $winRateGrade === 'N/A' ? 'No Data' : ($winRatePoints >= 20 ? 'Strong' : 'Developing'),
+                'tone' => $winRatePoints >= 20 ? 'success' : ($winRatePoints > 0 ? 'warning' : 'secondary'),
+                'formula' => 'Winning trades divided by closed winning plus losing trades.',
+                'calculation' => ($summary['winning_trades'] ?? 0).' wins / '.(($summary['winning_trades'] ?? 0) + ($summary['losing_trades'] ?? 0)).' closed trades',
+            ],
+            [
+                'metric' => 'Risk Reward',
+                'value' => $riskRewardDisplay,
+                'grade' => $riskRewardGrade,
+                'points' => $riskRewardPoints,
+                'max_points' => 30,
+                'is_penalty' => false,
+                'status' => $riskRewardGrade === 'N/A' ? 'No Data' : ($riskRewardPoints >= 20 ? 'Strong' : 'Developing'),
+                'tone' => $riskRewardPoints >= 20 ? 'success' : ($riskRewardPoints > 0 ? 'warning' : 'secondary'),
+                'formula' => 'Total winning P/L divided by total losing P/L.',
+                'calculation' => number_format((float) ($summary['total_profit'] ?? 0), 2).'u profit / '.number_format((float) ($summary['total_loss'] ?? 0), 2).'u loss',
+            ],
+            [
+                'metric' => 'Recovery Factor',
+                'value' => $recoveryDisplay,
+                'grade' => $recoveryGrade,
+                'points' => $recoveryPoints,
+                'max_points' => 15,
+                'is_penalty' => false,
+                'status' => $recoveryStatus,
+                'tone' => $recoveryTone,
+                'formula' => 'Net P/L divided by maximum drawdown. Higher means profit was earned with less equity stress.',
+                'calculation' => number_format((float) ($summary['net_profit_loss'] ?? 0), 2).'u / '.number_format((float) ($summary['max_drawdown_amount'] ?? 0), 2).'u drawdown',
+            ],
+            [
+                'metric' => 'Best Day Consistency',
+                'value' => number_format($consistencyPercent, 2).'%',
+                'grade' => $consistencyGrade,
+                'points' => $consistencyPoints,
+                'max_points' => 10,
+                'is_penalty' => false,
+                'status' => (string) ($bestDayRule['status'] ?? 'N/A'),
+                'tone' => ($bestDayRule['passed'] ?? false) ? 'success' : ($currentGeneratedProfit > 0 ? 'warning' : 'secondary'),
+                'formula' => 'Biggest winning day divided by total generated profit. Lower concentration is better.',
+                'calculation' => number_format((float) ($bestDayRule['best_winning_day'] ?? 0), 2).'u / '.number_format($currentGeneratedProfit, 2).'u',
+            ],
+            [
+                'metric' => 'Position Consistency',
+                'value' => number_format((float) data_get($positionProfile, 'score', 0), 2).'/100',
+                'grade' => $positionConsistencyGrade,
+                'points' => $positionConsistencyPoints,
+                'max_points' => 5,
+                'is_penalty' => false,
+                'status' => $positionConsistencyStatus,
+                'tone' => $positionConsistencyTone,
+                'formula' => 'Position consistency score multiplied by 5%. This rewards stable risk sizing without overpowering performance metrics.',
+                'calculation' => number_format((float) data_get($positionProfile, 'score', 0), 2).'/100 x 5 pts = '.number_format($positionConsistencyPoints, 2).' pts',
+            ],
+            [
+                'metric' => 'Expectancy',
+                'value' => number_format((float) ($summary['expectancy'] ?? 0), 2).'u',
+                'grade' => $expectancyGrade,
+                'points' => $expectancyPoints,
+                'max_points' => 10,
+                'is_penalty' => false,
+                'status' => (float) ($summary['expectancy'] ?? 0) > 0 ? 'Positive' : ((float) ($summary['expectancy'] ?? 0) < 0 ? 'Negative' : 'Flat'),
+                'tone' => (float) ($summary['expectancy'] ?? 0) > 0 ? 'success' : ((float) ($summary['expectancy'] ?? 0) < 0 ? 'danger' : 'secondary'),
+                'formula' => '(Win rate x average win) - (loss rate x average loss).',
+                'calculation' => number_format((float) ($summary['average_win'] ?? 0), 2).'u avg win / '.number_format((float) ($summary['average_loss'] ?? 0), 2).'u avg loss',
+            ],
+            [
+                'metric' => 'Drawdown Penalty',
+                'value' => number_format((float) ($summary['overall_loss_percent'] ?? 0), 2).'%',
+                'grade' => $drawdownGrade,
+                'points' => -$drawdownPenalty,
+                'max_points' => 0,
+                'is_penalty' => true,
+                'status' => $drawdownPenalty > 0 ? 'Penalty' : 'No Penalty',
+                'tone' => $drawdownPenalty > 0 ? 'danger' : 'success',
+                'formula' => 'Journal score loss pressure percentage. Penalty points are subtracted from total score.',
+                'calculation' => number_format((float) ($summary['overall_loss_percent'] ?? 0), 2).'% current loss pressure',
+            ],
+        ];
 
         $baseTotalScore = $hasTrades
             ? round((float) collect($components)->sum(fn (array $component): float => (float) ($component['points'] ?? 0)), 2)
@@ -1145,34 +1338,171 @@ class TradingStatisticsController extends Controller
 
         $components[] = [
             'metric' => 'Behaviour Tier Penalty',
-            'value' => number_format($behaviorPenaltyPercent, 0) . '%',
+            'value' => number_format($behaviorPenaltyPercent, 0).'%',
             'grade' => data_get($behaviorScorePenalty, 'tier_label', 'Clear'),
             'points' => -$behaviorPenaltyPoints,
             'max_points' => 0,
             'is_penalty' => true,
             'status' => data_get($behaviorScorePenalty, 'status', 'No Behaviour Penalty'),
             'tone' => data_get($behaviorScorePenalty, 'tone', 'success'),
-            'formula' => 'Medium revenge/gambling tier subtracts 5% from the base score. High tier subtracts 10%. Low tier has no score penalty.',
-            'calculation' => 'Base ' . number_format($baseTotalScore, 2) . ' pts x ' . number_format($behaviorPenaltyPercent, 0) . '% | ' . data_get($behaviorScorePenalty, 'trigger_label', 'Clear or low revenge/gambling tier'),
+            'formula' => 'Mid revenge/gambling tier subtracts 5% from the base score. High or critical tier subtracts 10%. Low tier has no score penalty.',
+            'calculation' => 'Base '.number_format($baseTotalScore, 2).' pts x '.number_format($behaviorPenaltyPercent, 0).'% | '.data_get($behaviorScorePenalty, 'trigger_label', 'Clear or low revenge/gambling tier'),
         ];
 
-        $totalScore = $hasTrades
+        $rawTotalScore = $hasTrades
             ? (float) data_get($behaviorScorePenalty, 'adjusted_score', $baseTotalScore)
             : 0.0;
+        $sampleSizeProfile = $this->scoreSampleSizeProfile($summary, $traderStyleProfile, $rawTotalScore, $hasTrades);
+        $totalScore = (float) ($sampleSizeProfile['score'] ?? $rawTotalScore);
+
+        if ($hasTrades && (bool) ($sampleSizeProfile['is_provisional'] ?? false)) {
+            $sampleAdjustment = round($totalScore - $rawTotalScore, 2);
+
+            $components[] = [
+                'metric' => 'Small Sample Adjustment',
+                'value' => $totalTrades.' / '.self::MIN_RELIABLE_SCORE_TRADES.' trades',
+                'grade' => 'Provisional',
+                'points' => $sampleAdjustment,
+                'max_points' => 0,
+                'is_penalty' => false,
+                'is_adjustment' => true,
+                'status' => (string) ($sampleSizeProfile['status'] ?? 'Provisional'),
+                'tone' => (string) ($sampleSizeProfile['tone'] ?? 'primary'),
+                'formula' => 'When sample size is small, raw score is blended with a neutral provisional baseline unless strong risk evidence exists.',
+                'calculation' => 'Raw '.number_format($rawTotalScore, 2).' pts -> provisional '.number_format($totalScore, 2).' pts | confidence '.number_format((float) ($sampleSizeProfile['confidence_percent'] ?? 0), 0).'%',
+            ];
+        }
 
         return [
             'score' => $totalScore,
+            'raw_score' => $rawTotalScore,
             'base_score' => $baseTotalScore,
             'behavior_score_penalty' => $behaviorScorePenalty,
-            'rating' => $this->scoreEvaluationRating($totalScore, $hasTrades),
-            'meaning' => $this->scoreEvaluationMeaning($totalScore, $hasTrades),
+            'rating' => $this->scoreEvaluationRating($totalScore, $hasTrades, $sampleSizeProfile),
+            'meaning' => $this->scoreEvaluationMeaning($totalScore, $hasTrades, $sampleSizeProfile),
             'max_positive_points' => 100,
-            'formula' => 'Win Rate + Risk Reward + Recovery Factor + Best Day Consistency + Expectancy - Drawdown Penalty - Behaviour Tier Penalty',
+            'formula' => 'Win Rate + Risk Reward + Recovery Factor + Best Day Consistency + Position Consistency + Expectancy - Drawdown Penalty - Behaviour Tier Penalty'.((bool) ($sampleSizeProfile['is_provisional'] ?? false) ? ' + Small Sample Adjustment' : ''),
             'recovery_factor' => $recoveryDisplay,
             'recovery_factor_progress' => $this->clampProgress(is_numeric($summary['recovery_factor'] ?? null) ? ((float) $summary['recovery_factor'] / 3) * 100 : ($recoveryDisplay === 'No Drawdown' ? 100 : 0)),
+            'score_is_provisional' => (bool) ($sampleSizeProfile['is_provisional'] ?? false),
+            'sample_size_status' => (string) ($sampleSizeProfile['status'] ?? ($hasTrades ? 'Reliable Sample' : 'No Data')),
+            'sample_size_tone' => (string) ($sampleSizeProfile['tone'] ?? ($hasTrades ? 'success' : 'secondary')),
+            'sample_size_confidence' => (float) ($sampleSizeProfile['confidence_percent'] ?? 0),
+            'sample_size_note' => (string) ($sampleSizeProfile['note'] ?? ''),
+            'sample_size_formula' => (string) ($sampleSizeProfile['formula'] ?? ''),
+            'sample_size_calculation' => (string) ($sampleSizeProfile['calculation'] ?? ''),
+            'sample_size_baseline' => (float) ($sampleSizeProfile['baseline_score'] ?? 0),
+            'sample_size_raw_weight' => (float) ($sampleSizeProfile['raw_weight_percent'] ?? 0),
+            'sample_size_cap' => (float) ($sampleSizeProfile['sample_cap'] ?? 0),
+            'sample_size_adjustment' => (float) ($sampleSizeProfile['adjustment'] ?? 0),
+            'minimum_reliable_trades' => self::MIN_RELIABLE_SCORE_TRADES,
             'components' => $components,
             'criteria_bands' => $this->scoreCriteriaBands(),
             'grade_ranking' => $this->scoreGradeRanking(),
+        ];
+    }
+
+    private function scoreSampleSizeProfile(array $summary, array $traderStyleProfile, float $rawScore, bool $hasTrades): array
+    {
+        $totalTrades = (int) ($summary['total_trades'] ?? 0);
+        $confidencePercent = $hasTrades
+            ? round(min(100, ($totalTrades / self::MIN_RELIABLE_SCORE_TRADES) * 100), 2)
+            : 0.0;
+
+        $baseProfile = [
+            'is_provisional' => $hasTrades && $totalTrades < self::MIN_RELIABLE_SCORE_TRADES,
+            'score' => round($rawScore, 2),
+            'raw_score' => round($rawScore, 2),
+            'confidence_percent' => $confidencePercent,
+            'status' => $hasTrades ? 'Reliable Sample' : 'No Data',
+            'tone' => $hasTrades ? 'success' : 'secondary',
+            'note' => $hasTrades
+                ? 'Sample size is large enough for the normal score formula.'
+                : 'No closed trades are available for score evaluation.',
+        ];
+
+        if (! $hasTrades || $totalTrades >= self::MIN_RELIABLE_SCORE_TRADES) {
+            return $baseProfile;
+        }
+
+        $netProfitLoss = (float) ($summary['net_profit_loss'] ?? 0);
+        $totalProfit = (float) ($summary['total_profit'] ?? 0);
+        $totalLoss = (float) ($summary['total_loss'] ?? 0);
+        $maxDrawdownPercent = (float) ($summary['max_drawdown_percent'] ?? 0);
+        $overallLossPercent = (float) ($summary['overall_loss_percent'] ?? 0);
+        $maxDailyLossPercent = (float) ($summary['max_daily_loss_percent'] ?? 0);
+        $behaviorRisk = (float) data_get($traderStyleProfile, 'final_score', data_get($traderStyleProfile, 'risk_score', 0));
+        $profitFactor = $summary['profit_factor'] ?? null;
+        $recoveryFactor = $summary['recovery_factor'] ?? null;
+
+        $lossesRecovered = $totalLoss > 0 && $totalProfit >= $totalLoss && $netProfitLoss >= 0;
+        $positiveRecoveryQuality = $lossesRecovered
+            || (is_numeric($profitFactor) && (float) $profitFactor >= 1.0 && $netProfitLoss >= 0)
+            || (is_numeric($recoveryFactor) && (float) $recoveryFactor >= 1.0);
+        $controlledRisk = $maxDrawdownPercent <= 5
+            && $overallLossPercent <= 2
+            && $maxDailyLossPercent < (float) config('trading_detection.daily_loss_limit_percent', 5.0)
+            && $behaviorRisk < 45;
+        $strongRiskEvidence = $maxDailyLossPercent >= (float) config('trading_detection.daily_loss_limit_percent', 5.0)
+            || $maxDrawdownPercent > 10
+            || $behaviorRisk >= 65
+            || ($netProfitLoss < 0 && $overallLossPercent > 2);
+
+        $baseline = match (true) {
+            $strongRiskEvidence => $rawScore,
+            $lossesRecovered && $controlledRisk => 68.0,
+            $netProfitLoss >= 0 && $controlledRisk && $positiveRecoveryQuality => 64.0,
+            $netProfitLoss >= 0 && $behaviorRisk < 45 => 58.0,
+            default => 50.0,
+        };
+
+        $rawWeight = max(0.25, min(0.85, $totalTrades / self::MIN_RELIABLE_SCORE_TRADES));
+        $provisionalScore = $strongRiskEvidence
+            ? $rawScore
+            : (($rawScore * $rawWeight) + ($baseline * (1 - $rawWeight)));
+
+        if ($lossesRecovered && $controlledRisk && ! $strongRiskEvidence) {
+            $provisionalScore = max($provisionalScore, 65.0);
+        }
+
+        $sampleCap = $totalTrades <= 3 ? 72.0 : 80.0;
+        $provisionalScore = $strongRiskEvidence
+            ? $provisionalScore
+            : min($sampleCap, max($rawScore, $provisionalScore));
+        $finalProvisionalScore = round(max(0, min(100, $provisionalScore)), 2);
+        $adjustment = round($finalProvisionalScore - $rawScore, 2);
+
+        $status = match (true) {
+            $strongRiskEvidence => 'Provisional - Risk Evidence',
+            $lossesRecovered && $controlledRisk => 'Provisional - Controlled Recovery',
+            $netProfitLoss >= 0 && $controlledRisk => 'Provisional - Controlled Sample',
+            default => 'Provisional - Need More Trades',
+        };
+
+        $note = match (true) {
+            $strongRiskEvidence => 'Only '.$totalTrades.' trade(s) are available, but strong risk evidence remains active, so the raw score is not lifted.',
+            $lossesRecovered && $controlledRisk => 'Only '.$totalTrades.' trade(s) are available. Losses were recovered without high behavior risk, so the report uses a provisional controlled-recovery score instead of treating the raw formula as final.',
+            $netProfitLoss >= 0 && $controlledRisk => 'Only '.$totalTrades.' trade(s) are available. The account is non-negative with controlled risk, so the report uses a provisional score until more trades are recorded.',
+            default => 'Only '.$totalTrades.' trade(s) are available. Treat this score as provisional until at least '.self::MIN_RELIABLE_SCORE_TRADES.' trades are recorded.',
+        };
+
+        return [
+            'is_provisional' => true,
+            'score' => $finalProvisionalScore,
+            'raw_score' => round($rawScore, 2),
+            'confidence_percent' => $confidencePercent,
+            'status' => $status,
+            'tone' => $strongRiskEvidence ? 'warning' : 'primary',
+            'note' => $note,
+            'losses_recovered' => $lossesRecovered,
+            'controlled_risk' => $controlledRisk,
+            'strong_risk_evidence' => $strongRiskEvidence,
+            'raw_weight_percent' => round($rawWeight * 100, 2),
+            'baseline_score' => round($baseline, 2),
+            'sample_cap' => $sampleCap,
+            'adjustment' => $adjustment,
+            'formula' => 'Provisional score = min(sample cap, max(raw score, raw score x sample weight + baseline x remaining weight)).',
+            'calculation' => 'min('.number_format($sampleCap, 2).', max('.number_format($rawScore, 2).', '.number_format($rawScore, 2).' x '.number_format($rawWeight * 100, 0).'% + '.number_format($baseline, 2).' x '.number_format((1 - $rawWeight) * 100, 0).'%)) = '.number_format($finalProvisionalScore, 2),
         ];
     }
 
@@ -1269,13 +1599,31 @@ class TradingStatisticsController extends Controller
         }
 
         return match (true) {
-            $consistencyPercent <= 20 => [15, 'S'],
-            $consistencyPercent <= 30 => [12, 'A'],
-            $consistencyPercent <= TradingJournalAnalytics::BEST_DAY_LIMIT_PERCENT => [10, 'B'],
-            $consistencyPercent <= 50 => [6, 'C'],
-            $consistencyPercent <= 65 => [3, 'D'],
+            $consistencyPercent <= 20 => [10, 'S'],
+            $consistencyPercent <= 30 => [8, 'A'],
+            $consistencyPercent <= TradingJournalAnalytics::BEST_DAY_LIMIT_PERCENT => [6, 'B'],
+            $consistencyPercent <= 50 => [4, 'C'],
+            $consistencyPercent <= 65 => [2, 'D'],
             default => [0, 'F'],
         };
+    }
+
+    private function positionConsistencyScore(array $positionProfile, bool $hasTrades): array
+    {
+        if (! $hasTrades) {
+            return [0.0, 'N/A', 'No Data', 'secondary'];
+        }
+
+        $score = max(0, min(100, (float) data_get($positionProfile, 'score', 0)));
+        $points = round(($score / 100) * 5, 2);
+        $grade = (string) data_get($positionProfile, 'grade', 'N/A');
+        $status = (string) data_get($positionProfile, 'status', ($points >= 3.5 ? 'Controlled' : 'Needs Review'));
+        $isDynamic = (bool) data_get($positionProfile, 'is_dynamic', false);
+        $tone = $score >= 70 && ! $isDynamic
+            ? 'success'
+            : ($score >= 45 ? 'warning' : 'danger');
+
+        return [$points, $grade, $status, $tone];
     }
 
     private function expectancyScore(float $expectancy): array
@@ -1309,13 +1657,13 @@ class TradingStatisticsController extends Controller
         return [abs($penalty), $grade];
     }
 
-    private function scoreEvaluationRating(float $totalScore, bool $hasTrades): string
+    private function scoreEvaluationRating(float $totalScore, bool $hasTrades, array $sampleSizeProfile = []): string
     {
         if (! $hasTrades) {
             return 'N/A';
         }
 
-        return match (true) {
+        $rating = match (true) {
             $totalScore >= 95 => 'S',
             $totalScore >= 90 => 'A+',
             $totalScore >= 85 => 'A',
@@ -1331,12 +1679,23 @@ class TradingStatisticsController extends Controller
             $totalScore >= 30 => 'E',
             default => 'F',
         };
+
+        return (bool) ($sampleSizeProfile['is_provisional'] ?? false)
+            ? 'Provisional '.$rating
+            : $rating;
     }
 
-    private function scoreEvaluationMeaning(float $totalScore, bool $hasTrades): string
+    private function scoreEvaluationMeaning(float $totalScore, bool $hasTrades, array $sampleSizeProfile = []): string
     {
         if (! $hasTrades) {
             return 'No score yet. Add closed trades to activate the scoring model.';
+        }
+
+        if ((bool) ($sampleSizeProfile['is_provisional'] ?? false)) {
+            return trim((string) ($sampleSizeProfile['note'] ?? 'This score is provisional because the selected sample is small.'))
+                .' Raw formula score: '.number_format((float) ($sampleSizeProfile['raw_score'] ?? $totalScore), 2)
+                .'/100; provisional display score: '.number_format($totalScore, 2)
+                .'/100.';
         }
 
         return match (true) {
@@ -1368,8 +1727,13 @@ class TradingStatisticsController extends Controller
             ],
             [
                 'metric' => 'Best Day Consistency',
-                'max_points' => '15 pts',
-                'bands' => 'Best day <=20% of generated profit = 15 S; <=30% = 12 A; <=40% = 10 B; <=50% = 6 C; <=65% = 3 D; above 65% = 0 F.',
+                'max_points' => '10 pts',
+                'bands' => 'Best day <=20% of generated profit = 10 S; <=30% = 8 A; <=40% = 6 B; <=50% = 4 C; <=65% = 2 D; above 65% = 0 F.',
+            ],
+            [
+                'metric' => 'Position Consistency',
+                'max_points' => '5 pts',
+                'bands' => 'Position consistency score / 100 x 5 pts. Rewards stable lot sizing, main-lot discipline, and low sizing variation.',
             ],
             [
                 'metric' => 'Expectancy',
@@ -1386,6 +1750,11 @@ class TradingStatisticsController extends Controller
                 'max_points' => 'Penalty',
                 'bands' => 'Clear/Low revenge and gambling tiers = 0; any Medium tier = -5% of base score; any High tier = -10% of base score. The highest tier applies once.',
             ],
+            [
+                'metric' => 'Small Sample Adjustment',
+                'max_points' => 'Adjustment',
+                'bands' => 'Under 10 trades = provisional. Controlled recovery or non-negative P/L with low behavior risk is blended toward a neutral score; strong risk evidence keeps the raw score.',
+            ],
         ];
     }
 
@@ -1399,6 +1768,7 @@ class TradingStatisticsController extends Controller
             ['grade' => 'C', 'range' => '50 - 69.99', 'description' => 'Developing performance. Review weaker components before scaling.'],
             ['grade' => 'D/E', 'range' => '30 - 49.99', 'description' => 'Weak score. Profitability or risk control needs attention.'],
             ['grade' => 'F', 'range' => 'Below 30', 'description' => 'High review priority. Score is not yet aligned with desk requirements.'],
+            ['grade' => 'Provisional', 'range' => 'Under 10 trades', 'description' => 'Sample is too small for mature grading. Review raw score and provisional note together.'],
         ];
     }
 
@@ -1434,43 +1804,43 @@ class TradingStatisticsController extends Controller
             [
                 'key' => 'gross_profit_floor',
                 'title' => '2% Gross Profit',
-                'value' => number_format($grossProfitRule['gross_profit'], 2) . 'u / ' . number_format($grossProfitRule['required_amount'], 2) . 'u',
+                'value' => number_format($grossProfitRule['gross_profit'], 2).'u / '.number_format($grossProfitRule['required_amount'], 2).'u',
                 'progress' => $grossProfitRule['minimum_percent'] > 0 ? $this->clampProgress(($grossProfitRule['achieved_percent'] / $grossProfitRule['minimum_percent']) * 100) : 0,
                 'status' => $grossProfitRule['passed'] ? 'Passed' : 'Monitoring',
                 'tone' => $grossProfitRule['passed'] ? 'success' : 'primary',
-                'caption' => 'Minimum ' . number_format($grossProfitRule['minimum_percent'], 0) . '% gross profit on account balance',
+                'caption' => 'Minimum '.number_format($grossProfitRule['minimum_percent'], 0).'% gross profit on account balance',
             ],
             [
                 'key' => 'daily_loss',
                 'title' => 'Max Daily Loss',
-                'value' => number_format($summary['max_daily_loss_percent'], 2) . '% used',
+                'value' => number_format($summary['max_daily_loss_percent'], 2).'% used',
                 'progress' => $this->clampProgress($dailyLossUsage),
                 'status' => $summary['max_daily_loss_percent'] > $maxDailyLossPercent ? 'Breached' : 'Within Limit',
                 'tone' => $summary['max_daily_loss_percent'] > $maxDailyLossPercent ? 'danger' : 'success',
-                'caption' => $maxDailyLossPercent . '% limit',
+                'caption' => $maxDailyLossPercent.'% limit',
             ],
             [
                 'key' => 'total_loss',
                 'title' => 'Max Total Drawdown',
-                'value' => number_format($summary['max_drawdown_percent'], 2) . '% used',
+                'value' => number_format($summary['max_drawdown_percent'], 2).'% used',
                 'progress' => $this->clampProgress($totalLossUsage),
                 'status' => $summary['max_drawdown_percent'] > $maxTotalLossPercent ? 'Breached' : 'Within Limit',
                 'tone' => $summary['max_drawdown_percent'] > $maxTotalLossPercent ? 'danger' : 'success',
-                'caption' => $maxTotalLossPercent . '% limit',
+                'caption' => $maxTotalLossPercent.'% limit',
             ],
             [
                 'key' => 'consistency',
                 'title' => '40% Best Day Rule',
-                'value' => number_format($bestDayRule['score_percent'], 2) . '%',
+                'value' => number_format($bestDayRule['score_percent'], 2).'%',
                 'progress' => $summary['consistency_percent'] > 0 ? $this->clampProgress(($summary['consistency_percent'] / $consistencyLimitPercent) * 100) : 0,
                 'status' => $bestDayRule['passed'] ? 'Passed' : 'Monitoring',
                 'tone' => $bestDayRule['passed'] ? 'success' : 'warning',
-                'caption' => 'Best day max ' . number_format($consistencyLimitPercent, 0) . '%; need ' . number_format($bestDayRule['additional_profit_needed'], 2) . 'u more if pending',
+                'caption' => 'Best day max '.number_format($consistencyLimitPercent, 0).'%; need '.number_format($bestDayRule['additional_profit_needed'], 2).'u more if pending',
             ],
             [
                 'key' => 'profitable_days',
                 'title' => 'Profitable Days',
-                'value' => $summary['profitable_days'] . ' / ' . $minProfitableDays,
+                'value' => $summary['profitable_days'].' / '.$minProfitableDays,
                 'progress' => $this->clampProgress($profitableDaysProgress),
                 'status' => $summary['profitable_days'] >= $minProfitableDays ? 'Passed' : 'Monitoring',
                 'tone' => $summary['profitable_days'] >= $minProfitableDays ? 'success' : 'primary',
@@ -1594,8 +1964,9 @@ class TradingStatisticsController extends Controller
         return max(0, min(100, round($value, 2)));
     }
 
-    private function capitalSummary(?int $userId, ?int $month, ?int $year): array
+    private function capitalSummary(?int $userId, ?int $month, ?int $year, string $accountStage = self::ACCOUNT_STAGE_OVERALL): array
     {
+        $accountStage = $this->normalizeAccountStageFilter($accountStage);
         $query = Capital::query();
 
         if ($userId) {
@@ -1613,12 +1984,20 @@ class TradingStatisticsController extends Controller
         $transactions = $query->get();
         $deposits = $transactions->where('type', 1)->sum('amount');
         $withdrawals = abs($transactions->where('type', 2)->sum('amount'));
+        $basisLabel = 'Capital transactions';
+
+        if ($userId && in_array($accountStage, [self::ACCOUNT_STAGE_PHASE_2, self::ACCOUNT_STAGE_FUNDED], true) && $deposits > 0) {
+            $basisLabel = $accountStage === self::ACCOUNT_STAGE_FUNDED
+                ? 'Funded account initial capital'
+                : 'Phase 2 initial capital';
+        }
 
         return [
             'total_deposits' => round((float) $deposits, 2),
             'total_withdrawals' => round((float) $withdrawals, 2),
             'net_capital' => round((float) $transactions->sum('amount'), 2),
             'transactions' => $transactions->count(),
+            'basis_label' => $basisLabel,
         ];
     }
 
@@ -1726,6 +2105,51 @@ class TradingStatisticsController extends Controller
         $value = (int) $value;
 
         return $value > 0 ? $value : null;
+    }
+
+    private function normalizeAccountStageFilter($value): string
+    {
+        $value = strtolower((string) ($value ?: self::ACCOUNT_STAGE_OVERALL));
+
+        return array_key_exists($value, $this->accountStageOptions())
+            ? $value
+            : self::ACCOUNT_STAGE_OVERALL;
+    }
+
+    private function accountStageOptions(): array
+    {
+        return [
+            self::ACCOUNT_STAGE_OVERALL => [
+                'label' => 'Overall Evaluation',
+                'short_label' => 'Overall',
+                'description' => 'Phase 1 + Phase 2 statistics, excluding funded account trades.',
+            ],
+            self::ACCOUNT_STAGE_PHASE_1 => [
+                'label' => 'Phase 1 Statistics',
+                'short_label' => 'Phase 1',
+                'description' => 'Only Phase 1 current or archived journal records.',
+            ],
+            self::ACCOUNT_STAGE_PHASE_2 => [
+                'label' => 'Phase 2 Statistics',
+                'short_label' => 'Phase 2',
+                'description' => 'Only Phase 2 current or archived journal records.',
+            ],
+            self::ACCOUNT_STAGE_FUNDED => [
+                'label' => 'Funded Account',
+                'short_label' => 'Funded',
+                'description' => 'Only funded account journal records.',
+            ],
+        ];
+    }
+
+    private function accountStageLabel(string $stage): string
+    {
+        return $this->accountStageOptions()[$this->normalizeAccountStageFilter($stage)]['short_label'];
+    }
+
+    private function accountStageDescription(string $stage): string
+    {
+        return $this->accountStageOptions()[$this->normalizeAccountStageFilter($stage)]['description'];
     }
 
     private function parseDate($value): ?Carbon

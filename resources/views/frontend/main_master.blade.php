@@ -4,11 +4,11 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>@yield('title')</title>
-    <meta name="description" content="">
+    <title>{{ trim(strip_tags($__env->yieldContent('title', 'HC Gaming'))) }}</title>
+    <meta name="description" content="{{ trim(strip_tags($__env->yieldContent('meta_description', 'Explore products and stories from HC Gaming.'))) }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+    <link rel="icon" type="image/png" href="{{ asset('logo.png') }}">
     <!-- Place favicon.ico in the root directory -->
     <!-- CSS here -->
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/bootstrap.min.css') }}">
@@ -19,55 +19,42 @@
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/default.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/responsive.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/assets/css/estore.css') }}">
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
 
     <!-- PWA  -->
-    <meta name="theme-color" content="#6777ef" />
+    <meta name="theme-color" content="#181a18" />
     <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
     <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
-    <script src="{{ asset('/sw.js') }}"></script>
     <script>
         if ("serviceWorker" in navigator) {
         // Register a service worker hosted at the root of the
         // site using the default scope.
         navigator.serviceWorker.register("/sw.js").then((reg) => {
-            console.log("Service worker has been registered for scope: " + reg.scope);
+            // Service worker registration is optional for the storefront.
         }, (error) => {
-            console.error(`Service worker registration failed: ${error}`);
+            console.warn('Service worker registration failed', error);
         });
-    } else {
-        console.error("Service workers are not supported.");
     }
     </script>
 </head>
 
 <body>
 
-    <!-- preloader-start -->
-    <div id="preloader">
-        <div class="rasalina-spin-box"></div>
-    </div>
-    <!-- preloader-end -->
-
-    <!-- Scroll-top -->
-    <button class="scroll-top scroll-to-target" data-target="html">
-        <i class="fas fa-angle-up"></i>
-    </button>
-    <!-- Scroll-top-end-->
 
     <!-- header-area -->
     @include('frontend.body.header')
     <!-- header-area-end -->
 
-    <main>
+    <main id="main-content">
         @yield('main')
     </main>
 
 
     <!-- Footer-area -->
-    {{-- @include('frontend.body.footer') --}}
+    @include('frontend.body.footer')
     <!-- Footer-area-end -->
 
 
@@ -85,34 +72,22 @@
     <script src="{{ asset('frontend/assets/js/wow.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/plugins.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/main.js') }}"></script>
+    <script defer src="{{ asset('frontend/assets/js/estore.js') }}"></script>
 
 
 
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
+    @if(Session::has('message'))
     <script>
-        @if(Session::has('message'))
-         var type = "{{ Session::get('alert-type','info') }}"
-         switch(type){
-            case 'info':
-            toastr.info(" {{ Session::get('message') }} ");
-            break;
-
-            case 'success':
-            toastr.success(" {{ Session::get('message') }} ");
-            break;
-
-            case 'warning':
-            toastr.warning(" {{ Session::get('message') }} ");
-            break;
-
-            case 'error':
-            toastr.error(" {{ Session::get('message') }} ");
-            break;
-         }
-         @endif
+        if (window.toastr) {
+            const level = @json(Session::get('alert-type', 'info'));
+            const message = @json(Session::get('message'));
+            (toastr[level] || toastr.info)(message);
+        }
     </script>
+    @endif
 
 
 </body>

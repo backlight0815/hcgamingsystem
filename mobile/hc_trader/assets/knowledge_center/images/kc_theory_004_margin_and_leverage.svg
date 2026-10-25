@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title">
+  <title id="title">Margin and leverage Diagram</title>
+  <rect width="1600" height="900" rx="0" fill="#F8FAFC"/>
+  <rect x="54" y="44" width="1492" height="772" rx="36" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+  <rect x="180" y="290" width="360" height="180" rx="30" fill="#10B981" opacity=".15" stroke="#10B981" stroke-width="5"/>
+  <text x="214" y="358" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#10B981">Margin</text>
+  <text x="214" y="418" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="800" fill="#334155">$1,000</text>
+  <line x1="560" y1="380" x2="850" y2="380" stroke="#F59E0B" stroke-width="9" stroke-linecap="round"/><polygon points="850,380 830.9474411167423,391 830.9474411167423,369" fill="#F59E0B"/>
+  <rect x="900" y="220" width="520" height="320" rx="30" fill="#2563EB" opacity=".15" stroke="#2563EB" stroke-width="5"/>
+  <text x="934" y="288" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#2563EB">Exposure</text>
+  <text x="934" y="348" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="800" fill="#334155">$100,000</text>
+  <text x="650" y="322" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="800" fill="#334155">Leverage</text>
+  <text x="650" y="438" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="800" fill="#DC2626">Risk scales too</text>
+  <rect x="84" y="842" width="290" height="18" rx="9" fill="#2563EB" opacity=".22"/>
+  <rect x="412" y="842" width="404" height="18" rx="9" fill="#10B981" opacity=".20"/>
+  <rect x="852" y="842" width="664" height="18" rx="9" fill="#334155" opacity=".10"/>
+</svg>

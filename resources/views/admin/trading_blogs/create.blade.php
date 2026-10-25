@@ -104,6 +104,7 @@
                             <div class="mb-3">
                                 <label for="published_at" class="form-label">Publish Time</label>
                                 <input type="datetime-local" name="published_at" id="published_at" class="form-control @error('published_at') is-invalid @enderror" value="{{ old('published_at') }}">
+                                <div class="form-text">Leave blank to publish immediately. Scheduled times use {{ config('trading_blogs.publication_timezone') }}.</div>
                                 @error('published_at') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
 

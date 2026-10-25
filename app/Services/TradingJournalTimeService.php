@@ -7,9 +7,11 @@ use Carbon\Carbon;
 class TradingJournalTimeService
 {
     public const TIMEZONE_MALAYSIA = 'malaysia';
+
     public const TIMEZONE_MT5 = 'mt5';
 
     private const MALAYSIA_OFFSET_MINUTES = 480;
+
     private const DEFAULT_MT5_OFFSET_MINUTES = 180;
 
     public function modes(): array
@@ -76,10 +78,10 @@ class TradingJournalTimeService
         $mode = $this->normalizeMode($mode);
 
         if ($mode === self::TIMEZONE_MT5) {
-            return $this->modes()[$mode]['label'] . ' (' . $this->offsetLabel($offsetMinutes, $mode) . ')';
+            return $this->modes()[$mode]['label'].' ('.$this->offsetLabel($offsetMinutes, $mode).')';
         }
 
-        return $this->modes()[$mode]['label'] . ' (UTC+8)';
+        return $this->modes()[$mode]['label'].' (UTC+8)';
     }
 
     public function shortLabel(?string $mode, $offsetMinutes = null): string
@@ -87,7 +89,7 @@ class TradingJournalTimeService
         $mode = $this->normalizeMode($mode);
 
         if ($mode === self::TIMEZONE_MT5) {
-            return 'MT5 ' . $this->offsetLabel($offsetMinutes, $mode);
+            return 'MT5 '.$this->offsetLabel($offsetMinutes, $mode);
         }
 
         return $this->modes()[$mode]['short_label'];
@@ -107,6 +109,31 @@ class TradingJournalTimeService
     public function toMalaysiaDatabase($value, ?string $sourceMode, $sourceOffsetMinutes = null): ?string
     {
         return $this->toMalaysiaCarbon($value, $sourceMode, $sourceOffsetMinutes)?->format('Y-m-d H:i:s');
+    }
+
+    public function toMalaysiaTimeline($openValue, $closeValue, ?string $sourceMode, $sourceOffsetMinutes = null): array
+    {
+        $sourceOpen = $this->parseNaive($openValue);
+        $sourceClose = $this->parseNaive($closeValue);
+        $closeRolledForward = false;
+
+        if ($sourceOpen && $sourceClose && $sourceClose->lte($sourceOpen) && $sourceClose->isSameDay($sourceOpen)) {
+            $sourceClose->addDay();
+            $closeRolledForward = true;
+        }
+
+        $offsetAdjustment = self::MALAYSIA_OFFSET_MINUTES - $this->offsetMinutes($sourceMode, $sourceOffsetMinutes);
+        $open = $sourceOpen?->copy()->addMinutes($offsetAdjustment);
+        $close = $sourceClose?->copy()->addMinutes($offsetAdjustment);
+
+        return [
+            'open' => $open,
+            'close' => $close,
+            'open_date' => $open?->format('Y-m-d H:i:s'),
+            'close_date' => $close?->format('Y-m-d H:i:s'),
+            'close_rolled_forward' => $closeRolledForward,
+            'is_valid' => $open && $close && $close->gt($open),
+        ];
     }
 
     public function fromMalaysiaCarbon($value, ?string $targetMode, $targetOffsetMinutes = null): ?Carbon

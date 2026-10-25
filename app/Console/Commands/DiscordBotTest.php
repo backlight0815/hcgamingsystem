@@ -2,19 +2,20 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use Discord\Discord;
 use Discord\Parts\Channel\Channel;
+use Illuminate\Console\Command;
 
-class DiscordCreateThread extends Command
+class DiscordBotTest extends Command
 {
-    protected $signature = 'discord:create-thread {channel_id?} {--name=} {--message=}';
-    protected $description = 'Create a thread in a channel using bot';
+    protected $signature = 'discord:bot-test {channel_id?} {--name=} {--message=}';
+
+    protected $description = 'Test creating a thread in a channel using the Discord bot';
 
     public function handle()
     {
         $channelId = $this->argument('channel_id') ?? '1363065104803041403';
-        $threadName = $this->option('name') ?? 'My New Thread ' . date('Y-m-d H:i:s');
+        $threadName = $this->option('name') ?? 'My New Thread '.date('Y-m-d H:i:s');
         $firstMessage = $this->option('message') ?? null;
 
         $discord = new Discord([
@@ -25,8 +26,9 @@ class DiscordCreateThread extends Command
 
             $channel = $discord->getChannel($channelId);
 
-            if (!$channel) {
-                $this->error("❌ Channel not found or bot has no access.");
+            if (! $channel) {
+                $this->error('❌ Channel not found or bot has no access.');
+
                 return;
             }
 

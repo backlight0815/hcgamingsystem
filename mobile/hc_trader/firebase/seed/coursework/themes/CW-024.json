@@ -1,0 +1,637 @@
+{
+  "theme": {
+    "id": "CW-024",
+    "code": "CW-024",
+    "title": {
+      "en": "Comparing Fresh Zones with Repeatedly Tested Levels",
+      "zh": "比较新鲜区域与多次测试价位"
+    },
+    "shortTitle": {
+      "en": "fresh zone",
+      "zh": "比较新鲜区域与多次测试价位"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates comparing fresh zones with repeatedly tested levels using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示比较新鲜区域与多次测试价位。"
+    },
+    "categoryId": "key_levels",
+    "categoryName": {
+      "en": "Support, Resistance and Key Levels",
+      "zh": "支撑、阻力与关键价位"
+    },
+    "difficulty": "beginner",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind comparing fresh zones with repeatedly tested levels.",
+        "Apply comparing fresh zones with repeatedly tested levels to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释比较新鲜区域与多次测试价位背后的核心决策规则。",
+        "将比较新鲜区域与多次测试价位应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "fresh zone",
+      "tested zone",
+      "quality",
+      "GBPUSD",
+      "Support, Resistance and Key Levels"
+    ],
+    "searchTokens": [
+      "cw-024",
+      "CW-024",
+      "key_levels",
+      "support, resistance and key levels",
+      "支撑、阻力与关键价位",
+      "comparing",
+      "fresh",
+      "zones",
+      "with",
+      "repeatedly",
+      "tested",
+      "levels",
+      "比较新鲜区域与多次测试价位",
+      "zone",
+      "quality",
+      "gbpusd",
+      "support,",
+      "resistance",
+      "and",
+      "key"
+    ],
+    "difficultyOrder": 1,
+    "estimatedMinutes": 55,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 24,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "738d7af4565729febc7a876abf5fed18ef5bc6188bf9486112d788c86f921bbf"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-024",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for fresh zone",
+        "zh": "比较新鲜区域与多次测试价位的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which statement best describes a risk-aware approach to comparing fresh zones with repeatedly tested levels?",
+        "zh": "哪项陈述最能说明对比较新鲜区域与多次测试价位采取风险意识的方法？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing comparing fresh zones with repeatedly tested levels.",
+            "zh": "评估比较新鲜区域与多次测试价位时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "d78018a088d8144743909565a6037174f0bcbddc121868cfd440fb418afd0d68"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-024",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying fresh zone Under Uncertainty",
+        "zh": "在不确定性下应用比较新鲜区域与多次测试价位"
+      },
+      "prompt": {
+        "en": "The market moves quickly before confirmation of comparing fresh zones with repeatedly tested levels. Which action follows a professional plan?",
+        "zh": "在比较新鲜区域与多次测试价位获得确认前市场快速波动。哪项行动符合专业计划？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "a50c8f253672d9fbb25f84a7aae07feeae042c1d1fc67d534ece9260e875f8b9"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-024",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "GBPUSD Chart Interpretation for fresh zone",
+        "zh": "GBPUSD图表中的比较新鲜区域与多次测试价位解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational GBPUSD H1 chart. Which labelled zone is the strongest decision area for evaluating comparing fresh zones with repeatedly tested levels while keeping invalidation visible?",
+        "zh": "研究合成教学用GBPUSD H1图表。哪个标记区域最适合评估比较新鲜区域与多次测试价位，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "GBPUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 1.27582,
+            "high": 1.27779,
+            "low": 1.27256,
+            "close": 1.2741
+          },
+          {
+            "timeIndex": 1,
+            "open": 1.2741,
+            "high": 1.27619,
+            "low": 1.27178,
+            "close": 1.27292
+          },
+          {
+            "timeIndex": 2,
+            "open": 1.27292,
+            "high": 1.27466,
+            "low": 1.27103,
+            "close": 1.27336
+          },
+          {
+            "timeIndex": 3,
+            "open": 1.27336,
+            "high": 1.27724,
+            "low": 1.27129,
+            "close": 1.27562
+          },
+          {
+            "timeIndex": 4,
+            "open": 1.27562,
+            "high": 1.28073,
+            "low": 1.27402,
+            "close": 1.27856
+          },
+          {
+            "timeIndex": 5,
+            "open": 1.27856,
+            "high": 1.28227,
+            "low": 1.27749,
+            "close": 1.28053
+          },
+          {
+            "timeIndex": 6,
+            "open": 1.28053,
+            "high": 1.28182,
+            "low": 1.27868,
+            "close": 1.28068
+          },
+          {
+            "timeIndex": 7,
+            "open": 1.28068,
+            "high": 1.28272,
+            "low": 1.2774,
+            "close": 1.27949
+          },
+          {
+            "timeIndex": 8,
+            "open": 1.27949,
+            "high": 1.28154,
+            "low": 1.27629,
+            "close": 1.27794
+          },
+          {
+            "timeIndex": 9,
+            "open": 1.27794,
+            "high": 1.27913,
+            "low": 1.2756,
+            "close": 1.27661
+          },
+          {
+            "timeIndex": 10,
+            "open": 1.27661,
+            "high": 1.27831,
+            "low": 1.27368,
+            "close": 1.27548
+          },
+          {
+            "timeIndex": 11,
+            "open": 1.27548,
+            "high": 1.27765,
+            "low": 1.27259,
+            "close": 1.27468
+          },
+          {
+            "timeIndex": 12,
+            "open": 1.27468,
+            "high": 1.27651,
+            "low": 1.27297,
+            "close": 1.27486
+          },
+          {
+            "timeIndex": 13,
+            "open": 1.27486,
+            "high": 1.2778,
+            "low": 1.27393,
+            "close": 1.27655
+          },
+          {
+            "timeIndex": 14,
+            "open": 1.27655,
+            "high": 1.28142,
+            "low": 1.27481,
+            "close": 1.27934
+          },
+          {
+            "timeIndex": 15,
+            "open": 1.27934,
+            "high": 1.28376,
+            "low": 1.27725,
+            "close": 1.28175
+          },
+          {
+            "timeIndex": 16,
+            "open": 1.28175,
+            "high": 1.28346,
+            "low": 1.27999,
+            "close": 1.28238
+          },
+          {
+            "timeIndex": 17,
+            "open": 1.28238,
+            "high": 1.28417,
+            "low": 1.28014,
+            "close": 1.28109
+          },
+          {
+            "timeIndex": 18,
+            "open": 1.28109,
+            "high": 1.28325,
+            "low": 1.27727,
+            "close": 1.27896
+          },
+          {
+            "timeIndex": 19,
+            "open": 1.27896,
+            "high": 1.28053,
+            "low": 1.27517,
+            "close": 1.27726
+          },
+          {
+            "timeIndex": 20,
+            "open": 1.27726,
+            "high": 1.27861,
+            "low": 1.27461,
+            "close": 1.27642
+          },
+          {
+            "timeIndex": 21,
+            "open": 1.27642,
+            "high": 1.27854,
+            "low": 1.27522,
+            "close": 1.27624
+          },
+          {
+            "timeIndex": 22,
+            "open": 1.27624,
+            "high": 1.27858,
+            "low": 1.2746,
+            "close": 1.27663
+          },
+          {
+            "timeIndex": 23,
+            "open": 1.27663,
+            "high": 1.27888,
+            "low": 1.27455,
+            "close": 1.27791
+          },
+          {
+            "timeIndex": 24,
+            "open": 1.27791,
+            "high": 1.28204,
+            "low": 1.27606,
+            "close": 1.28017
+          },
+          {
+            "timeIndex": 25,
+            "open": 1.28017,
+            "high": 1.28473,
+            "low": 1.27908,
+            "close": 1.28258
+          },
+          {
+            "timeIndex": 26,
+            "open": 1.28258,
+            "high": 1.2852,
+            "low": 1.281,
+            "close": 1.28373
+          },
+          {
+            "timeIndex": 27,
+            "open": 1.28373,
+            "high": 1.28518,
+            "low": 1.28073,
+            "close": 1.2828
+          },
+          {
+            "timeIndex": 28,
+            "open": 1.2828,
+            "high": 1.28495,
+            "low": 1.27853,
+            "close": 1.28042
+          },
+          {
+            "timeIndex": 29,
+            "open": 1.28042,
+            "high": 1.2823,
+            "low": 1.27697,
+            "close": 1.27813
+          },
+          {
+            "timeIndex": 30,
+            "open": 1.27813,
+            "high": 1.27908,
+            "low": 1.27558,
+            "close": 1.2771
+          },
+          {
+            "timeIndex": 31,
+            "open": 1.2771,
+            "high": 1.2793,
+            "low": 1.27505,
+            "close": 1.27737
+          },
+          {
+            "timeIndex": 32,
+            "open": 1.27737,
+            "high": 1.28046,
+            "low": 1.27543,
+            "close": 1.27834
+          },
+          {
+            "timeIndex": 33,
+            "open": 1.27834,
+            "high": 1.28102,
+            "low": 1.2771,
+            "close": 1.27965
+          },
+          {
+            "timeIndex": 34,
+            "open": 1.27965,
+            "high": 1.28292,
+            "low": 1.27819,
+            "close": 1.28137
+          },
+          {
+            "timeIndex": 35,
+            "open": 1.28137,
+            "high": 1.28549,
+            "low": 1.27934,
+            "close": 1.28333
+          },
+          {
+            "timeIndex": 36,
+            "open": 1.28333,
+            "high": 1.28644,
+            "low": 1.28136,
+            "close": 1.28464
+          },
+          {
+            "timeIndex": 37,
+            "open": 1.28464,
+            "high": 1.2857,
+            "low": 1.28296,
+            "close": 1.28426
+          },
+          {
+            "timeIndex": 38,
+            "open": 1.28426,
+            "high": 1.28626,
+            "low": 1.28073,
+            "close": 1.28212
+          },
+          {
+            "timeIndex": 39,
+            "open": 1.28212,
+            "high": 1.28421,
+            "low": 1.27744,
+            "close": 1.27945
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 1.27165,
+            "maximumPrice": 1.2738,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 1.27534,
+            "maximumPrice": 1.2775,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 1.27997,
+            "maximumPrice": 1.28213,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 1.28367,
+            "maximumPrice": 1.28582,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "b4ddec97b842d00bdaf7c521d6bc4a7a0919e6e94f7939ac4ac75b34508ee231"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-024",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: fresh zone",
+        "zh": "独立情境分析：比较新鲜区域与多次测试价位"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of comparing fresh zones with repeatedly tested levels using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析比较新鲜区域与多次测试价位的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "e4f5d1d2bc750445684683f19fbbc5e4414f53011e2e1775eeec9a5ea3848597"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-024",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: fresh zone",
+        "zh": "实践展示：比较新鲜区域与多次测试价位"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate comparing fresh zones with repeatedly tested levels. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示比较新鲜区域与多次测试价位。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "8437c6683b7f4e063adcd607fdc0381847519f1c671dc35216d6f905faf4a000"
+    }
+  ]
+}

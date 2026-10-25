@@ -1,0 +1,638 @@
+{
+  "theme": {
+    "id": "CW-013",
+    "code": "CW-013",
+    "title": {
+      "en": "Validating Rejection Candles at Decision Areas",
+      "zh": "在决策区域验证拒绝K线"
+    },
+    "shortTitle": {
+      "en": "rejection candle",
+      "zh": "在决策区域验证拒绝K线"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates validating rejection candles at decision areas using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示在决策区域验证拒绝K线。"
+    },
+    "categoryId": "price_action",
+    "categoryName": {
+      "en": "Candlestick and Price Action",
+      "zh": "K线与价格行为"
+    },
+    "difficulty": "beginner",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind validating rejection candles at decision areas.",
+        "Apply validating rejection candles at decision areas to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释在决策区域验证拒绝K线背后的核心决策规则。",
+        "将在决策区域验证拒绝K线应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "rejection candle",
+      "wick",
+      "key level",
+      "US30",
+      "Candlestick and Price Action"
+    ],
+    "searchTokens": [
+      "cw-013",
+      "CW-013",
+      "price_action",
+      "candlestick and price action",
+      "K线与价格行为",
+      "validating",
+      "rejection",
+      "candles",
+      "at",
+      "decision",
+      "areas",
+      "在决策区域验证拒绝K线",
+      "candle",
+      "wick",
+      "key",
+      "level",
+      "us30",
+      "candlestick",
+      "and",
+      "price",
+      "action"
+    ],
+    "difficultyOrder": 1,
+    "estimatedMinutes": 55,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 13,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "11f4ce3fc6185dfd6aacdf6f9d340b3455f01d894dad896cc9f68379f0d10cbd"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-013",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for rejection candle",
+        "zh": "在决策区域验证拒绝K线的核心决策规则"
+      },
+      "prompt": {
+        "en": "What should a learner verify first when evaluating validating rejection candles at decision areas?",
+        "zh": "评估在决策区域验证拒绝K线时，学习者首先应核实什么？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing validating rejection candles at decision areas.",
+            "zh": "评估在决策区域验证拒绝K线时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "3c2420b83b4a8060fed05f61338249a215e90106036b3c12103655656ac5926d"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-013",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying rejection candle Under Uncertainty",
+        "zh": "在不确定性下应用在决策区域验证拒绝K线"
+      },
+      "prompt": {
+        "en": "A setup involving validating rejection candles at decision areas offers poor risk-to-reward after costs. What should the learner do?",
+        "zh": "涉及在决策区域验证拒绝K线的形态在计入成本后风险回报不佳。学习者应怎么做？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "ce91b25d9b8e66b4b83a02d1eda107596729e372d91a92b24d1834eb50b73a13"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-013",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "US30 Chart Interpretation for rejection candle",
+        "zh": "US30图表中的在决策区域验证拒绝K线解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational US30 H1 chart. Which labelled zone is the strongest decision area for evaluating validating rejection candles at decision areas while keeping invalidation visible?",
+        "zh": "研究合成教学用US30 H1图表。哪个标记区域最适合评估在决策区域验证拒绝K线，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "US30",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 39082.4,
+            "high": 39123,
+            "low": 39030.7,
+            "close": 39079.5
+          },
+          {
+            "timeIndex": 1,
+            "open": 39079.5,
+            "high": 39113.5,
+            "low": 38972.4,
+            "close": 39025.3
+          },
+          {
+            "timeIndex": 2,
+            "open": 39025.3,
+            "high": 39079.3,
+            "low": 38904.7,
+            "close": 38944.9
+          },
+          {
+            "timeIndex": 3,
+            "open": 38944.9,
+            "high": 38995,
+            "low": 38843.7,
+            "close": 38872
+          },
+          {
+            "timeIndex": 4,
+            "open": 38872,
+            "high": 38897.3,
+            "low": 38774,
+            "close": 38821.7
+          },
+          {
+            "timeIndex": 5,
+            "open": 38821.7,
+            "high": 38869.1,
+            "low": 38736.4,
+            "close": 38789.7
+          },
+          {
+            "timeIndex": 6,
+            "open": 38789.7,
+            "high": 38844.8,
+            "low": 38730,
+            "close": 38771.7
+          },
+          {
+            "timeIndex": 7,
+            "open": 38771.7,
+            "high": 38813,
+            "low": 38745.2,
+            "close": 38774.8
+          },
+          {
+            "timeIndex": 8,
+            "open": 38774.8,
+            "high": 38840.1,
+            "low": 38728.3,
+            "close": 38803.5
+          },
+          {
+            "timeIndex": 9,
+            "open": 38803.5,
+            "high": 38894.9,
+            "low": 38750,
+            "close": 38840.1
+          },
+          {
+            "timeIndex": 10,
+            "open": 38840.1,
+            "high": 38897.7,
+            "low": 38796.9,
+            "close": 38849.2
+          },
+          {
+            "timeIndex": 11,
+            "open": 38849.2,
+            "high": 38873,
+            "low": 38781.6,
+            "close": 38806.2
+          },
+          {
+            "timeIndex": 12,
+            "open": 38806.2,
+            "high": 38855.4,
+            "low": 38676.4,
+            "close": 38721.8
+          },
+          {
+            "timeIndex": 13,
+            "open": 38721.8,
+            "high": 38776.2,
+            "low": 38580.5,
+            "close": 38634.1
+          },
+          {
+            "timeIndex": 14,
+            "open": 38634.1,
+            "high": 38669.6,
+            "low": 38531.7,
+            "close": 38576.3
+          },
+          {
+            "timeIndex": 15,
+            "open": 38576.3,
+            "high": 38615.5,
+            "low": 38530.2,
+            "close": 38553.6
+          },
+          {
+            "timeIndex": 16,
+            "open": 38553.6,
+            "high": 38608.9,
+            "low": 38507.2,
+            "close": 38551.2
+          },
+          {
+            "timeIndex": 17,
+            "open": 38551.2,
+            "high": 38604.3,
+            "low": 38497.7,
+            "close": 38557.8
+          },
+          {
+            "timeIndex": 18,
+            "open": 38557.8,
+            "high": 38600.5,
+            "low": 38512,
+            "close": 38574
+          },
+          {
+            "timeIndex": 19,
+            "open": 38574,
+            "high": 38648.3,
+            "low": 38548.7,
+            "close": 38597.6
+          },
+          {
+            "timeIndex": 20,
+            "open": 38597.6,
+            "high": 38662,
+            "low": 38554.9,
+            "close": 38608.4
+          },
+          {
+            "timeIndex": 21,
+            "open": 38608.4,
+            "high": 38641.3,
+            "low": 38525.7,
+            "close": 38579.1
+          },
+          {
+            "timeIndex": 22,
+            "open": 38579.1,
+            "high": 38620.7,
+            "low": 38455.9,
+            "close": 38502.9
+          },
+          {
+            "timeIndex": 23,
+            "open": 38502.9,
+            "high": 38558.5,
+            "low": 38380.3,
+            "close": 38407.5
+          },
+          {
+            "timeIndex": 24,
+            "open": 38407.5,
+            "high": 38452,
+            "low": 38294.2,
+            "close": 38335.4
+          },
+          {
+            "timeIndex": 25,
+            "open": 38335.4,
+            "high": 38364.7,
+            "low": 38256.6,
+            "close": 38309.8
+          },
+          {
+            "timeIndex": 26,
+            "open": 38309.8,
+            "high": 38372.2,
+            "low": 38261.6,
+            "close": 38320.1
+          },
+          {
+            "timeIndex": 27,
+            "open": 38320.1,
+            "high": 38392.8,
+            "low": 38291,
+            "close": 38340.3
+          },
+          {
+            "timeIndex": 28,
+            "open": 38340.3,
+            "high": 38385,
+            "low": 38300.7,
+            "close": 38354.8
+          },
+          {
+            "timeIndex": 29,
+            "open": 38354.8,
+            "high": 38407.3,
+            "low": 38302.1,
+            "close": 38363.5
+          },
+          {
+            "timeIndex": 30,
+            "open": 38363.5,
+            "high": 38419.5,
+            "low": 38314.3,
+            "close": 38363.9
+          },
+          {
+            "timeIndex": 31,
+            "open": 38363.9,
+            "high": 38406.2,
+            "low": 38309.7,
+            "close": 38340.6
+          },
+          {
+            "timeIndex": 32,
+            "open": 38340.6,
+            "high": 38372.7,
+            "low": 38240.8,
+            "close": 38278.8
+          },
+          {
+            "timeIndex": 33,
+            "open": 38278.8,
+            "high": 38332.1,
+            "low": 38135.9,
+            "close": 38188.2
+          },
+          {
+            "timeIndex": 34,
+            "open": 38188.2,
+            "high": 38239.4,
+            "low": 38055.3,
+            "close": 38105.4
+          },
+          {
+            "timeIndex": 35,
+            "open": 38105.4,
+            "high": 38132.8,
+            "low": 38034.5,
+            "close": 38067.2
+          },
+          {
+            "timeIndex": 36,
+            "open": 38067.2,
+            "high": 38125,
+            "low": 38030.8,
+            "close": 38079
+          },
+          {
+            "timeIndex": 37,
+            "open": 38079,
+            "high": 38169.2,
+            "low": 38027.3,
+            "close": 38113.8
+          },
+          {
+            "timeIndex": 38,
+            "open": 38113.8,
+            "high": 38178.6,
+            "low": 38062.9,
+            "close": 38138.6
+          },
+          {
+            "timeIndex": 39,
+            "open": 38138.6,
+            "high": 38175.4,
+            "low": 38104.2,
+            "close": 38140.7
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 38071.1,
+            "maximumPrice": 38224.5,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 38334.1,
+            "maximumPrice": 38487.5,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 38662.8,
+            "maximumPrice": 38816.2,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 38925.8,
+            "maximumPrice": 39079.2,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "6f5a4e5e4ca1d8d4f1cf47a62fea8d7db5129649eb932eb1c325f93018383d47"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-013",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: rejection candle",
+        "zh": "独立情境分析：在决策区域验证拒绝K线"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of validating rejection candles at decision areas using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析在决策区域验证拒绝K线的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "bb82450014e048ec8832d2d3046f8d949c0f079c8b333ac64b8fedbe6373c877"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-013",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: rejection candle",
+        "zh": "实践展示：在决策区域验证拒绝K线"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate validating rejection candles at decision areas. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示在决策区域验证拒绝K线。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "fd32c6133137155feb3d343a8cefc009a4c0cbd991cf42f5e0a7a69708d7cff5"
+    }
+  ]
+}

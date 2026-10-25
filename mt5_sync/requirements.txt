@@ -1,0 +1,4 @@
+MetaTrader5
+python-dotenv
+firebase-admin
+supabase

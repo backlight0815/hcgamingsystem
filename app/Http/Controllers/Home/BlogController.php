@@ -169,24 +169,13 @@ public function UpdateBlog(Request $request)
 
 
 public function BlogDetails($id){
-
-$allblogs = Blog::latest()->limit(5)->get();
-    $blogs = Blog::findOrFail($id);
-    $categories = BlogCategory::orderBy('blog_category','ASC')->get();
-
-
-   // Create a request instance with the route parameters
-   $request = Request::create('/blog/details/' . $id, 'GET');
-
-   // Dispatch a request to the route, letting the middleware handle the request
-   // Resolve the middleware and apply it to the request
-    // Resolve the middleware and apply it to the request
-    $middleware = app()->make(\App\Http\Middleware\PageViewMiddleware::class);
-    $middleware->handle($request, function ($request) use ($blogs) {
-        // This closure is needed to simulate the middleware behavior
-    });
-
-    return view('frontend.blog_details',compact('blogs','allblogs','categories'));
+    $blogs = Blog::storefront()->with('category')->findOrFail($id);
+    $relatedBlogs = Blog::storefront()->with('category')->whereKeyNot($blogs->id)
+        ->where('blog_category_id', $blogs->blog_category_id)->latest()->limit(3)->get();
+    if ($relatedBlogs->isEmpty()) {
+        $relatedBlogs = Blog::storefront()->with('category')->whereKeyNot($blogs->id)->latest()->limit(3)->get();
+    }
+    return view('frontend.blog_details', compact('blogs', 'relatedBlogs'));
 
 }//End Methods
 
@@ -198,20 +187,36 @@ private function handlePageView($blog)
 }
 
 public function CategoryBlog($id){
-    $blogpost = Blog::where('blog_category_id',$id)->orderBy('id','DESC')->get();
-    $allblogs = Blog::latest()->limit(5)->get();
-    $categories = BlogCategory::orderBy('blog_category','ASC')->get();
-    $categoryname = BlogCategory::findOrFail($id);
-    return view('frontend.cat_blog_details',compact('blogpost','allblogs','categories','categoryname'));
-
-
+    BlogCategory::findOrFail($id);
+    return $this->blogListing(request(), (int) $id);
 }//End Method
 
-public function HomeBlog(){
+public function HomeBlog(Request $request){
+    $categoryId = $request->integer('category') ?: null;
+    if ($categoryId) {
+        BlogCategory::findOrFail($categoryId);
+    }
+    return $this->blogListing($request, $categoryId);
+}
 
-    $categories = BlogCategory::orderBy('blog_category','ASC')->get();
-    $allblogs = Blog::latest()->paginate(2);
-    return view('frontend.blog',compact('allblogs','categories'));
+private function blogListing(Request $request, ?int $categoryId = null)
+{
+    $search = mb_substr(trim((string) $request->query('q', '')), 0, 80);
+    $query = Blog::storefront()->with('category');
+    if ($categoryId) {
+        $query->where('blog_category_id', $categoryId);
+    }
+    if ($search !== '') {
+        $query->where(function ($query) use ($search) {
+            $query->where('blog_title', 'like', '%'.$search.'%')
+                ->orWhere('blog_description', 'like', '%'.$search.'%');
+        });
+    }
+    $allblogs = $query->latest()->paginate(9)->withQueryString();
+    $categories = BlogCategory::whereHas('blogs', fn ($query) => $query->storefront())
+        ->whereNotIn('blog_category', ['?', '??', ''])->orderBy('blog_category')->get();
+    $featured = $allblogs->currentPage() === 1 ? $allblogs->first() : null;
+    return view('frontend.blog', compact('allblogs', 'categories', 'featured', 'categoryId', 'search'));
 }
 
 

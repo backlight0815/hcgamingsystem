@@ -1,0 +1,634 @@
+{
+  "theme": {
+    "id": "CW-036",
+    "code": "CW-036",
+    "title": {
+      "en": "Confirming Break of Structure Without Anticipating the Close",
+      "zh": "不提前假设收盘地确认结构突破"
+    },
+    "shortTitle": {
+      "en": "Break of Structure",
+      "zh": "不提前假设收盘地确认结构突破"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates confirming break of structure without anticipating the close using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示不提前假设收盘地确认结构突破。"
+    },
+    "categoryId": "market_structure",
+    "categoryName": {
+      "en": "Market Structure",
+      "zh": "市场结构"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind confirming break of structure without anticipating the close.",
+        "Apply confirming break of structure without anticipating the close to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释不提前假设收盘地确认结构突破背后的核心决策规则。",
+        "将不提前假设收盘地确认结构突破应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "Break of Structure",
+      "BOS",
+      "close",
+      "XAUUSD",
+      "Market Structure"
+    ],
+    "searchTokens": [
+      "cw-036",
+      "CW-036",
+      "market_structure",
+      "market structure",
+      "市场结构",
+      "confirming",
+      "break",
+      "of",
+      "structure",
+      "without",
+      "anticipating",
+      "the",
+      "close",
+      "不提前假设收盘地确认结构突破",
+      "bos",
+      "xauusd",
+      "market"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 36,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "7fa6c21cbd617cdb905a9d882f09ecd22d92db07472854309e6694a95d84c0e6"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-036",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for Break of Structure",
+        "zh": "不提前假设收盘地确认结构突破的核心决策规则"
+      },
+      "prompt": {
+        "en": "How should confirming break of structure without anticipating the close influence a planned trading decision?",
+        "zh": "不提前假设收盘地确认结构突破应如何影响有计划的交易决策？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing confirming break of structure without anticipating the close.",
+            "zh": "评估不提前假设收盘地确认结构突破时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "58551b65579e450973796f387a361d1a1011e329a604f50a36c680ba99dff9b9"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-036",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying Break of Structure Under Uncertainty",
+        "zh": "在不确定性下应用不提前假设收盘地确认结构突破"
+      },
+      "prompt": {
+        "en": "A learner wants to increase size because confirming break of structure without anticipating the close appears convincing. What must happen first?",
+        "zh": "学习者因不提前假设收盘地确认结构突破看似有说服力而想增加仓位。首先必须做什么？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "3ba6eef53c0fb6bc9a6cb5f6b5160c34f4b79727a206dc70d909b51af23c8d92"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-036",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "XAUUSD Chart Interpretation for Break of Structure",
+        "zh": "XAUUSD图表中的不提前假设收盘地确认结构突破解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational XAUUSD H1 chart. Which labelled zone is the strongest decision area for evaluating confirming break of structure without anticipating the close while keeping invalidation visible?",
+        "zh": "研究合成教学用XAUUSD H1图表。哪个标记区域最适合评估不提前假设收盘地确认结构突破，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "XAUUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 2355.94,
+            "high": 2358.92,
+            "low": 2353.91,
+            "close": 2357.44
+          },
+          {
+            "timeIndex": 1,
+            "open": 2357.44,
+            "high": 2360.85,
+            "low": 2356.08,
+            "close": 2358.65
+          },
+          {
+            "timeIndex": 2,
+            "open": 2358.65,
+            "high": 2361.27,
+            "low": 2357.24,
+            "close": 2359.34
+          },
+          {
+            "timeIndex": 3,
+            "open": 2359.34,
+            "high": 2360.31,
+            "low": 2356.78,
+            "close": 2358.83
+          },
+          {
+            "timeIndex": 4,
+            "open": 2358.83,
+            "high": 2360.8,
+            "low": 2354.77,
+            "close": 2356.82
+          },
+          {
+            "timeIndex": 5,
+            "open": 2356.82,
+            "high": 2359,
+            "low": 2352.77,
+            "close": 2354.2
+          },
+          {
+            "timeIndex": 6,
+            "open": 2354.2,
+            "high": 2355.6,
+            "low": 2351.22,
+            "close": 2352.57
+          },
+          {
+            "timeIndex": 7,
+            "open": 2352.57,
+            "high": 2354.58,
+            "low": 2350.54,
+            "close": 2353
+          },
+          {
+            "timeIndex": 8,
+            "open": 2353,
+            "high": 2357.35,
+            "low": 2350.92,
+            "close": 2355.13
+          },
+          {
+            "timeIndex": 9,
+            "open": 2355.13,
+            "high": 2359.44,
+            "low": 2353.64,
+            "close": 2357.59
+          },
+          {
+            "timeIndex": 10,
+            "open": 2357.59,
+            "high": 2360.34,
+            "low": 2356.32,
+            "close": 2359.27
+          },
+          {
+            "timeIndex": 11,
+            "open": 2359.27,
+            "high": 2362.05,
+            "low": 2357.28,
+            "close": 2360.01
+          },
+          {
+            "timeIndex": 12,
+            "open": 2360.01,
+            "high": 2362.26,
+            "low": 2357.91,
+            "close": 2360.12
+          },
+          {
+            "timeIndex": 13,
+            "open": 2360.12,
+            "high": 2361.42,
+            "low": 2358.05,
+            "close": 2359.6
+          },
+          {
+            "timeIndex": 14,
+            "open": 2359.6,
+            "high": 2361.28,
+            "low": 2356.95,
+            "close": 2358.15
+          },
+          {
+            "timeIndex": 15,
+            "open": 2358.15,
+            "high": 2360.37,
+            "low": 2354,
+            "close": 2355.94
+          },
+          {
+            "timeIndex": 16,
+            "open": 2355.94,
+            "high": 2357.71,
+            "low": 2351.98,
+            "close": 2354.1
+          },
+          {
+            "timeIndex": 17,
+            "open": 2354.1,
+            "high": 2355.29,
+            "low": 2352.36,
+            "close": 2353.98
+          },
+          {
+            "timeIndex": 18,
+            "open": 2353.98,
+            "high": 2358,
+            "low": 2352.85,
+            "close": 2355.91
+          },
+          {
+            "timeIndex": 19,
+            "open": 2355.91,
+            "high": 2360.89,
+            "low": 2354,
+            "close": 2358.8
+          },
+          {
+            "timeIndex": 20,
+            "open": 2358.8,
+            "high": 2362.21,
+            "low": 2356.67,
+            "close": 2361.02
+          },
+          {
+            "timeIndex": 21,
+            "open": 2361.02,
+            "high": 2363.51,
+            "low": 2359.35,
+            "close": 2361.74
+          },
+          {
+            "timeIndex": 22,
+            "open": 2361.74,
+            "high": 2363.97,
+            "low": 2360.22,
+            "close": 2361.27
+          },
+          {
+            "timeIndex": 23,
+            "open": 2361.27,
+            "high": 2362.95,
+            "low": 2358.43,
+            "close": 2360.29
+          },
+          {
+            "timeIndex": 24,
+            "open": 2360.29,
+            "high": 2361.58,
+            "low": 2356.89,
+            "close": 2359.03
+          },
+          {
+            "timeIndex": 25,
+            "open": 2359.03,
+            "high": 2361.16,
+            "low": 2355.7,
+            "close": 2357.43
+          },
+          {
+            "timeIndex": 26,
+            "open": 2357.43,
+            "high": 2359.47,
+            "low": 2354.91,
+            "close": 2355.88
+          },
+          {
+            "timeIndex": 27,
+            "open": 2355.88,
+            "high": 2356.96,
+            "low": 2353.59,
+            "close": 2355.4
+          },
+          {
+            "timeIndex": 28,
+            "open": 2355.4,
+            "high": 2358.64,
+            "low": 2353.26,
+            "close": 2356.79
+          },
+          {
+            "timeIndex": 29,
+            "open": 2356.79,
+            "high": 2361.86,
+            "low": 2355,
+            "close": 2359.64
+          },
+          {
+            "timeIndex": 30,
+            "open": 2359.64,
+            "high": 2363.97,
+            "low": 2358.69,
+            "close": 2362.38
+          },
+          {
+            "timeIndex": 31,
+            "open": 2362.38,
+            "high": 2364.94,
+            "low": 2360.63,
+            "close": 2363.54
+          },
+          {
+            "timeIndex": 32,
+            "open": 2363.54,
+            "high": 2365.71,
+            "low": 2360.72,
+            "close": 2362.86
+          },
+          {
+            "timeIndex": 33,
+            "open": 2362.86,
+            "high": 2364.84,
+            "low": 2359.41,
+            "close": 2361.25
+          },
+          {
+            "timeIndex": 34,
+            "open": 2361.25,
+            "high": 2362.22,
+            "low": 2358.66,
+            "close": 2359.68
+          },
+          {
+            "timeIndex": 35,
+            "open": 2359.68,
+            "high": 2361.61,
+            "low": 2356.77,
+            "close": 2358.47
+          },
+          {
+            "timeIndex": 36,
+            "open": 2358.47,
+            "high": 2360.66,
+            "low": 2355.4,
+            "close": 2357.53
+          },
+          {
+            "timeIndex": 37,
+            "open": 2357.53,
+            "high": 2359.01,
+            "low": 2355.29,
+            "close": 2357.17
+          },
+          {
+            "timeIndex": 38,
+            "open": 2357.17,
+            "high": 2359.59,
+            "low": 2356.08,
+            "close": 2358.08
+          },
+          {
+            "timeIndex": 39,
+            "open": 2358.08,
+            "high": 2362.65,
+            "low": 2356.44,
+            "close": 2360.45
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 2351.15,
+            "maximumPrice": 2353.27,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 2354.79,
+            "maximumPrice": 2356.91,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 2359.34,
+            "maximumPrice": 2361.46,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 2362.98,
+            "maximumPrice": 2365.1,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "af1a2f4d2bb240c96a5fe489d8362e1f53df2b05b93115e98cab05b334d4005d"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-036",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: Break of Structure",
+        "zh": "独立情境分析：不提前假设收盘地确认结构突破"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of confirming break of structure without anticipating the close using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析不提前假设收盘地确认结构突破的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "b10ccecf37eee1a5d1f0a9ce24f30d6111f4f90285ab3ab8bb23a89748c97c78"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-036",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: Break of Structure",
+        "zh": "实践展示：不提前假设收盘地确认结构突破"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate confirming break of structure without anticipating the close. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示不提前假设收盘地确认结构突破。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "77c57d40851b1d1e3b0b008201c25c132c03fea01baa72776e8ec5818ccbd1b5"
+    }
+  ]
+}

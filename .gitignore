@@ -12,6 +12,10 @@
 .env
 .env.backup
 .env.production
+mt5_sync/.env
+mt5_sync/*.json
+*service-account*.json
+*firebase-adminsdk*.json
 
 Homestead.json
 Homestead.yaml

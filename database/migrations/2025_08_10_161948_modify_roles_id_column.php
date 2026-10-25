@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('roles', function (Blueprint $table) {
- // Change the ID column: drop auto increment, keep as primary key
+        if (! Schema::hasTable('roles') || DB::getDriverName() === 'sqlite') {
+            return;
+        }
+
+        // Change the ID column: drop auto increment, keep as primary key.
         DB::statement('ALTER TABLE roles MODIFY id BIGINT UNSIGNED NOT NULL;');
-        DB::statement('ALTER TABLE roles DROP PRIMARY KEY, ADD PRIMARY KEY (id);');        });
+        DB::statement('ALTER TABLE roles DROP PRIMARY KEY, ADD PRIMARY KEY (id);');
     }
 
     /**
@@ -22,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('roles', function (Blueprint $table) {
-            //
-        });
+        //
     }
 };

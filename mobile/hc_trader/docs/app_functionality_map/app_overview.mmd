@@ -1,0 +1,94 @@
+﻿flowchart LR
+  subgraph Roles["User roles"]
+    Guest["Guest / unauthenticated"]
+    Trader["Trader / Lead Client"]
+    Recruiter["Leader / Recruiter"]
+    Publisher["Market Analyst / Signal Provider"]
+    Admin["Super Admin / Sub Admin"]
+  end
+
+  subgraph App["Flutter HC Trader app"]
+    Auth["AuthScreen\nSign in / Register / Reset / Language"]
+    Gate["AuthGate\nFirebase auth stream + user profile"]
+    Shell["HomeShell\nHome | Journal | Trading Hub | Accounts"]
+    More["Profile & More\nTools | Exams | Support | Recruitment | Admin"]
+  end
+
+  subgraph TraderFlow["Trader / user flow"]
+    Dashboard["Dashboard"]
+    Journal["Trading journal\nCRUD / import / attachments"]
+    Hub["Trading Hub\nMarket | Knowledge | Classes | Blogs | Signals | Exam | Positions | Resources"]
+    Accounts["Accounts\nVerification | Trading accounts | Capital | Position applications"]
+    Toolkit["Toolkit\nRisk | Statistics | Prop firm | Psychology | Trading plan"]
+    Ready["Readiness checklist"]
+    Appts["Appointments"]
+    Support["Support tickets"]
+  end
+
+  subgraph AdminFlow["Administration flow"]
+    AdminRoot["AdminOverviewScreen\n11 tabs"]
+    Users["Users / Roles"]
+    Verify["Verification / KYC review"]
+    AdminContent["Content / Modules CRUD"]
+    Reviews["Journals / Exams / Delete requests"]
+    Ops["Performance / Prop firm / Leaderboard / Competitions"]
+    Features["Feature toggles / Audit"]
+  end
+
+  subgraph Backend["Firebase and services"]
+    FAuth["Firebase Auth"]
+    Firestore["Cloud Firestore\nusers, journals, content, exams, tickets, appointments"]
+    Storage["Firebase Storage\nprofile, support, admin assets, documents"]
+    Functions["Cloud Functions\nregistration, translation, notifications"]
+    Messaging["FCM + local notifications"]
+    Local["SharedPreferences\nlocale, drafts, preferences"]
+    Translate["Manual zh fields\nno translation API"]
+    Legacy["Legacy ApiClient\nnot used at runtime in main.dart"]
+  end
+
+  Guest --> Auth --> Gate
+  Gate -->|no user| Auth
+  Gate -->|user profile| Shell
+  Shell --> Dashboard
+  Shell --> Journal
+  Shell --> Hub
+  Shell --> Accounts
+  Shell --> More
+  More --> Toolkit
+  More --> Ready
+  More --> Appts
+  More --> Support
+  More --> AdminRoot
+  Recruiter --> More
+  Recruiter -->|invite / downline| Firestore
+  Publisher --> Hub
+  Publisher --> AdminContent
+  Admin --> AdminRoot
+  AdminRoot --> Users
+  AdminRoot --> Verify
+  AdminRoot --> AdminContent
+  AdminRoot --> Reviews
+  AdminRoot --> Ops
+  AdminRoot --> Features
+  Journal --> Firestore
+  Journal --> Storage
+  Accounts --> Firestore
+  Accounts --> Storage
+  Hub --> Firestore
+  Toolkit --> Local
+  Ready --> Firestore
+  Appts --> Firestore
+  Support --> Firestore
+  Support --> Storage
+  Auth --> FAuth
+  Auth --> Functions
+  Gate --> Firestore
+  Functions --> Firestore
+  Functions --> Messaging
+  Functions --> Translate
+  Messaging --> Trader
+  Messaging --> Publisher
+  Messaging --> Admin
+  More --> Local
+  Legacy -. "present but Firebase mode is active" .-> App
+

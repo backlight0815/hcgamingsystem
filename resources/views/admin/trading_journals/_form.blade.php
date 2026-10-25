@@ -4,6 +4,13 @@
     $selectedPair = old('pair', $journal->pair ?? '');
     $selectedDirection = old('direction', $journal->direction ?? '');
     $selectedResult = old('result', $journal->result ?? '');
+    $tradingReasons = collect($tradingReasons ?? []);
+    $selectedStatus = old('status', $journal->status ?? \App\Models\TradingJournal::STATUS_CLOSED);
+    $selectedCloseHandling = old('close_handling', $journal->close_handling ?? \App\Models\TradingJournal::CLOSE_HANDLING_MANUAL);
+    $selectedTradingReasonId = old('trading_reason_id', $journal->trading_reason_id ?? '');
+    $mistakeTagsRaw = old('mistake_tags', $journal->mistake_tags ?? '');
+    $mistakeTagsValue = is_array($mistakeTagsRaw) ? implode(', ', $mistakeTagsRaw) : $mistakeTagsRaw;
+    $emotionOptions = ['Calm', 'Confident', 'Focused', 'Patient', 'Anxious', 'Fearful', 'Greedy', 'Frustrated', 'Tired'];
     $journalTime = app(\App\Services\TradingJournalTimeService::class);
     $timeModes = $journalTime->modes();
     $timeInputTimezone = $journalTime->normalizeMode(old('time_input_timezone', $journal->time_input_timezone ?? null));
@@ -103,6 +110,10 @@
 
     .journal-time-segment {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .journal-status-segment {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     .journal-segment input {
@@ -229,7 +240,8 @@
             flex-direction: column;
         }
 
-        .journal-result-segment {
+        .journal-result-segment,
+        .journal-status-segment {
             grid-template-columns: 1fr;
         }
 
@@ -245,6 +257,62 @@
 
     <div class="row g-4">
         <div class="col-xl-8">
+            <div class="journal-panel mb-4">
+                <div class="journal-panel-header">
+                    <h5>Trade Workflow</h5>
+                </div>
+                <div class="journal-panel-body">
+                    <div class="row">
+                        <div class="col-lg-6 journal-field">
+                            <label>Status</label>
+                            <div class="journal-segment journal-status-segment">
+                                <input type="radio" name="status" id="status_draft" value="{{ \App\Models\TradingJournal::STATUS_DRAFT }}" {{ $selectedStatus === \App\Models\TradingJournal::STATUS_DRAFT ? 'checked' : '' }}>
+                                <label class="journal-choice" for="status_draft"><i class="mdi mdi-file-outline"></i> Draft</label>
+
+                                <input type="radio" name="status" id="status_open" value="{{ \App\Models\TradingJournal::STATUS_OPEN }}" {{ $selectedStatus === \App\Models\TradingJournal::STATUS_OPEN ? 'checked' : '' }}>
+                                <label class="journal-choice" for="status_open"><i class="mdi mdi-lock-open-variant-outline"></i> Open</label>
+
+                                <input type="radio" name="status" id="status_closed" value="{{ \App\Models\TradingJournal::STATUS_CLOSED }}" {{ $selectedStatus === \App\Models\TradingJournal::STATUS_CLOSED ? 'checked' : '' }}>
+                                <label class="journal-choice" for="status_closed"><i class="mdi mdi-check-circle-outline"></i> Closed</label>
+                            </div>
+                            <div class="small text-muted mt-2">Draft and open positions can be saved without close details. A complete close time, exit price, and result will save the trade as closed.</div>
+                            @error('status')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-lg-6 journal-field">
+                            <label>Close Handling</label>
+                            <div class="journal-segment">
+                                <input type="radio" name="close_handling" id="close_handling_manual" value="{{ \App\Models\TradingJournal::CLOSE_HANDLING_MANUAL }}" {{ $selectedCloseHandling === \App\Models\TradingJournal::CLOSE_HANDLING_MANUAL ? 'checked' : '' }}>
+                                <label class="journal-choice" for="close_handling_manual"><i class="mdi mdi-hand-back-right-outline"></i> Manual Close</label>
+
+                                <input type="radio" name="close_handling" id="close_handling_preset" value="{{ \App\Models\TradingJournal::CLOSE_HANDLING_PRESET }}" {{ $selectedCloseHandling === \App\Models\TradingJournal::CLOSE_HANDLING_PRESET ? 'checked' : '' }}>
+                                <label class="journal-choice" for="close_handling_preset"><i class="mdi mdi-target-variant"></i> Follow Pre Set</label>
+                            </div>
+                            @error('close_handling')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="journal-field mb-0">
+                        <label for="trading_reason_id">Reason for Entry</label>
+                        <select id="trading_reason_id" name="trading_reason_id" class="form-control @error('trading_reason_id') is-invalid @enderror">
+                            <option value="">Select Reason</option>
+                            @foreach($tradingReasons as $reason)
+                                <option value="{{ $reason->id }}" {{ (string) $selectedTradingReasonId === (string) $reason->id ? 'selected' : '' }}>
+                                    {{ $reason->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('trading_reason_id')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
             <div class="journal-panel mb-4">
                 <div class="journal-panel-header">
                     <h5>Trade Timeline</h5>
@@ -292,7 +360,7 @@
 
                         <div class="col-md-6 journal-field">
                             <label for="close_date">Close Trade Time</label>
-                            <input id="close_date" name="close_date" type="datetime-local" class="form-control @error('close_date') is-invalid @enderror" value="{{ old('close_date', $formatDateTimeLocal($journal->close_date ?? null)) }}" required>
+                            <input id="close_date" name="close_date" type="datetime-local" class="form-control @error('close_date') is-invalid @enderror" value="{{ old('close_date', $formatDateTimeLocal($journal->close_date ?? null)) }}">
                             @error('close_date')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
@@ -310,6 +378,9 @@
                             <strong>Open: <span data-preview-open-mt5>-</span></strong>
                             <strong>Close: <span data-preview-close-mt5>-</span></strong>
                         </div>
+                    </div>
+                    <div class="small text-muted mt-2" data-timeline-rollover-note style="display:none;">
+                        Overnight trade detected: close time is treated as the next calendar day.
                     </div>
                 </div>
             </div>
@@ -364,7 +435,7 @@
 
                         <div class="col-md-4 journal-field">
                             <label for="exit_price">Exit Price</label>
-                            <input id="exit_price" name="exit_price" type="number" step="0.00001" class="form-control @error('exit_price') is-invalid @enderror" value="{{ old('exit_price', $journal->exit_price ?? '') }}" required>
+                            <input id="exit_price" name="exit_price" type="number" step="0.00001" class="form-control @error('exit_price') is-invalid @enderror" value="{{ old('exit_price', $journal->exit_price ?? '') }}">
                             @error('exit_price')
                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
@@ -381,7 +452,7 @@
                 </div>
             </div>
 
-            <div class="journal-panel">
+            <div class="journal-panel mb-4">
                 <div class="journal-panel-header">
                     <h5>Outcome</h5>
                 </div>
@@ -430,6 +501,79 @@
                     </div>
                 </div>
             </div>
+
+            <div class="journal-panel">
+                <div class="journal-panel-header">
+                    <h5>Psychology Review</h5>
+                </div>
+                <div class="journal-panel-body">
+                    <div class="row">
+                        <div class="col-md-4 journal-field">
+                            <label for="emotion_before_entry">Before Entry</label>
+                            <input id="emotion_before_entry" name="emotion_before_entry" list="emotion_options" class="form-control @error('emotion_before_entry') is-invalid @enderror" value="{{ old('emotion_before_entry', $journal->emotion_before_entry ?? '') }}">
+                            @error('emotion_before_entry')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-4 journal-field">
+                            <label for="emotion_during_trade">During Trade</label>
+                            <input id="emotion_during_trade" name="emotion_during_trade" list="emotion_options" class="form-control @error('emotion_during_trade') is-invalid @enderror" value="{{ old('emotion_during_trade', $journal->emotion_during_trade ?? '') }}">
+                            @error('emotion_during_trade')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-4 journal-field">
+                            <label for="emotion_after_trade">After Trade</label>
+                            <input id="emotion_after_trade" name="emotion_after_trade" list="emotion_options" class="form-control @error('emotion_after_trade') is-invalid @enderror" value="{{ old('emotion_after_trade', $journal->emotion_after_trade ?? '') }}">
+                            @error('emotion_after_trade')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <datalist id="emotion_options">
+                        @foreach($emotionOptions as $emotion)
+                            <option value="{{ $emotion }}"></option>
+                        @endforeach
+                    </datalist>
+
+                    <div class="row">
+                        <div class="col-md-6 journal-field">
+                            <label for="confidence_level">Confidence Level</label>
+                            <input id="confidence_level" name="confidence_level" type="number" min="1" max="10" step="1" class="form-control @error('confidence_level') is-invalid @enderror" value="{{ old('confidence_level', $journal->confidence_level ?? '') }}">
+                            @error('confidence_level')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 journal-field">
+                            <label for="discipline_rating">Discipline Rating</label>
+                            <input id="discipline_rating" name="discipline_rating" type="number" min="1" max="10" step="1" class="form-control @error('discipline_rating') is-invalid @enderror" value="{{ old('discipline_rating', $journal->discipline_rating ?? '') }}">
+                            @error('discipline_rating')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="journal-field">
+                        <label for="mistake_tags">Mistake Tags</label>
+                        <input id="mistake_tags" name="mistake_tags" class="form-control @error('mistake_tags') is-invalid @enderror" value="{{ $mistakeTagsValue }}" placeholder="late entry, moved stop, over-risked">
+                        @error('mistake_tags')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="journal-field mb-0">
+                        <label for="psychology_notes">Reflection</label>
+                        <textarea id="psychology_notes" name="psychology_notes" class="form-control @error('psychology_notes') is-invalid @enderror" rows="4">{{ old('psychology_notes', $journal->psychology_notes ?? '') }}</textarea>
+                        @error('psychology_notes')
+                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="col-xl-4">
@@ -445,6 +589,18 @@
                     <div class="journal-summary-row">
                         <span class="journal-summary-label">Direction</span>
                         <span class="journal-summary-value" data-summary-direction>-</span>
+                    </div>
+                    <div class="journal-summary-row">
+                        <span class="journal-summary-label">Status</span>
+                        <span class="journal-summary-value" data-summary-status>{{ ucfirst((string) $selectedStatus) }}</span>
+                    </div>
+                    <div class="journal-summary-row">
+                        <span class="journal-summary-label">Close Handling</span>
+                        <span class="journal-summary-value" data-summary-close-handling>{{ $selectedCloseHandling === \App\Models\TradingJournal::CLOSE_HANDLING_PRESET ? 'Follow Pre Set' : 'Manual Close' }}</span>
+                    </div>
+                    <div class="journal-summary-row">
+                        <span class="journal-summary-label">Entry Reason</span>
+                        <span class="journal-summary-value" data-summary-reason>{{ optional($tradingReasons->firstWhere('id', (int) $selectedTradingReasonId))->name ?? '-' }}</span>
                     </div>
                     <div class="journal-summary-row">
                         <span class="journal-summary-label">Time Source</span>
@@ -496,11 +652,17 @@ document.addEventListener('DOMContentLoaded', function () {
     var profit = form.querySelector('[name="profit_loss"]');
     var openDate = form.querySelector('[name="open_date"]');
     var closeDate = form.querySelector('[name="close_date"]');
+    var resultInputs = form.querySelectorAll('[name="result"]');
+    var reason = form.querySelector('[name="trading_reason_id"]');
+    var duplicateCount = form.querySelector('[name="duplicate_count"]');
     var timeModeInputs = form.querySelectorAll('[name="time_input_timezone"]');
     var mt5Offset = form.querySelector('[name="time_input_offset_minutes"]');
     var mt5OffsetWrap = form.querySelector('[data-mt5-offset-wrap]');
     var summaryPair = form.querySelector('[data-summary-pair]');
     var summaryDirection = form.querySelector('[data-summary-direction]');
+    var summaryStatus = form.querySelector('[data-summary-status]');
+    var summaryCloseHandling = form.querySelector('[data-summary-close-handling]');
+    var summaryReason = form.querySelector('[data-summary-reason]');
     var summaryTimeSource = form.querySelector('[data-summary-time-source]');
     var summaryPips = form.querySelector('[data-summary-pips]');
     var summaryProfit = form.querySelector('[data-summary-profit]');
@@ -508,6 +670,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var previewCloseMalaysia = form.querySelector('[data-preview-close-malaysia]');
     var previewOpenMt5 = form.querySelector('[data-preview-open-mt5]');
     var previewCloseMt5 = form.querySelector('[data-preview-close-mt5]');
+    var rolloverNote = form.querySelector('[data-timeline-rollover-note]');
     var activeTimeMode = selectedTimeMode();
     var activeTimeOffset = selectedTimeOffset();
 
@@ -523,6 +686,27 @@ document.addEventListener('DOMContentLoaded', function () {
     function selectedResult() {
         var input = form.querySelector('[name="result"]:checked');
         return input ? input.value : '';
+    }
+
+    function selectedStatus() {
+        var input = form.querySelector('[name="status"]:checked');
+        return input ? input.value : 'closed';
+    }
+
+    function selectedCloseHandlingLabel() {
+        var input = form.querySelector('[name="close_handling"]:checked');
+        return input && input.value === 'follow_pre_set' ? 'Follow Pre Set' : 'Manual Close';
+    }
+
+    function selectedReasonLabel() {
+        if (!reason || !reason.value) return '-';
+        var option = reason.options[reason.selectedIndex];
+        return option ? option.textContent.trim() : '-';
+    }
+
+    function selectedStatusLabel() {
+        var status = selectedStatus();
+        return status.charAt(0).toUpperCase() + status.slice(1);
     }
 
     function selectedDirection() {
@@ -607,13 +791,18 @@ document.addEventListener('DOMContentLoaded', function () {
             + ':' + pad(date.getMinutes());
     }
 
+    function sameCalendarDate(left, right) {
+        return left && right
+            && left.getFullYear() === right.getFullYear()
+            && left.getMonth() === right.getMonth()
+            && left.getDate() === right.getDate();
+    }
+
     function modeOffset(mode, fallbackOffset) {
         return mode === 'mt5' ? (fallbackOffset || 180) : 480;
     }
 
-    function convertDateBetween(value, sourceMode, targetMode, sourceOffset, targetOffset) {
-        var parsed = parseDateTimeLocal(value);
-
+    function convertParsedDateBetween(parsed, sourceMode, targetMode, sourceOffset, targetOffset) {
         if (!parsed || sourceMode === targetMode) {
             if (sourceMode === targetMode && modeOffset(sourceMode, sourceOffset) !== modeOffset(targetMode, targetOffset)) {
                 // Continue below so changing MT5 UTC+2 <-> UTC+3 preserves the same moment.
@@ -625,17 +814,44 @@ document.addEventListener('DOMContentLoaded', function () {
         return addMinutes(parsed, modeOffset(targetMode, targetOffset) - modeOffset(sourceMode, sourceOffset));
     }
 
-    function convertInputDate(value, targetMode) {
+    function convertDateBetween(value, sourceMode, targetMode, sourceOffset, targetOffset) {
+        return convertParsedDateBetween(parseDateTimeLocal(value), sourceMode, targetMode, sourceOffset, targetOffset);
+    }
+
+    function closeRollsToNextDay() {
+        var openedAt = parseDateTimeLocal(openDate.value);
+        var closedAt = parseDateTimeLocal(closeDate.value);
+
+        return openedAt && closedAt && sameCalendarDate(openedAt, closedAt) && closedAt <= openedAt;
+    }
+
+    function normalizedCloseDateForTimeline() {
+        var closedAt = parseDateTimeLocal(closeDate.value);
+
+        if (!closedAt) {
+            return null;
+        }
+
+        return closeRollsToNextDay() ? addMinutes(closedAt, 1440) : closedAt;
+    }
+
+    function convertOpenDate(targetMode) {
         var targetOffset = targetMode === 'mt5' ? selectedMt5Offset() : 480;
 
-        return convertDateBetween(value, selectedTimeMode(), targetMode, selectedTimeOffset(), targetOffset);
+        return convertParsedDateBetween(parseDateTimeLocal(openDate.value), selectedTimeMode(), targetMode, selectedTimeOffset(), targetOffset);
+    }
+
+    function convertCloseDate(targetMode) {
+        var targetOffset = targetMode === 'mt5' ? selectedMt5Offset() : 480;
+
+        return convertParsedDateBetween(normalizedCloseDateForTimeline(), selectedTimeMode(), targetMode, selectedTimeOffset(), targetOffset);
     }
 
     function updateTimePreview() {
-        previewOpenMalaysia.textContent = formatDisplayDate(convertInputDate(openDate.value, 'malaysia'));
-        previewCloseMalaysia.textContent = formatDisplayDate(convertInputDate(closeDate.value, 'malaysia'));
-        previewOpenMt5.textContent = formatDisplayDate(convertInputDate(openDate.value, 'mt5'));
-        previewCloseMt5.textContent = formatDisplayDate(convertInputDate(closeDate.value, 'mt5'));
+        previewOpenMalaysia.textContent = formatDisplayDate(convertOpenDate('malaysia'));
+        previewCloseMalaysia.textContent = formatDisplayDate(convertCloseDate('malaysia'));
+        previewOpenMt5.textContent = formatDisplayDate(convertOpenDate('mt5'));
+        previewCloseMt5.textContent = formatDisplayDate(convertCloseDate('mt5'));
 
         if (summaryTimeSource) {
             summaryTimeSource.textContent = selectedTimeSourceLabel();
@@ -643,6 +859,46 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (mt5OffsetWrap) {
             mt5OffsetWrap.style.display = selectedTimeMode() === 'mt5' ? '' : 'none';
+        }
+
+        if (rolloverNote) {
+            rolloverNote.style.display = closeRollsToNextDay() ? '' : 'none';
+        }
+    }
+
+    function updateWorkflowState() {
+        var status = selectedStatus();
+        var isClosed = status === 'closed';
+
+        if (closeDate) {
+            closeDate.required = isClosed;
+        }
+
+        if (exit) {
+            exit.required = isClosed;
+        }
+
+        resultInputs.forEach(function (field) {
+            field.required = isClosed;
+        });
+
+        if (duplicateCount) {
+            duplicateCount.disabled = !isClosed;
+            if (!isClosed) {
+                duplicateCount.value = 1;
+            }
+        }
+
+        if (summaryStatus) {
+            summaryStatus.textContent = selectedStatusLabel();
+        }
+
+        if (summaryCloseHandling) {
+            summaryCloseHandling.textContent = selectedCloseHandlingLabel();
+        }
+
+        if (summaryReason) {
+            summaryReason.textContent = selectedReasonLabel();
         }
     }
 
@@ -659,6 +915,8 @@ document.addEventListener('DOMContentLoaded', function () {
             calculatedPips = Math.abs(exitValue - entryValue) / pairData.pipFactor;
             calculatedPips = calculatedPips.toFixed(pairData.pipDecimal);
             pips.value = calculatedPips;
+        } else {
+            pips.value = '';
         }
 
         if (calculatedPips !== '' && result !== '') {
@@ -673,10 +931,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             profit.value = calculatedProfit.toFixed(2);
+        } else {
+            profit.value = '';
         }
 
         summaryPair.textContent = pairData.symbol;
         summaryDirection.textContent = selectedDirection();
+        updateWorkflowState();
         updateTimePreview();
         summaryPips.textContent = pips.value || '-';
         summaryProfit.textContent = profit.value || '-';
@@ -685,9 +946,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function syncCloseMinimum() {
-        if (openDate.value) {
-            closeDate.min = openDate.value;
-        }
+        closeDate.removeAttribute('min');
     }
 
     function validateTradeTimeline() {
@@ -697,11 +956,11 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        var openedAt = new Date(openDate.value);
-        var closedAt = new Date(closeDate.value);
+        var openedAt = parseDateTimeLocal(openDate.value);
+        var closedAt = parseDateTimeLocal(closeDate.value);
 
-        if (closedAt <= openedAt) {
-            closeDate.setCustomValidity('Close trade time must be after the open trade time. Same date is allowed when the close time is later.');
+        if (closedAt < openedAt && !sameCalendarDate(openedAt, closedAt)) {
+            closeDate.setCustomValidity('Close trade time must be after the open trade time. Same-date after-midnight closes are saved as the next calendar day.');
         }
     }
 
@@ -717,9 +976,13 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    form.querySelectorAll('[name="direction"], [name="result"]').forEach(function (field) {
+    form.querySelectorAll('[name="direction"], [name="result"], [name="status"], [name="close_handling"]').forEach(function (field) {
         field.addEventListener('change', calculate);
     });
+
+    if (reason) {
+        reason.addEventListener('change', calculate);
+    }
 
     timeModeInputs.forEach(function (field) {
         field.addEventListener('change', function () {
@@ -759,6 +1022,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     syncCloseMinimum();
     validateTradeTimeline();
+    updateWorkflowState();
     updateTimePreview();
     calculate();
 });

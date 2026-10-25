@@ -38,7 +38,7 @@
     }
 
     .readiness-muted {
-        color: #64748b;
+        color: #526276;
     }
 
     .readiness-progress {

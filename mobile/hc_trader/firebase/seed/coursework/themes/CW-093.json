@@ -1,0 +1,639 @@
+{
+  "theme": {
+    "id": "CW-093",
+    "code": "CW-093",
+    "title": {
+      "en": "Documenting Pre-Trade Analysis Before Outcome Bias Appears",
+      "zh": "在结果偏差出现前记录交易前分析"
+    },
+    "shortTitle": {
+      "en": "pre-trade analysis",
+      "zh": "在结果偏差出现前记录交易前分析"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates documenting pre-trade analysis before outcome bias appears using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示在结果偏差出现前记录交易前分析。"
+    },
+    "categoryId": "journal_review",
+    "categoryName": {
+      "en": "Trading Journal and Performance Review",
+      "zh": "交易日志与绩效复盘"
+    },
+    "difficulty": "advanced",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind documenting pre-trade analysis before outcome bias appears.",
+        "Apply documenting pre-trade analysis before outcome bias appears to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释在结果偏差出现前记录交易前分析背后的核心决策规则。",
+        "将在结果偏差出现前记录交易前分析应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "pre-trade analysis",
+      "bias",
+      "plan",
+      "EURUSD",
+      "Trading Journal and Performance Review"
+    ],
+    "searchTokens": [
+      "cw-093",
+      "CW-093",
+      "journal_review",
+      "trading journal and performance review",
+      "交易日志与绩效复盘",
+      "documenting",
+      "pre",
+      "trade",
+      "analysis",
+      "before",
+      "outcome",
+      "bias",
+      "appears",
+      "在结果偏差出现前记录交易前分析",
+      "pre-trade",
+      "plan",
+      "eurusd",
+      "trading",
+      "journal",
+      "and",
+      "performance",
+      "review"
+    ],
+    "difficultyOrder": 3,
+    "estimatedMinutes": 90,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 93,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "befe01a791a59380c62de81ca1cfb5c5cf38be14eef469a4cd7b4260485fec17"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-093",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for pre-trade analysis",
+        "zh": "在结果偏差出现前记录交易前分析的核心决策规则"
+      },
+      "prompt": {
+        "en": "What should a learner verify first when evaluating documenting pre-trade analysis before outcome bias appears?",
+        "zh": "评估在结果偏差出现前记录交易前分析时，学习者首先应核实什么？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing documenting pre-trade analysis before outcome bias appears.",
+            "zh": "评估在结果偏差出现前记录交易前分析时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "f9e79d5d5fc634ab339c8cce401985ad50abd06cde7909bf030233c749073e41"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-093",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying pre-trade analysis Under Uncertainty",
+        "zh": "在不确定性下应用在结果偏差出现前记录交易前分析"
+      },
+      "prompt": {
+        "en": "A setup involving documenting pre-trade analysis before outcome bias appears offers poor risk-to-reward after costs. What should the learner do?",
+        "zh": "涉及在结果偏差出现前记录交易前分析的形态在计入成本后风险回报不佳。学习者应怎么做？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "5afa66ad7573c54784bcf8bd21620e85cf5866ea766cafbbd17f068ff71fac74"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-093",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "EURUSD Chart Interpretation for pre-trade analysis",
+        "zh": "EURUSD图表中的在结果偏差出现前记录交易前分析解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational EURUSD H1 chart. Which labelled zone is the strongest decision area for evaluating documenting pre-trade analysis before outcome bias appears while keeping invalidation visible?",
+        "zh": "研究合成教学用EURUSD H1图表。哪个标记区域最适合评估在结果偏差出现前记录交易前分析，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "EURUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 1.0775,
+            "high": 1.0803,
+            "low": 1.07621,
+            "close": 1.07882
+          },
+          {
+            "timeIndex": 1,
+            "open": 1.07882,
+            "high": 1.08049,
+            "low": 1.07777,
+            "close": 1.07856
+          },
+          {
+            "timeIndex": 2,
+            "open": 1.07856,
+            "high": 1.07967,
+            "low": 1.07561,
+            "close": 1.07702
+          },
+          {
+            "timeIndex": 3,
+            "open": 1.07702,
+            "high": 1.07818,
+            "low": 1.07366,
+            "close": 1.07529
+          },
+          {
+            "timeIndex": 4,
+            "open": 1.07529,
+            "high": 1.07697,
+            "low": 1.07292,
+            "close": 1.07425
+          },
+          {
+            "timeIndex": 5,
+            "open": 1.07425,
+            "high": 1.07569,
+            "low": 1.07326,
+            "close": 1.07399
+          },
+          {
+            "timeIndex": 6,
+            "open": 1.07399,
+            "high": 1.07502,
+            "low": 1.07262,
+            "close": 1.07425
+          },
+          {
+            "timeIndex": 7,
+            "open": 1.07425,
+            "high": 1.07647,
+            "low": 1.07262,
+            "close": 1.07494
+          },
+          {
+            "timeIndex": 8,
+            "open": 1.07494,
+            "high": 1.07792,
+            "low": 1.07357,
+            "close": 1.07627
+          },
+          {
+            "timeIndex": 9,
+            "open": 1.07627,
+            "high": 1.07912,
+            "low": 1.07554,
+            "close": 1.07808
+          },
+          {
+            "timeIndex": 10,
+            "open": 1.07808,
+            "high": 1.0808,
+            "low": 1.07675,
+            "close": 1.07956
+          },
+          {
+            "timeIndex": 11,
+            "open": 1.07956,
+            "high": 1.08142,
+            "low": 1.07793,
+            "close": 1.07972
+          },
+          {
+            "timeIndex": 12,
+            "open": 1.07972,
+            "high": 1.08111,
+            "low": 1.07694,
+            "close": 1.07835
+          },
+          {
+            "timeIndex": 13,
+            "open": 1.07835,
+            "high": 1.07921,
+            "low": 1.07551,
+            "close": 1.0763
+          },
+          {
+            "timeIndex": 14,
+            "open": 1.0763,
+            "high": 1.07787,
+            "low": 1.07355,
+            "close": 1.07484
+          },
+          {
+            "timeIndex": 15,
+            "open": 1.07484,
+            "high": 1.07645,
+            "low": 1.07297,
+            "close": 1.07459
+          },
+          {
+            "timeIndex": 16,
+            "open": 1.07459,
+            "high": 1.07624,
+            "low": 1.07315,
+            "close": 1.07529
+          },
+          {
+            "timeIndex": 17,
+            "open": 1.07529,
+            "high": 1.07765,
+            "low": 1.07444,
+            "close": 1.07634
+          },
+          {
+            "timeIndex": 18,
+            "open": 1.07634,
+            "high": 1.07923,
+            "low": 1.0751,
+            "close": 1.07753
+          },
+          {
+            "timeIndex": 19,
+            "open": 1.07753,
+            "high": 1.08019,
+            "low": 1.07591,
+            "close": 1.07887
+          },
+          {
+            "timeIndex": 20,
+            "open": 1.07887,
+            "high": 1.08107,
+            "low": 1.0774,
+            "close": 1.08012
+          },
+          {
+            "timeIndex": 21,
+            "open": 1.08012,
+            "high": 1.08216,
+            "low": 1.07922,
+            "close": 1.08055
+          },
+          {
+            "timeIndex": 22,
+            "open": 1.08055,
+            "high": 1.08213,
+            "low": 1.07839,
+            "close": 1.07959
+          },
+          {
+            "timeIndex": 23,
+            "open": 1.07959,
+            "high": 1.08046,
+            "low": 1.07598,
+            "close": 1.07758
+          },
+          {
+            "timeIndex": 24,
+            "open": 1.07758,
+            "high": 1.07896,
+            "low": 1.07422,
+            "close": 1.07573
+          },
+          {
+            "timeIndex": 25,
+            "open": 1.07573,
+            "high": 1.07742,
+            "low": 1.07419,
+            "close": 1.07515
+          },
+          {
+            "timeIndex": 26,
+            "open": 1.07515,
+            "high": 1.07724,
+            "low": 1.07401,
+            "close": 1.07599
+          },
+          {
+            "timeIndex": 27,
+            "open": 1.07599,
+            "high": 1.07855,
+            "low": 1.0744,
+            "close": 1.07752
+          },
+          {
+            "timeIndex": 28,
+            "open": 1.07752,
+            "high": 1.08059,
+            "low": 1.07599,
+            "close": 1.07895
+          },
+          {
+            "timeIndex": 29,
+            "open": 1.07895,
+            "high": 1.08155,
+            "low": 1.07794,
+            "close": 1.08001
+          },
+          {
+            "timeIndex": 30,
+            "open": 1.08001,
+            "high": 1.08157,
+            "low": 1.07892,
+            "close": 1.08079
+          },
+          {
+            "timeIndex": 31,
+            "open": 1.08079,
+            "high": 1.08255,
+            "low": 1.07922,
+            "close": 1.08111
+          },
+          {
+            "timeIndex": 32,
+            "open": 1.08111,
+            "high": 1.08279,
+            "low": 1.07895,
+            "close": 1.08051
+          },
+          {
+            "timeIndex": 33,
+            "open": 1.08051,
+            "high": 1.08169,
+            "low": 1.07782,
+            "close": 1.07888
+          },
+          {
+            "timeIndex": 34,
+            "open": 1.07888,
+            "high": 1.07999,
+            "low": 1.07591,
+            "close": 1.07695
+          },
+          {
+            "timeIndex": 35,
+            "open": 1.07695,
+            "high": 1.07862,
+            "low": 1.0744,
+            "close": 1.07595
+          },
+          {
+            "timeIndex": 36,
+            "open": 1.07595,
+            "high": 1.07804,
+            "low": 1.07437,
+            "close": 1.07656
+          },
+          {
+            "timeIndex": 37,
+            "open": 1.07656,
+            "high": 1.07906,
+            "low": 1.07544,
+            "close": 1.07835
+          },
+          {
+            "timeIndex": 38,
+            "open": 1.07835,
+            "high": 1.08172,
+            "low": 1.07737,
+            "close": 1.08023
+          },
+          {
+            "timeIndex": 39,
+            "open": 1.08023,
+            "high": 1.08306,
+            "low": 1.07871,
+            "close": 1.08139
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 1.07304,
+            "maximumPrice": 1.0745,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 1.07554,
+            "maximumPrice": 1.077,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 1.07868,
+            "maximumPrice": 1.08014,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 1.08118,
+            "maximumPrice": 1.08264,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "73d7ef6b56a1b73b51813a03ef31fd5f45479920b1bc65da78bc887788509be2"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-093",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: pre-trade analysis",
+        "zh": "独立情境分析：在结果偏差出现前记录交易前分析"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of documenting pre-trade analysis before outcome bias appears using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析在结果偏差出现前记录交易前分析的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "390ad00a1496640027283d57cc416e09b0a69c0be2326fc9316783481d72a6a2"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-093",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: pre-trade analysis",
+        "zh": "实践展示：在结果偏差出现前记录交易前分析"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate documenting pre-trade analysis before outcome bias appears. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示在结果偏差出现前记录交易前分析。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "1094954a9b59ba94bd961f792adb4367b5409f0e45fce8a9d38f1ed6f28bb50d"
+    }
+  ]
+}

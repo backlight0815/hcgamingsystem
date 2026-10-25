@@ -1,0 +1,637 @@
+{
+  "theme": {
+    "id": "CW-100",
+    "code": "CW-100",
+    "title": {
+      "en": "Creating a Personal Improvement Plan from Journal Evidence",
+      "zh": "根据日志证据制定个人改进计划"
+    },
+    "shortTitle": {
+      "en": "improvement plan",
+      "zh": "根据日志证据制定个人改进计划"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates creating a personal improvement plan from journal evidence using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示根据日志证据制定个人改进计划。"
+    },
+    "categoryId": "journal_review",
+    "categoryName": {
+      "en": "Trading Journal and Performance Review",
+      "zh": "交易日志与绩效复盘"
+    },
+    "difficulty": "advanced",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind creating a personal improvement plan from journal evidence.",
+        "Apply creating a personal improvement plan from journal evidence to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释根据日志证据制定个人改进计划背后的核心决策规则。",
+        "将根据日志证据制定个人改进计划应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "improvement plan",
+      "journal evidence",
+      "goal",
+      "EURUSD",
+      "Trading Journal and Performance Review"
+    ],
+    "searchTokens": [
+      "cw-100",
+      "CW-100",
+      "journal_review",
+      "trading journal and performance review",
+      "交易日志与绩效复盘",
+      "creating",
+      "a",
+      "personal",
+      "improvement",
+      "plan",
+      "from",
+      "journal",
+      "evidence",
+      "根据日志证据制定个人改进计划",
+      "goal",
+      "eurusd",
+      "trading",
+      "and",
+      "performance",
+      "review"
+    ],
+    "difficultyOrder": 3,
+    "estimatedMinutes": 90,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 100,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "698a690fd8bf26453461cbd15acc3601c722f6326313719e68a7d425b0d630f6"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-100",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for improvement plan",
+        "zh": "根据日志证据制定个人改进计划的核心决策规则"
+      },
+      "prompt": {
+        "en": "What distinguishes professional analysis of creating a personal improvement plan from journal evidence from signal chasing?",
+        "zh": "对根据日志证据制定个人改进计划的专业分析与追逐信号有何区别？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing creating a personal improvement plan from journal evidence.",
+            "zh": "评估根据日志证据制定个人改进计划时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "a65cc6b577e3191c73aa15844a410a52b1f4bf9f4a13dab55028db1e2cb2d11f"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-100",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying improvement plan Under Uncertainty",
+        "zh": "在不确定性下应用根据日志证据制定个人改进计划"
+      },
+      "prompt": {
+        "en": "A trader cannot explain the risk boundary for creating a personal improvement plan from journal evidence. What does this imply about readiness to enter?",
+        "zh": "交易者无法解释根据日志证据制定个人改进计划的风险边界。这说明入场准备程度如何？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "3cfb97ee2e08b61b3aca4b51e9ba603da2453b0f51c65851f540b33fb5aaa69e"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-100",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "EURUSD Chart Interpretation for improvement plan",
+        "zh": "EURUSD图表中的根据日志证据制定个人改进计划解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational EURUSD H1 chart. Which labelled zone is the strongest decision area for evaluating creating a personal improvement plan from journal evidence while keeping invalidation visible?",
+        "zh": "研究合成教学用EURUSD H1图表。哪个标记区域最适合评估根据日志证据制定个人改进计划，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "EURUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 1.07099,
+            "high": 1.07269,
+            "low": 1.06758,
+            "close": 1.06832
+          },
+          {
+            "timeIndex": 1,
+            "open": 1.06832,
+            "high": 1.0696,
+            "low": 1.0642,
+            "close": 1.06557
+          },
+          {
+            "timeIndex": 2,
+            "open": 1.06557,
+            "high": 1.06656,
+            "low": 1.06224,
+            "close": 1.06387
+          },
+          {
+            "timeIndex": 3,
+            "open": 1.06387,
+            "high": 1.0655,
+            "low": 1.06207,
+            "close": 1.06344
+          },
+          {
+            "timeIndex": 4,
+            "open": 1.06344,
+            "high": 1.06527,
+            "low": 1.06271,
+            "close": 1.06371
+          },
+          {
+            "timeIndex": 5,
+            "open": 1.06371,
+            "high": 1.06495,
+            "low": 1.06237,
+            "close": 1.06412
+          },
+          {
+            "timeIndex": 6,
+            "open": 1.06412,
+            "high": 1.06595,
+            "low": 1.06249,
+            "close": 1.06455
+          },
+          {
+            "timeIndex": 7,
+            "open": 1.06455,
+            "high": 1.06667,
+            "low": 1.06314,
+            "close": 1.06498
+          },
+          {
+            "timeIndex": 8,
+            "open": 1.06498,
+            "high": 1.06623,
+            "low": 1.0642,
+            "close": 1.06502
+          },
+          {
+            "timeIndex": 9,
+            "open": 1.06502,
+            "high": 1.06609,
+            "low": 1.06269,
+            "close": 1.06398
+          },
+          {
+            "timeIndex": 10,
+            "open": 1.06398,
+            "high": 1.06564,
+            "low": 1.06001,
+            "close": 1.06163
+          },
+          {
+            "timeIndex": 11,
+            "open": 1.06163,
+            "high": 1.06314,
+            "low": 1.05731,
+            "close": 1.05874
+          },
+          {
+            "timeIndex": 12,
+            "open": 1.05874,
+            "high": 1.05948,
+            "low": 1.05577,
+            "close": 1.05661
+          },
+          {
+            "timeIndex": 13,
+            "open": 1.05661,
+            "high": 1.05807,
+            "low": 1.05475,
+            "close": 1.05599
+          },
+          {
+            "timeIndex": 14,
+            "open": 1.05599,
+            "high": 1.05826,
+            "low": 1.05437,
+            "close": 1.05658
+          },
+          {
+            "timeIndex": 15,
+            "open": 1.05658,
+            "high": 1.05858,
+            "low": 1.05511,
+            "close": 1.05745
+          },
+          {
+            "timeIndex": 16,
+            "open": 1.05745,
+            "high": 1.05906,
+            "low": 1.05655,
+            "close": 1.05791
+          },
+          {
+            "timeIndex": 17,
+            "open": 1.05791,
+            "high": 1.05961,
+            "low": 1.05671,
+            "close": 1.05793
+          },
+          {
+            "timeIndex": 18,
+            "open": 1.05793,
+            "high": 1.05939,
+            "low": 1.05598,
+            "close": 1.05758
+          },
+          {
+            "timeIndex": 19,
+            "open": 1.05758,
+            "high": 1.05834,
+            "low": 1.05513,
+            "close": 1.05663
+          },
+          {
+            "timeIndex": 20,
+            "open": 1.05663,
+            "high": 1.05815,
+            "low": 1.05378,
+            "close": 1.05473
+          },
+          {
+            "timeIndex": 21,
+            "open": 1.05473,
+            "high": 1.05638,
+            "low": 1.05093,
+            "close": 1.05208
+          },
+          {
+            "timeIndex": 22,
+            "open": 1.05208,
+            "high": 1.05313,
+            "low": 1.0481,
+            "close": 1.04969
+          },
+          {
+            "timeIndex": 23,
+            "open": 1.04969,
+            "high": 1.05091,
+            "low": 1.04713,
+            "close": 1.04866
+          },
+          {
+            "timeIndex": 24,
+            "open": 1.04866,
+            "high": 1.05089,
+            "low": 1.04765,
+            "close": 1.0492
+          },
+          {
+            "timeIndex": 25,
+            "open": 1.0492,
+            "high": 1.05185,
+            "low": 1.0481,
+            "close": 1.05046
+          },
+          {
+            "timeIndex": 26,
+            "open": 1.05046,
+            "high": 1.05214,
+            "low": 1.04888,
+            "close": 1.0513
+          },
+          {
+            "timeIndex": 27,
+            "open": 1.0513,
+            "high": 1.05286,
+            "low": 1.04965,
+            "close": 1.0512
+          },
+          {
+            "timeIndex": 28,
+            "open": 1.0512,
+            "high": 1.05283,
+            "low": 1.04932,
+            "close": 1.05038
+          },
+          {
+            "timeIndex": 29,
+            "open": 1.05038,
+            "high": 1.05135,
+            "low": 1.0481,
+            "close": 1.04915
+          },
+          {
+            "timeIndex": 30,
+            "open": 1.04915,
+            "high": 1.05044,
+            "low": 1.04592,
+            "close": 1.04747
+          },
+          {
+            "timeIndex": 31,
+            "open": 1.04747,
+            "high": 1.04917,
+            "low": 1.0437,
+            "close": 1.04528
+          },
+          {
+            "timeIndex": 32,
+            "open": 1.04528,
+            "high": 1.04661,
+            "low": 1.04191,
+            "close": 1.04302
+          },
+          {
+            "timeIndex": 33,
+            "open": 1.04302,
+            "high": 1.04395,
+            "low": 1.04066,
+            "close": 1.04165
+          },
+          {
+            "timeIndex": 34,
+            "open": 1.04165,
+            "high": 1.04342,
+            "low": 1.04012,
+            "close": 1.04182
+          },
+          {
+            "timeIndex": 35,
+            "open": 1.04182,
+            "high": 1.04474,
+            "low": 1.04022,
+            "close": 1.04315
+          },
+          {
+            "timeIndex": 36,
+            "open": 1.04315,
+            "high": 1.04531,
+            "low": 1.04199,
+            "close": 1.04443
+          },
+          {
+            "timeIndex": 37,
+            "open": 1.04443,
+            "high": 1.04595,
+            "low": 1.04349,
+            "close": 1.04459
+          },
+          {
+            "timeIndex": 38,
+            "open": 1.04459,
+            "high": 1.04629,
+            "low": 1.04203,
+            "close": 1.04352
+          },
+          {
+            "timeIndex": 39,
+            "open": 1.04352,
+            "high": 1.04479,
+            "low": 1.0402,
+            "close": 1.04181
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 1.04142,
+            "maximumPrice": 1.04598,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 1.04924,
+            "maximumPrice": 1.0538,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 1.05901,
+            "maximumPrice": 1.06357,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 1.06683,
+            "maximumPrice": 1.07139,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "e3335e409fe211bbf330cff4945f99f97dd8e891ac74330217316d17933c7de7"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-100",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: improvement plan",
+        "zh": "独立情境分析：根据日志证据制定个人改进计划"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of creating a personal improvement plan from journal evidence using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析根据日志证据制定个人改进计划的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "a8182cca05b9b823305ffe9930bdbf6f3bd40b1c847e11fdeeca1d853b88f315"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-100",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: improvement plan",
+        "zh": "实践展示：根据日志证据制定个人改进计划"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate creating a personal improvement plan from journal evidence. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示根据日志证据制定个人改进计划。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "c52baf878d434ce1ca0a425e800b16354e9a1959707969f2b9e44de68bc58216"
+    }
+  ]
+}

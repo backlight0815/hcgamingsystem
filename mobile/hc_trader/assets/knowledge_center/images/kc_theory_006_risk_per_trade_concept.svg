@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title">
+  <title id="title">Risk per trade concept Diagram</title>
+  <rect width="1600" height="900" rx="0" fill="#F8FAFC"/>
+  <rect x="54" y="44" width="1492" height="772" rx="36" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+  <rect x="155" y="250" width="350" height="180" rx="30" fill="#2563EB" opacity=".15" stroke="#2563EB" stroke-width="5"/>
+  <text x="189" y="318" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#2563EB">Account</text>
+  <text x="189" y="378" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="800" fill="#334155">$10,000</text>
+  <line x1="520" y1="340" x2="760" y2="340" stroke="#F59E0B" stroke-width="9" stroke-linecap="round"/><polygon points="760,340 740.9474411167423,351 740.9474411167423,329" fill="#F59E0B"/>
+  <rect x="800" y="250" width="350" height="180" rx="30" fill="#10B981" opacity=".15" stroke="#10B981" stroke-width="5"/>
+  <text x="834" y="318" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#10B981">Risk 1%</text>
+  <text x="834" y="378" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="800" fill="#334155">$100</text>
+  <line x1="1165" y1="340" x2="1325" y2="340" stroke="#F59E0B" stroke-width="9" stroke-linecap="round"/><polygon points="1325,340 1305.9474411167423,351 1305.9474411167423,329" fill="#F59E0B"/>
+  <rect x="1260" y="250" width="220" height="180" rx="30" fill="#334155" opacity=".15" stroke="#334155" stroke-width="5"/>
+  <text x="1294" y="318" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#334155">SL</text>
+  <text x="1294" y="378" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="800" fill="#334155">Defines lot</text>
+  <rect x="84" y="842" width="290" height="18" rx="9" fill="#2563EB" opacity=".22"/>
+  <rect x="412" y="842" width="404" height="18" rx="9" fill="#10B981" opacity=".20"/>
+  <rect x="852" y="842" width="664" height="18" rx="9" fill="#334155" opacity=".10"/>
+</svg>

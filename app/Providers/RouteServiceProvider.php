@@ -44,5 +44,37 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
+
+        RateLimiter::for('signal-reads', function (Request $request) {
+            return Limit::perMinute(90)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('signal-streams', function (Request $request) {
+            return Limit::perMinute(6)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('signal-writes', function (Request $request) {
+            return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('signal-publish', function (Request $request) {
+            return Limit::perMinute(5)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('blog-reads', function (Request $request) {
+            return Limit::perMinute(90)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('blog-streams', function (Request $request) {
+            return Limit::perMinute(6)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('blog-writes', function (Request $request) {
+            return Limit::perMinute(10)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('blog-publish', function (Request $request) {
+            return Limit::perMinute(5)->by($request->user()?->id ?: $request->ip());
+        });
     }
 }

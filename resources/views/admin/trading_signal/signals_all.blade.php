@@ -477,6 +477,25 @@
                             <option value="done" {{ request('status_filter') === 'done' ? 'selected' : '' }}>Done</option>
                         </select>
                     </div>
+                    <div>
+                        <label for="source" class="form-label">Source</label>
+                        <select id="source" name="source" class="form-control">
+                            <option value="">All Sources</option>
+                            <option value="WEBSITE" {{ request('source') === 'WEBSITE' ? 'selected' : '' }}>Website</option>
+                            <option value="MOBILE_APP" {{ request('source') === 'MOBILE_APP' ? 'selected' : '' }}>Mobile App</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="workflow_status" class="form-label">Workflow</label>
+                        <select id="workflow_status" name="workflow_status" class="form-control">
+                            <option value="">All Workflows</option>
+                            @foreach(['PENDING', 'PUBLISHED', 'CLOSED', 'CANCELLED', 'EXPIRED', 'REJECTED'] as $workflow)
+                                <option value="{{ $workflow }}" {{ request('workflow_status') === $workflow ? 'selected' : '' }}>
+                                    {{ ucfirst(strtolower($workflow)) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                     @if($canManageAll)
                         <div>
                             <label for="provider_id" class="form-label">Provider</label>
@@ -519,6 +538,7 @@
                             <th>Setup</th>
                             <th>Levels</th>
                             <th>Progress</th>
+                            <th>Source / Delivery</th>
                             <th>Created</th>
                             <th>Actions</th>
                         </tr>
@@ -562,6 +582,11 @@
                                     @if($item->IsSetBE && !$item->IsBE)
                                         <span class="subtle">BE has been set</span>
                                     @endif
+                                </td>
+                                <td>
+                                    <strong>{{ $item->source === 'MOBILE_APP' ? 'Mobile App' : 'Website' }}</strong>
+                                    <span class="subtle">{{ $item->sourceUser?->username ?? $item->user?->username ?? $item->sourceUser?->name ?? $item->user?->name ?? '-' }}</span>
+                                    <span class="subtle">Discord: {{ str_replace('_', ' ', strtolower($item->discord_delivery_status ?? 'not requested')) }}</span>
                                 </td>
                                 <td>{{ optional($item->created_at)->format('Y-m-d H:i') }}</td>
                                 <td>

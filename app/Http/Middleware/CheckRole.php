@@ -15,7 +15,7 @@ class CheckRole
      */
     public function handle($request, Closure $next, $roleId)
     {
-        if (auth()->check() && auth()->user()->hasRole($roleId)) {
+        if (auth()->check() && (auth()->user()->isGlobalSuperAdmin() || auth()->user()->hasRole($roleId))) {
             return $next($request);
 
         }

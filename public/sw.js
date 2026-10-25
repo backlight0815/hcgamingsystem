@@ -991,16 +991,9 @@ self.addEventListener("install", (event) => {
     );
 });
 
+// A real HTTP 404 must reach the browser. Use the offline cache only when the network fails.
 const checkResponse = function (request) {
-    return new Promise(function (fulfill, reject) {
-        fetch(request).then(function (response) {
-            if (response.status !== 404) {
-                fulfill(response);
-            } else {
-                reject();
-            }
-        }, reject);
-    });
+    return fetch(request);
 };
 
 const addToCache = async function (request) {

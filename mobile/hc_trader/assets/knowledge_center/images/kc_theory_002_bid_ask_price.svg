@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title">
+  <title id="title">Bid and ask price Diagram</title>
+  <rect width="1600" height="900" rx="0" fill="#F8FAFC"/>
+  <rect x="54" y="44" width="1492" height="772" rx="36" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+  <rect x="160" y="120" width="1280" height="86" rx="28" fill="#2563EB" opacity=".10" stroke="#2563EB" stroke-width="3"/>
+  <text x="230" y="176" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="800" fill="#2563EB">BID 1.1000</text>
+  <text x="1000" y="176" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="800" fill="#10B981">ASK 1.1002</text>
+  <rect x="185" y="265" width="420" height="210" rx="30" fill="#2563EB" opacity=".15" stroke="#2563EB" stroke-width="5"/>
+  <text x="219" y="333" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#2563EB">BID</text>
+  <text x="219" y="393" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="800" fill="#334155">1.1000</text>
+  <rect x="995" y="265" width="420" height="210" rx="30" fill="#10B981" opacity=".15" stroke="#10B981" stroke-width="5"/>
+  <text x="1029" y="333" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#10B981">ASK</text>
+  <text x="1029" y="393" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="800" fill="#334155">1.1002</text>
+  <line x1="620" y1="370" x2="980" y2="370" stroke="#F59E0B" stroke-width="9" stroke-linecap="round"/><polygon points="980,370 960.9474411167423,381 960.9474411167423,359" fill="#F59E0B"/>
+  <text x="705" y="320" font-family="Arial, Helvetica, sans-serif" font-size="36" font-weight="800" fill="#B45309">Spread = 2 pips</text>
+  <rect x="675" y="395" width="250" height="24" rx="12" fill="#F59E0B" opacity=".28"/>
+  <rect x="84" y="842" width="290" height="18" rx="9" fill="#2563EB" opacity=".22"/>
+  <rect x="412" y="842" width="404" height="18" rx="9" fill="#10B981" opacity=".20"/>
+  <rect x="852" y="842" width="664" height="18" rx="9" fill="#334155" opacity=".10"/>
+</svg>

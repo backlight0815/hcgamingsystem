@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Trading;
 
 use App\Http\Controllers\Controller;
 use App\Models\TradingBlog;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -81,6 +82,7 @@ class TradingBlogController extends Controller
         $data = $this->validatedBlogData($request);
         $data['slug'] = $this->uniqueSlug($data['title']);
         $data['author_id'] = auth()->id();
+        $data['source'] = 'WEBSITE';
         $data['cover_image'] = $this->uploadCoverImage($request);
         $data['excerpt'] = $data['excerpt'] ?: Str::words(strip_tags($data['content']), 30);
         $data = $this->normalizePublishingData($data);
@@ -116,6 +118,7 @@ class TradingBlogController extends Controller
         $data['slug'] = $this->uniqueSlug($data['title'], $blog->id);
         $data['excerpt'] = $data['excerpt'] ?: Str::words(strip_tags($data['content']), 30);
         $data = $this->normalizePublishingData($data, $blog);
+        $data['version'] = (int) $blog->version + 1;
 
         if ($request->hasFile('cover_image')) {
             $this->deleteCoverImage($blog->cover_image);
@@ -149,7 +152,7 @@ class TradingBlogController extends Controller
         $activeCategory = $request->input('category');
         $search = trim((string) $request->input('search'));
 
-        $query = TradingBlog::with('author')->published()->latest('published_at');
+        $query = TradingBlog::with('author')->websitePublished()->latest('published_at');
 
         if ($activeCategory && array_key_exists($activeCategory, $categories)) {
             $query->where('category', $activeCategory);
@@ -164,18 +167,15 @@ class TradingBlogController extends Controller
             });
         }
 
-        $featuredBlog = TradingBlog::with('author')
-            ->published()
-            ->where('is_featured', true)
-            ->latest('published_at')
-            ->first();
+        $featuredBlog = (clone $query)->where('is_featured', true)->first()
+            ?: (clone $query)->first();
 
         $blogs = $query
             ->when($featuredBlog, fn ($builder) => $builder->where('id', '!=', $featuredBlog->id))
             ->paginate(9)
             ->withQueryString();
 
-        $categoryCounts = TradingBlog::published()
+        $categoryCounts = TradingBlog::websitePublished()
             ->selectRaw('category, count(*) as total')
             ->groupBy('category')
             ->pluck('total', 'category');
@@ -199,11 +199,11 @@ class TradingBlogController extends Controller
     public function show(TradingBlog $blog)
     {
         $this->ensureTradingReader();
-        abort_unless($blog->status === TradingBlog::STATUS_PUBLISHED && $blog->published_at && $blog->published_at->lte(now()), 404);
+        abort_unless($blog->status === TradingBlog::STATUS_PUBLISHED && $blog->published_at && $blog->published_at->lte(now()) && ! Str::startsWith($blog->title, '[Demo]'), 404);
 
         $blog->increment('views');
 
-        $relatedBlogs = TradingBlog::published()
+        $relatedBlogs = TradingBlog::websitePublished()
             ->where('id', '!=', $blog->id)
             ->where('category', $blog->category)
             ->latest('published_at')
@@ -239,7 +239,15 @@ class TradingBlogController extends Controller
         $data['is_featured'] = filter_var($data['is_featured'] ?? false, FILTER_VALIDATE_BOOLEAN);
 
         if ($data['status'] === TradingBlog::STATUS_PUBLISHED) {
-            $data['published_at'] = $data['published_at'] ?? optional($blog)->published_at ?? now();
+            $submittedTime = $data['published_at'] ?? null;
+            if (filled($submittedTime)) {
+                $data['published_at'] = CarbonImmutable::parse(
+                    $submittedTime,
+                    (string) config('trading_blogs.publication_timezone', 'Asia/Singapore')
+                )->setTimezone((string) config('app.timezone', 'UTC'));
+            } else {
+                $data['published_at'] = optional($blog)->published_at ?? now();
+            }
         } else {
             $data['published_at'] = null;
             $data['is_featured'] = false;
@@ -259,7 +267,7 @@ class TradingBlogController extends Controller
                 ->when($ignoreId, fn ($query) => $query->where('id', '!=', $ignoreId))
                 ->exists()
         ) {
-            $slug = $baseSlug . '-' . $counter;
+            $slug = $baseSlug.'-'.$counter;
             $counter++;
         }
 
@@ -273,7 +281,7 @@ class TradingBlogController extends Controller
         }
 
         $image = $request->file('cover_image');
-        $fileName = uniqid('trading_blog_', true) . '.' . $image->getClientOriginalExtension();
+        $fileName = uniqid('trading_blog_', true).'.'.$image->getClientOriginalExtension();
         $destination = public_path('upload/trading_blogs');
 
         if (! File::exists($destination)) {
@@ -282,7 +290,7 @@ class TradingBlogController extends Controller
 
         $image->move($destination, $fileName);
 
-        return 'upload/trading_blogs/' . $fileName;
+        return 'upload/trading_blogs/'.$fileName;
     }
 
     private function deleteCoverImage(?string $path): void

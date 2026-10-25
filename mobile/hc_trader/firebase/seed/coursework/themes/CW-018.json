@@ -1,0 +1,635 @@
+{
+  "theme": {
+    "id": "CW-018",
+    "code": "CW-018",
+    "title": {
+      "en": "Recognising Consolidation Boundaries and No-Trade Conditions",
+      "zh": "识别盘整边界与禁止交易条件"
+    },
+    "shortTitle": {
+      "en": "consolidation",
+      "zh": "识别盘整边界与禁止交易条件"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates recognising consolidation boundaries and no-trade conditions using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示识别盘整边界与禁止交易条件。"
+    },
+    "categoryId": "price_action",
+    "categoryName": {
+      "en": "Candlestick and Price Action",
+      "zh": "K线与价格行为"
+    },
+    "difficulty": "beginner",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind recognising consolidation boundaries and no-trade conditions.",
+        "Apply recognising consolidation boundaries and no-trade conditions to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释识别盘整边界与禁止交易条件背后的核心决策规则。",
+        "将识别盘整边界与禁止交易条件应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "consolidation",
+      "range",
+      "no trade",
+      "USDJPY",
+      "Candlestick and Price Action"
+    ],
+    "searchTokens": [
+      "cw-018",
+      "CW-018",
+      "price_action",
+      "candlestick and price action",
+      "K线与价格行为",
+      "recognising",
+      "consolidation",
+      "boundaries",
+      "and",
+      "no",
+      "trade",
+      "conditions",
+      "识别盘整边界与禁止交易条件",
+      "range",
+      "usdjpy",
+      "candlestick",
+      "price",
+      "action"
+    ],
+    "difficultyOrder": 1,
+    "estimatedMinutes": 55,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 18,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "28eb8398753ab66d936306b64925a5cfbed92746752f79a550812ac6dd84a791"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-018",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for consolidation",
+        "zh": "识别盘整边界与禁止交易条件的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which method produces the most auditable conclusion about recognising consolidation boundaries and no-trade conditions?",
+        "zh": "哪种方法能够对识别盘整边界与禁止交易条件得出最可审核的结论？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing recognising consolidation boundaries and no-trade conditions.",
+            "zh": "评估识别盘整边界与禁止交易条件时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "079061d6cb0c0e2e5e0cbfed27a99c586623c7e408dda2d1b8653dd06f7b6db8"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-018",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying consolidation Under Uncertainty",
+        "zh": "在不确定性下应用识别盘整边界与禁止交易条件"
+      },
+      "prompt": {
+        "en": "Higher- and lower-timeframe evidence disagree about recognising consolidation boundaries and no-trade conditions. What is the most defensible response?",
+        "zh": "高低时间周期对识别盘整边界与禁止交易条件的证据不一致。哪种反应最合理？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "4e74f82120dcf2f9fddd12f076a4450e123bd8fa1bb9455a335a8b4298f03bee"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-018",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "USDJPY Chart Interpretation for consolidation",
+        "zh": "USDJPY图表中的识别盘整边界与禁止交易条件解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational USDJPY H1 chart. Which labelled zone is the strongest decision area for evaluating recognising consolidation boundaries and no-trade conditions while keeping invalidation visible?",
+        "zh": "研究合成教学用USDJPY H1图表。哪个标记区域最适合评估识别盘整边界与禁止交易条件，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "USDJPY",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 153.014,
+            "high": 153.232,
+            "low": 152.777,
+            "close": 152.903
+          },
+          {
+            "timeIndex": 1,
+            "open": 152.903,
+            "high": 153.101,
+            "low": 152.507,
+            "close": 152.656
+          },
+          {
+            "timeIndex": 2,
+            "open": 152.656,
+            "high": 152.753,
+            "low": 152.201,
+            "close": 152.409
+          },
+          {
+            "timeIndex": 3,
+            "open": 152.409,
+            "high": 152.602,
+            "low": 152.117,
+            "close": 152.319
+          },
+          {
+            "timeIndex": 4,
+            "open": 152.319,
+            "high": 152.655,
+            "low": 152.186,
+            "close": 152.435
+          },
+          {
+            "timeIndex": 5,
+            "open": 152.435,
+            "high": 152.816,
+            "low": 152.292,
+            "close": 152.668
+          },
+          {
+            "timeIndex": 6,
+            "open": 152.668,
+            "high": 153.034,
+            "low": 152.462,
+            "close": 152.883
+          },
+          {
+            "timeIndex": 7,
+            "open": 152.883,
+            "high": 153.235,
+            "low": 152.678,
+            "close": 153.015
+          },
+          {
+            "timeIndex": 8,
+            "open": 153.015,
+            "high": 153.267,
+            "low": 152.875,
+            "close": 153.077
+          },
+          {
+            "timeIndex": 9,
+            "open": 153.077,
+            "high": 153.183,
+            "low": 152.941,
+            "close": 153.083
+          },
+          {
+            "timeIndex": 10,
+            "open": 153.083,
+            "high": 153.283,
+            "low": 152.801,
+            "close": 153.004
+          },
+          {
+            "timeIndex": 11,
+            "open": 153.004,
+            "high": 153.22,
+            "low": 152.608,
+            "close": 152.815
+          },
+          {
+            "timeIndex": 12,
+            "open": 152.815,
+            "high": 152.953,
+            "low": 152.434,
+            "close": 152.581
+          },
+          {
+            "timeIndex": 13,
+            "open": 152.581,
+            "high": 152.742,
+            "low": 152.316,
+            "close": 152.445
+          },
+          {
+            "timeIndex": 14,
+            "open": 152.445,
+            "high": 152.736,
+            "low": 152.245,
+            "close": 152.514
+          },
+          {
+            "timeIndex": 15,
+            "open": 152.514,
+            "high": 152.942,
+            "low": 152.305,
+            "close": 152.76
+          },
+          {
+            "timeIndex": 16,
+            "open": 152.76,
+            "high": 153.145,
+            "low": 152.606,
+            "close": 153.033
+          },
+          {
+            "timeIndex": 17,
+            "open": 153.033,
+            "high": 153.405,
+            "low": 152.912,
+            "close": 153.199
+          },
+          {
+            "timeIndex": 18,
+            "open": 153.199,
+            "high": 153.439,
+            "low": 153.003,
+            "close": 153.227
+          },
+          {
+            "timeIndex": 19,
+            "open": 153.227,
+            "high": 153.354,
+            "low": 152.959,
+            "close": 153.17
+          },
+          {
+            "timeIndex": 20,
+            "open": 153.17,
+            "high": 153.341,
+            "low": 152.913,
+            "close": 153.073
+          },
+          {
+            "timeIndex": 21,
+            "open": 153.073,
+            "high": 153.296,
+            "low": 152.817,
+            "close": 152.931
+          },
+          {
+            "timeIndex": 22,
+            "open": 152.931,
+            "high": 153.106,
+            "low": 152.56,
+            "close": 152.752
+          },
+          {
+            "timeIndex": 23,
+            "open": 152.752,
+            "high": 152.874,
+            "low": 152.399,
+            "close": 152.612
+          },
+          {
+            "timeIndex": 24,
+            "open": 152.612,
+            "high": 152.839,
+            "low": 152.446,
+            "close": 152.628
+          },
+          {
+            "timeIndex": 25,
+            "open": 152.628,
+            "high": 153.045,
+            "low": 152.521,
+            "close": 152.837
+          },
+          {
+            "timeIndex": 26,
+            "open": 152.837,
+            "high": 153.255,
+            "low": 152.65,
+            "close": 153.139
+          },
+          {
+            "timeIndex": 27,
+            "open": 153.139,
+            "high": 153.541,
+            "low": 152.925,
+            "close": 153.362
+          },
+          {
+            "timeIndex": 28,
+            "open": 153.362,
+            "high": 153.628,
+            "low": 153.19,
+            "close": 153.406
+          },
+          {
+            "timeIndex": 29,
+            "open": 153.406,
+            "high": 153.571,
+            "low": 153.201,
+            "close": 153.301
+          },
+          {
+            "timeIndex": 30,
+            "open": 153.301,
+            "high": 153.434,
+            "low": 152.965,
+            "close": 153.147
+          },
+          {
+            "timeIndex": 31,
+            "open": 153.147,
+            "high": 153.362,
+            "low": 152.794,
+            "close": 153.008
+          },
+          {
+            "timeIndex": 32,
+            "open": 153.008,
+            "high": 153.21,
+            "low": 152.709,
+            "close": 152.886
+          },
+          {
+            "timeIndex": 33,
+            "open": 152.886,
+            "high": 152.991,
+            "low": 152.699,
+            "close": 152.791
+          },
+          {
+            "timeIndex": 34,
+            "open": 152.791,
+            "high": 152.978,
+            "low": 152.609,
+            "close": 152.786
+          },
+          {
+            "timeIndex": 35,
+            "open": 152.786,
+            "high": 153.159,
+            "low": 152.572,
+            "close": 152.938
+          },
+          {
+            "timeIndex": 36,
+            "open": 152.938,
+            "high": 153.373,
+            "low": 152.756,
+            "close": 153.217
+          },
+          {
+            "timeIndex": 37,
+            "open": 153.217,
+            "high": 153.625,
+            "low": 153.117,
+            "close": 153.481
+          },
+          {
+            "timeIndex": 38,
+            "open": 153.481,
+            "high": 153.795,
+            "low": 153.31,
+            "close": 153.577
+          },
+          {
+            "timeIndex": 39,
+            "open": 153.577,
+            "high": 153.772,
+            "low": 153.256,
+            "close": 153.469
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 152.184,
+            "maximumPrice": 152.419,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 152.587,
+            "maximumPrice": 152.822,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 153.09,
+            "maximumPrice": 153.325,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 153.493,
+            "maximumPrice": 153.728,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "9851583a6f17998e06350c0e3b839aac03d1e73380d0acf8c9a648af8dec1020"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-018",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: consolidation",
+        "zh": "独立情境分析：识别盘整边界与禁止交易条件"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of recognising consolidation boundaries and no-trade conditions using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析识别盘整边界与禁止交易条件的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "776061063cdc6bcbc80f3eeafb765f782269aab88b8f662b7fda7919c40db825"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-018",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: consolidation",
+        "zh": "实践展示：识别盘整边界与禁止交易条件"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate recognising consolidation boundaries and no-trade conditions. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示识别盘整边界与禁止交易条件。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "ab396ae58e14cf77c2b4e288aba342da1964ee90e980ea29c5d5b76bd7f4f3ac"
+    }
+  ]
+}

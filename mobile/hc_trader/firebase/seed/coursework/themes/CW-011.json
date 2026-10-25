@@ -1,0 +1,638 @@
+{
+  "theme": {
+    "id": "CW-011",
+    "code": "CW-011",
+    "title": {
+      "en": "Reading Candlestick Anatomy as a Record of Auction Behaviour",
+      "zh": "将K线结构解读为市场竞价行为记录"
+    },
+    "shortTitle": {
+      "en": "candlestick anatomy",
+      "zh": "将K线结构解读为市场竞价行为记录"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates reading candlestick anatomy as a record of auction behaviour using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示将K线结构解读为市场竞价行为记录。"
+    },
+    "categoryId": "price_action",
+    "categoryName": {
+      "en": "Candlestick and Price Action",
+      "zh": "K线与价格行为"
+    },
+    "difficulty": "beginner",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind reading candlestick anatomy as a record of auction behaviour.",
+        "Apply reading candlestick anatomy as a record of auction behaviour to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释将K线结构解读为市场竞价行为记录背后的核心决策规则。",
+        "将将K线结构解读为市场竞价行为记录应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "candlestick anatomy",
+      "body",
+      "wick",
+      "USDJPY",
+      "Candlestick and Price Action"
+    ],
+    "searchTokens": [
+      "cw-011",
+      "CW-011",
+      "price_action",
+      "candlestick and price action",
+      "K线与价格行为",
+      "reading",
+      "candlestick",
+      "anatomy",
+      "as",
+      "a",
+      "record",
+      "of",
+      "auction",
+      "behaviour",
+      "将K线结构解读为市场竞价行为记录",
+      "body",
+      "wick",
+      "usdjpy",
+      "and",
+      "price",
+      "action"
+    ],
+    "difficultyOrder": 1,
+    "estimatedMinutes": 55,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 11,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "43ba135126c957ec02dd236607b96b77f6f6885ba8f88ad387befe1ea9fd8506"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-011",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for candlestick anatomy",
+        "zh": "将K线结构解读为市场竞价行为记录的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which evidence most reliably shows that reading candlestick anatomy as a record of auction behaviour is being applied correctly?",
+        "zh": "哪项证据最可靠地表明已正确应用将K线结构解读为市场竞价行为记录？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing reading candlestick anatomy as a record of auction behaviour.",
+            "zh": "评估将K线结构解读为市场竞价行为记录时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "4a819de4c072cd6d89aa10a538bcf3e9d58b9ceb52c773796cc8cde207abf455"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-011",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying candlestick anatomy Under Uncertainty",
+        "zh": "在不确定性下应用将K线结构解读为市场竞价行为记录"
+      },
+      "prompt": {
+        "en": "A trader finds evidence for reading candlestick anatomy as a record of auction behaviour, but the planned invalidation has already been breached. What is the best response?",
+        "zh": "交易者发现支持将K线结构解读为市场竞价行为记录的证据，但计划失效条件已经被突破。最佳做法是什么？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "f5d81df3e97798b9171c4798fc0a5510b2c77c5c566963b4b589ce11d183d727"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-011",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "USDJPY Chart Interpretation for candlestick anatomy",
+        "zh": "USDJPY图表中的将K线结构解读为市场竞价行为记录解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational USDJPY H1 chart. Which labelled zone is the strongest decision area for evaluating reading candlestick anatomy as a record of auction behaviour while keeping invalidation visible?",
+        "zh": "研究合成教学用USDJPY H1图表。哪个标记区域最适合评估将K线结构解读为市场竞价行为记录，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "USDJPY",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 149.839,
+            "high": 150.308,
+            "low": 149.645,
+            "close": 150.145
+          },
+          {
+            "timeIndex": 1,
+            "open": 150.145,
+            "high": 150.575,
+            "low": 150.025,
+            "close": 150.353
+          },
+          {
+            "timeIndex": 2,
+            "open": 150.353,
+            "high": 150.546,
+            "low": 150.197,
+            "close": 150.366
+          },
+          {
+            "timeIndex": 3,
+            "open": 150.366,
+            "high": 150.479,
+            "low": 150.001,
+            "close": 150.211
+          },
+          {
+            "timeIndex": 4,
+            "open": 150.211,
+            "high": 150.418,
+            "low": 149.841,
+            "close": 150.04
+          },
+          {
+            "timeIndex": 5,
+            "open": 150.04,
+            "high": 150.251,
+            "low": 149.876,
+            "close": 150.003
+          },
+          {
+            "timeIndex": 6,
+            "open": 150.003,
+            "high": 150.261,
+            "low": 149.854,
+            "close": 150.137
+          },
+          {
+            "timeIndex": 7,
+            "open": 150.137,
+            "high": 150.543,
+            "low": 149.929,
+            "close": 150.37
+          },
+          {
+            "timeIndex": 8,
+            "open": 150.37,
+            "high": 150.844,
+            "low": 150.168,
+            "close": 150.622
+          },
+          {
+            "timeIndex": 9,
+            "open": 150.622,
+            "high": 151.041,
+            "low": 150.488,
+            "close": 150.869
+          },
+          {
+            "timeIndex": 10,
+            "open": 150.869,
+            "high": 151.239,
+            "low": 150.727,
+            "close": 151.114
+          },
+          {
+            "timeIndex": 11,
+            "open": 151.114,
+            "high": 151.523,
+            "low": 150.909,
+            "close": 151.311
+          },
+          {
+            "timeIndex": 12,
+            "open": 151.311,
+            "high": 151.579,
+            "low": 151.106,
+            "close": 151.372
+          },
+          {
+            "timeIndex": 13,
+            "open": 151.372,
+            "high": 151.486,
+            "low": 151.123,
+            "close": 151.264
+          },
+          {
+            "timeIndex": 14,
+            "open": 151.264,
+            "high": 151.445,
+            "low": 150.944,
+            "close": 151.079
+          },
+          {
+            "timeIndex": 15,
+            "open": 151.079,
+            "high": 151.301,
+            "low": 150.783,
+            "close": 150.986
+          },
+          {
+            "timeIndex": 16,
+            "open": 150.986,
+            "high": 151.254,
+            "low": 150.778,
+            "close": 151.091
+          },
+          {
+            "timeIndex": 17,
+            "open": 151.091,
+            "high": 151.498,
+            "low": 150.944,
+            "close": 151.362
+          },
+          {
+            "timeIndex": 18,
+            "open": 151.362,
+            "high": 151.89,
+            "low": 151.234,
+            "close": 151.674
+          },
+          {
+            "timeIndex": 19,
+            "open": 151.674,
+            "high": 152.134,
+            "low": 151.475,
+            "close": 151.933
+          },
+          {
+            "timeIndex": 20,
+            "open": 151.933,
+            "high": 152.228,
+            "low": 151.723,
+            "close": 152.126
+          },
+          {
+            "timeIndex": 21,
+            "open": 152.126,
+            "high": 152.457,
+            "low": 151.971,
+            "close": 152.268
+          },
+          {
+            "timeIndex": 22,
+            "open": 152.268,
+            "high": 152.557,
+            "low": 152.147,
+            "close": 152.337
+          },
+          {
+            "timeIndex": 23,
+            "open": 152.337,
+            "high": 152.49,
+            "low": 152.09,
+            "close": 152.285
+          },
+          {
+            "timeIndex": 24,
+            "open": 152.285,
+            "high": 152.431,
+            "low": 151.925,
+            "close": 152.136
+          },
+          {
+            "timeIndex": 25,
+            "open": 152.136,
+            "high": 152.355,
+            "low": 151.854,
+            "close": 152.014
+          },
+          {
+            "timeIndex": 26,
+            "open": 152.014,
+            "high": 152.259,
+            "low": 151.901,
+            "close": 152.064
+          },
+          {
+            "timeIndex": 27,
+            "open": 152.064,
+            "high": 152.417,
+            "low": 151.873,
+            "close": 152.323
+          },
+          {
+            "timeIndex": 28,
+            "open": 152.323,
+            "high": 152.88,
+            "low": 152.11,
+            "close": 152.684
+          },
+          {
+            "timeIndex": 29,
+            "open": 152.684,
+            "high": 153.212,
+            "low": 152.517,
+            "close": 152.994
+          },
+          {
+            "timeIndex": 30,
+            "open": 152.994,
+            "high": 153.321,
+            "low": 152.888,
+            "close": 153.178
+          },
+          {
+            "timeIndex": 31,
+            "open": 153.178,
+            "high": 153.416,
+            "low": 152.991,
+            "close": 153.26
+          },
+          {
+            "timeIndex": 32,
+            "open": 153.26,
+            "high": 153.508,
+            "low": 153.046,
+            "close": 153.287
+          },
+          {
+            "timeIndex": 33,
+            "open": 153.287,
+            "high": 153.473,
+            "low": 153.089,
+            "close": 153.261
+          },
+          {
+            "timeIndex": 34,
+            "open": 153.261,
+            "high": 153.366,
+            "low": 153.074,
+            "close": 153.172
+          },
+          {
+            "timeIndex": 35,
+            "open": 153.172,
+            "high": 153.375,
+            "low": 152.89,
+            "close": 153.072
+          },
+          {
+            "timeIndex": 36,
+            "open": 153.072,
+            "high": 153.296,
+            "low": 152.858,
+            "close": 153.081
+          },
+          {
+            "timeIndex": 37,
+            "open": 153.081,
+            "high": 153.421,
+            "low": 152.903,
+            "close": 153.289
+          },
+          {
+            "timeIndex": 38,
+            "open": 153.289,
+            "high": 153.82,
+            "low": 153.195,
+            "close": 153.654
+          },
+          {
+            "timeIndex": 39,
+            "open": 153.654,
+            "high": 154.242,
+            "low": 153.478,
+            "close": 154.02
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 149.829,
+            "maximumPrice": 150.472,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 150.932,
+            "maximumPrice": 151.576,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 152.311,
+            "maximumPrice": 152.955,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 153.415,
+            "maximumPrice": 154.058,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "7dcfcfdb9c4574071b57dd82646dc492d042a54a6050b6f1383fcad6d382d07d"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-011",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: candlestick anatomy",
+        "zh": "独立情境分析：将K线结构解读为市场竞价行为记录"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of reading candlestick anatomy as a record of auction behaviour using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析将K线结构解读为市场竞价行为记录的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "c794699a6f2b5783e758b42bf4e2c49105ad65c6bf81dcd02d19e1334185361e"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-011",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: candlestick anatomy",
+        "zh": "实践展示：将K线结构解读为市场竞价行为记录"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate reading candlestick anatomy as a record of auction behaviour. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示将K线结构解读为市场竞价行为记录。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "9c23cd179b885444e811b5d0d0c9f3583b2523a29a671660576f63c1f1872570"
+    }
+  ]
+}

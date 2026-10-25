@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Config;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
+use App\Support\AdminAudit;
 use Illuminate\Http\Request;
 
 class RoleManagementController extends Controller
@@ -52,11 +53,14 @@ class RoleManagementController extends Controller
             'description' => 'nullable|max:500',
         ]);
 
-        Role::create([
+        abort_if((int) $request->id === User::ROLE_SUPER_ADMIN && ! $request->user()->isGlobalSuperAdmin(), 403);
+
+        $role = Role::create([
             'id' => $request->id,
             'name' => $request->name,
             'description' => $request->description,
         ]);
+        AdminAudit::record($request->user(), 'role.created', 'role', $role->id, ['name' => $role->name]);
 
         return redirect()->route('all.roles')->with('success', 'Role created successfully.');
     }
@@ -78,6 +82,7 @@ class RoleManagementController extends Controller
     public function UpdateRole(Request $request, $id)
     {
         $role = Role::findOrFail($id);
+        abort_if((int) $id === User::ROLE_SUPER_ADMIN && ! $request->user()->isGlobalSuperAdmin(), 403);
 
         $request->validate([
             'name' => 'required|max:255|unique:roles,name,' . $id,
@@ -88,19 +93,23 @@ class RoleManagementController extends Controller
             'name' => $request->name,
             'description' => $request->description,
         ]);
+        AdminAudit::record($request->user(), 'role.updated', 'role', $role->id, ['name' => $role->name]);
 
         return redirect()->route('all.roles')->with('success', 'Role updated successfully.');
     }
 
     public function DeleteRole($id)
     {
+        abort_if((int) $id === User::ROLE_SUPER_ADMIN && ! request()->user()->isGlobalSuperAdmin(), 403);
         if (User::where('role_id', $id)->exists()) {
             return redirect()
                 ->route('all.roles')
                 ->with('error', 'This role has assigned users and cannot be deleted.');
         }
 
-        Role::findOrFail($id)->delete();
+        $role = Role::findOrFail($id);
+        $role->delete();
+        AdminAudit::record(request()->user(), 'role.deleted', 'role', $role->id, ['name' => $role->name]);
         return redirect()->route('all.roles')->with('success', 'Role deleted successfully.');
     }
 }

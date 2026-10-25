@@ -1,0 +1,25 @@
+.pm-cycle-stage-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:0 0 22px}
+.pm-cycle-stage-card{min-width:0;padding:20px;border:1px solid var(--pm-line);border-radius:13px;background:var(--pm-paper);box-shadow:0 5px 20px #12263c12}
+.pm-cycle-stage-card>span{display:block;color:var(--pm-muted);font-size:12px;font-weight:800}
+.pm-cycle-stage-card>strong{display:block;margin:7px 0 15px;font-size:30px;letter-spacing:-.04em;line-height:1}
+.pm-cycle-stage-card .pm-small-progress{margin-bottom:10px}
+.pm-cycle-stage-card small{display:block;color:var(--pm-muted);font-size:11px;line-height:1.55}
+.pm-cycle-stage-card:nth-child(1) .pm-small-progress span{background:#548de9}
+.pm-cycle-stage-card:nth-child(2) .pm-small-progress span{background:#42b9ad}
+.pm-cycle-stage-card:nth-child(3) .pm-small-progress span{background:#d79a48}
+@media(max-width:1000px){.pm-cycle-stage-grid{grid-template-columns:1fr}}
+.pm-cycle-report-filters{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px}
+.pm-cycle-report-filters label{display:grid;gap:5px;min-width:0;color:var(--pm-muted);font-size:11px;font-weight:750}
+.pm-cycle-report-filters :is(input,select){width:100%;min-width:0;min-height:39px;padding:8px 10px;border:1px solid var(--pm-line);border-radius:8px;background:var(--pm-bg);color:var(--pm-ink)}
+.pm-cycle-report-filters>div{display:flex;align-items:end;gap:12px}
+.pm-cycle-report-filters>div a{padding-bottom:9px}
+.pm-cycle-report-list .pm-panel-head{align-items:flex-start}
+.pm-cycle-report-list .pm-panel-head p.pm-muted{margin:6px 0 0}
+.pm-cycle-report-list .pm-cycle-stage-grid{margin:18px 0}
+.pm-cycle-report-summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;border-top:1px solid var(--pm-line);padding-top:15px;color:var(--pm-muted);font-size:12px}
+.pm-cycle-report-summary strong{display:block;margin-bottom:9px;color:var(--pm-ink)}
+.pm-cycle-statuses,.pm-cycle-report-summary-counts{display:flex;flex-wrap:wrap;gap:7px}
+.pm-cycle-statuses span,.pm-cycle-report-summary-counts span{display:inline-flex;gap:5px;padding:6px 9px;border-radius:7px;background:var(--pm-bg)}
+.pm-cycle-statuses b,.pm-cycle-report-summary-counts b{color:var(--pm-ink)}
+@media(max-width:1100px){.pm-cycle-report-filters{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){.pm-cycle-report-filters,.pm-cycle-report-summary{grid-template-columns:1fr}}

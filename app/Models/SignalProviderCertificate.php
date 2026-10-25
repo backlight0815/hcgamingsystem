@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class SignalProviderCertificate extends Model
 {
     public const STATUS_DRAFT = 'draft';
+
     public const STATUS_APPROVED = 'approved';
+
     public const STATUS_PUBLISHED = 'published';
+
     public const STATUS_REVOKED = 'revoked';
 
     protected $fillable = [
@@ -116,6 +119,6 @@ class SignalProviderCertificate extends Model
 
     public static function eligibleRoleIds(): array
     {
-        return [1, 2, 201, 202, 501, 750, 760, 770];
+        return [1, 2, 201, 202, 501, 502, 750, 760, 770];
     }
 }

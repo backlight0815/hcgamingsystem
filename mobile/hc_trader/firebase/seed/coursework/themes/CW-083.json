@@ -1,0 +1,636 @@
+{
+  "theme": {
+    "id": "CW-083",
+    "code": "CW-083",
+    "title": {
+      "en": "Controlling Overtrading with Session and Setup Limits",
+      "zh": "通过时段与形态限制控制过度交易"
+    },
+    "shortTitle": {
+      "en": "overtrading",
+      "zh": "通过时段与形态限制控制过度交易"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates controlling overtrading with session and setup limits using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示通过时段与形态限制控制过度交易。"
+    },
+    "categoryId": "trading_psychology",
+    "categoryName": {
+      "en": "Trading Psychology and Discipline",
+      "zh": "交易心理与纪律"
+    },
+    "difficulty": "advanced",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind controlling overtrading with session and setup limits.",
+        "Apply controlling overtrading with session and setup limits to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释通过时段与形态限制控制过度交易背后的核心决策规则。",
+        "将通过时段与形态限制控制过度交易应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "overtrading",
+      "trade limit",
+      "setup",
+      "US30",
+      "Trading Psychology and Discipline"
+    ],
+    "searchTokens": [
+      "cw-083",
+      "CW-083",
+      "trading_psychology",
+      "trading psychology and discipline",
+      "交易心理与纪律",
+      "controlling",
+      "overtrading",
+      "with",
+      "session",
+      "and",
+      "setup",
+      "limits",
+      "通过时段与形态限制控制过度交易",
+      "trade",
+      "limit",
+      "us30",
+      "trading",
+      "psychology",
+      "discipline"
+    ],
+    "difficultyOrder": 3,
+    "estimatedMinutes": 90,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 83,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "6161ef1452cb640a7dd974a06007638190799af939b19d69f210569807763da2"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-083",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for overtrading",
+        "zh": "通过时段与形态限制控制过度交易的核心决策规则"
+      },
+      "prompt": {
+        "en": "What should a learner verify first when evaluating controlling overtrading with session and setup limits?",
+        "zh": "评估通过时段与形态限制控制过度交易时，学习者首先应核实什么？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing controlling overtrading with session and setup limits.",
+            "zh": "评估通过时段与形态限制控制过度交易时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "39251717458144a601b1ddcfd4e7871ec6f88096f6f7ed70f9a439d46060ee22"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-083",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying overtrading Under Uncertainty",
+        "zh": "在不确定性下应用通过时段与形态限制控制过度交易"
+      },
+      "prompt": {
+        "en": "A setup involving controlling overtrading with session and setup limits offers poor risk-to-reward after costs. What should the learner do?",
+        "zh": "涉及通过时段与形态限制控制过度交易的形态在计入成本后风险回报不佳。学习者应怎么做？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "c9bf9311dff36561c116244ae145aeedf665bd4e2b7563176ee1d036fb2e45b7"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-083",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "US30 Chart Interpretation for overtrading",
+        "zh": "US30图表中的通过时段与形态限制控制过度交易解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational US30 H1 chart. Which labelled zone is the strongest decision area for evaluating controlling overtrading with session and setup limits while keeping invalidation visible?",
+        "zh": "研究合成教学用US30 H1图表。哪个标记区域最适合评估通过时段与形态限制控制过度交易，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "US30",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 38847.2,
+            "high": 38917.8,
+            "low": 38795.2,
+            "close": 38884.5
+          },
+          {
+            "timeIndex": 1,
+            "open": 38884.5,
+            "high": 38988.9,
+            "low": 38847.3,
+            "close": 38935.1
+          },
+          {
+            "timeIndex": 2,
+            "open": 38935.1,
+            "high": 39054.2,
+            "low": 38903.4,
+            "close": 39003.7
+          },
+          {
+            "timeIndex": 3,
+            "open": 39003.7,
+            "high": 39108.9,
+            "low": 38954,
+            "close": 39082.8
+          },
+          {
+            "timeIndex": 4,
+            "open": 39082.8,
+            "high": 39191.7,
+            "low": 39030.3,
+            "close": 39144.9
+          },
+          {
+            "timeIndex": 5,
+            "open": 39144.9,
+            "high": 39216.1,
+            "low": 39106,
+            "close": 39160.8
+          },
+          {
+            "timeIndex": 6,
+            "open": 39160.8,
+            "high": 39199.7,
+            "low": 39099.7,
+            "close": 39129.6
+          },
+          {
+            "timeIndex": 7,
+            "open": 39129.6,
+            "high": 39165.6,
+            "low": 39035.6,
+            "close": 39084.3
+          },
+          {
+            "timeIndex": 8,
+            "open": 39084.3,
+            "high": 39138.9,
+            "low": 39012.2,
+            "close": 39065.2
+          },
+          {
+            "timeIndex": 9,
+            "open": 39065.2,
+            "high": 39137.5,
+            "low": 39024.8,
+            "close": 39088.5
+          },
+          {
+            "timeIndex": 10,
+            "open": 39088.5,
+            "high": 39164.3,
+            "low": 39060.4,
+            "close": 39141
+          },
+          {
+            "timeIndex": 11,
+            "open": 39141,
+            "high": 39250.7,
+            "low": 39093.4,
+            "close": 39202
+          },
+          {
+            "timeIndex": 12,
+            "open": 39202,
+            "high": 39318.6,
+            "low": 39148.7,
+            "close": 39263.9
+          },
+          {
+            "timeIndex": 13,
+            "open": 39263.9,
+            "high": 39363.9,
+            "low": 39222,
+            "close": 39327.6
+          },
+          {
+            "timeIndex": 14,
+            "open": 39327.6,
+            "high": 39422.2,
+            "low": 39301.4,
+            "close": 39383.7
+          },
+          {
+            "timeIndex": 15,
+            "open": 39383.7,
+            "high": 39465,
+            "low": 39337.3,
+            "close": 39409.8
+          },
+          {
+            "timeIndex": 16,
+            "open": 39409.8,
+            "high": 39456.9,
+            "low": 39338.3,
+            "close": 39391.7
+          },
+          {
+            "timeIndex": 17,
+            "open": 39391.7,
+            "high": 39417.5,
+            "low": 39302.6,
+            "close": 39346
+          },
+          {
+            "timeIndex": 18,
+            "open": 39346,
+            "high": 39396.3,
+            "low": 39289.1,
+            "close": 39313.5
+          },
+          {
+            "timeIndex": 19,
+            "open": 39313.5,
+            "high": 39381.1,
+            "low": 39268.3,
+            "close": 39327.2
+          },
+          {
+            "timeIndex": 20,
+            "open": 39327.2,
+            "high": 39419.9,
+            "low": 39273.6,
+            "close": 39386.3
+          },
+          {
+            "timeIndex": 21,
+            "open": 39386.3,
+            "high": 39503.7,
+            "low": 39341.5,
+            "close": 39462.8
+          },
+          {
+            "timeIndex": 22,
+            "open": 39462.8,
+            "high": 39586.2,
+            "low": 39439.1,
+            "close": 39530.7
+          },
+          {
+            "timeIndex": 23,
+            "open": 39530.7,
+            "high": 39628.6,
+            "low": 39486.9,
+            "close": 39583.5
+          },
+          {
+            "timeIndex": 24,
+            "open": 39583.5,
+            "high": 39653.3,
+            "low": 39530,
+            "close": 39624.8
+          },
+          {
+            "timeIndex": 25,
+            "open": 39624.8,
+            "high": 39701.1,
+            "low": 39578.8,
+            "close": 39649.4
+          },
+          {
+            "timeIndex": 26,
+            "open": 39649.4,
+            "high": 39702.2,
+            "low": 39618.7,
+            "close": 39644.3
+          },
+          {
+            "timeIndex": 27,
+            "open": 39644.3,
+            "high": 39675.3,
+            "low": 39567.2,
+            "close": 39609.7
+          },
+          {
+            "timeIndex": 28,
+            "open": 39609.7,
+            "high": 39652.9,
+            "low": 39519.5,
+            "close": 39572.9
+          },
+          {
+            "timeIndex": 29,
+            "open": 39572.9,
+            "high": 39628.5,
+            "low": 39525.3,
+            "close": 39572.5
+          },
+          {
+            "timeIndex": 30,
+            "open": 39572.5,
+            "high": 39668.6,
+            "low": 39545.1,
+            "close": 39625.6
+          },
+          {
+            "timeIndex": 31,
+            "open": 39625.6,
+            "high": 39743.6,
+            "low": 39584.7,
+            "close": 39712.3
+          },
+          {
+            "timeIndex": 32,
+            "open": 39712.3,
+            "high": 39847.6,
+            "low": 39659.2,
+            "close": 39794.6
+          },
+          {
+            "timeIndex": 33,
+            "open": 39794.6,
+            "high": 39900,
+            "low": 39746.3,
+            "close": 39848.4
+          },
+          {
+            "timeIndex": 34,
+            "open": 39848.4,
+            "high": 39903.9,
+            "low": 39819.1,
+            "close": 39875.7
+          },
+          {
+            "timeIndex": 35,
+            "open": 39875.7,
+            "high": 39933,
+            "low": 39836.3,
+            "close": 39887.6
+          },
+          {
+            "timeIndex": 36,
+            "open": 39887.6,
+            "high": 39943.1,
+            "low": 39833.2,
+            "close": 39885.9
+          },
+          {
+            "timeIndex": 37,
+            "open": 39885.9,
+            "high": 39926.5,
+            "low": 39816.8,
+            "close": 39866.1
+          },
+          {
+            "timeIndex": 38,
+            "open": 39866.1,
+            "high": 39900.1,
+            "low": 39806.5,
+            "close": 39837.6
+          },
+          {
+            "timeIndex": 39,
+            "open": 39837.6,
+            "high": 39891.6,
+            "low": 39791.4,
+            "close": 39829.2
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 38841.1,
+            "maximumPrice": 39001.8,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 39116.6,
+            "maximumPrice": 39277.3,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 39461,
+            "maximumPrice": 39621.7,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 39736.5,
+            "maximumPrice": 39897.2,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "878948b533028f85a07bb4464146768b55ae1109eec1926e5a80c1a362c19f19"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-083",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: overtrading",
+        "zh": "独立情境分析：通过时段与形态限制控制过度交易"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of controlling overtrading with session and setup limits using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析通过时段与形态限制控制过度交易的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "5577f855a3fd3abab2b25119e8cc2ea2c625391a520e9a94f0303442ebfdf343"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-083",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: overtrading",
+        "zh": "实践展示：通过时段与形态限制控制过度交易"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate controlling overtrading with session and setup limits. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示通过时段与形态限制控制过度交易。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "aa957b9fc4bba6dc9adfac29af0b3bb84d899a70bb33d4b37a2c49f1fb248a7a"
+    }
+  ]
+}

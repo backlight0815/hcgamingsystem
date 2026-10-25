@@ -1,0 +1,840 @@
+{
+    "info": {
+        "name": "PMS API Testing",
+        "description": "Run against a QA database. Set base_url, pms_email and pms_password locally. Never export a populated api_token. Project and ticket IDs are captured from inserts.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{api_token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "event": [
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    "if (pm.request.url.toString().includes('/api/v1/project-management/')) pm.test('Envelope has request ID and timestamp', () => { const j = pm.response.json(); pm.expect(j.request_id).to.be.a('string'); pm.expect(j.timestamp).to.be.a('string'); });"
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": ""
+        },
+        {
+            "key": "pms_email",
+            "value": ""
+        },
+        {
+            "key": "pms_password",
+            "value": ""
+        },
+        {
+            "key": "api_token",
+            "value": ""
+        },
+        {
+            "key": "project_id",
+            "value": ""
+        },
+        {
+            "key": "project_key",
+            "value": "PMAUTO"
+        },
+        {
+            "key": "ticket_id",
+            "value": ""
+        },
+        {
+            "key": "developer_id",
+            "value": ""
+        },
+        {
+            "key": "qa_id",
+            "value": ""
+        },
+        {
+            "key": "restricted_api_token",
+            "value": ""
+        }
+    ],
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Login and capture token",
+                    "auth": {
+                        "type": "noauth"
+                    },
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"email\":\"{{pms_email}}\",\"password\":\"{{pms_password}}\",\"device_name\":\"Postman QA\"}"
+                        },
+                        "url": "{{base_url}}/api/backoffice/pms/auth/login"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Login succeeds', () => pm.response.to.have.status(200));",
+                                    "const j = pm.response.json(); if (j.token) pm.collectionVariables.set('api_token', j.token);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Project Management",
+            "item": [
+                {
+                    "name": "Insert Project",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"action\":\"insert\",\"project_key\":\"{{project_key}}\",\"name\":\"Postman QA Project\",\"description\":\"Created from Postman\",\"priority\":\"normal\"}"
+                        },
+                        "url": "{{base_url}}/api/v1/project-management/updateProjectInfo"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Project inserted', () => { pm.response.to.have.status(201); pm.expect(pm.response.json().success).to.eql(true); pm.expect(pm.response.json().code).to.eql('PROJECT_CREATED'); });",
+                                    "pm.collectionVariables.set('project_id', pm.response.json().data.project_id);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Project",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"action\":\"update\",\"project_id\":{{project_id}},\"name\":\"Updated via Postman\",\"priority\":\"high\"}"
+                        },
+                        "url": "{{base_url}}/api/v1/project-management/updateProjectInfo"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Project updated', () => { pm.response.to.have.status(200); pm.expect(pm.response.json().code).to.eql('PROJECT_UPDATED'); pm.expect(pm.response.json().data.name).to.eql('Updated via Postman'); });"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Get Project Info",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/project-management/getProjectInfo?project_id={{project_id}}"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Read matches update', () => { pm.response.to.have.status(200); const j = pm.response.json(); pm.expect(j.success).to.eql(true); pm.expect(j.code).to.eql('PROJECT_RETRIEVED'); pm.expect(j.data.name).to.eql('Updated via Postman'); pm.expect(j.data.priority).to.eql('high'); });"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Ticket Management",
+            "item": [
+                {
+                    "name": "Insert Ticket",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"action\":\"insert\",\"project_id\":{{project_id}},\"ticket_type\":\"REQ\",\"title\":\"Postman requirement\",\"priority\":\"normal\",\"description\":\"Verify API workflow\",\"business_justification\":\"QA coverage\",\"acceptance_criteria\":\"Changes are persisted\"}"
+                        },
+                        "url": "{{base_url}}/api/v1/project-management/updateTicketInfo"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Ticket inserted', () => { pm.response.to.have.status(201); pm.expect(pm.response.json().code).to.eql('TICKET_CREATED'); });",
+                                    "pm.collectionVariables.set('ticket_id', pm.response.json().data.ticket_id);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Ticket",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"action\":\"update\",\"ticket_id\":{{ticket_id}},\"title\":\"Updated Postman requirement\",\"priority\":\"high\"}"
+                        },
+                        "url": "{{base_url}}/api/v1/project-management/updateTicketInfo"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Ticket updated', () => { pm.response.to.have.status(200); pm.expect(pm.response.json().code).to.eql('TICKET_UPDATED'); pm.expect(pm.response.json().data.title).to.eql('Updated Postman requirement'); });"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Get Project Tickets",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/project-management/getProjectTickets?project_id={{project_id}}&per_page=20"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Project tickets include update', () => { pm.response.to.have.status(200); const j = pm.response.json(); pm.expect(j.code).to.eql('PROJECT_TICKETS_RETRIEVED'); pm.expect(j.data.items.some(t => t.ticket_id == pm.collectionVariables.get('ticket_id') && t.title === 'Updated Postman requirement')).to.eql(true); });"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "User Assignment",
+            "item": [
+                {
+                    "name": "Find Developer candidate",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/project-management/getAssignableUsers?assignment_type=developer"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Developer positions only', () => { pm.response.to.have.status(200); const j = pm.response.json(); pm.expect(j.code).to.eql('ASSIGNABLE_USERS_RETRIEVED'); j.data.forEach(u => pm.expect(u.job_position).to.eql('Developer')); });",
+                                    "if (pm.response.json().data.length) pm.collectionVariables.set('developer_id', pm.response.json().data[0].user_id);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Find QA candidate",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/project-management/getAssignableUsers?assignment_type=qa"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('QA positions only', () => { pm.response.to.have.status(200); const j = pm.response.json(); pm.expect(j.code).to.eql('ASSIGNABLE_USERS_RETRIEVED'); j.data.forEach(u => pm.expect(u.job_position).to.eql('QA Engineer')); });",
+                                    "if (pm.response.json().data.length) pm.collectionVariables.set('qa_id', pm.response.json().data[0].user_id);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Add Developer to project",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"user_id\":{{developer_id}},\"role\":\"Developer\"}"
+                        },
+                        "url": "{{base_url}}/api/backoffice/pms/projects/{{project_id}}/members"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Developer added', () => { pm.response.to.have.status(200); pm.expect(pm.response.json().saved).to.eql(true); });"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Add QA to project",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"user_id\":{{qa_id}},\"role\":\"QA Engineer\"}"
+                        },
+                        "url": "{{base_url}}/api/backoffice/pms/projects/{{project_id}}/members"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('QA added', () => { pm.response.to.have.status(200); pm.expect(pm.response.json().saved).to.eql(true); });"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Assign Developer to ticket",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"action\":\"update\",\"ticket_id\":{{ticket_id}},\"developer_assignee_id\":{{developer_id}}}"
+                        },
+                        "url": "{{base_url}}/api/v1/project-management/updateTicketInfo"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Developer assignment persisted', () => { pm.response.to.have.status(200); pm.expect(pm.response.json().data.developer_assignee.user_id).to.eql(Number(pm.collectionVariables.get('developer_id'))); });"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Verify project scoped Developers",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/project-management/getAssignableUsers?assignment_type=developer&project_id={{project_id}}"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "pm.test('Assigned Developer is project eligible', () => { pm.response.to.have.status(200); pm.expect(pm.response.json().data.some(u => u.user_id == pm.collectionVariables.get('developer_id'))).to.eql(true); });"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Negative Testing",
+            "item": [
+                {
+                    "name": "Missing Parameters",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/project-management/getProjectInfo"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Missing identifier rejected', () => { pm.response.to.have.status(422); pm.expect(pm.response.json().code).to.eql('VALIDATION_ERROR'); });"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Invalid Values",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"action\":\"update\",\"project_id\":{{project_id}},\"priority\":\"urgent\"}"
+                        },
+                        "url": "{{base_url}}/api/v1/project-management/updateProjectInfo"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Invalid priority rejected', () => { pm.response.to.have.status(422); pm.expect(pm.response.json().code).to.eql('VALIDATION_ERROR'); });"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Unauthorized",
+                    "auth": {
+                        "type": "noauth"
+                    },
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/project-management/getProjectInfo?project_id={{project_id}}"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Bearer required', () => { pm.response.to.have.status(401); pm.expect(pm.response.json().code).to.eql('UNAUTHENTICATED'); });"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Forbidden",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"action\":\"insert\",\"project_key\":\"NOAUTH\",\"name\":\"Should fail for nonadmin\",\"priority\":\"normal\"}"
+                        },
+                        "url": "{{base_url}}/api/v1/project-management/updateProjectInfo"
+                    },
+                    "description": "Run this with a nonadministrator PMS token; expected 403.",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Nonadmin cannot create project', () => { pm.response.to.have.status(403); pm.expect(pm.response.json().code).to.eql('FORBIDDEN'); });"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "if (!pm.collectionVariables.get('restricted_api_token')) pm.execution.skipRequest();"
+                                ]
+                            }
+                        }
+                    ],
+                    "auth": {
+                        "type": "bearer",
+                        "bearer": [
+                            {
+                                "key": "token",
+                                "value": "{{restricted_api_token}}",
+                                "type": "string"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "Project Not Found",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/v1/project-management/getProjectInfo?project_id=999999999"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Missing project is 404', () => { pm.response.to.have.status(404); pm.expect(pm.response.json().code).to.eql('PROJECT_NOT_FOUND'); });"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Invalid Assignment",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"action\":\"update\",\"ticket_id\":{{ticket_id}},\"developer_assignee_id\":{{qa_id}}}"
+                        },
+                        "url": "{{base_url}}/api/v1/project-management/updateTicketInfo"
+                    },
+                    "description": "Requires an existing QA-only member in qa_id and an active ticket_id.",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('QA cannot be developer assignee', () => { pm.response.to.have.status(422); pm.expect(pm.response.json().code).to.eql('VALIDATION_ERROR'); });"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "if (!pm.collectionVariables.get('qa_id') || !pm.collectionVariables.get('ticket_id')) pm.execution.skipRequest();"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Invalid Action",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"action\":\"upsert\"}"
+                        },
+                        "url": "{{base_url}}/api/v1/project-management/updateProjectInfo"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Unsupported action rejected', () => { pm.response.to.have.status(422); pm.expect(pm.response.json().code).to.eql('VALIDATION_ERROR'); });"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Duplicate Project Key",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"action\":\"insert\",\"project_key\":\"{{project_key}}\",\"name\":\"Duplicate\",\"priority\":\"normal\"}"
+                        },
+                        "url": "{{base_url}}/api/v1/project-management/updateProjectInfo"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Duplicate key rejected', () => { pm.response.to.have.status(422); pm.expect(pm.response.json().code).to.eql('VALIDATION_ERROR'); });"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Cleanup",
+            "item": [
+                {
+                    "name": "Delete Ticket",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"action\":\"delete\",\"ticket_id\":{{ticket_id}}}"
+                        },
+                        "url": "{{base_url}}/api/v1/project-management/updateTicketInfo"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Ticket soft deleted', () => { pm.response.to.have.status(200); pm.expect(pm.response.json().code).to.eql('TICKET_DELETED'); });"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Project",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"action\":\"delete\",\"project_id\":{{project_id}}}"
+                        },
+                        "url": "{{base_url}}/api/v1/project-management/updateProjectInfo"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Project soft deleted', () => { pm.response.to.have.status(200); pm.expect(pm.response.json().code).to.eql('PROJECT_DELETED'); });"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Revoke current token",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": "{{base_url}}/api/backoffice/pms/auth/token"
+                    },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test('Token revoked', () => pm.response.to.have.status(200));",
+                                    "pm.collectionVariables.unset('api_token');"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

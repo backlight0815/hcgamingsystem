@@ -134,7 +134,7 @@
     }
 
     .leaderboard-filter label {
-        color: #344256;
+        color: #cbd5e1;
         font-size: 12px;
         font-weight: 800;
         margin-bottom: 6px;
@@ -707,7 +707,7 @@
 </div>
 
 <script>
-    $(function () {
+    document.addEventListener('DOMContentLoaded', function () {
         const currentRank = @json($currentPlacement['rank'] ?? null);
         const table = $('#leaderboard').DataTable({
             order: [[0, 'asc']],

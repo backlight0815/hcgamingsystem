@@ -1,0 +1,247 @@
+openapi: 3.0.3
+info:
+  title: PMS automation API
+  version: 1.0.0
+  description: Authenticated automation endpoints backed by the same PMS project and ticket records as the browser workspace.
+servers:
+  - url: /api/v1/project-management
+security:
+  - pmsBearer: []
+components:
+  securitySchemes:
+    pmsBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: Sanctum
+      description: Obtain a 30 day PMS token through POST /api/backoffice/pms/auth/login and revoke it through DELETE /api/backoffice/pms/auth/token.
+  schemas:
+    ErrorMap:
+      type: object
+      additionalProperties:
+        type: array
+        items: { type: string }
+    Envelope:
+      type: object
+      required: [success, code, message, data, errors, request_id, timestamp]
+      properties:
+        success: { type: boolean }
+        code: { type: string }
+        message: { type: string }
+        data: { nullable: true }
+        errors: { $ref: '#/components/schemas/ErrorMap' }
+        request_id: { type: string, format: uuid }
+        timestamp: { type: string, format: date-time }
+    Project:
+      type: object
+      properties:
+        project_id: { type: integer }
+        project_key: { type: string }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        objective: { type: string, nullable: true }
+        category: { type: string, nullable: true }
+        priority: { type: string, enum: [low, normal, high, critical] }
+        priority_code: { type: string, enum: [P4, P3, P2, P1] }
+        status: { type: string, enum: [Planned, Approved, Active, On Hold, Completed, Cancelled] }
+        status_code: { type: integer, nullable: true }
+        status_label: { type: string }
+        planned_start_date: { type: string, format: date, nullable: true }
+        target_date: { type: string, format: date, nullable: true }
+        related_module: { type: string, nullable: true }
+        manager:
+          type: object
+          nullable: true
+          properties:
+            user_id: { type: integer }
+            full_name: { type: string }
+            job_position: { type: string, nullable: true }
+        owner:
+          type: object
+          nullable: true
+          properties:
+            user_id: { type: integer }
+            full_name: { type: string }
+        lock_version: { type: integer }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+    Ticket:
+      type: object
+      properties:
+        ticket_id: { type: integer }
+        ticket_key: { type: string }
+        title: { type: string }
+        description: { type: string, nullable: true }
+        ticket_type: { type: string, enum: [REQ, ENH, PRD, QAT, TSK] }
+        status: { type: string }
+        status_code: { type: integer, nullable: true }
+        status_label: { type: string }
+        resolution: { type: string, nullable: true }
+        priority: { type: string, enum: [low, normal, high, critical] }
+        priority_code: { type: string }
+        developer_assignee: { type: object, nullable: true }
+        qa_assignee: { type: object, nullable: true }
+        project_manager:
+          type: object
+          nullable: true
+          properties:
+            user_id: { type: integer }
+            full_name: { type: string }
+        project: { type: object, nullable: true }
+        due_date: { type: string, format: date, nullable: true }
+        lock_version: { type: integer }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+    AssignableUser:
+      type: object
+      properties:
+        user_id: { type: integer }
+        full_name: { type: string }
+        job_position: { type: string, nullable: true }
+        display_name: { type: string }
+        is_active: { type: boolean }
+  responses:
+    BadRequest: { description: Malformed request, content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+    Unauthorized: { description: Missing, revoked, expired or invalid bearer token, content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+    Forbidden: { description: PMS or project permission denied, content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+    NotFound: { description: Active resource not found or identifiers do not match, content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+    Conflict: { description: expected_version does not match lock_version or a workflow stage rejects the action, content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+    Validation: { description: Invalid fields or workflow rules, content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+    RateLimited: { description: More than 60 requests per minute, content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+paths:
+  /updateProjectInfo:
+    post:
+      operationId: updateProjectInfo
+      summary: Insert, update or soft delete a project
+      description: Insert requires project_key and name; priority defaults to normal and status to Planned. Business Analyst updates and deletions create a Project Manager review and return 202. Approved proposals apply to the published record. project_key is immutable after creation. expected_version is optional for update and delete.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action: { type: string, enum: [insert, update, delete] }
+                project_id: { type: integer }
+                project_key: { type: string, pattern: '^[A-Za-z][A-Za-z0-9]{1,11}$' }
+                name: { type: string, maxLength: 255 }
+                description: { type: string, nullable: true, maxLength: 10000 }
+                objective: { type: string, nullable: true, maxLength: 10000 }
+                category: { type: string, nullable: true, maxLength: 100 }
+                priority: { type: string, enum: [low, normal, high, critical, P4, P3, P2, P1] }
+                status: { type: string, enum: [Planned, Approved, Active, On Hold, Completed, Cancelled] }
+                status_code: { type: integer, minimum: 1 }
+                planned_start_date: { type: string, format: date, nullable: true }
+                target_date: { type: string, format: date, nullable: true }
+                related_module: { type: string, nullable: true, maxLength: 40 }
+                manager_id: { type: integer, nullable: true }
+                expected_version: { type: integer, minimum: 0 }
+      responses:
+        '200': { description: Updated or soft deleted, content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+        '201': { description: Inserted, content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+        '202': { description: Review pending; data includes project_id and review_id, content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/Validation' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+  /getProjectInfo:
+    get:
+      operationId: getProjectInfo
+      summary: Read the current project record
+      description: At least one identifier is required. If both are supplied, both must match the same active project.
+      parameters:
+        - { name: project_id, in: query, schema: { type: integer } }
+        - { name: project_key, in: query, schema: { type: string } }
+      responses:
+        '200': { description: data is Project, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/Envelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/Project' } } } ] } } } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/Validation' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+  /getProjectTickets:
+    get:
+      operationId: getProjectTickets
+      summary: Read authorized project tickets, newest ID first
+      parameters:
+        - { name: project_id, in: query, required: true, schema: { type: integer } }
+        - { name: status, in: query, schema: { type: string } }
+        - { name: status_code, in: query, schema: { type: integer, minimum: 1 } }
+        - { name: priority, in: query, schema: { type: string } }
+        - { name: ticket_type, in: query, schema: { type: string } }
+        - { name: developer_id, in: query, schema: { type: integer } }
+        - { name: qa_id, in: query, schema: { type: integer } }
+        - { name: page, in: query, schema: { type: integer, minimum: 1 } }
+        - { name: per_page, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }
+      responses:
+        '200': { description: 'data contains items (Ticket[]) and pagination {page, per_page, total, last_page}', content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/Validation' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+  /updateTicketInfo:
+    post:
+      operationId: updateTicketInfo
+      summary: Insert, update or soft delete a ticket
+      description: Ticket creation and status transitions use the browser workflow rules. Business Analyst REQ and ENH detail edits or deletions create a Project Manager review and return 202. expected_version is optional. status or status_code is changed through the approved workflow, never by a raw field update. resolution applies to QAT tickets. Existing assignments can remain unchanged even if their holder no longer has the required position.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action: { type: string, enum: [insert, update, delete] }
+                ticket_id: { type: integer }
+                project_id: { type: integer, nullable: true }
+                title: { type: string, maxLength: 255 }
+                description: { type: string, nullable: true }
+                ticket_type: { type: string, enum: [REQ, ENH, PRD, QAT, TSK] }
+                priority: { type: string, enum: [low, normal, high, critical, P4, P3, P2, P1] }
+                status: { type: string }
+                status_code: { type: integer, minimum: 1 }
+                resolution: { type: string, nullable: true }
+                developer_assignee_id: { type: integer, nullable: true }
+                qa_assignee_id: { type: integer, nullable: true }
+                project_manager_id: { type: integer, nullable: true, description: Active Project Manager member of the ticket project }
+                due_date: { type: string, format: date, nullable: true }
+                expected_version: { type: integer, minimum: 0 }
+                business_justification: { type: string }
+                acceptance_criteria: { type: string }
+                current_behavior: { type: string }
+                proposed_behavior: { type: string }
+                reproduction_steps: { type: string }
+                expected_result: { type: string }
+                actual_result: { type: string }
+                testing_environment: { type: string }
+                defect_type: { type: string }
+      responses:
+        '200': { description: Updated or soft deleted, content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+        '201': { description: Inserted, content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+        '202': { description: Review pending; data includes ticket_id and review_id, content: { application/json: { schema: { $ref: '#/components/schemas/Envelope' } } } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '422': { $ref: '#/components/responses/Validation' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+  /getAssignableUsers:
+    get:
+      operationId: getAssignableUsers
+      summary: Search active, assignment eligible members
+      description: Developer requires the Developer position; qa requires QA Engineer; manager requires the Project Manager project role. A project ID restricts results to its members. Without it, a regular member only sees candidates in projects they can access. The UI uses the same handler through a session protected web route.
+      parameters:
+        - { name: assignment_type, in: query, required: true, schema: { type: string, enum: [developer, qa, manager] } }
+        - { name: project_id, in: query, schema: { type: integer } }
+        - { name: search, in: query, schema: { type: string, maxLength: 100 } }
+      responses:
+        '200': { description: data is an array of AssignableUser, limited to 50, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/Envelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/AssignableUser' } } } } ] } } } }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '422': { $ref: '#/components/responses/Validation' }
+        '429': { $ref: '#/components/responses/RateLimited' }

@@ -1,0 +1,638 @@
+{
+  "theme": {
+    "id": "CW-009",
+    "code": "CW-009",
+    "title": {
+      "en": "Choosing Market, Limit and Stop Orders for Defined Trade Intent",
+      "zh": "按明确交易意图选择市价单、限价单与停止单"
+    },
+    "shortTitle": {
+      "en": "order types",
+      "zh": "按明确交易意图选择市价单、限价单与停止单"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates choosing market, limit and stop orders for defined trade intent using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示按明确交易意图选择市价单、限价单与停止单。"
+    },
+    "categoryId": "market_foundations",
+    "categoryName": {
+      "en": "Trading Market Foundations",
+      "zh": "交易市场基础"
+    },
+    "difficulty": "beginner",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind choosing market, limit and stop orders for defined trade intent.",
+        "Apply choosing market, limit and stop orders for defined trade intent to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释按明确交易意图选择市价单、限价单与停止单背后的核心决策规则。",
+        "将按明确交易意图选择市价单、限价单与停止单应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "order types",
+      "limit order",
+      "stop order",
+      "EURUSD",
+      "Trading Market Foundations"
+    ],
+    "searchTokens": [
+      "cw-009",
+      "CW-009",
+      "market_foundations",
+      "trading market foundations",
+      "交易市场基础",
+      "choosing",
+      "market",
+      "limit",
+      "and",
+      "stop",
+      "orders",
+      "for",
+      "defined",
+      "trade",
+      "intent",
+      "按明确交易意图选择市价单、限价单与停止单",
+      "order",
+      "types",
+      "eurusd",
+      "trading",
+      "foundations"
+    ],
+    "difficultyOrder": 1,
+    "estimatedMinutes": 55,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 9,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "98938f1c3b822b23cfc2d7b6becc3781dacdc4f1710fea6fb60163035a5bf95e"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-009",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for order types",
+        "zh": "按明确交易意图选择市价单、限价单与停止单的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which combination of evidence is most appropriate for assessing choosing market, limit and stop orders for defined trade intent?",
+        "zh": "评估按明确交易意图选择市价单、限价单与停止单时，哪种证据组合最合适？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing choosing market, limit and stop orders for defined trade intent.",
+            "zh": "评估按明确交易意图选择市价单、限价单与停止单时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "5f7f3be62732e2539c30ffe38491688fef824629a1f2b7214b47c324481a8967"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-009",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying order types Under Uncertainty",
+        "zh": "在不确定性下应用按明确交易意图选择市价单、限价单与停止单"
+      },
+      "prompt": {
+        "en": "A chart resembles a textbook example of choosing market, limit and stop orders for defined trade intent, but the location is poor. How should it be treated?",
+        "zh": "图表看似按明确交易意图选择市价单、限价单与停止单的教科书案例，但位置不佳。应如何处理？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "111f9ee839fe4c08a46736cd5ff9cac6206691706eddad1c06bd3122cdf48bdc"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-009",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "EURUSD Chart Interpretation for order types",
+        "zh": "EURUSD图表中的按明确交易意图选择市价单、限价单与停止单解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational EURUSD H1 chart. Which labelled zone is the strongest decision area for evaluating choosing market, limit and stop orders for defined trade intent while keeping invalidation visible?",
+        "zh": "研究合成教学用EURUSD H1图表。哪个标记区域最适合评估按明确交易意图选择市价单、限价单与停止单，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "EURUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 1.09701,
+            "high": 1.09984,
+            "low": 1.09617,
+            "close": 1.09815
+          },
+          {
+            "timeIndex": 1,
+            "open": 1.09815,
+            "high": 1.1002,
+            "low": 1.09671,
+            "close": 1.09901
+          },
+          {
+            "timeIndex": 2,
+            "open": 1.09901,
+            "high": 1.10057,
+            "low": 1.09738,
+            "close": 1.09948
+          },
+          {
+            "timeIndex": 3,
+            "open": 1.09948,
+            "high": 1.10115,
+            "low": 1.09785,
+            "close": 1.09914
+          },
+          {
+            "timeIndex": 4,
+            "open": 1.09914,
+            "high": 1.10064,
+            "low": 1.09693,
+            "close": 1.09772
+          },
+          {
+            "timeIndex": 5,
+            "open": 1.09772,
+            "high": 1.09844,
+            "low": 1.09434,
+            "close": 1.09574
+          },
+          {
+            "timeIndex": 6,
+            "open": 1.09574,
+            "high": 1.09722,
+            "low": 1.09279,
+            "close": 1.09442
+          },
+          {
+            "timeIndex": 7,
+            "open": 1.09442,
+            "high": 1.09632,
+            "low": 1.09309,
+            "close": 1.09465
+          },
+          {
+            "timeIndex": 8,
+            "open": 1.09465,
+            "high": 1.09737,
+            "low": 1.09393,
+            "close": 1.09626
+          },
+          {
+            "timeIndex": 9,
+            "open": 1.09626,
+            "high": 1.09937,
+            "low": 1.09489,
+            "close": 1.09821
+          },
+          {
+            "timeIndex": 10,
+            "open": 1.09821,
+            "high": 1.10124,
+            "low": 1.09658,
+            "close": 1.09956
+          },
+          {
+            "timeIndex": 11,
+            "open": 1.09956,
+            "high": 1.10155,
+            "low": 1.09819,
+            "close": 1.10011
+          },
+          {
+            "timeIndex": 12,
+            "open": 1.10011,
+            "high": 1.10089,
+            "low": 1.09937,
+            "close": 1.10012
+          },
+          {
+            "timeIndex": 13,
+            "open": 1.10012,
+            "high": 1.10165,
+            "low": 1.09837,
+            "close": 1.09969
+          },
+          {
+            "timeIndex": 14,
+            "open": 1.09969,
+            "high": 1.10134,
+            "low": 1.09702,
+            "close": 1.09865
+          },
+          {
+            "timeIndex": 15,
+            "open": 1.09865,
+            "high": 1.09969,
+            "low": 1.09564,
+            "close": 1.09706
+          },
+          {
+            "timeIndex": 16,
+            "open": 1.09706,
+            "high": 1.0983,
+            "low": 1.09485,
+            "close": 1.09565
+          },
+          {
+            "timeIndex": 17,
+            "open": 1.09565,
+            "high": 1.09734,
+            "low": 1.09418,
+            "close": 1.09546
+          },
+          {
+            "timeIndex": 18,
+            "open": 1.09546,
+            "high": 1.09822,
+            "low": 1.09383,
+            "close": 1.09684
+          },
+          {
+            "timeIndex": 19,
+            "open": 1.09684,
+            "high": 1.09992,
+            "low": 1.09539,
+            "close": 1.09906
+          },
+          {
+            "timeIndex": 20,
+            "open": 1.09906,
+            "high": 1.10243,
+            "low": 1.09821,
+            "close": 1.10085
+          },
+          {
+            "timeIndex": 21,
+            "open": 1.10085,
+            "high": 1.10308,
+            "low": 1.09962,
+            "close": 1.10147
+          },
+          {
+            "timeIndex": 22,
+            "open": 1.10147,
+            "high": 1.10242,
+            "low": 1.09945,
+            "close": 1.10107
+          },
+          {
+            "timeIndex": 23,
+            "open": 1.10107,
+            "high": 1.10238,
+            "low": 1.09876,
+            "close": 1.10024
+          },
+          {
+            "timeIndex": 24,
+            "open": 1.10024,
+            "high": 1.10193,
+            "low": 1.09836,
+            "close": 1.09927
+          },
+          {
+            "timeIndex": 25,
+            "open": 1.09927,
+            "high": 1.10058,
+            "low": 1.09694,
+            "close": 1.09813
+          },
+          {
+            "timeIndex": 26,
+            "open": 1.09813,
+            "high": 1.09907,
+            "low": 1.09541,
+            "close": 1.09701
+          },
+          {
+            "timeIndex": 27,
+            "open": 1.09701,
+            "high": 1.09862,
+            "low": 1.0951,
+            "close": 1.09661
+          },
+          {
+            "timeIndex": 28,
+            "open": 1.09661,
+            "high": 1.09914,
+            "low": 1.09564,
+            "close": 1.09756
+          },
+          {
+            "timeIndex": 29,
+            "open": 1.09756,
+            "high": 1.10054,
+            "low": 1.09642,
+            "close": 1.09967
+          },
+          {
+            "timeIndex": 30,
+            "open": 1.09967,
+            "high": 1.10319,
+            "low": 1.09809,
+            "close": 1.10182
+          },
+          {
+            "timeIndex": 31,
+            "open": 1.10182,
+            "high": 1.1045,
+            "low": 1.10028,
+            "close": 1.10281
+          },
+          {
+            "timeIndex": 32,
+            "open": 1.10281,
+            "high": 1.10405,
+            "low": 1.10131,
+            "close": 1.10233
+          },
+          {
+            "timeIndex": 33,
+            "open": 1.10233,
+            "high": 1.10336,
+            "low": 1.09996,
+            "close": 1.10104
+          },
+          {
+            "timeIndex": 34,
+            "open": 1.10104,
+            "high": 1.10268,
+            "low": 1.0982,
+            "close": 1.09977
+          },
+          {
+            "timeIndex": 35,
+            "open": 1.09977,
+            "high": 1.1013,
+            "low": 1.09729,
+            "close": 1.09885
+          },
+          {
+            "timeIndex": 36,
+            "open": 1.09885,
+            "high": 1.09963,
+            "low": 1.09714,
+            "close": 1.09821
+          },
+          {
+            "timeIndex": 37,
+            "open": 1.09821,
+            "high": 1.09965,
+            "low": 1.09695,
+            "close": 1.09798
+          },
+          {
+            "timeIndex": 38,
+            "open": 1.09798,
+            "high": 1.1003,
+            "low": 1.09644,
+            "close": 1.09862
+          },
+          {
+            "timeIndex": 39,
+            "open": 1.09862,
+            "high": 1.1015,
+            "low": 1.09703,
+            "close": 1.10032
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 1.09326,
+            "maximumPrice": 1.0949,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 1.09607,
+            "maximumPrice": 1.09771,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 1.09958,
+            "maximumPrice": 1.10122,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 1.10239,
+            "maximumPrice": 1.10403,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "950e16c88fd2273d4ab310999c9df47d60f892e22a754624911e85ebe423e954"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-009",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: order types",
+        "zh": "独立情境分析：按明确交易意图选择市价单、限价单与停止单"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of choosing market, limit and stop orders for defined trade intent using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析按明确交易意图选择市价单、限价单与停止单的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "3599640bddf78515fc6037ab255f54fcd284d776d04cf8356c9cf1f7fb62b279"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-009",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: order types",
+        "zh": "实践展示：按明确交易意图选择市价单、限价单与停止单"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate choosing market, limit and stop orders for defined trade intent. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示按明确交易意图选择市价单、限价单与停止单。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "e42092bbd0b263554f45f0341c199dcd3f7b1e6918bf87aee7cb0029eb4ced82"
+    }
+  ]
+}

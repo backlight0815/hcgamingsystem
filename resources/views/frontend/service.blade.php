@@ -1,0 +1,7 @@
+@extends('frontend.main_master')
+@section('title', 'Services | HC Gaming')
+@section('meta_description', 'Explore services from HC Gaming.')
+@section('main')
+<div class="es-page"><header class="es-page-hero"><div class="es-shell"><nav class="es-breadcrumb" aria-label="Breadcrumb"><a href="{{ route('store.home') }}">Home</a><span>/</span><span>Services</span></nav><span class="es-eyebrow">What we do</span><h1 class="es-title">Our services.</h1><p class="es-lead">Explore the services currently available from HC Gaming.</p></div></header>
+<section class="es-section"><div class="es-shell">@if($service->isNotEmpty())<div class="es-service-grid">@foreach($service as $item)<article class="es-service-card">@if($item->service_image && is_file(public_path($item->service_image)))<img src="{{ asset($item->service_image) }}" alt="" loading="lazy" width="160" height="150">@endif<div><span class="es-eyebrow">0{{ $loop->iteration }}</span><h2>{{ $item->service_title }}</h2><p>{{ \Illuminate\Support\Str::limit(strip_tags($item->short_description ?? ''), 140) }}</p><a class="es-text-link" href="{{ route('service.details', $item->id) }}">View service ↗</a></div></article>@endforeach</div>@else<div class="es-empty"><h2>No services to show yet.</h2><p>Contact us if you have a question.</p><a class="es-button" href="{{ route('contact.me') }}">Contact us</a></div>@endif</div></section></div>
+@endsection

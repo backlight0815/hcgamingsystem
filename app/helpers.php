@@ -37,6 +37,7 @@ if (!function_exists('module_feature_name')) {
         return match ($module) {
             'trading', 'module_trading' => FeatureToggle::MODULE_TRADING,
             'ecommerce', 'dealership_ecommerce', 'module_dealership_ecommerce' => FeatureToggle::MODULE_DEALERSHIP_ECOMMERCE,
+            'project_management', 'pms', 'module_project_management' => FeatureToggle::MODULE_PROJECT_MANAGEMENT,
             default => $module,
         };
     }
@@ -45,7 +46,13 @@ if (!function_exists('module_feature_name')) {
 if (!function_exists('module_enabled')) {
     function module_enabled(string $module): bool
     {
-        return feature_toggle_value(module_feature_name($module), true);
+        $featureName = module_feature_name($module);
+        return match ($featureName) {
+            FeatureToggle::MODULE_TRADING => \App\Support\FrontendExperience::enabled(\App\Support\FrontendExperience::TRADING),
+            FeatureToggle::MODULE_DEALERSHIP_ECOMMERCE => \App\Support\FrontendExperience::enabled(\App\Support\FrontendExperience::ECOMMERCE),
+            FeatureToggle::MODULE_PROJECT_MANAGEMENT => FeatureToggle::isEnabled(FeatureToggle::MODULE_PROJECT_MANAGEMENT, false),
+            default => feature_toggle_value($featureName, true),
+        };
     }
 }
 

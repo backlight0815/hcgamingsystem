@@ -1,0 +1,63 @@
+/* Contrast corrections for the original combined-module backoffice shell.
+   This file is loaded only when BackofficeExperience resolves to "existing". */
+:root{--hc-light-ink:#172033;--hc-light-muted:#526276;--hc-light-link:#075985;--hc-light-success:#15803d;--hc-light-danger:#b91c1c;--hc-light-warning:#92400e}
+body:not([data-backoffice-mode]) #sidebar-menu .menu-title{color:#475569;opacity:1}
+body:not([data-backoffice-mode]) #sidebar-menu ul li a,body:not([data-backoffice-mode]) #sidebar-menu .sub-menu a{color:#475569}
+body:not([data-backoffice-mode]) #sidebar-menu .mm-active>a,body:not([data-backoffice-mode]) #sidebar-menu .mm-active .active,body:not([data-backoffice-mode]) #sidebar-menu a[aria-current=page]{color:#075985!important;background:#e8f2fc}
+body:not([data-backoffice-mode]) .breadcrumb-item,body:not([data-backoffice-mode]) .breadcrumb-item a{color:#475569}
+body:not([data-backoffice-mode]) .breadcrumb a{color:#075985}
+body:not([data-backoffice-mode]) .text-muted{color:var(--hc-light-muted)!important}
+body:not([data-backoffice-mode]) .text-primary{color:var(--hc-light-link)!important}
+body:not([data-backoffice-mode]) .text-success{color:var(--hc-light-success)!important}
+body:not([data-backoffice-mode]) .text-danger{color:var(--hc-light-danger)!important}
+body:not([data-backoffice-mode]) .text-warning{color:var(--hc-light-warning)!important}
+body:not([data-backoffice-mode]) code{color:#9d174d}
+body:not([data-backoffice-mode]) .btn-primary{background:#075985;border-color:#075985;color:#fff}
+body:not([data-backoffice-mode]) .btn-primary:hover{background:#0c4a6e;border-color:#0c4a6e;color:#fff}
+body:not([data-backoffice-mode]) .btn-secondary{background:#475569;border-color:#475569;color:#fff}
+body:not([data-backoffice-mode]) .btn-secondary:hover{background:#334155;border-color:#334155;color:#fff}
+body:not([data-backoffice-mode]) .btn-success{background:#15803d;border-color:#15803d;color:#fff}
+body:not([data-backoffice-mode]) .btn-success:hover{background:#166534;border-color:#166534;color:#fff}
+body:not([data-backoffice-mode]) .btn-danger{background:#b91c1c;border-color:#b91c1c;color:#fff}
+body:not([data-backoffice-mode]) .btn-danger:hover{background:#991b1b;border-color:#991b1b;color:#fff}
+body:not([data-backoffice-mode]) .btn-info{background:#075985;border-color:#075985;color:#fff}
+body:not([data-backoffice-mode]) .btn-info:hover{background:#0c4a6e;border-color:#0c4a6e;color:#fff}
+body:not([data-backoffice-mode]) :is(.btn-outline-primary,.btn-outline-info){color:#075985;border-color:#075985}
+body:not([data-backoffice-mode]) :is(.btn-outline-primary,.btn-outline-info):hover{background:#075985;color:#fff}
+body:not([data-backoffice-mode]) .btn-outline-success{color:#15803d;border-color:#15803d}
+body:not([data-backoffice-mode]) .btn-outline-success:hover{background:#15803d;color:#fff}
+body:not([data-backoffice-mode]) .btn-outline-danger{color:#b91c1c;border-color:#b91c1c}
+body:not([data-backoffice-mode]) .btn-outline-danger:hover{background:#b91c1c;color:#fff}
+body:not([data-backoffice-mode]) .btn-outline-warning{color:#92400e;border-color:#92400e}
+body:not([data-backoffice-mode]) .btn-outline-warning:hover{background:#92400e;color:#fff}
+body:not([data-backoffice-mode]) .btn-outline-secondary{color:#475569;border-color:#64748b}
+body:not([data-backoffice-mode]) .btn-outline-secondary:hover{background:#475569;color:#fff}
+body:not([data-backoffice-mode]) :is(.badge,.badge-status).bg-primary{background:#075985!important;color:#fff}
+body:not([data-backoffice-mode]) :is(.badge,.badge-status).bg-success{background:#15803d!important;color:#fff}
+body:not([data-backoffice-mode]) .bg-warning.text-dark{color:#172033!important}
+body:not([data-backoffice-mode]) .bg-danger.text-white{background:#b91c1c!important}
+body:not([data-backoffice-mode]) :is(.bg-secondary,.bg-danger.text-white) h6{color:#fff}
+body:not([data-backoffice-mode]) .pagination .disabled .page-link{color:#475569;background:#f1f5f9}
+body:not([data-backoffice-mode]) :is(.irs-min,.irs-max){color:#475569;background:#f1f5f7}
+body:not([data-backoffice-mode]) .commerce-hero .btn-outline-light{color:#fff}
+body:not([data-backoffice-mode]) .signal-hero .btn-outline-light{color:#fff}
+body:not([data-backoffice-mode]) .form-hero .btn-outline-light,body:not([data-backoffice-mode]) .news-hero .btn-outline-light{color:#fff}
+body:not([data-backoffice-mode]) .prop-podium .prop-avatar{color:#1d4ed8}
+body:not([data-backoffice-mode]) .recording-url,body:not([data-backoffice-mode]) .knowledge-table a[target="_blank"]{color:#075985}
+body:not([data-backoffice-mode]) .backtest-lab .text-muted{color:#b8c4d6!important}
+body:not([data-backoffice-mode]) :focus-visible{outline:3px solid #0284c7;outline-offset:3px}
+
+/* Dark dashboard cards keep their bright accent colors. */
+body:not([data-backoffice-mode]) .bo-dashboard :is(.text-muted,.text-primary,.text-success){color:#b8d9e8!important}
+body:not([data-backoffice-mode]) .bo-dashboard .btn-outline-info{color:#7dd3fc;border-color:#7dd3fc}
+body:not([data-backoffice-mode]) .bo-dashboard .btn-outline-info:hover{background:#7dd3fc;color:#0b1526}
+body:not([data-backoffice-mode]) .role-dashboard-table .btn-outline-info{color:#7dd3fc;border-color:#7dd3fc}
+body:not([data-backoffice-mode]) .role-dashboard-table .btn-outline-info:hover{background:#7dd3fc;color:#0b1526}
+
+/* The statistics matrix has pale state surfaces in every workspace mode. */
+body:not([data-backoffice-mode]) .evaluation-matrix .status-label.success{background:#d1fae5;color:#047857}
+body:not([data-backoffice-mode]) .evaluation-matrix .status-label.primary{background:#e0e7ff;color:#3730a3}
+body:not([data-backoffice-mode]) .evaluation-matrix .status-label.warning{background:#fef3c7;color:#92400e}
+body:not([data-backoffice-mode]) .evaluation-matrix .status-label.danger{background:#fee2e2;color:#991b1b}
+body:not([data-backoffice-mode]) .evaluation-matrix .status-label.secondary{background:#f1f5f9;color:#334155}
+body:not([data-backoffice-mode]) .evaluation-matrix .matrix-hero .status-label{background:rgba(20,184,166,.14);color:#5eead4}

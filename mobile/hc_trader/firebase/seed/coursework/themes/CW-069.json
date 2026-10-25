@@ -1,0 +1,634 @@
+{
+  "theme": {
+    "id": "CW-069",
+    "code": "CW-069",
+    "title": {
+      "en": "Evaluating Scaling and Pyramiding Without Multiplying Hidden Risk",
+      "zh": "评估加仓与金字塔策略而不放大隐性风险"
+    },
+    "shortTitle": {
+      "en": "scaling",
+      "zh": "评估加仓与金字塔策略而不放大隐性风险"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates evaluating scaling and pyramiding without multiplying hidden risk using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示评估加仓与金字塔策略而不放大隐性风险。"
+    },
+    "categoryId": "risk_management",
+    "categoryName": {
+      "en": "Risk and Money Management",
+      "zh": "风险与资金管理"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind evaluating scaling and pyramiding without multiplying hidden risk.",
+        "Apply evaluating scaling and pyramiding without multiplying hidden risk to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释评估加仓与金字塔策略而不放大隐性风险背后的核心决策规则。",
+        "将评估加仓与金字塔策略而不放大隐性风险应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "scaling",
+      "pyramiding",
+      "risk",
+      "US30",
+      "Risk and Money Management"
+    ],
+    "searchTokens": [
+      "cw-069",
+      "CW-069",
+      "risk_management",
+      "risk and money management",
+      "风险与资金管理",
+      "evaluating",
+      "scaling",
+      "and",
+      "pyramiding",
+      "without",
+      "multiplying",
+      "hidden",
+      "risk",
+      "评估加仓与金字塔策略而不放大隐性风险",
+      "us30",
+      "money",
+      "management"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 69,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "af15f10c678e6a440bddc0f776c4e18bc063b324c9bdee654bb0fb495f6292c9"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-069",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for scaling",
+        "zh": "评估加仓与金字塔策略而不放大隐性风险的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which combination of evidence is most appropriate for assessing evaluating scaling and pyramiding without multiplying hidden risk?",
+        "zh": "评估评估加仓与金字塔策略而不放大隐性风险时，哪种证据组合最合适？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing evaluating scaling and pyramiding without multiplying hidden risk.",
+            "zh": "评估评估加仓与金字塔策略而不放大隐性风险时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "8cca22862d08320956df71f547e68e54dc19f4a83e7fb9bbbc6536513e6c6f28"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-069",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying scaling Under Uncertainty",
+        "zh": "在不确定性下应用评估加仓与金字塔策略而不放大隐性风险"
+      },
+      "prompt": {
+        "en": "A chart resembles a textbook example of evaluating scaling and pyramiding without multiplying hidden risk, but the location is poor. How should it be treated?",
+        "zh": "图表看似评估加仓与金字塔策略而不放大隐性风险的教科书案例，但位置不佳。应如何处理？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "4c747030aa8f5e1114bdcb4b270dc7fe6e103d906c2496b9297ab6de95216553"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-069",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "US30 Chart Interpretation for scaling",
+        "zh": "US30图表中的评估加仓与金字塔策略而不放大隐性风险解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational US30 H1 chart. Which labelled zone is the strongest decision area for evaluating evaluating scaling and pyramiding without multiplying hidden risk while keeping invalidation visible?",
+        "zh": "研究合成教学用US30 H1图表。哪个标记区域最适合评估评估加仓与金字塔策略而不放大隐性风险，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "US30",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 39317.6,
+            "high": 39369.9,
+            "low": 39267.1,
+            "close": 39303.6
+          },
+          {
+            "timeIndex": 1,
+            "open": 39303.6,
+            "high": 39333.4,
+            "low": 39227.3,
+            "close": 39279
+          },
+          {
+            "timeIndex": 2,
+            "open": 39279,
+            "high": 39323.2,
+            "low": 39194.9,
+            "close": 39245.8
+          },
+          {
+            "timeIndex": 3,
+            "open": 39245.8,
+            "high": 39301.4,
+            "low": 39169,
+            "close": 39203.3
+          },
+          {
+            "timeIndex": 4,
+            "open": 39203.3,
+            "high": 39245.2,
+            "low": 39131.6,
+            "close": 39166.4
+          },
+          {
+            "timeIndex": 5,
+            "open": 39166.4,
+            "high": 39198.9,
+            "low": 39111.8,
+            "close": 39162.9
+          },
+          {
+            "timeIndex": 6,
+            "open": 39162.9,
+            "high": 39261.3,
+            "low": 39111.3,
+            "close": 39207.8
+          },
+          {
+            "timeIndex": 7,
+            "open": 39207.8,
+            "high": 39333.3,
+            "low": 39171.8,
+            "close": 39282.3
+          },
+          {
+            "timeIndex": 8,
+            "open": 39282.3,
+            "high": 39371.4,
+            "low": 39249.3,
+            "close": 39344.4
+          },
+          {
+            "timeIndex": 9,
+            "open": 39344.4,
+            "high": 39409.2,
+            "low": 39294.1,
+            "close": 39362.9
+          },
+          {
+            "timeIndex": 10,
+            "open": 39362.9,
+            "high": 39418.3,
+            "low": 39287.6,
+            "close": 39339.7
+          },
+          {
+            "timeIndex": 11,
+            "open": 39339.7,
+            "high": 39379.3,
+            "low": 39262.1,
+            "close": 39299.8
+          },
+          {
+            "timeIndex": 12,
+            "open": 39299.8,
+            "high": 39334.9,
+            "low": 39231.9,
+            "close": 39263.2
+          },
+          {
+            "timeIndex": 13,
+            "open": 39263.2,
+            "high": 39317.5,
+            "low": 39183.9,
+            "close": 39233.3
+          },
+          {
+            "timeIndex": 14,
+            "open": 39233.3,
+            "high": 39282.7,
+            "low": 39157.3,
+            "close": 39210
+          },
+          {
+            "timeIndex": 15,
+            "open": 39210,
+            "high": 39234.1,
+            "low": 39165.8,
+            "close": 39205.1
+          },
+          {
+            "timeIndex": 16,
+            "open": 39205.1,
+            "high": 39284.3,
+            "low": 39175.7,
+            "close": 39236.1
+          },
+          {
+            "timeIndex": 17,
+            "open": 39236.1,
+            "high": 39356.6,
+            "low": 39187.7,
+            "close": 39301.7
+          },
+          {
+            "timeIndex": 18,
+            "open": 39301.7,
+            "high": 39407.9,
+            "low": 39248.6,
+            "close": 39370.9
+          },
+          {
+            "timeIndex": 19,
+            "open": 39370.9,
+            "high": 39441.2,
+            "low": 39330,
+            "close": 39403.4
+          },
+          {
+            "timeIndex": 20,
+            "open": 39403.4,
+            "high": 39458.5,
+            "low": 39355.9,
+            "close": 39383.5
+          },
+          {
+            "timeIndex": 21,
+            "open": 39383.5,
+            "high": 39431.1,
+            "low": 39283.9,
+            "close": 39331.2
+          },
+          {
+            "timeIndex": 22,
+            "open": 39331.2,
+            "high": 39356.1,
+            "low": 39227.9,
+            "close": 39281.3
+          },
+          {
+            "timeIndex": 23,
+            "open": 39281.3,
+            "high": 39331.1,
+            "low": 39210.9,
+            "close": 39253.2
+          },
+          {
+            "timeIndex": 24,
+            "open": 39253.2,
+            "high": 39307.3,
+            "low": 39219.2,
+            "close": 39244.9
+          },
+          {
+            "timeIndex": 25,
+            "open": 39244.9,
+            "high": 39285.2,
+            "low": 39198.8,
+            "close": 39250.8
+          },
+          {
+            "timeIndex": 26,
+            "open": 39250.8,
+            "high": 39316,
+            "low": 39197.3,
+            "close": 39275.8
+          },
+          {
+            "timeIndex": 27,
+            "open": 39275.8,
+            "high": 39382,
+            "low": 39232,
+            "close": 39326.5
+          },
+          {
+            "timeIndex": 28,
+            "open": 39326.5,
+            "high": 39435.9,
+            "low": 39302.7,
+            "close": 39390.2
+          },
+          {
+            "timeIndex": 29,
+            "open": 39390.2,
+            "high": 39460.7,
+            "low": 39345.4,
+            "close": 39433
+          },
+          {
+            "timeIndex": 30,
+            "open": 39433,
+            "high": 39484.3,
+            "low": 39372.2,
+            "close": 39425.8
+          },
+          {
+            "timeIndex": 31,
+            "open": 39425.8,
+            "high": 39479,
+            "low": 39327.4,
+            "close": 39372.5
+          },
+          {
+            "timeIndex": 32,
+            "open": 39372.5,
+            "high": 39404.3,
+            "low": 39284.3,
+            "close": 39308.5
+          },
+          {
+            "timeIndex": 33,
+            "open": 39308.5,
+            "high": 39351.1,
+            "low": 39226.9,
+            "close": 39270.4
+          },
+          {
+            "timeIndex": 34,
+            "open": 39270.4,
+            "high": 39326,
+            "low": 39215.2,
+            "close": 39268.7
+          },
+          {
+            "timeIndex": 35,
+            "open": 39268.7,
+            "high": 39334,
+            "low": 39222.3,
+            "close": 39290.4
+          },
+          {
+            "timeIndex": 36,
+            "open": 39290.4,
+            "high": 39352.5,
+            "low": 39264.3,
+            "close": 39322
+          },
+          {
+            "timeIndex": 37,
+            "open": 39322,
+            "high": 39415.2,
+            "low": 39280,
+            "close": 39362.5
+          },
+          {
+            "timeIndex": 38,
+            "open": 39362.5,
+            "high": 39463.7,
+            "low": 39309.2,
+            "close": 39411.7
+          },
+          {
+            "timeIndex": 39,
+            "open": 39411.7,
+            "high": 39482,
+            "low": 39364.2,
+            "close": 39453
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 39126.2,
+            "maximumPrice": 39178.4,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 39215.7,
+            "maximumPrice": 39268,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 39327.6,
+            "maximumPrice": 39379.9,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 39417.2,
+            "maximumPrice": 39469.4,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "11a62e4d1baad0bb6ab67802150d7b3fd95e3582e0a394aa2808d9d024df4ce5"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-069",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: scaling",
+        "zh": "独立情境分析：评估加仓与金字塔策略而不放大隐性风险"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of evaluating scaling and pyramiding without multiplying hidden risk using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析评估加仓与金字塔策略而不放大隐性风险的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "3e31bd5f87856bb901651bda5c5edfec90a221bea57789e9090141f0bd70a95d"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-069",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: scaling",
+        "zh": "实践展示：评估加仓与金字塔策略而不放大隐性风险"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate evaluating scaling and pyramiding without multiplying hidden risk. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示评估加仓与金字塔策略而不放大隐性风险。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "09624f8ae6f2f078eabc5d9a95afda5ca38961310c4c49ceb4d5fd30d3665304"
+    }
+  ]
+}

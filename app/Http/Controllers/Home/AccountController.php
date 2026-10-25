@@ -541,6 +541,7 @@ public function updateAccountStatus(Request $request){
 
 public function DeleteAccount($id){
     $user = User::findOrFail($id);
+    request()->validate(['confirmation' => ['required', \Illuminate\Validation\Rule::in([$user->username])]]);
 
         // Check if the user being deleted is the currently authenticated user
         if ($user->id === Auth::id()) {

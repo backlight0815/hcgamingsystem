@@ -72,7 +72,7 @@
     .filter-grid {
         display: grid;
         gap: 14px;
-        grid-template-columns: minmax(240px, 2fr) repeat(5, minmax(150px, 1fr)) auto;
+        grid-template-columns: minmax(240px, 2fr) repeat(6, minmax(150px, 1fr)) auto;
     }
 
     .status-list {
@@ -219,10 +219,18 @@
     };
     $stageBadgeClass = $propFirmStage['badge_class'] ?? 'secondary';
     $sourceLabel = data_get($journalSourceOptions ?? [], $journalSource . '.label', 'Current trade history');
-    $flaggedTradeIds = collect($riskFlags)->pluck('trade_id')->all();
+    $flaggedTradeKeys = collect($riskFlags)->pluck('trade_key')->filter()->all();
     $phaseLabel = $propFirmStage['phase_label'] ?? 'N/A';
     $stageLabel = $propFirmStage['label'] ?? 'N/A';
     $lockLabel = $propFirmStage['lock_label'] ?? 'N/A';
+    $selectedAccountStage = $selectedAccountStage ?? request('account_stage', 'overall');
+    $accountStageOptions = collect($accountStageOptions ?? []);
+    $selectedAccountStageLabel = $selectedAccountStageLabel ?? data_get($accountStageOptions->get($selectedAccountStage), 'short_label', 'Overview');
+    $selectedAccountStageDescription = $selectedAccountStageDescription ?? data_get($accountStageOptions->get($selectedAccountStage), 'description', 'Phase 1 + Phase 2 performance.');
+    $accountStageComparison = collect($accountStageComparison ?? []);
+    $propFirmModels = collect($propFirmModels ?? []);
+    $selectedPropFirmModel = $selectedPropFirmModel ?? null;
+    $selectedPropFirmPhaseRule = $selectedPropFirmPhaseRule ?? null;
     $journalTime = app(\App\Services\TradingJournalTimeService::class);
     $selectedTimeView = $journalTime->normalizeMode($selectedTimeView ?? request('time_view'));
     $selectedTimeViewOffset = $journalTime->normalizeOffset($selectedTimeViewOffset ?? request('mt5_offset_minutes'), $selectedTimeView);
@@ -234,6 +242,7 @@
         'month' => $selectedMonth ?: 'all',
         'year' => $selectedYear ?: 'all',
         'source' => 'all',
+        'account_stage' => $selectedAccountStage,
         'time_view' => $selectedTimeView,
         'mt5_offset_minutes' => $selectedMt5ViewOffset,
     ];
@@ -258,7 +267,7 @@
                     <h3 class="mb-2">Trader Performance Dashboard</h3>
                     <p class="text-muted mb-0">
                         @if($selectedTrader)
-                            Reviewing {{ $selectedTrader->name ?: $selectedTrader->username }} with {{ strtolower($sourceLabel) }}.
+                            Reviewing {{ $selectedTrader->name ?: $selectedTrader->username }} with {{ strtolower($sourceLabel) }} in {{ strtolower($selectedAccountStageLabel) }} view.
                         @else
                             Select a trader to view performance, prop firm status, and trade history.
                         @endif
@@ -296,6 +305,17 @@
                         @foreach($journalSourceOptions as $sourceKey => $sourceOption)
                             <option value="{{ $sourceKey }}" {{ $journalSource === $sourceKey ? 'selected' : '' }}>
                                 {{ $sourceOption['label'] }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label for="account_stage" class="form-label">Account Stage</label>
+                    <select name="account_stage" id="account_stage" class="form-select">
+                        @foreach($accountStageOptions as $stageKey => $stageOption)
+                            <option value="{{ $stageKey }}" {{ $selectedAccountStage === $stageKey ? 'selected' : '' }}>
+                                {{ $stageOption['label'] }}
                             </option>
                         @endforeach
                     </select>
@@ -354,10 +374,72 @@
             </form>
         </div>
 
+        @if($selectedTrader && $propFirmModels->isNotEmpty())
+            <div class="performance-panel mb-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+                    <div>
+                        <h5 class="mb-1">Admin Prop Firm Assignment</h5>
+                        <p class="text-muted mb-0">
+                            Current setup:
+                            <strong>{{ $selectedPropFirmModel?->name ?? 'Default model' }}</strong>
+                            @if($selectedPropFirmPhaseRule)
+                                | {{ $selectedPropFirmPhaseRule->display_name }}
+                            @endif
+                        </p>
+                    </div>
+                    <a href="{{ route('admin.funded_traders.config') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="mdi mdi-cog-outline me-1"></i> Edit Rule Values
+                    </a>
+                </div>
+
+                <form method="POST" action="{{ route('admin.trader.journals.prop_firm_config.update', $selectedTrader) }}" class="row g-3 align-items-end" data-admin-prop-firm-config-form>
+                    @csrf
+                    <input type="hidden" name="month" value="{{ $selectedMonth ?: '' }}">
+                    <input type="hidden" name="year" value="{{ $selectedYear ?: '' }}">
+                    <input type="hidden" name="journal_source" value="{{ $journalSource }}">
+                    <input type="hidden" name="account_stage" value="{{ $selectedAccountStage }}">
+                    <input type="hidden" name="time_view" value="{{ $selectedTimeView }}">
+                    <input type="hidden" name="mt5_offset_minutes" value="{{ $selectedMt5ViewOffset }}">
+
+                    <div class="col-lg-5">
+                        <label for="admin_prop_firm_model_id" class="form-label">Challenge Model</label>
+                        <select id="admin_prop_firm_model_id" name="prop_firm_model_id" class="form-select" data-admin-prop-firm-model required>
+                            @foreach($propFirmModels as $model)
+                                <option value="{{ $model->id }}" {{ (int) ($selectedPropFirmModel?->id ?? 0) === (int) $model->id ? 'selected' : '' }}>
+                                    {{ $model->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-lg-5">
+                        <label for="admin_prop_firm_phase_rule_id" class="form-label">Phase Rule</label>
+                        <select id="admin_prop_firm_phase_rule_id" name="prop_firm_phase_rule_id" class="form-select" data-admin-prop-firm-phase required>
+                            @foreach($propFirmModels as $model)
+                                @foreach($model->phaseRules as $phaseRule)
+                                    <option value="{{ $phaseRule->id }}"
+                                        data-model-id="{{ $model->id }}"
+                                        {{ (int) ($selectedPropFirmPhaseRule?->id ?? 0) === (int) $phaseRule->id ? 'selected' : '' }}>
+                                        {{ $phaseRule->display_name }} - Target {{ rtrim(rtrim(number_format((float) $phaseRule->profit_target_percent, 2), '0'), '.') }}%
+                                    </option>
+                                @endforeach
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="mdi mdi-content-save-outline me-1"></i> Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        @endif
+
         @if($selectedTrader)
             <div class="row g-3 mb-4">
-                @foreach($phaseArchiveComparison as $phaseSummary)
-                    <div class="col-md-4">
+                @foreach($accountStageComparison as $phaseSummary)
+                    <div class="col-xl-3 col-md-6">
                         <div class="metric-tile h-100">
                             <span>{{ $phaseSummary['label'] }}</span>
                             <strong class="{{ $phaseSummary['net_profit'] >= 0 ? 'text-success' : 'text-danger' }}">
@@ -366,6 +448,7 @@
                             <div class="small text-muted mt-2">
                                 {{ $phaseSummary['trade_count'] }} trades | Win {{ number_format($phaseSummary['win_rate'], 2) }}% | Avg lot {{ number_format($phaseSummary['average_lot'], 2) }}
                             </div>
+                            <div class="small text-muted mt-1">{{ $phaseSummary['description'] ?? '' }}</div>
                             <a class="btn btn-sm btn-outline-primary mt-3" href="{{ route('admin.trader.journals.index', array_filter($phaseSummary['query'], fn($value) => $value !== null && $value !== '')) }}">
                                 Review
                             </a>
@@ -417,6 +500,10 @@
                         <div class="status-item">
                             <span>Trade Source</span>
                             <strong>{{ $sourceLabel }}</strong>
+                        </div>
+                        <div class="status-item">
+                            <span>Account Stage View</span>
+                            <strong>{{ $selectedAccountStageLabel }}</strong>
                         </div>
                         <div class="status-item">
                             <span>Total Trades</span>
@@ -491,7 +578,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     <h5 class="mb-1">Trade History</h5>
-                    <p class="text-muted mb-0">{{ $sourceLabel }}</p>
+                    <p class="text-muted mb-0">{{ $sourceLabel }} | {{ $selectedAccountStageLabel }} view</p>
                 </div>
                 @if($journalSource !== 'current')
                     <span class="badge bg-secondary">{{ $sourceLabel }}</span>
@@ -521,8 +608,8 @@
                     <tbody>
                         @forelse($journals as $index => $journal)
                             @php
-                                $isFlagged = in_array($journal->id, $flaggedTradeIds, true);
-                                $tradeKey = 'journal:' . $journal->id;
+                                $tradeKey = $journal->behavior_trade_key ?? (($journal->source ?? 'journal') . ':' . $journal->id);
+                                $isFlagged = in_array($tradeKey, $flaggedTradeKeys, true);
                                 $hedgeInsight = ($hedgingProfile['trade_map'] ?? collect())->get($tradeKey);
                                 $layeringInsight = data_get($traderStyleProfile, 'layering.trade_map', collect())->get($tradeKey);
                                 $hasRevengeSignal = $revengeTradeKeys->contains($tradeKey);
@@ -535,9 +622,7 @@
                                 <td><span class="badge bg-light text-dark">{{ $journalTime->shortLabel($journal->time_input_timezone ?? null, $journal->time_input_offset_minutes ?? null) }}</span></td>
                                 <td>
                                     <span class="badge bg-light text-dark">{{ $journal->journal_source_label ?? $sourceLabel }}</span>
-                                    @if(!empty($journal->prop_firm_phase))
-                                        <div class="small text-muted mt-1">Phase {{ $journal->prop_firm_phase }}</div>
-                                    @endif
+                                    <div class="small text-muted mt-1">{{ $journal->account_stage_label ?? 'Overview' }}</div>
                                     @if(!empty($journal->archived_at))
                                         <div class="small text-muted">{{ $journal->archived_at->format('Y-m-d') }}</div>
                                     @endif
@@ -652,7 +737,7 @@
             <div class="modal-header">
                 <div>
                     <h5 class="modal-title" id="propFirmEvaluationModalLabel">Prop Firm Evaluation Detail</h5>
-                    <div class="text-muted small">{{ $stageLabel }} | {{ $phaseLabel }} | {{ $sourceLabel }}</div>
+                    <div class="text-muted small">{{ $stageLabel }} | {{ $phaseLabel }} | {{ $sourceLabel }} | {{ $selectedAccountStageLabel }}</div>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -795,5 +880,45 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var configForm = document.querySelector('[data-admin-prop-firm-config-form]');
+        var modelSelect = configForm ? configForm.querySelector('[data-admin-prop-firm-model]') : null;
+        var phaseSelect = configForm ? configForm.querySelector('[data-admin-prop-firm-phase]') : null;
+
+        if (!modelSelect || !phaseSelect) {
+            return;
+        }
+
+        var syncPhaseOptions = function () {
+            var selectedModelId = modelSelect.value;
+            var selectedOptionAvailable = false;
+
+            Array.prototype.forEach.call(phaseSelect.options, function (option) {
+                var matchesModel = option.getAttribute('data-model-id') === selectedModelId;
+                option.hidden = !matchesModel;
+                option.disabled = !matchesModel;
+
+                if (option.selected && matchesModel) {
+                    selectedOptionAvailable = true;
+                }
+            });
+
+            if (!selectedOptionAvailable) {
+                var firstMatchingOption = Array.prototype.find.call(phaseSelect.options, function (option) {
+                    return option.getAttribute('data-model-id') === selectedModelId;
+                });
+
+                if (firstMatchingOption) {
+                    phaseSelect.value = firstMatchingOption.value;
+                }
+            }
+        };
+
+        modelSelect.addEventListener('change', syncPhaseOptions);
+        syncPhaseOptions();
+    });
+</script>
 
 @endsection

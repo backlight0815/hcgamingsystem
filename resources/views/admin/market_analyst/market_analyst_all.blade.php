@@ -317,14 +317,19 @@
                                 <td>{{ $trendLabel($item) }}</td>
                                 <td>{{ $item->analysis_date?->format('Y-m-d') ?? '-' }}</td>
                                 <td>
-                                    @if($item->discord_sent)
-                                        <span class="ma-status sent">Sent</span>
+                                    @if($item->publication_status === 'published')
+                                        <span class="ma-status sent">Published</span>
                                     @else
-                                        <span class="ma-status pending">Pending</span>
+                                        <span class="ma-status pending">Draft</span>
                                     @endif
                                 </td>
                                 <td>
                                     <div class="ma-action-set">
+                                        @if($item->publication_status === 'published')
+                                            <form action="{{ route('market-analyst.unpublish', $item->id) }}" method="POST">@csrf<button type="submit" class="btn btn-outline-secondary btn-sm" title="Unpublish from Trading Hub">Unpublish</button></form>
+                                        @else
+                                            <form action="{{ route('market-analyst.publish', $item->id) }}" method="POST">@csrf<button type="submit" class="btn btn-success btn-sm" title="Publish to Trading Hub">Publish</button></form>
+                                        @endif
                                         <a href="{{ route('market-analyst.show', $item->id) }}" class="btn btn-secondary btn-sm" title="View">
                                             <i class="fas fa-eye"></i>
                                         </a>

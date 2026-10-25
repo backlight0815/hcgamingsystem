@@ -1,0 +1,13 @@
+{
+  "generatedDate": "2026-06-28",
+  "screensFound": 51,
+  "modulesFound": 24,
+  "implementedRolesFound": 10,
+  "firestoreCollectionPathsDocumented": 40,
+  "files": [
+    "app_overview.mmd",
+    "app_overview.svg",
+    "App_Functionality_Documentation.md",
+    "App_Functionality_Documentation.docx"
+  ]
+}

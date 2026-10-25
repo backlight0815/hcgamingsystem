@@ -576,7 +576,7 @@
                         @foreach($activeFilters as $key => $value)
                             <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                         @endforeach
-                        <button type="submit" class="btn btn-info text-white"><i class="ri-calendar-check-line"></i>Send Weekly Discord</button>
+                        <button type="submit" class="btn btn-info"><i class="ri-calendar-check-line"></i>Send Weekly Discord</button>
                     </form>
                 </div>
             @endif

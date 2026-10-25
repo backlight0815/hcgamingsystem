@@ -1,0 +1,6 @@
+@extends('pms.layout')
+@section('title', 'Activity')
+@section('content')
+<div class="pm-heading"><div><p class="pm-eyebrow">GOVERNANCE</p><h1>Activity &amp; audit</h1><p>Recorded project and issue changes for your accessible projects.</p></div></div><div class="pm-panel">@if($logs->isEmpty())<div class="pm-empty">No activity yet.</div>@else<div class="pm-table-wrap"><table class="pm-table"><thead><tr><th>When</th><th>Action</th><th>Subject</th><th>Actor ID</th></tr></thead><tbody>@foreach($logs as $log)<tr><td>{{ $log->created_at }}</td><td>{{ $log->action }}</td><td>{{ $log->subject_type }} #{{ $log->subject_id }}</td><td>{{ $log->actor_id }}</td></tr>@endforeach</tbody></table></div>{{ $logs->links() }}@endif</div>
+<section class="pm-panel"><div class="pm-panel-head"><h2>System log</h2><span class="pm-muted">PMS version {{ config('pms.version') }}</span></div><div class="pm-table-wrap"><table class="pm-table"><thead><tr><th>Version</th><th>Date</th><th>Category</th><th>Module</th><th>Changes</th></tr></thead><tbody>@foreach(config('pms.system_log',[]) as $entry)<tr><td>{{ $entry['version'] }}</td><td>{{ $entry['date'] }}</td><td>{{ $entry['category'] ?? 'ENHANCEMENT' }}</td><td>{{ $entry['module'] }}</td><td>{{ $entry['summary'] }}</td></tr>@endforeach</tbody></table></div></section>
+@endsection

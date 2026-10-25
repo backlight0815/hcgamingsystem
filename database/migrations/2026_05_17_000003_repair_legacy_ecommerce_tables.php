@@ -136,35 +136,41 @@ return new class extends Migration
             });
         }
 
-        Schema::table('product', function (Blueprint $table) {
-            if (! Schema::hasColumn('product', 'user_id')) {
-                $table->unsignedBigInteger('user_id')->nullable()->index()->after('id');
-            }
+        if (Schema::hasTable('product')) {
+            Schema::table('product', function (Blueprint $table) {
+                if (! Schema::hasColumn('product', 'user_id')) {
+                    $table->unsignedBigInteger('user_id')->nullable()->index()->after('id');
+                }
 
-            if (! Schema::hasColumn('product', 'dealer_stock_id')) {
-                $table->unsignedBigInteger('dealer_stock_id')->nullable()->index()->after('user_id');
-            }
+                if (! Schema::hasColumn('product', 'dealer_stock_id')) {
+                    $table->unsignedBigInteger('dealer_stock_id')->nullable()->index()->after('user_id');
+                }
 
-            if (! Schema::hasColumn('product', 'publish_status')) {
-                $table->unsignedTinyInteger('publish_status')->default(0)->after('dealer_stock_id');
-            }
-        });
+                if (! Schema::hasColumn('product', 'publish_status')) {
+                    $table->unsignedTinyInteger('publish_status')->default(0)->after('dealer_stock_id');
+                }
+            });
+        }
 
-        Schema::table('product_categories', function (Blueprint $table) {
-            if (! Schema::hasColumn('product_categories', 'user_id')) {
-                $table->unsignedBigInteger('user_id')->nullable()->index()->after('id');
-            }
+        if (Schema::hasTable('product_categories')) {
+            Schema::table('product_categories', function (Blueprint $table) {
+                if (! Schema::hasColumn('product_categories', 'user_id')) {
+                    $table->unsignedBigInteger('user_id')->nullable()->index()->after('id');
+                }
 
-            if (! Schema::hasColumn('product_categories', 'deleted_at')) {
-                $table->softDeletes();
-            }
-        });
+                if (! Schema::hasColumn('product_categories', 'deleted_at')) {
+                    $table->softDeletes();
+                }
+            });
+        }
 
-        Schema::table('carts', function (Blueprint $table) {
-            if (! Schema::hasColumn('carts', 'dealer_stock_id')) {
-                $table->unsignedBigInteger('dealer_stock_id')->nullable()->index()->after('product_id');
-            }
-        });
+        if (Schema::hasTable('carts')) {
+            Schema::table('carts', function (Blueprint $table) {
+                if (! Schema::hasColumn('carts', 'dealer_stock_id')) {
+                    $table->unsignedBigInteger('dealer_stock_id')->nullable()->index()->after('product_id');
+                }
+            });
+        }
     }
 
     public function down(): void

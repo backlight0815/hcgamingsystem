@@ -1,0 +1,637 @@
+{
+  "theme": {
+    "id": "CW-040",
+    "code": "CW-040",
+    "title": {
+      "en": "Protecting Structural Bias with Protected Highs and Lows",
+      "zh": "利用受保护高低点维护结构偏向"
+    },
+    "shortTitle": {
+      "en": "protected high",
+      "zh": "利用受保护高低点维护结构偏向"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates protecting structural bias with protected highs and lows using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示利用受保护高低点维护结构偏向。"
+    },
+    "categoryId": "market_structure",
+    "categoryName": {
+      "en": "Market Structure",
+      "zh": "市场结构"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind protecting structural bias with protected highs and lows.",
+        "Apply protecting structural bias with protected highs and lows to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释利用受保护高低点维护结构偏向背后的核心决策规则。",
+        "将利用受保护高低点维护结构偏向应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "protected high",
+      "protected low",
+      "invalidation",
+      "AUDUSD",
+      "Market Structure"
+    ],
+    "searchTokens": [
+      "cw-040",
+      "CW-040",
+      "market_structure",
+      "market structure",
+      "市场结构",
+      "protecting",
+      "structural",
+      "bias",
+      "with",
+      "protected",
+      "highs",
+      "and",
+      "lows",
+      "利用受保护高低点维护结构偏向",
+      "high",
+      "low",
+      "invalidation",
+      "audusd",
+      "market",
+      "structure"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 40,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "61bd4b94f4f902255ab5f46a1d592a39833664916085335c352c96a01a8b894f"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-040",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for protected high",
+        "zh": "利用受保护高低点维护结构偏向的核心决策规则"
+      },
+      "prompt": {
+        "en": "What distinguishes professional analysis of protecting structural bias with protected highs and lows from signal chasing?",
+        "zh": "对利用受保护高低点维护结构偏向的专业分析与追逐信号有何区别？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing protecting structural bias with protected highs and lows.",
+            "zh": "评估利用受保护高低点维护结构偏向时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "bedbd7030ea131bb3c6d21a56996f08e302e2f5aea44a75d57c0c967ed141596"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-040",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying protected high Under Uncertainty",
+        "zh": "在不确定性下应用利用受保护高低点维护结构偏向"
+      },
+      "prompt": {
+        "en": "A trader cannot explain the risk boundary for protecting structural bias with protected highs and lows. What does this imply about readiness to enter?",
+        "zh": "交易者无法解释利用受保护高低点维护结构偏向的风险边界。这说明入场准备程度如何？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "66b3c66e52069f68ccc84f1e634d12138c366d923bca82fc5ce99548fd215956"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-040",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "AUDUSD Chart Interpretation for protected high",
+        "zh": "AUDUSD图表中的利用受保护高低点维护结构偏向解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational AUDUSD H1 chart. Which labelled zone is the strongest decision area for evaluating protecting structural bias with protected highs and lows while keeping invalidation visible?",
+        "zh": "研究合成教学用AUDUSD H1图表。哪个标记区域最适合评估利用受保护高低点维护结构偏向，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "AUDUSD",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 0.66001,
+            "high": 0.66147,
+            "low": 0.65901,
+            "close": 0.65984
+          },
+          {
+            "timeIndex": 1,
+            "open": 0.65984,
+            "high": 0.66115,
+            "low": 0.65734,
+            "close": 0.65835
+          },
+          {
+            "timeIndex": 2,
+            "open": 0.65835,
+            "high": 0.65898,
+            "low": 0.65486,
+            "close": 0.65625
+          },
+          {
+            "timeIndex": 3,
+            "open": 0.65625,
+            "high": 0.65754,
+            "low": 0.65304,
+            "close": 0.65438
+          },
+          {
+            "timeIndex": 4,
+            "open": 0.65438,
+            "high": 0.65585,
+            "low": 0.65217,
+            "close": 0.65305
+          },
+          {
+            "timeIndex": 5,
+            "open": 0.65305,
+            "high": 0.65403,
+            "low": 0.65118,
+            "close": 0.65214
+          },
+          {
+            "timeIndex": 6,
+            "open": 0.65214,
+            "high": 0.65315,
+            "low": 0.65024,
+            "close": 0.65161
+          },
+          {
+            "timeIndex": 7,
+            "open": 0.65161,
+            "high": 0.6532,
+            "low": 0.65025,
+            "close": 0.65173
+          },
+          {
+            "timeIndex": 8,
+            "open": 0.65173,
+            "high": 0.65384,
+            "low": 0.65081,
+            "close": 0.65258
+          },
+          {
+            "timeIndex": 9,
+            "open": 0.65258,
+            "high": 0.65426,
+            "low": 0.65166,
+            "close": 0.65359
+          },
+          {
+            "timeIndex": 10,
+            "open": 0.65359,
+            "high": 0.6551,
+            "low": 0.65223,
+            "close": 0.65376
+          },
+          {
+            "timeIndex": 11,
+            "open": 0.65376,
+            "high": 0.6552,
+            "low": 0.65114,
+            "close": 0.65252
+          },
+          {
+            "timeIndex": 12,
+            "open": 0.65252,
+            "high": 0.65343,
+            "low": 0.64928,
+            "close": 0.65025
+          },
+          {
+            "timeIndex": 13,
+            "open": 0.65025,
+            "high": 0.65133,
+            "low": 0.64712,
+            "close": 0.64798
+          },
+          {
+            "timeIndex": 14,
+            "open": 0.64798,
+            "high": 0.64946,
+            "low": 0.64518,
+            "close": 0.64652
+          },
+          {
+            "timeIndex": 15,
+            "open": 0.64652,
+            "high": 0.64773,
+            "low": 0.64451,
+            "close": 0.64591
+          },
+          {
+            "timeIndex": 16,
+            "open": 0.64591,
+            "high": 0.64665,
+            "low": 0.64476,
+            "close": 0.64577
+          },
+          {
+            "timeIndex": 17,
+            "open": 0.64577,
+            "high": 0.64729,
+            "low": 0.64495,
+            "close": 0.64592
+          },
+          {
+            "timeIndex": 18,
+            "open": 0.64592,
+            "high": 0.64781,
+            "low": 0.64461,
+            "close": 0.6464
+          },
+          {
+            "timeIndex": 19,
+            "open": 0.6464,
+            "high": 0.64793,
+            "low": 0.64499,
+            "close": 0.6471
+          },
+          {
+            "timeIndex": 20,
+            "open": 0.6471,
+            "high": 0.64853,
+            "low": 0.64604,
+            "close": 0.64739
+          },
+          {
+            "timeIndex": 21,
+            "open": 0.64739,
+            "high": 0.64887,
+            "low": 0.64575,
+            "close": 0.64652
+          },
+          {
+            "timeIndex": 22,
+            "open": 0.64652,
+            "high": 0.64768,
+            "low": 0.64313,
+            "close": 0.64441
+          },
+          {
+            "timeIndex": 23,
+            "open": 0.64441,
+            "high": 0.64523,
+            "low": 0.64046,
+            "close": 0.64188
+          },
+          {
+            "timeIndex": 24,
+            "open": 0.64188,
+            "high": 0.64329,
+            "low": 0.63895,
+            "close": 0.64005
+          },
+          {
+            "timeIndex": 25,
+            "open": 0.64005,
+            "high": 0.64143,
+            "low": 0.63871,
+            "close": 0.63943
+          },
+          {
+            "timeIndex": 26,
+            "open": 0.63943,
+            "high": 0.64044,
+            "low": 0.63818,
+            "close": 0.63967
+          },
+          {
+            "timeIndex": 27,
+            "open": 0.63967,
+            "high": 0.64134,
+            "low": 0.63825,
+            "close": 0.64014
+          },
+          {
+            "timeIndex": 28,
+            "open": 0.64014,
+            "high": 0.64199,
+            "low": 0.639,
+            "close": 0.64051
+          },
+          {
+            "timeIndex": 29,
+            "open": 0.64051,
+            "high": 0.64189,
+            "low": 0.63984,
+            "close": 0.6408
+          },
+          {
+            "timeIndex": 30,
+            "open": 0.6408,
+            "high": 0.64176,
+            "low": 0.63958,
+            "close": 0.64086
+          },
+          {
+            "timeIndex": 31,
+            "open": 0.64086,
+            "high": 0.6423,
+            "low": 0.63879,
+            "close": 0.64022
+          },
+          {
+            "timeIndex": 32,
+            "open": 0.64022,
+            "high": 0.64156,
+            "low": 0.6373,
+            "close": 0.63848
+          },
+          {
+            "timeIndex": 33,
+            "open": 0.63848,
+            "high": 0.63917,
+            "low": 0.63539,
+            "close": 0.63601
+          },
+          {
+            "timeIndex": 34,
+            "open": 0.63601,
+            "high": 0.63727,
+            "low": 0.63267,
+            "close": 0.63386
+          },
+          {
+            "timeIndex": 35,
+            "open": 0.63386,
+            "high": 0.63533,
+            "low": 0.6315,
+            "close": 0.63293
+          },
+          {
+            "timeIndex": 36,
+            "open": 0.63293,
+            "high": 0.63432,
+            "low": 0.63172,
+            "close": 0.63329
+          },
+          {
+            "timeIndex": 37,
+            "open": 0.63329,
+            "high": 0.63512,
+            "low": 0.63263,
+            "close": 0.63416
+          },
+          {
+            "timeIndex": 38,
+            "open": 0.63416,
+            "high": 0.6362,
+            "low": 0.63301,
+            "close": 0.63475
+          },
+          {
+            "timeIndex": 39,
+            "open": 0.63475,
+            "high": 0.6361,
+            "low": 0.63332,
+            "close": 0.6348
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 0.6327,
+            "maximumPrice": 0.63689,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 0.63989,
+            "maximumPrice": 0.64409,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 0.64888,
+            "maximumPrice": 0.65308,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 0.65608,
+            "maximumPrice": 0.66027,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "f44eb05418104c78a7cd14ac3d776a05e314db1a845bde610cea66a7327cef36"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-040",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: protected high",
+        "zh": "独立情境分析：利用受保护高低点维护结构偏向"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of protecting structural bias with protected highs and lows using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析利用受保护高低点维护结构偏向的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "69cc307fb9f821b9d048d9e17a13ac7bbf9608a3fd4ffaaf321edc8a8b3a53fe"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-040",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: protected high",
+        "zh": "实践展示：利用受保护高低点维护结构偏向"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate protecting structural bias with protected highs and lows. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示利用受保护高低点维护结构偏向。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "ffb64ff1072f8cccbea2d66c8e6f1b811e65a2d2bfea148f77431d8f6ef55e35"
+    }
+  ]
+}

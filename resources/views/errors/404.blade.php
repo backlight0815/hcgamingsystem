@@ -1,0 +1,3 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Page unavailable | HC Gaming</title><link rel="stylesheet" href="{{ asset('frontend/assets/css/trading-hub.css') }}"></head>
+<body class="th-body"><main class="th-neutral"><div class="th-neutral-panel"><span class="th-kicker th-accent">404 / Unavailable</span><h1>This page is unavailable.</h1><p>The link may have moved, or this module may be disabled.</p><a class="th-button" href="{{ route('home') }}">Back to home</a></div></main></body></html>

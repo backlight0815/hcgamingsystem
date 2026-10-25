@@ -1,0 +1,637 @@
+{
+  "theme": {
+    "id": "CW-004",
+    "code": "CW-004",
+    "title": {
+      "en": "Reading Bid, Ask and Spread Before Committing to a Trade",
+      "zh": "交易前解读买价、卖价与点差"
+    },
+    "shortTitle": {
+      "en": "bid",
+      "zh": "交易前解读买价、卖价与点差"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates reading bid, ask and spread before committing to a trade using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示交易前解读买价、卖价与点差。"
+    },
+    "categoryId": "market_foundations",
+    "categoryName": {
+      "en": "Trading Market Foundations",
+      "zh": "交易市场基础"
+    },
+    "difficulty": "beginner",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind reading bid, ask and spread before committing to a trade.",
+        "Apply reading bid, ask and spread before committing to a trade to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释交易前解读买价、卖价与点差背后的核心决策规则。",
+        "将交易前解读买价、卖价与点差应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "bid",
+      "ask",
+      "spread",
+      "USDJPY",
+      "Trading Market Foundations"
+    ],
+    "searchTokens": [
+      "cw-004",
+      "CW-004",
+      "market_foundations",
+      "trading market foundations",
+      "交易市场基础",
+      "reading",
+      "bid",
+      "ask",
+      "and",
+      "spread",
+      "before",
+      "committing",
+      "to",
+      "a",
+      "trade",
+      "交易前解读买价、卖价与点差",
+      "usdjpy",
+      "trading",
+      "market",
+      "foundations"
+    ],
+    "difficultyOrder": 1,
+    "estimatedMinutes": 55,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 4,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "2496bb653b417e16b0463b972544e7006044572a5aa433baac0a6b8700067141"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-004",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for bid",
+        "zh": "交易前解读买价、卖价与点差的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which statement best describes a risk-aware approach to reading bid, ask and spread before committing to a trade?",
+        "zh": "哪项陈述最能说明对交易前解读买价、卖价与点差采取风险意识的方法？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing reading bid, ask and spread before committing to a trade.",
+            "zh": "评估交易前解读买价、卖价与点差时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "2aafb3451bf16c4c92cb5db88b07a8496895f7b7bb2ca7a61684cfe0a9859b87"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-004",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying bid Under Uncertainty",
+        "zh": "在不确定性下应用交易前解读买价、卖价与点差"
+      },
+      "prompt": {
+        "en": "The market moves quickly before confirmation of reading bid, ask and spread before committing to a trade. Which action follows a professional plan?",
+        "zh": "在交易前解读买价、卖价与点差获得确认前市场快速波动。哪项行动符合专业计划？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "dc94d621143660af86df09f5ede27ecf09da250d949ed4068f2d6feb3116c181"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-004",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "USDJPY Chart Interpretation for bid",
+        "zh": "USDJPY图表中的交易前解读买价、卖价与点差解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational USDJPY H1 chart. Which labelled zone is the strongest decision area for evaluating reading bid, ask and spread before committing to a trade while keeping invalidation visible?",
+        "zh": "研究合成教学用USDJPY H1图表。哪个标记区域最适合评估交易前解读买价、卖价与点差，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "USDJPY",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 150.746,
+            "high": 150.857,
+            "low": 150.515,
+            "close": 150.728
+          },
+          {
+            "timeIndex": 1,
+            "open": 150.728,
+            "high": 151.028,
+            "low": 150.537,
+            "close": 150.845
+          },
+          {
+            "timeIndex": 2,
+            "open": 150.845,
+            "high": 151.242,
+            "low": 150.732,
+            "close": 151.02
+          },
+          {
+            "timeIndex": 3,
+            "open": 151.02,
+            "high": 151.256,
+            "low": 150.859,
+            "close": 151.095
+          },
+          {
+            "timeIndex": 4,
+            "open": 151.095,
+            "high": 151.233,
+            "low": 150.75,
+            "close": 150.962
+          },
+          {
+            "timeIndex": 5,
+            "open": 150.962,
+            "high": 151.179,
+            "low": 150.461,
+            "close": 150.656
+          },
+          {
+            "timeIndex": 6,
+            "open": 150.656,
+            "high": 150.856,
+            "low": 150.199,
+            "close": 150.319
+          },
+          {
+            "timeIndex": 7,
+            "open": 150.319,
+            "high": 150.419,
+            "low": 149.917,
+            "close": 150.072
+          },
+          {
+            "timeIndex": 8,
+            "open": 150.072,
+            "high": 150.263,
+            "low": 149.725,
+            "close": 149.935
+          },
+          {
+            "timeIndex": 9,
+            "open": 149.935,
+            "high": 150.155,
+            "low": 149.669,
+            "close": 149.868
+          },
+          {
+            "timeIndex": 10,
+            "open": 149.868,
+            "high": 150.019,
+            "low": 149.728,
+            "close": 149.856
+          },
+          {
+            "timeIndex": 11,
+            "open": 149.856,
+            "high": 150.069,
+            "low": 149.708,
+            "close": 149.921
+          },
+          {
+            "timeIndex": 12,
+            "open": 149.921,
+            "high": 150.268,
+            "low": 149.713,
+            "close": 150.048
+          },
+          {
+            "timeIndex": 13,
+            "open": 150.048,
+            "high": 150.331,
+            "low": 149.846,
+            "close": 150.138
+          },
+          {
+            "timeIndex": 14,
+            "open": 150.138,
+            "high": 150.235,
+            "low": 149.926,
+            "close": 150.061
+          },
+          {
+            "timeIndex": 15,
+            "open": 150.061,
+            "high": 150.259,
+            "low": 149.64,
+            "close": 149.781
+          },
+          {
+            "timeIndex": 16,
+            "open": 149.781,
+            "high": 149.999,
+            "low": 149.201,
+            "close": 149.406
+          },
+          {
+            "timeIndex": 17,
+            "open": 149.406,
+            "high": 149.547,
+            "low": 148.897,
+            "close": 149.102
+          },
+          {
+            "timeIndex": 18,
+            "open": 149.102,
+            "high": 149.261,
+            "low": 148.819,
+            "close": 148.961
+          },
+          {
+            "timeIndex": 19,
+            "open": 148.961,
+            "high": 149.182,
+            "low": 148.815,
+            "close": 148.949
+          },
+          {
+            "timeIndex": 20,
+            "open": 148.949,
+            "high": 149.173,
+            "low": 148.747,
+            "close": 148.988
+          },
+          {
+            "timeIndex": 21,
+            "open": 148.988,
+            "high": 149.147,
+            "low": 148.78,
+            "close": 149.04
+          },
+          {
+            "timeIndex": 22,
+            "open": 149.04,
+            "high": 149.31,
+            "low": 148.891,
+            "close": 149.106
+          },
+          {
+            "timeIndex": 23,
+            "open": 149.106,
+            "high": 149.375,
+            "low": 148.979,
+            "close": 149.161
+          },
+          {
+            "timeIndex": 24,
+            "open": 149.161,
+            "high": 149.291,
+            "low": 148.916,
+            "close": 149.115
+          },
+          {
+            "timeIndex": 25,
+            "open": 149.115,
+            "high": 149.282,
+            "low": 148.681,
+            "close": 148.891
+          },
+          {
+            "timeIndex": 26,
+            "open": 148.891,
+            "high": 149.113,
+            "low": 148.371,
+            "close": 148.527
+          },
+          {
+            "timeIndex": 27,
+            "open": 148.527,
+            "high": 148.703,
+            "low": 148.055,
+            "close": 148.175
+          },
+          {
+            "timeIndex": 28,
+            "open": 148.175,
+            "high": 148.294,
+            "low": 147.791,
+            "close": 147.986
+          },
+          {
+            "timeIndex": 29,
+            "open": 147.986,
+            "high": 148.198,
+            "low": 147.774,
+            "close": 147.988
+          },
+          {
+            "timeIndex": 30,
+            "open": 147.988,
+            "high": 148.298,
+            "low": 147.827,
+            "close": 148.088
+          },
+          {
+            "timeIndex": 31,
+            "open": 148.088,
+            "high": 148.295,
+            "low": 147.976,
+            "close": 148.176
+          },
+          {
+            "timeIndex": 32,
+            "open": 148.176,
+            "high": 148.387,
+            "low": 147.985,
+            "close": 148.21
+          },
+          {
+            "timeIndex": 33,
+            "open": 148.21,
+            "high": 148.432,
+            "low": 147.989,
+            "close": 148.202
+          },
+          {
+            "timeIndex": 34,
+            "open": 148.202,
+            "high": 148.37,
+            "low": 147.969,
+            "close": 148.137
+          },
+          {
+            "timeIndex": 35,
+            "open": 148.137,
+            "high": 148.267,
+            "low": 147.852,
+            "close": 147.958
+          },
+          {
+            "timeIndex": 36,
+            "open": 147.958,
+            "high": 148.171,
+            "low": 147.459,
+            "close": 147.645
+          },
+          {
+            "timeIndex": 37,
+            "open": 147.645,
+            "high": 147.849,
+            "low": 147.074,
+            "close": 147.288
+          },
+          {
+            "timeIndex": 38,
+            "open": 147.288,
+            "high": 147.396,
+            "low": 146.871,
+            "close": 147.045
+          },
+          {
+            "timeIndex": 39,
+            "open": 147.045,
+            "high": 147.23,
+            "low": 146.915,
+            "close": 147.013
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 147.046,
+            "maximumPrice": 147.66,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 148.099,
+            "maximumPrice": 148.713,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 149.414,
+            "maximumPrice": 150.028,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 150.467,
+            "maximumPrice": 151.081,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "409f2ad071849f0bb61f8cdf88dc5904f2b50220dda0ff7bc81b0e2ce333b0b5"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-004",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: bid",
+        "zh": "独立情境分析：交易前解读买价、卖价与点差"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of reading bid, ask and spread before committing to a trade using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析交易前解读买价、卖价与点差的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "b94fee127926d6994c9c628de106cb5c6a2f4d9ffc96f415858c0c4a2701401d"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-004",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: bid",
+        "zh": "实践展示：交易前解读买价、卖价与点差"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate reading bid, ask and spread before committing to a trade. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示交易前解读买价、卖价与点差。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "4deb97c4237b4cb88de0ef71b1d03d4002bbfab2d4c1b37a20d7fadfa1d3de6a"
+    }
+  ]
+}

@@ -1,0 +1,323 @@
+/// Simplified-Chinese copy for the additive account-sequence planner.
+///
+/// Keys intentionally remain the English source copy used by AppLocalizations
+/// so placeholders and the existing fallback mechanism continue to work.
+const accountSequenceZh = <String, String>{
+  'Daily trade limit reached ({current}/{limit}).':
+      '\u5df2\u8fbe\u5230\u6bcf\u65e5\u4ea4\u6613\u4e0a\u9650\uff08{current}/{limit}\uff09\u3002',
+  'Sequence': '顺序',
+  'Dynamic Account Trading Sequence': '动态账户交易顺序',
+  'A rule-based plan for which account to trade first, which account may follow, and when trading must stop.':
+      '基于规则决定先交易哪个账户、随后可用哪个账户，以及何时必须停止交易。',
+  'Trading date': '交易日期',
+  'Last recalculated': '最近重新计算',
+  'Data status': '数据状态',
+  'Update': '更新',
+  'Draft': '草稿',
+  'Confirmed': '已确认',
+  'Session active': '交易时段进行中',
+  'Stopped': '已停止',
+  'Choose the starting account': '选择起始账户',
+  'Use system recommendation': '使用系统建议',
+  'Your eligible choice stays first. The system recommends a replacement only when it is unsafe or unavailable.':
+      '符合条件的选择会保持第一位；仅在不安全或不可用时，系统才建议替代账户。',
+  'Portfolio stop is active': '投资组合停止状态已启用',
+  'No account may be started until the existing Control Room or account-health stop is reviewed and safely cleared.':
+      '在控制室或账户健康停止状态经过检查并安全解除前，不得启动任何账户。',
+  'Your selected account is not currently eligible. {account} is the safest eligible replacement.':
+      '您选择的账户目前不符合条件。{account} 是最安全的合格替代账户。',
+  'System recommendation: start with {account} after checking all hard limits.':
+      '系统建议：检查所有硬性限制后，从 {account} 开始。',
+  '{account} remains first, but only with reduced risk and a fresh pre-trade check.':
+      '{account} 保持第一位，但仅能降低风险，并须重新进行交易前检查。',
+  'Your eligible selection, {account}, remains first.':
+      '您选择的合格账户 {account} 保持第一位。',
+  'This is decision support only. Reassessment is required before every sequence step.':
+      '本功能仅提供决策支持。执行顺序中的每一步前都必须重新评估。',
+  'Review selected account': '检查所选账户',
+  'No eligible account is available.': '当前没有符合条件的账户。',
+  'Generated account sequence': '生成的账户顺序',
+  'An arrow means reassess, not automatic permission to trade the next account.':
+      '箭头表示需要重新评估，并不代表自动获准交易下一个账户。',
+  'A sequence is a conditional plan, not permission to trade every account. Every step must pass the account-health, portfolio-risk, payout-protection, and psychology checks again.':
+      '顺序是有条件的计划，并非交易每个账户的许可。每一步都必须再次通过账户健康、投资组合风险、出金保护和心理检查。',
+  'Recalculate now': '立即重新计算',
+  'No eligible account sequence can be produced. Review the exclusions and stop conditions below.':
+      '无法生成合格账户顺序。请检查下方的排除原因和停止条件。',
+  'Alternative at similar health: {accounts}': '健康度相近的替代账户：{accounts}',
+  'Excluded from this sequence': '本次顺序中排除',
+  'Confirm sequence': '确认顺序',
+  'Start sequence session': '启动顺序交易时段',
+  'Customise order': '自定义顺序',
+  'Save as template': '另存为模板',
+  'Sequence session': '顺序交易时段',
+  'Current account: {account}': '当前账户：{account}',
+  'Conditional next account: {account}': '有条件的下一账户：{account}',
+  'Stop and reassess': '停止并重新评估',
+  'Plan trade': '规划交易',
+  'Record result': '记录结果',
+  'Skip account': '跳过账户',
+  'Pause account': '暂停账户',
+  'Stop sequence': '停止顺序',
+  'Reassess account': '重新评估账户',
+  'Lock portfolio': '锁定投资组合',
+  'Sequence rules and result actions': '顺序规则和结果动作',
+  'Change ranking mode, tie handling, and what the planner evaluates after TP, SL, or break-even.':
+      '更改排序模式、同分处理，以及止盈、止损或保本后规划器要评估的动作。',
+  'Sequence mode': '顺序模式',
+  'Similar-health tie rule': '健康度相近时的排序规则',
+  'Healthiest next': '健康度最高者优先',
+  'Fixed rotation': '固定轮换',
+  'Payout protection': '出金保护',
+  'Override payout protection': '覆盖出金保护',
+  'Estimated payout amount at risk: {amount}': '预计面临风险的出金金额：{amount}',
+  'The payout warning remains visible after this override.': '覆盖后，出金警告仍会保持可见。',
+  'Confirm override': '确认覆盖',
+  'Recovery last': '恢复账户最后',
+  'Least recently used': '最近最少使用',
+  'Custom order': '自定义顺序',
+  'Show equal alternatives': '显示同等替代账户',
+  'Least recently used first': '最近最少使用者优先',
+  'Largest daily-loss buffer': '每日亏损缓冲最大者',
+  'Largest overall-loss buffer': '总亏损缓冲最大者',
+  'Use custom order': '使用自定义顺序',
+  'After take profit': '止盈后',
+  'After stop loss': '止损后',
+  'After break-even': '保本后',
+  'Account health comparison': '账户健康对比',
+  'Scores are explicit decision components, not a hidden ranking.':
+      '分数由明确的决策项目组成，并非隐藏排序。',
+  'Daily limit used': '已用每日限额',
+  'Overall limit used': '已用总限额',
+  'Daily room': '每日剩余空间',
+  'Overall room': '总剩余空间',
+  'Why this sequence?': '为什么采用此顺序？',
+  'Why this account is first': '为什么此账户排第一',
+  'Why the others follow': '为什么其他账户随后',
+  'What could change the order': '什么情况会改变顺序',
+  'Why some accounts are excluded': '为什么部分账户被排除',
+  'No additional reason recorded.': '没有记录其他原因。',
+  'Conditional decision tree': '条件决策树',
+  'Every result returns to safety checks before another account can become active.':
+      '每次结果产生后，都必须返回安全检查，才能启用另一个账户。',
+  'Conditional candidate: {account}': '有条件的候选账户：{account}',
+  'Portfolio stop conditions': '投资组合停止条件',
+  'Complete account information': '账户信息完整',
+  'Partially complete account information': '账户信息部分完整',
+  'Insufficient account information': '账户信息不足',
+  'Missing non-critical values reduce confidence. Missing critical balance, loss-limit, or risk values block that account.':
+      '缺少非关键数据会降低置信度；缺少关键余额、亏损限额或风险数据会阻止该账户。',
+  'Sequence templates': '顺序模板',
+  'Quick modes and your locally saved sequences.': '快速模式和您本地保存的顺序。',
+  'Balanced': '均衡',
+  'Standard A-B-C': '标准 A-B-C',
+  'One account only': '仅一个账户',
+  'Apply': '应用',
+  'Decision support, not trade execution': '决策支持，并非交易执行',
+  'The sequence is stored locally for planning and review. It does not connect to MT4, MT5, a broker, or a prop firm, and it never places trades automatically.':
+      '顺序仅在本地保存，用于规划和复核。它不会连接 MT4、MT5、经纪商或自营交易公司，也绝不会自动下单。',
+  'Account is not eligible': '账户不符合条件',
+  'Review account data': '检查账户数据',
+  'Review restriction': '检查限制',
+  'Explain why this payout-protected account should be included.':
+      '说明为什么要纳入此受出金保护的账户。',
+  'Combined exposure warning': '综合敞口警告',
+  'Record why this plan remains acceptable before overriding the warning.':
+      '覆盖警告前，请记录此计划仍可接受的原因。',
+  'Enter the operational, setup-quality, or wellbeing reason for this skip.':
+      '输入此次跳过的操作、形态质量或身心状态原因。',
+  'Record why this account should remain paused until review.':
+      '记录此账户应保持暂停直至复核的原因。',
+  'Save sequence template': '保存顺序模板',
+  'Template name': '模板名称',
+  'Custom account order': '自定义账户顺序',
+  'Drag accounts, assign roles, then review every safety warning.':
+      '拖动账户、分配角色，然后检查每项安全警告。',
+  'Required override reason': '必须填写覆盖原因',
+  'Save custom sequence': '保存自定义顺序',
+  'Balance': '余额',
+  'P/L today': '今日盈亏',
+  'Current P/L': '当前盈亏',
+  'Payout status': '出金状态',
+  'Daily used': '每日已用',
+  'Overall used': '总计已用',
+  'Payout profit': '可出金利润',
+  'Health score': '健康分数',
+  'Eligible': '符合条件',
+  'Eligible with reduced risk': '降低风险后符合条件',
+  'Ineligible': '不符合条件',
+  'Starting account': '起始账户',
+  'First backup': '第一备用账户',
+  'Second backup': '第二备用账户',
+  'Recovery account': '恢复账户',
+  'Payout protected': '出金保护账户',
+  'Emergency only': '仅限紧急情况',
+  'Unavailable': '不可用',
+  'Pending reassessment': '等待重新评估',
+  'Active now': '当前启用',
+  'Completed': '已完成',
+  'Skipped': '已跳过',
+  'Blocked': '已阻止',
+  'Healthy': '健康',
+  'Caution': '谨慎',
+  'High risk': '高风险',
+  'Near daily loss limit': '接近每日亏损限额',
+  'Near maximum loss limit': '接近最大亏损限额',
+  'Daily locked': '当日锁定',
+  'Recovery': '恢复中',
+  'Payout progress': '出金进度',
+  'Payout eligible': '符合出金条件',
+  'Waiting for payout date': '等待出金日期',
+  'Paused': '已暂停',
+  'Breached': '已违规',
+  'Archived': '已归档',
+
+  // Transparent scoring and ranking explanations.
+  'The eligible account selected by the user remains first.': '用户选择的合格账户保持第一位。',
+  'The system selected the healthiest eligible starting account.':
+      '系统选择了健康度最高的合格起始账户。',
+  '{account} is the safest eligible alternative starting account.':
+      '{account} 是最安全的合格替代起始账户。',
+  '{account} is eligible only with reduced risk after using {percent}% of its daily limit.':
+      '{account} 已使用每日限额的 {percent}%，仅在降低风险后符合条件。',
+  'Requested {requested} is unavailable; {alternative} is the safest eligible replacement.':
+      '所选 {requested} 不可用；{alternative} 是最安全的合格替代账户。',
+  '{account} is eligible only with reduced risk.': '{account} 仅在降低风险后才符合条件。',
+  '{account} is currently unavailable.': '{account} 当前不可用。',
+  '{account} has the strongest eligible health score.': '{account} 的合格健康分数最高。',
+  'Accounts with different sizes or currencies are compared by normalized limit percentages.':
+      '不同规模或币种的账户使用标准化限额百分比进行比较。',
+  'Health score {score} determines this position after hard safety rules.':
+      '通过硬性安全规则后，健康分数 {score} 决定此位置。',
+  'One or more accounts have a similar health score and are shown as alternatives.':
+      '一个或多个账户健康分数相近，已显示为替代选项。',
+  'Recovery accounts are placed after healthier eligible accounts.':
+      '恢复账户排在更健康的合格账户之后。',
+  'No account is currently eligible.': '当前没有账户符合条件。',
+  'An existing portfolio stop prevents a sequence.': '现有投资组合停止状态阻止生成顺序。',
+  '{percent}% of the daily loss limit remains available.':
+      '每日亏损限额尚余 {percent}%。',
+  '{percent}% of the maximum loss limit remains available.':
+      '最大亏损限额尚余 {percent}%。',
+  'Trading-day progress is {completed} of {required}.':
+      '交易日进度为 {completed}/{required}。',
+  '{count} required trading days remain.': '尚需 {count} 个必需交易日。',
+  '{percent}% of the daily loss limit is already used.':
+      '每日亏损限额已使用 {percent}%。',
+  '{percent}% of the maximum loss limit is already used.':
+      '最大亏损限额已使用 {percent}%。',
+  'The account has {count} consecutive losses.': '该账户已连续亏损 {count} 次。',
+  'A psychology or discipline flag requires review.': '心理或纪律标记需要检查。',
+  'Confidence is reduced because account information is incomplete.':
+      '账户信息不完整，置信度已降低。',
+  'This account is in recovery and should not be used to chase losses.':
+      '此账户处于恢复状态，不应被用于追赶亏损。',
+  'Payout protection was overridden with a recorded reason.': '出金保护已凭记录原因覆盖。',
+  'Daily-loss buffer': '每日亏损缓冲',
+  'Maximum-loss buffer': '最大亏损缓冲',
+  'Payout condition': '出金条件',
+  'Recent loss streak': '近期连续亏损',
+  'Trades already taken': '已进行交易次数',
+  'Psychology and cooldown': '心理状态与冷却期',
+
+  // Exact hard exclusions and custom-order validation.
+  'Portfolio stop is active.': '投资组合停止状态已启用。',
+  'Account is breached.': '账户已违规。',
+  'Account is critical and excluded by the safety threshold.':
+      '账户处于严重风险状态，已按安全阈值排除。',
+  'Account is archived.': '账户已归档。',
+  'Daily loss lock is active.': '每日亏损锁定已启用。',
+  'Account is locked by the portfolio.': '账户已被投资组合锁定。',
+  'Account is manually paused.': '账户已手动暂停。',
+  'Cooldown has not ended.': '冷却期尚未结束。',
+  'Maximum trades for the day has been reached.': '已达到当日最大交易次数。',
+  'Remaining daily-loss room ({remaining}) is below planned risk.':
+      '剩余每日亏损空间（{remaining}）低于计划风险。',
+  'Remaining daily-loss room ({amount}) is below planned risk.':
+      '剩余每日亏损空间（{amount}）低于计划风险。',
+  'Remaining maximum-loss room ({remaining}) is below planned risk.':
+      '剩余最大亏损空间（{remaining}）低于计划风险。',
+  'Remaining maximum-loss room ({amount}) is below planned risk.':
+      '剩余最大亏损空间（{amount}）低于计划风险。',
+  'Another open position prevents simultaneous trading.': '另一个未平仓头寸阻止同时交易。',
+  'Skipped for this session: {reason}': '本交易时段已跳过：{reason}',
+  'Account is protected for payout.': '账户正受出金保护。',
+  'Account is marked not available today.': '账户已标记为今日不可用。',
+  'Account is manually excluded from the sequence.': '账户已被手动排除在顺序之外。',
+  'Account size is missing or invalid.': '账户规模缺失或无效。',
+  'Starting balance is missing or invalid.': '起始余额缺失或无效。',
+  'Current balance is missing or invalid.': '当前余额缺失或无效。',
+  'Daily loss limit is missing.': '每日亏损限额缺失。',
+  'Maximum loss limit is missing.': '最大亏损限额缺失。',
+  'Maximum risk per trade is missing or invalid.': '每笔最大风险缺失或无效。',
+  'Required equity information is missing.': '必要的净值信息缺失。',
+  'Every account may appear only once.': '每个账户只能出现一次。',
+  'The order contains an unknown account.': '顺序中包含未知账户。',
+  '{account} is payout-protected and requires an override reason.':
+      '{account} 受出金保护，必须填写覆盖原因。',
+  '{account} is placed before a materially healthier account.':
+      '{account} 被排在健康度明显更高的账户之前。',
+  '{higherRisk} is placed before the materially healthier {healthier}.':
+      '{higherRisk} 被排在健康度明显更高的 {healthier} 之前。',
+  '{account} is a recovery account placed before a healthy account.':
+      '{account} 是恢复账户，却被排在健康账户之前。',
+  'Recovery account {recovery} is placed before healthier {healthier}.':
+      '恢复账户 {recovery} 被排在更健康的 {healthier} 之前。',
+
+  // Recalculation, branches, result actions, and portfolio stops.
+  'Initial sequence generated.': '已生成初始顺序。',
+  'Safety checks were refreshed; the order did not change.': '安全检查已刷新；顺序未改变。',
+  '{account} changed health state, so the sequence was recalculated.':
+      '{account} 的健康状态已改变，因此重新计算了顺序。',
+  '{account} moved because daily-loss usage changed from {before}% to {after}%.':
+      '{account} 因每日亏损使用率从 {before}% 变为 {after}% 而调整了位置。',
+  'Eligibility changed, so the sequence was recalculated.':
+      '合格状态已改变，因此重新计算了顺序。',
+  'After daily target': '达到每日目标后',
+  'If a portfolio stop is triggered': '触发投资组合停止时',
+  'Reassess the next candidate before trading.': '交易前重新评估下一候选账户。',
+  'Reassess all portfolio loss and discipline limits.': '重新评估所有投资组合亏损和纪律限制。',
+  'Continue only when every hard safety rule allows it.': '仅在所有硬性安全规则允许时继续。',
+  'Protect the current account for the day.': '当天保护当前账户。',
+  'Stop all account trading.': '停止所有账户交易。',
+  'Move to the next account after reassessment.': '重新评估后转至下一账户。',
+  'Keep the account after its cooldown.': '冷却期结束后保留此账户。',
+  'Protect the winning account for the day.': '当天保护盈利账户。',
+  'Stop when the daily target is reached.': '达到每日目标时停止。',
+  'Recalculate the remaining sequence.': '重新计算剩余顺序。',
+  'Lock the losing account for the day.': '当天锁定亏损账户。',
+  'Start the loss cooldown.': '启动亏损冷却期。',
+  'Complete a psychology check, then reassess the next account.':
+      '完成心理检查，然后重新评估下一账户。',
+  'Stop the whole portfolio.': '停止整个投资组合。',
+  'Recalculate remaining portfolio risk.': '重新计算剩余投资组合风险。',
+  'Keep the current account if still eligible.': '若仍符合条件，则保留当前账户。',
+  'Do not count this as a completed sequence step.': '不要将此计为已完成的顺序步骤。',
+  'Portfolio daily loss limit has been reached.': '已达到投资组合每日亏损限额。',
+  'Maximum portfolio trades have been reached.': '已达到投资组合最大交易次数。',
+  'Maximum consecutive losses have been reached.': '已达到最大连续亏损次数。',
+  'An emotional-risk stop has been triggered.': '已触发情绪风险停止。',
+  'Repeated invalid setups require the session to stop.': '反复出现无效形态，必须停止交易时段。',
+  'Only payout-protected accounts remain.': '只剩受出金保护的账户。',
+  'No eligible account remains.': '没有剩余合格账户。',
+  'Planned risk is larger than every remaining safe buffer.': '计划风险大于所有剩余安全缓冲。',
+  'The user may stop the session at any time.': '用户可随时停止交易时段。',
+  'Skip reason': '跳过原因',
+  'Optional detail': '可选详情',
+  'No valid setup': '没有有效形态',
+  'Market session unsuitable': '市场时段不合适',
+  'Account close to daily limit': '账户接近每日限额',
+  'Protecting payout': '保护出金',
+  'Emotional condition': '情绪状态',
+  'Technical issue': '技术问题',
+  'User preference': '用户偏好',
+  'Other': '其他',
+  'Profit incomplete': '利润要求未完成',
+  'Trading days incomplete': '交易日要求未完成',
+  'Payout eligible today': '今日符合出金条件',
+  'Payout request submitted': '出金申请已提交',
+  'Paid': '已出金',
+  'Payout rejected or delayed': '出金被拒或延迟',
+  'Payout request cancelled': '出金申请已取消',
+  'Not set': '未设置',
+};

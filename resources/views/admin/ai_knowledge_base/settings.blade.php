@@ -1,0 +1,18 @@
+@extends('admin.admin_master')
+@section('admin')
+<title>TradingHub AI Settings</title>
+<div class="page-content"><div class="container-fluid"><div class="d-flex justify-content-between align-items-center mb-3"><div><h4>TradingHub AI settings</h4><p class="text-muted mb-0">Risk policy, provider model and usage limits.</p></div><a href="{{ route('admin.ai_knowledge_base.index') }}" class="btn btn-secondary">Knowledge base</a></div>
+@if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
+@if($errors->any())<div class="alert alert-danger">{{ $errors->first() }}</div>@endif
+<div class="card mb-4"><div class="card-body"><form method="POST" action="{{ route('admin.ai_settings.update') }}">@csrf @method('PUT')<div class="row">
+<div class="col-md-4 mb-3"><label for="aiDefaultRisk" class="form-label">Default idea risk (%)</label><input id="aiDefaultRisk" class="form-control" type="number" step="0.01" min="0.01" max="1" name="default_risk_percent" value="{{ old('default_risk_percent', $settings['default_risk_percent']) }}" required></div>
+<div class="col-md-4 mb-3"><label for="aiMaxRisk" class="form-label">Maximum idea risk (%)</label><input id="aiMaxRisk" class="form-control" type="number" step="0.01" min="0.1" max="1" name="maximum_risk_percent" value="{{ old('maximum_risk_percent', $settings['maximum_risk_percent']) }}" required></div>
+<div class="col-md-4 mb-3"><label for="aiMinRr" class="form-label">Minimum structural R:R</label><input id="aiMinRr" class="form-control" type="number" step="0.1" min="1" max="5" name="minimum_rr" value="{{ old('minimum_rr', $settings['minimum_rr']) }}" required></div>
+<div class="col-md-4 mb-3"><label for="aiLimit" class="form-label">Daily requests per member</label><input id="aiLimit" class="form-control" type="number" min="1" max="1000" name="daily_request_limit" value="{{ old('daily_request_limit', $settings['daily_request_limit']) }}" required></div>
+<div class="col-md-4 mb-3"><label for="aiRetrieval" class="form-label">Knowledge articles per answer</label><input id="aiRetrieval" class="form-control" type="number" min="1" max="8" name="retrieval_limit" value="{{ old('retrieval_limit', $settings['retrieval_limit']) }}" required></div>
+<div class="col-md-4 mb-3"><label for="aiRetention" class="form-label">Conversation retention (days)</label><input id="aiRetention" class="form-control" type="number" min="7" max="3650" name="retention_days" value="{{ old('retention_days', $settings['retention_days']) }}" required></div>
+<div class="col-md-4 mb-3"><label for="aiModel" class="form-label">Permitted model</label><select id="aiModel" class="form-control" name="model">@foreach($models as $model)<option value="{{ $model }}" @selected(old('model', $settings['model']) === $model)>{{ $model }}</option>@endforeach</select></div>
+</div><p class="text-muted small">Provider key and permitted model list remain in server configuration. The maximum cannot exceed 1%.</p><button class="btn btn-primary" type="submit">Save settings</button></form></div></div>
+<h5>Recent answer feedback</h5><div class="card"><div class="card-body table-responsive"><table class="table table-sm"><thead><tr><th>When</th><th>Rating</th><th>Comment</th><th>Answer excerpt</th></tr></thead><tbody>@forelse($feedback as $item)<tr><td>{{ $item->created_at }}</td><td>{{ $item->rating }}</td><td>{{ $item->comment }}</td><td>{{ \Illuminate\Support\Str::limit($item->content, 180) }}</td></tr>@empty<tr><td colspan="4">No feedback yet.</td></tr>@endforelse</tbody></table>{{ $feedback->links('vendor.pagination.bootstrap-4') }}</div></div>
+</div></div>
+@endsection

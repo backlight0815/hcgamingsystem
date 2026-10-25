@@ -4,7 +4,7 @@
 <head>
 
     <meta charset="utf-8" />
-    <title>Login |HC Gaming</title>
+    <title>{{ $module === 'tradinghub' ? 'TradingHub' : ($module === 'dealership' ? 'Dealership Ecommerce' : 'HC Gaming') }} Sign In | HC Gaming</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Themesdesign" name="author" />
     <!-- App favicon -->
@@ -17,6 +17,7 @@
     <link href="{{ asset('backend/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="{{ asset('backend/assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('backend/assets/css/module-auth.css') }}" rel="stylesheet" />
 
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
@@ -26,20 +27,6 @@
     <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
     <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
-    <script src="{{ asset('/sw.js') }}"></script>
-    <script>
-        if ("serviceWorker" in navigator) {
-            // Register a service worker hosted at the root of the
-            // site using the default scope.
-            navigator.serviceWorker.register("/sw.js").then((reg) => {
-                console.log("Service worker has been registered for scope: " + reg.scope);
-            }, (error) => {
-                console.error(`Service worker registration failed: ${error}`);
-            });
-        } else {
-            console.error("Service workers are not supported.");
-        }
-    </script>
 </head>
 
 <style>
@@ -58,7 +45,7 @@
 </div>
 @endif
 
-<body class="auth-body-bg">
+<body class="auth-body-bg module-auth-page">
     <div class="bg-overlay"></div>
     <div class="wrapper-page">
         <div class="container-fluid p-0">
@@ -80,26 +67,32 @@
                         </div>
                     </div>
 
-                    <h4 class="text-muted text-center font-size-18"><b>Sign In</b></h4>
+                    <h4 class="text-muted text-center font-size-18"><b>{{ $module === 'tradinghub' ? 'TradingHub' : ($module === 'dealership' ? 'Dealership Ecommerce' : 'Account') }} Sign In</b></h4>
+
+                    @if($errors->any())<div class="alert alert-danger" role="alert">{{ $errors->first() }}</div>@endif
 
                     <div class="p-3">
 
-                        <form class="form-horizontal mt-3" method="POST" action="{{ route('login') }}" id="login">
+                        <form class="form-horizontal mt-3" method="POST" action="{{ $module === 'tradinghub' ? route('tradinghub.authenticate') : ($module === 'dealership' ? route('dealership.authenticate') : route('login')) }}" id="login">
                             @csrf
 
                             <div class="form-group mb-3 row">
                                 <div class="col-12">
-                                    <input class="form-control" id="username" name="username" type="text" required=""
-                                        placeholder="Username">
+                                    <label for="username" class="form-label">Username or email</label>
+                                    <input class="form-control" id="username" name="username" type="text" required="" value="{{ old('username') }}"
+                                        placeholder="Username or email" autocomplete="username">
                                 </div>
                             </div>
 
                             <div class="form-group mb-3 row">
                                 <div class="col-12">
+                                    <label for="password" class="form-label">Password</label>
+                                    <div class="position-relative">
                                     <input class="form-control" id="password" name="password" type="password"
-                                        required="" placeholder="Password">
-                                    <span class="password-toggle-icon" onclick="togglePasswordVisibility()"><i
-                                            class="fa fa-eye"></i></span>
+                                        required="" placeholder="Password" autocomplete="current-password">
+                                    <button type="button" class="password-toggle-icon" onclick="togglePasswordVisibility()" aria-label="Show password" aria-pressed="false" aria-controls="password"><i
+                                            class="fa fa-eye" aria-hidden="true"></i></button>
+                                    </div>
 
                                 </div>
                             </div>
@@ -115,7 +108,7 @@
                             <div class="form-group mb-3 text-center row mt-3 pt-1">
                                 <div class="col-12">
                                     <button class="btn btn-info w-100 waves-effect waves-light" id="loginbutton"
-                                        type="submit" onclick="disableButton()">Log In</button>
+                                        type="submit">Log In</button>
                                 </div>
                             </div>
 
@@ -124,12 +117,13 @@
                                     <a href="{{ route('password.request') }}" class="text-muted"><i
                                             class="mdi mdi-lock"></i> Forgot your password?</a>
                                 </div> --}}
-                                <div class="col-sm-5 mt-3">
-                                    <a href="{{ route('register') }}" class="text-muted"><i
+                                @if(!$module || \App\Support\ModuleAccess::registrationAllowed($module))<div class="col-sm-5 mt-3">
+                                    <a href="{{ route('register') }}" class="auth-register"><i
                                             class="mdi mdi-account-circle"></i> Create an account</a>
-                                </div>
+                                </div>@endif
                             </div>
                         </form>
+                        @include('auth.partials.module-navigation', ['currentModule' => $module])
                     </div>
                     <!-- end -->
                 </div>
@@ -178,6 +172,10 @@
          function togglePasswordVisibility() {
     var passwordInput = document.getElementById("password");
     var icon = document.querySelector(".password-toggle-icon i");
+    var toggle = document.querySelector('.password-toggle-icon');
+    var visible = passwordInput.type === 'password';
+    toggle.setAttribute('aria-pressed', String(visible));
+    toggle.setAttribute('aria-label', visible ? 'Hide password' : 'Show password');
 
     if (passwordInput.type === "password") {
         passwordInput.type = "text";
@@ -190,23 +188,16 @@
     }
 }
 
-var formSubmitted = false;
-    function disableButton() {
-        if (formSubmitted) {
-            return false;
-        }
-        var submitButton = document.getElementById('loginbutton');
-        submitButton.disabled = true;
-        submitButton.value = 'login...'; // Show a loading text on the button
-
-        // Submit the form after a short delay (e.g., 0.5 seconds) to give the disabled visual effect
-        setTimeout(function () {
-            document.getElementById('login').submit();
-        }, 500);
-
-        formSubmitted = true;
-        return true;
-    }
+document.getElementById('login').addEventListener('submit', function () {
+    var submitButton = document.getElementById('loginbutton');
+    submitButton.disabled = true;
+    submitButton.textContent = 'Signing in...';
+});
+window.addEventListener('pageshow', function () {
+    var submitButton = document.getElementById('loginbutton');
+    submitButton.disabled = false;
+    submitButton.textContent = 'Log In';
+});
     </script>
 </body>
 

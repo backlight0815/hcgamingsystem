@@ -1,0 +1,637 @@
+{
+  "theme": {
+    "id": "CW-032",
+    "code": "CW-032",
+    "title": {
+      "en": "Confirming Higher Highs and Higher Lows in Developing Trends",
+      "zh": "确认发展中趋势的更高高点与更高低点"
+    },
+    "shortTitle": {
+      "en": "higher high",
+      "zh": "确认发展中趋势的更高高点与更高低点"
+    },
+    "description": {
+      "en": "This coursework evaluates how a learner explains, analyses and demonstrates confirming higher highs and higher lows in developing trends using objective chart evidence, explicit invalidation and controlled risk.",
+      "zh": "本课程作业评估学习者如何运用客观图表证据、明确失效条件与受控风险来解释、分析并展示确认发展中趋势的更高高点与更高低点。"
+    },
+    "categoryId": "market_structure",
+    "categoryName": {
+      "en": "Market Structure",
+      "zh": "市场结构"
+    },
+    "difficulty": "intermediate",
+    "learningObjectives": {
+      "en": [
+        "Explain the core decision rules behind confirming higher highs and higher lows in developing trends.",
+        "Apply confirming higher highs and higher lows in developing trends to chart evidence without promising a trading outcome.",
+        "Document invalidation and risk controls before demonstrating the skill."
+      ],
+      "zh": [
+        "解释确认发展中趋势的更高高点与更高低点背后的核心决策规则。",
+        "将确认发展中趋势的更高高点与更高低点应用于图表证据，同时不承诺交易结果。",
+        "在展示技能前记录失效条件与风险控制。"
+      ]
+    },
+    "keywords": [
+      "higher high",
+      "higher low",
+      "uptrend",
+      "USDJPY",
+      "Market Structure"
+    ],
+    "searchTokens": [
+      "cw-032",
+      "CW-032",
+      "market_structure",
+      "market structure",
+      "市场结构",
+      "confirming",
+      "higher",
+      "highs",
+      "and",
+      "lows",
+      "in",
+      "developing",
+      "trends",
+      "确认发展中趋势的更高高点与更高低点",
+      "high",
+      "low",
+      "uptrend",
+      "usdjpy",
+      "market",
+      "structure"
+    ],
+    "difficultyOrder": 2,
+    "estimatedMinutes": 70,
+    "questionCount": 5,
+    "totalMarks": 100,
+    "courseworkWeight": 0.7,
+    "status": "published",
+    "isActive": true,
+    "isAssignable": true,
+    "version": 1,
+    "seedVersion": "coursework_100_themes_v1",
+    "sortOrder": 32,
+    "managedBySeed": true,
+    "createdBy": "system_seed",
+    "updatedBy": "system_seed",
+    "contentHash": "58913ede4f958eacc2efdb13fdc11a5354dc092e2d3f50a6cb042316826855e2"
+  },
+  "questions": [
+    {
+      "id": "Q1",
+      "themeId": "CW-032",
+      "order": 1,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Core Decision Rule for higher high",
+        "zh": "确认发展中趋势的更高高点与更高低点的核心决策规则"
+      },
+      "prompt": {
+        "en": "Which decision rule is most consistent with disciplined use of confirming higher highs and higher lows in developing trends?",
+        "zh": "哪项决策规则最符合有纪律地运用确认发展中趋势的更高高点与更高低点？"
+      },
+      "instructions": {
+        "en": "Select the most accurate answer.",
+        "zh": "请选择最准确的答案。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Use observable market evidence, a written decision rule and a defined invalidation when assessing confirming higher highs and higher lows in developing trends.",
+            "zh": "评估确认发展中趋势的更高高点与更高低点时，使用可观察的市场证据、书面决策规则与明确的失效条件。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Treat the most recent candle as sufficient evidence and ignore the surrounding structure.",
+            "zh": "将最新一根K线视为充分证据，并忽略周围结构。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Choose the interpretation that permits the largest position and shortest stop loss.",
+            "zh": "选择能够使用最大仓位和最短止损的解读。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Assume a familiar-looking pattern will repeat without defining a failure condition.",
+            "zh": "假设熟悉的形态会重复，而不定义失败条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "5c802f6c9e07400c717bc92907a4945678e2771fd9ac37bdfca8bb1cfae00a87"
+    },
+    {
+      "id": "Q2",
+      "themeId": "CW-032",
+      "order": 2,
+      "type": "theory_single_choice",
+      "title": {
+        "en": "Applying higher high Under Uncertainty",
+        "zh": "在不确定性下应用确认发展中趋势的更高高点与更高低点"
+      },
+      "prompt": {
+        "en": "Two signals related to confirming higher highs and higher lows in developing trends conflict before entry. Which response best protects decision quality?",
+        "zh": "入场前与确认发展中趋势的更高高点与更高低点相关的两个信号互相冲突。哪种做法最能保护决策质量？"
+      },
+      "instructions": {
+        "en": "Evaluate the scenario and select the response that best protects process discipline.",
+        "zh": "评估情境并选择最能保护流程纪律的做法。"
+      },
+      "marks": 15,
+      "answerMode": "single_choice",
+      "options": [
+        {
+          "id": "A",
+          "text": {
+            "en": "Enter immediately so the opportunity is not missed, then decide the stop later.",
+            "zh": "立即入场以免错失机会，之后再决定止损。"
+          }
+        },
+        {
+          "id": "B",
+          "text": {
+            "en": "Pause the decision, re-check the written rules and accept the trade only if evidence, invalidation and risk remain valid.",
+            "zh": "暂停决策，重新核对书面规则，只有在证据、失效条件与风险仍然有效时才接受交易。"
+          }
+        },
+        {
+          "id": "C",
+          "text": {
+            "en": "Increase risk because conflicting evidence creates a larger potential reward.",
+            "zh": "由于证据冲突带来更大潜在回报，因此增加风险。"
+          }
+        },
+        {
+          "id": "D",
+          "text": {
+            "en": "Ignore the invalidation if the most recent candle still supports the preferred direction.",
+            "zh": "如果最新K线仍支持偏好方向，就忽略失效条件。"
+          }
+        }
+      ],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "contentHash": "3c693803cbeb337ba1c9d816285bb33f79dc30004d514af10a12d52e7fc18e66"
+    },
+    {
+      "id": "Q3",
+      "themeId": "CW-032",
+      "order": 3,
+      "type": "chart_interpretation",
+      "title": {
+        "en": "USDJPY Chart Interpretation for higher high",
+        "zh": "USDJPY图表中的确认发展中趋势的更高高点与更高低点解读"
+      },
+      "prompt": {
+        "en": "Study the synthetic educational USDJPY H1 chart. Which labelled zone is the strongest decision area for evaluating confirming higher highs and higher lows in developing trends while keeping invalidation visible?",
+        "zh": "研究合成教学用USDJPY H1图表。哪个标记区域最适合评估确认发展中趋势的更高高点与更高低点，同时能清楚保留失效条件？"
+      },
+      "instructions": {
+        "en": "Select one chart zone. The candles are synthetic educational data, not a live-market feed.",
+        "zh": "选择一个图表区域。K线为合成教学数据，并非实时行情。"
+      },
+      "marks": 20,
+      "answerMode": "zone_selection",
+      "options": [],
+      "requiresText": false,
+      "requiresImage": false,
+      "requiresChart": true,
+      "minimumCharacters": 0,
+      "maximumCharacters": 0,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "chartData": {
+        "sourceType": "seeded_ohlc",
+        "symbol": "USDJPY",
+        "timeframe": "H1",
+        "displayTimezone": "UTC",
+        "isSyntheticEducationalData": true,
+        "candles": [
+          {
+            "timeIndex": 0,
+            "open": 151.2,
+            "high": 151.633,
+            "low": 150.996,
+            "close": 151.488
+          },
+          {
+            "timeIndex": 1,
+            "open": 151.488,
+            "high": 152.03,
+            "low": 151.281,
+            "close": 151.876
+          },
+          {
+            "timeIndex": 2,
+            "open": 151.876,
+            "high": 152.417,
+            "low": 151.731,
+            "close": 152.197
+          },
+          {
+            "timeIndex": 3,
+            "open": 152.197,
+            "high": 152.517,
+            "low": 152.066,
+            "close": 152.329
+          },
+          {
+            "timeIndex": 4,
+            "open": 152.329,
+            "high": 152.432,
+            "low": 152.089,
+            "close": 152.29
+          },
+          {
+            "timeIndex": 5,
+            "open": 152.29,
+            "high": 152.491,
+            "low": 151.983,
+            "close": 152.192
+          },
+          {
+            "timeIndex": 6,
+            "open": 152.192,
+            "high": 152.408,
+            "low": 151.978,
+            "close": 152.13
+          },
+          {
+            "timeIndex": 7,
+            "open": 152.13,
+            "high": 152.264,
+            "low": 151.995,
+            "close": 152.119
+          },
+          {
+            "timeIndex": 8,
+            "open": 152.119,
+            "high": 152.313,
+            "low": 151.922,
+            "close": 152.149
+          },
+          {
+            "timeIndex": 9,
+            "open": 152.149,
+            "high": 152.475,
+            "low": 151.938,
+            "close": 152.253
+          },
+          {
+            "timeIndex": 10,
+            "open": 152.253,
+            "high": 152.666,
+            "low": 152.095,
+            "close": 152.486
+          },
+          {
+            "timeIndex": 11,
+            "open": 152.486,
+            "high": 152.95,
+            "low": 152.369,
+            "close": 152.835
+          },
+          {
+            "timeIndex": 12,
+            "open": 152.835,
+            "high": 153.389,
+            "low": 152.643,
+            "close": 153.182
+          },
+          {
+            "timeIndex": 13,
+            "open": 153.182,
+            "high": 153.582,
+            "low": 152.969,
+            "close": 153.37
+          },
+          {
+            "timeIndex": 14,
+            "open": 153.37,
+            "high": 153.494,
+            "low": 153.182,
+            "close": 153.347
+          },
+          {
+            "timeIndex": 15,
+            "open": 153.347,
+            "high": 153.52,
+            "low": 153.093,
+            "close": 153.202
+          },
+          {
+            "timeIndex": 16,
+            "open": 153.202,
+            "high": 153.425,
+            "low": 152.897,
+            "close": 153.085
+          },
+          {
+            "timeIndex": 17,
+            "open": 153.085,
+            "high": 153.257,
+            "low": 152.866,
+            "close": 153.079
+          },
+          {
+            "timeIndex": 18,
+            "open": 153.079,
+            "high": 153.295,
+            "low": 152.909,
+            "close": 153.17
+          },
+          {
+            "timeIndex": 19,
+            "open": 153.17,
+            "high": 153.53,
+            "low": 153.068,
+            "close": 153.318
+          },
+          {
+            "timeIndex": 20,
+            "open": 153.318,
+            "high": 153.735,
+            "low": 153.135,
+            "close": 153.529
+          },
+          {
+            "timeIndex": 21,
+            "open": 153.529,
+            "high": 153.931,
+            "low": 153.315,
+            "close": 153.819
+          },
+          {
+            "timeIndex": 22,
+            "open": 153.819,
+            "high": 154.321,
+            "low": 153.643,
+            "close": 154.14
+          },
+          {
+            "timeIndex": 23,
+            "open": 154.14,
+            "high": 154.589,
+            "low": 154.045,
+            "close": 154.367
+          },
+          {
+            "timeIndex": 24,
+            "open": 154.367,
+            "high": 154.558,
+            "low": 154.188,
+            "close": 154.396
+          },
+          {
+            "timeIndex": 25,
+            "open": 154.396,
+            "high": 154.532,
+            "low": 154.036,
+            "close": 154.25
+          },
+          {
+            "timeIndex": 26,
+            "open": 154.25,
+            "high": 154.466,
+            "low": 153.898,
+            "close": 154.079
+          },
+          {
+            "timeIndex": 27,
+            "open": 154.079,
+            "high": 154.279,
+            "low": 153.933,
+            "close": 154.031
+          },
+          {
+            "timeIndex": 28,
+            "open": 154.031,
+            "high": 154.247,
+            "low": 153.858,
+            "close": 154.146
+          },
+          {
+            "timeIndex": 29,
+            "open": 154.146,
+            "high": 154.547,
+            "low": 153.932,
+            "close": 154.358
+          },
+          {
+            "timeIndex": 30,
+            "open": 154.358,
+            "high": 154.817,
+            "low": 154.171,
+            "close": 154.596
+          },
+          {
+            "timeIndex": 31,
+            "open": 154.596,
+            "high": 154.999,
+            "low": 154.491,
+            "close": 154.847
+          },
+          {
+            "timeIndex": 32,
+            "open": 154.847,
+            "high": 155.255,
+            "low": 154.679,
+            "close": 155.108
+          },
+          {
+            "timeIndex": 33,
+            "open": 155.108,
+            "high": 155.546,
+            "low": 154.895,
+            "close": 155.327
+          },
+          {
+            "timeIndex": 34,
+            "open": 155.327,
+            "high": 155.599,
+            "low": 155.136,
+            "close": 155.405
+          },
+          {
+            "timeIndex": 35,
+            "open": 155.405,
+            "high": 155.5,
+            "low": 155.191,
+            "close": 155.304
+          },
+          {
+            "timeIndex": 36,
+            "open": 155.304,
+            "high": 155.501,
+            "low": 154.955,
+            "close": 155.117
+          },
+          {
+            "timeIndex": 37,
+            "open": 155.117,
+            "high": 155.335,
+            "low": 154.8,
+            "close": 155.012
+          },
+          {
+            "timeIndex": 38,
+            "open": 155.012,
+            "high": 155.242,
+            "low": 154.817,
+            "close": 155.1
+          },
+          {
+            "timeIndex": 39,
+            "open": 155.1,
+            "high": 155.508,
+            "low": 154.98,
+            "close": 155.352
+          }
+        ],
+        "zones": [
+          {
+            "id": "zone_a",
+            "minimumPrice": 151.18,
+            "maximumPrice": 151.825,
+            "label": "A"
+          },
+          {
+            "id": "zone_b",
+            "minimumPrice": 152.285,
+            "maximumPrice": 152.929,
+            "label": "B"
+          },
+          {
+            "id": "zone_c",
+            "minimumPrice": 153.666,
+            "maximumPrice": 154.31,
+            "label": "C"
+          },
+          {
+            "id": "zone_d",
+            "minimumPrice": 154.77,
+            "maximumPrice": 155.415,
+            "label": "D"
+          }
+        ]
+      },
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "5386fc5d6f0b189a4a83b0910abe76b78e3dd2b1709801e1f2301d48c1fc060d"
+    },
+    {
+      "id": "Q4",
+      "themeId": "CW-032",
+      "order": 4,
+      "type": "self_analysis_kbat",
+      "title": {
+        "en": "Independent Scenario Analysis: higher high",
+        "zh": "独立情境分析：确认发展中趋势的更高高点与更高低点"
+      },
+      "prompt": {
+        "en": "Analyse both a valid and an invalid interpretation of confirming higher highs and higher lows in developing trends using the assigned chart. Compare the evidence, explain the risk boundary, identify what would change your conclusion and state when no trade is preferable.",
+        "zh": "使用指定图表分析确认发展中趋势的更高高点与更高低点的有效与无效解读。比较证据，解释风险边界，说明哪些变化会改变结论，并指出何时不交易更合适。"
+      },
+      "instructions": {
+        "en": "Write an original evidence-based analysis. Do not present the response as personal financial advice.",
+        "zh": "撰写原创且以证据为基础的分析。不得将回答表述为个人财务建议。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": false,
+      "requiresChart": false,
+      "minimumCharacters": 150,
+      "maximumCharacters": 2000,
+      "minimumImages": 0,
+      "maximumImages": 0,
+      "allowedFileTypes": [],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "seeded_synthetic_scenario",
+      "contentHash": "5a6af022e08fa6b8412e8b6e951f090341142e7a02a81f95628eff08ff6eed1e"
+    },
+    {
+      "id": "Q5",
+      "themeId": "CW-032",
+      "order": 5,
+      "type": "practical_demonstration",
+      "title": {
+        "en": "Practical Demonstration: higher high",
+        "zh": "实践展示：确认发展中趋势的更高高点与更高低点"
+      },
+      "prompt": {
+        "en": "Using a demo account, TradingView, FXReplay, MT5 demo or another approved charting platform, demonstrate confirming higher highs and higher lows in developing trends. Annotate the evidence, entry condition, invalidation, stop loss, take profit and risk control, then explain why the demonstration follows the written rules.",
+        "zh": "使用模拟账户、TradingView、FXReplay、MT5模拟版或其他获准图表平台展示确认发展中趋势的更高高点与更高低点。标注证据、入场条件、失效条件、止损、止盈与风险控制，并解释该展示为何符合书面规则。"
+      },
+      "instructions": {
+        "en": "Upload one to three clear screenshots and provide an original explanation.",
+        "zh": "上传一至三张清晰截图并提供原创说明。"
+      },
+      "marks": 25,
+      "answerMode": "long_text",
+      "options": [],
+      "requiresText": true,
+      "requiresImage": true,
+      "requiresChart": false,
+      "minimumCharacters": 80,
+      "maximumCharacters": 1500,
+      "minimumImages": 1,
+      "maximumImages": 3,
+      "allowedFileTypes": [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ],
+      "isRequired": true,
+      "status": "published",
+      "version": 1,
+      "seedVersion": "coursework_100_themes_v1",
+      "managedBySeed": true,
+      "marketContextMode": "student_current_market",
+      "contentHash": "83625ebd3a0a1ad33f87ac8ede23fbf584ffdc5eb680ae7ff9b4124978c7e413"
+    }
+  ]
+}

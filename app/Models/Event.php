@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Event extends Model
 {
     use HasFactory;
-    protected $table = 'Events';
+    protected $table = 'events';
 
        // Specify which attributes are mass assignable
        protected $fillable = [

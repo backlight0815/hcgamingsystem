@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title">
+  <title id="title">Market session timeline Diagram</title>
+  <rect width="1600" height="900" rx="0" fill="#F8FAFC"/>
+  <rect x="54" y="44" width="1492" height="772" rx="36" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="4"/>
+  <line x1="150" y1="360" x2="1440" y2="360" stroke="#334155" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="150" cy="360" r="10" fill="#334155"/><circle cx="365" cy="360" r="10" fill="#334155"/><circle cx="580" cy="360" r="10" fill="#334155"/><circle cx="795" cy="360" r="10" fill="#334155"/><circle cx="1010" cy="360" r="10" fill="#334155"/><circle cx="1225" cy="360" r="10" fill="#334155"/><circle cx="1440" cy="360" r="10" fill="#334155"/>
+  <rect x="160" y="270" width="360" height="120" rx="24" fill="#2563EB" opacity=".22" stroke="#2563EB" stroke-width="4"/><text x="205" y="345" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#2563EB">Asia</text>
+  <rect x="510" y="270" width="410" height="120" rx="24" fill="#10B981" opacity=".22" stroke="#10B981" stroke-width="4"/><text x="555" y="345" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#10B981">London</text>
+  <rect x="850" y="270" width="440" height="120" rx="24" fill="#F59E0B" opacity=".22" stroke="#F59E0B" stroke-width="4"/><text x="895" y="345" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#F59E0B">New York</text>
+  <rect x="850" y="250" width="70" height="180" rx="18" fill="#F59E0B" opacity=".45"/>
+  <text x="790" y="500" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" fill="#B45309">Overlap</text>
+  <rect x="84" y="842" width="290" height="18" rx="9" fill="#2563EB" opacity=".22"/>
+  <rect x="412" y="842" width="404" height="18" rx="9" fill="#10B981" opacity=".20"/>
+  <rect x="852" y="842" width="664" height="18" rx="9" fill="#334155" opacity=".10"/>
+</svg>

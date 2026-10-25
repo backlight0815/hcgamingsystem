@@ -1,0 +1,61 @@
+.pm-blocker-entry{padding:1rem 0;border-top:1px solid var(--pm-border,#496078);overflow-wrap:anywhere}
+.pm-blocker-entry .pm-panel-head{margin-bottom:.4rem}
+.pm-blocker-entry small{display:block;line-height:1.5;color:var(--pm-muted,#aabbd0)}
+.pm-people-chip{display:inline-block;margin:.2rem;padding:.3rem .6rem;border:1px solid #7189a3;border-radius:999px;font-size:.8rem;overflow-wrap:anywhere}
+.pm-people-remove{margin-left:.35rem;border:0;background:transparent;color:inherit;font-size:1rem;line-height:1;cursor:pointer}
+.pm-people-remove:focus-visible{outline:2px solid #9dcdff;border-radius:50%}
+[data-people-selected]>strong{display:block;margin:.3rem 0}
+.pm-workspace-panel,.pm-project-overview,.pm-project-overview>*{min-width:0}
+.pm-project-reader,.pm-markdown,.pm-event,.pm-member-list,.pm-workspace-hero h1{overflow-wrap:anywhere}
+.pm-project-reader img,.pm-markdown img,.pm-workspace-panel img{max-width:100%;height:auto}
+.pm-project-reader pre,.pm-markdown pre{max-width:100%;overflow-x:auto}
+.pm-global-cycle-row{color:inherit;text-decoration:none}
+@media(max-width:767px){
+  .pm-workspace-hero{display:block;padding:1rem}
+  .pm-workspace-hero h1{font-size:clamp(1.4rem,7vw,2rem);line-height:1.2}
+  .pm-workspace-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1rem}
+  .pm-workspace-actions>*{flex:1 1 auto;min-width:0}
+  .pm-workspace-actions .pm-button{min-height:44px;white-space:normal;text-align:center}
+  .pm-workspace-tabs{display:flex;overflow-x:auto;max-width:100%;scroll-snap-type:x proximity;overscroll-behavior-inline:contain}
+  .pm-workspace-tabs>*{flex:none;min-height:44px;scroll-snap-align:start}
+  .pm-workspace-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pm-project-overview,.pm-two-cols{display:block}
+  .pm-project-overview>*+*,.pm-two-cols>*+*{margin-top:1rem}
+  .pm-workspace-panel .pm-table-wrap{overflow:visible}
+  #project-panel-tickets .pm-table{display:block;min-width:0}
+  #project-panel-tickets .pm-table thead{display:none}
+  #project-panel-tickets .pm-table tbody{display:grid;gap:.75rem}
+  #project-panel-tickets .pm-table tr{display:grid;gap:.35rem;padding:1rem;border:1px solid #52677f;border-radius:12px;min-width:0}
+  #project-panel-tickets .pm-table td{display:block;padding:0;border:0;overflow-wrap:anywhere}
+  #project-panel-tickets .pm-table td:first-child a{font-weight:700;font-size:1rem}
+  #project-panel-tickets .pm-table td:nth-child(3)::before{content:'Type: ';font-weight:600}
+  #project-panel-tickets .pm-table td:nth-child(4)::before{content:'Status: ';font-weight:600}
+  #project-panel-tickets .pm-table td:nth-child(5)::before{content:'Priority: ';font-weight:600}
+  #project-panel-tickets .pm-table td:nth-child(6)::before{content:'Assignee: ';font-weight:600}
+  .pm-workspace-panel form,.pm-workspace-panel input,.pm-workspace-panel textarea,.pm-workspace-panel select{max-width:100%}
+  .pm-form-grid{grid-template-columns:minmax(0,1fr)}
+  .pm-panel{min-width:0}
+  .pm-team-table{display:block;min-width:0}
+  .pm-team-table thead{display:none}
+  .pm-team-table tbody{display:grid;gap:.75rem}
+  .pm-team-table tr{display:grid;gap:.35rem;padding:1rem;border:1px solid #52677f;border-radius:12px;min-width:0}
+  .pm-team-table td{display:block;padding:.2rem 0;border:0;overflow-wrap:anywhere}
+  .pm-team-table td:nth-child(3)::before{content:'Role: ';font-weight:700}
+  .pm-team-table td:nth-child(4)::before{content:'Projects: ';font-weight:700}
+  .pm-team-table td:nth-child(5)::before{content:'Status: ';font-weight:700}
+  .pm-team-table td:nth-child(6)::before{content:'Joined: ';font-weight:700}
+  .pm-team-table td:nth-child(7)::before{content:'Last activity: ';font-weight:700}
+  .pm-team-table td:last-child a,.pm-gallery-actions a,.pm-gallery-actions button,.pm-gallery-actions summary{display:inline-flex;align-items:center;min-height:44px}
+  .pm-team-filters>*{max-width:100%}
+}
+@media(max-width:374px){
+  .pm-top{gap:.35rem;padding:0 .6rem}
+  .pm-global-search{flex:1;min-width:0}
+  .pm-global-search input{width:100%;min-width:0;padding:.45rem .5rem}
+  .pm-top-actions{gap:.35rem;flex:none}
+  .pm-top-actions a,.pm-top-actions button{font-size:11px;white-space:nowrap}
+  .pm-workspace-actions>*{flex:1 1 100%!important}
+  .pm-workspace-actions .pm-button,.pm-workspace-actions summary{width:100%}
+  .pm-workspace-metrics{gap:.45rem}
+  .pm-panel{padding:.75rem}
+}

@@ -127,8 +127,10 @@
     }
 
     .trade-signal-icon.tier-low { box-shadow: inset 0 0 0 1px rgba(37, 99, 235, .35); }
+    .trade-signal-icon.tier-mid { box-shadow: inset 0 0 0 1px rgba(217, 119, 6, .45); }
     .trade-signal-icon.tier-medium { box-shadow: inset 0 0 0 1px rgba(217, 119, 6, .45); }
     .trade-signal-icon.tier-high { box-shadow: inset 0 0 0 1px rgba(185, 28, 28, .55); }
+    .trade-signal-icon.tier-critical { box-shadow: inset 0 0 0 2px rgba(185, 28, 28, .7); }
 
     .hero-balance {
         color: #ffffff;
@@ -427,7 +429,7 @@
 
     .calendar-day.outside {
         background: #f8fafc;
-        opacity: .58;
+        border-color: #cbd5e1;
     }
 
     .calendar-day.has-trade {
@@ -466,7 +468,7 @@
     }
 
     .calendar-trades {
-        color: #64748b;
+        color: #475569;
         font-size: 10px;
         font-weight: 800;
         margin-top: 4px;
@@ -531,7 +533,7 @@
     .fill-secondary { background: #64748b; }
 
     .text-profit { color: #0f766e !important; }
-    .text-loss { color: #e11d48 !important; }
+    .text-loss { color: #be123c !important; }
 
     .subgrid {
         display: grid;
@@ -879,20 +881,28 @@
     $selectedMt5ViewOffset = $journalTime->normalizeOffset(request('mt5_offset_minutes'), \App\Services\TradingJournalTimeService::TIMEZONE_MT5);
     $timeModes = $journalTime->modes();
     $mt5OffsetOptions = $journalTime->mt5OffsetOptions();
+    $accountStageOptions = collect($accountStageOptions ?? []);
+    $selectedAccountStage = $selectedAccountStage ?? 'overall';
+    $selectedAccountStageLabel = $selectedAccountStageLabel ?? data_get($accountStageOptions->get($selectedAccountStage), 'short_label', 'Overall');
+    $selectedAccountStageDescription = $selectedAccountStageDescription ?? data_get($accountStageOptions->get($selectedAccountStage), 'description', 'Phase 1 + Phase 2 statistics.');
     $revengeTradeMap = collect(data_get($traderStyleProfile, 'revenge.trade_map', []));
     $gamblingTradeMap = collect(data_get($traderStyleProfile, 'gambling.trade_map', []));
     $behaviorScorePenalty = data_get($scoreEvaluationProfile, 'behavior_score_penalty', []);
+    $scoreIsProvisional = (bool) data_get($scoreEvaluationProfile, 'score_is_provisional', false);
     $behaviorWeeklyMetrics = collect(data_get($behaviorWeeklyProfile ?? [], 'metrics', []));
     $tone = $performanceProfile['tone'] ?? 'primary';
     $topPairs = $pairStats->take(5);
     $metricCells = [
-        ['name' => 'Equity Balance', 'value' => number_format($summary['current_balance'], 2) . 'u', 'note' => 'Capital adjusted account value', 'tone' => $summary['current_balance'] >= 0 ? '' : 'danger'],
+        ['name' => 'Account Stage', 'value' => $selectedAccountStageLabel, 'note' => $selectedAccountStageDescription, 'tone' => $selectedAccountStage === 'funded' ? 'indigo' : 'slate'],
+        ['name' => 'Score Sample', 'value' => data_get($scoreEvaluationProfile, 'sample_size_status', 'Reliable Sample'), 'note' => 'Raw ' . number_format((float) data_get($scoreEvaluationProfile, 'raw_score', data_get($scoreEvaluationProfile, 'score', 0)), 2) . '/100 | Confidence ' . number_format((float) data_get($scoreEvaluationProfile, 'sample_size_confidence', 0), 0) . '%', 'tone' => $scoreIsProvisional ? 'warning' : 'slate'],
+        ['name' => 'Equity Balance', 'value' => number_format($summary['current_balance'], 2) . 'u', 'note' => ($capitalSummary['basis_label'] ?? 'Capital transactions') . ' adjusted value', 'tone' => $summary['current_balance'] >= 0 ? '' : 'danger'],
         ['name' => 'Net P/L', 'value' => number_format($summary['net_profit_loss'], 2) . 'u', 'note' => 'Growth ' . number_format($summary['growth_percent'], 2) . '%', 'tone' => $summary['net_profit_loss'] >= 0 ? '' : 'danger'],
         ['name' => 'Recovery Factor', 'value' => is_numeric($summary['recovery_factor']) ? number_format($summary['recovery_factor'], 2) : $summary['recovery_factor'], 'note' => 'Net P/L per max drawdown', 'tone' => (is_numeric($summary['recovery_factor']) && $summary['recovery_factor'] < 1) ? 'warning' : 'indigo'],
         ['name' => 'Max Drawdown', 'value' => number_format($summary['max_drawdown_percent'], 2) . '%', 'note' => number_format($summary['max_drawdown_amount'], 2) . 'u peak-to-trough', 'tone' => $summary['max_drawdown_percent'] > 10 ? 'danger' : 'warning'],
         ['name' => 'Best Day Rule', 'value' => number_format($summary['consistency_percent'], 2) . '%', 'note' => 'Limit ' . number_format($summary['best_day_rule']['limit_percent'], 0) . '% | Position score ' . number_format($positionProfile['score'], 2) . '/100', 'tone' => ($summary['best_day_rule']['passed'] ?? false) ? '' : 'warning'],
         ['name' => '2% Gross Profit', 'value' => number_format($summary['gross_profit_rule']['achieved_percent'], 2) . '%', 'note' => number_format($summary['gross_profit_rule']['gross_profit'], 2) . 'u gross / ' . number_format($summary['gross_profit_rule']['required_amount'], 2) . 'u target', 'tone' => ($summary['gross_profit_rule']['passed'] ?? false) ? '' : 'warning'],
-        ['name' => 'Trader Style', 'value' => $traderStyleProfile['style_label'], 'note' => $traderStyleProfile['risk_level'] . ' | Risk ' . number_format($traderStyleProfile['risk_score'], 2) . '/100', 'tone' => $traderStyleProfile['tone']],
+        ['name' => 'Trader Style', 'value' => $traderStyleProfile['style_label'], 'note' => $traderStyleProfile['risk_level'] . ' | Final ' . number_format((float) data_get($traderStyleProfile, 'final_score', $traderStyleProfile['risk_score']), 2) . '/100', 'tone' => $traderStyleProfile['tone']],
+        ['name' => 'Detection Confidence', 'value' => number_format((float) data_get($traderStyleProfile, 'confidence_score', 0), 2) . '/100', 'note' => data_get($traderStyleProfile, 'label', 'Normal Trading Behaviour'), 'tone' => (float) data_get($traderStyleProfile, 'confidence_score', 0) < 50 ? 'warning' : 'slate'],
         ['name' => 'Revenge Tier', 'value' => data_get($traderStyleProfile, 'revenge.status', 'N/A'), 'note' => number_format((float) data_get($traderStyleProfile, 'revenge.score', 0), 2) . '/100 | ' . number_format((float) data_get($traderStyleProfile, 'revenge.event_count', 0)) . ' event(s)', 'tone' => data_get($traderStyleProfile, 'revenge.tier_tone', data_get($traderStyleProfile, 'revenge.tone', 'secondary'))],
         ['name' => 'Gambling Tier', 'value' => data_get($traderStyleProfile, 'gambling.status', 'N/A'), 'note' => number_format((float) data_get($traderStyleProfile, 'gambling.score', 0), 2) . '/100 | Margin ' . number_format((float) data_get($traderStyleProfile, 'gambling.max_margin_percent', 0), 2) . '% | Layers ' . number_format((float) data_get($traderStyleProfile, 'gambling.layering_exposure_event_count', 0)), 'tone' => data_get($traderStyleProfile, 'gambling.tier_tone', data_get($traderStyleProfile, 'gambling.tone', 'secondary'))],
         ['name' => 'Behaviour Penalty', 'value' => '-' . number_format((float) data_get($behaviorScorePenalty, 'points', 0), 2) . ' pts', 'note' => number_format((float) data_get($behaviorScorePenalty, 'percent', 0), 0) . '% | ' . data_get($behaviorScorePenalty, 'trigger_label', 'Clear or low revenge/gambling tier'), 'tone' => data_get($behaviorScorePenalty, 'tone', 'success')],
@@ -953,8 +963,8 @@
                         <strong>{{ number_format($capitalSummary['total_deposits'], 2) }}u</strong>
                     </div>
                     <div>
-                        <span>Level</span>
-                        <strong>{{ $levelProfile['level'] }}</strong>
+                        <span>Stage</span>
+                        <strong>{{ $selectedAccountStageLabel }}</strong>
                     </div>
                     <div>
                         <span>Best Day</span>
@@ -1050,6 +1060,17 @@
                         </select>
                     </div>
                 @endif
+
+                <div class="col-xl-2 col-md-6">
+                    <label for="account_stage" class="form-label">Account Stage</label>
+                    <select name="account_stage" id="account_stage" class="form-select">
+                        @foreach($accountStageOptions as $stage => $stageOption)
+                            <option value="{{ $stage }}" {{ $selectedAccountStage === $stage ? 'selected' : '' }}>
+                                {{ $stageOption['label'] }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
                 <div class="col-xl-2 col-md-6">
                     <label for="source" class="form-label">Journal Source</label>
@@ -1252,6 +1273,15 @@
                     <div class="reward-item">
                         <span>Behavior Risk</span>
                         <strong class="text-{{ $traderStyleProfile['tone'] === 'danger' ? 'danger' : ($traderStyleProfile['tone'] === 'warning' ? 'warning' : 'success') }}">{{ number_format($traderStyleProfile['risk_score'], 2) }}/100</strong>
+                        <div class="small text-muted mt-1">Final score = max(gambling {{ number_format((float) data_get($traderStyleProfile, 'gambling.score', 0), 2) }}, revenge {{ number_format((float) data_get($traderStyleProfile, 'revenge.score', 0), 2) }})</div>
+                        @if((float) data_get($traderStyleProfile, 'behavior_recovery.total_reduction_percent', 0) > 0)
+                            <div class="small text-success mt-1">8-trade recovery: raw {{ number_format((float) data_get($traderStyleProfile, 'raw_risk_score', $traderStyleProfile['risk_score']), 2) }} reduced by {{ number_format((float) data_get($traderStyleProfile, 'behavior_recovery.total_reduction_percent', 0), 2) }}%.</div>
+                        @endif
+                    </div>
+                    <div class="reward-item">
+                        <span>Detection Label</span>
+                        <strong>{{ data_get($traderStyleProfile, 'label', 'Normal Trading Behaviour') }} <span class="status-label {{ data_get($traderStyleProfile, 'tone', 'success') }}">{{ data_get($traderStyleProfile, 'tier_label', 'Normal') }}</span></strong>
+                        <div class="small text-muted mt-1">Confidence {{ number_format((float) data_get($traderStyleProfile, 'confidence_score', 0), 2) }}/100</div>
                     </div>
                     <div class="reward-item">
                         <span>Revenge Trading</span>
@@ -1281,6 +1311,7 @@
                     <div class="reward-item">
                         <span>Layering</span>
                         <strong>{{ $traderStyleProfile['layering']['status'] }} ({{ number_format($traderStyleProfile['layering']['score'], 2) }}/100)</strong>
+                        <div class="small text-muted mt-1">Layering is reviewed separately and does not automatically classify gambling or revenge.</div>
                     </div>
                 </div>
                 <p class="metric-note mt-3">{{ $traderStyleProfile['summary'] }}</p>
@@ -1409,18 +1440,53 @@
         <div class="subgrid">
             <div class="matrix-panel">
                 <div class="panel-head">
-                    <h5>Progress Level</h5>
-                    <span>{{ $levelProfile['score'] }}/100 desk score</span>
+                    <h5>Trader Level Profile</h5>
+                    <span>{{ number_format((float) data_get($levelProfile, 'score', 0), 2) }}/100 classification score</span>
                 </div>
                 <div class="level-layout">
                     <div class="level-card">
                         <div class="label">Current Level</div>
-                        <div class="level">{{ $levelProfile['level'] }}</div>
+                        <div class="level">L{{ data_get($levelProfile, 'level_number', 1) }}</div>
+                        <div class="mt-2">{{ data_get($levelProfile, 'label', data_get($levelProfile, 'level', 'No Data')) }}</div>
+                        <div class="mt-3">
+                            <span class="status-label {{ data_get($levelProfile, 'tone', 'secondary') }}">{{ data_get($levelProfile, 'sample_label', 'No Data') }}</span>
+                        </div>
                     </div>
                     <div class="reward-list">
-                        <div class="reward-item"><span>Total Reward Estimate</span><strong>{{ number_format($levelProfile['reward'], 2) }}u</strong></div>
-                        <div class="reward-item"><span>Highest Reward Estimate</span><strong>{{ number_format($levelProfile['highest_reward'], 2) }}u</strong></div>
+                        <div class="reward-item"><span>Desk Score</span><strong>{{ number_format((float) data_get($levelProfile, 'desk_score', 0), 2) }}/100</strong></div>
+                        <div class="reward-item"><span>Raw Score</span><strong>{{ number_format((float) data_get($levelProfile, 'raw_score', 0), 2) }}/100</strong></div>
+                        <div class="reward-item"><span>Sample Confidence</span><strong>{{ number_format((float) data_get($levelProfile, 'sample_confidence', 0), 0) }}%</strong></div>
+                        <div class="reward-item"><span>Next Level</span><strong>{{ data_get($levelProfile, 'next_level.label', 'Max Level') }}</strong></div>
                     </div>
+                </div>
+                <p class="metric-note mt-3">{{ data_get($levelProfile, 'description', '') }}</p>
+                @if(data_get($levelProfile, 'cap_active'))
+                    <p class="metric-note mt-2"><strong>Active cap:</strong> {{ data_get($levelProfile, 'cap_reason') }}</p>
+                @endif
+                @if(data_get($levelProfile, 'next_level.requirement'))
+                    <p class="metric-note mt-2"><strong>Next requirement:</strong> {{ data_get($levelProfile, 'next_level.requirement') }}</p>
+                @endif
+                <div class="table-responsive mt-3">
+                    <table class="table matrix-table">
+                        <thead>
+                            <tr>
+                                <th>Level</th>
+                                <th>Score Band</th>
+                                <th>Small Sample</th>
+                                <th>Standard Sample</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(collect(data_get($levelProfile, 'ladder', [])) as $levelRow)
+                                <tr class="{{ (int) data_get($levelRow, 'level_number') === (int) data_get($levelProfile, 'level_number') ? 'table-primary' : '' }}">
+                                    <td>L{{ data_get($levelRow, 'level_number') }}</td>
+                                    <td>{{ data_get($levelRow, 'score_band') }}</td>
+                                    <td>{{ data_get($levelRow, 'small_sample_label') }}</td>
+                                    <td>{{ data_get($levelRow, 'standard_sample_label') }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -1671,6 +1737,7 @@
                             <tr>
                                 <th>Close Date ({{ $journalTime->shortLabel($selectedTimeView, $selectedTimeViewOffset) }})</th>
                                 <th>Source</th>
+                                <th>Stage</th>
                                 <th>Pair</th>
                                 <th>Direction</th>
                                 <th>Signals</th>
@@ -1689,6 +1756,7 @@
                                 <tr>
                                     <td>{{ $journalTime->formatForDisplay($trade['closed_at'], $selectedTimeView, $selectedTimeViewOffset) }}</td>
                                     <td>{{ $trade['source'] }}</td>
+                                    <td>{{ $trade['account_stage_label'] ?? 'Overall' }}</td>
                                     <td><strong>{{ $trade['pair'] }}</strong></td>
                                     <td>{{ $trade['direction'] === 1 ? 'Buy' : ($trade['direction'] === 2 ? 'Sell' : 'N/A') }}</td>
                                     <td>
@@ -1713,7 +1781,7 @@
                                     <td class="{{ $trade['profit_loss'] >= 0 ? 'text-profit' : 'text-loss' }}">{{ number_format($trade['profit_loss'], 2) }}u</td>
                                 </tr>
                             @empty
-                                <tr><td colspan="6" class="text-muted">No trades matched the selected filters.</td></tr>
+                                <tr><td colspan="7" class="text-muted">No trades matched the selected filters.</td></tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -1738,6 +1806,20 @@
                     <div class="col-md-3">
                         <div class="reward-item h-100"><span>Total Score</span><strong>{{ number_format($scoreEvaluationProfile['score'], 2) }} pts</strong></div>
                     </div>
+                    @if($scoreIsProvisional)
+                        <div class="col-md-3">
+                            <div class="reward-item h-100"><span>Raw Formula Score</span><strong>{{ number_format((float) data_get($scoreEvaluationProfile, 'raw_score', $scoreEvaluationProfile['score']), 2) }} pts</strong></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="reward-item h-100"><span>Sample Confidence</span><strong>{{ number_format((float) data_get($scoreEvaluationProfile, 'sample_size_confidence', 0), 0) }}%</strong></div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="reward-item h-100">
+                                <span>Provisional Trigger</span>
+                                <strong>{{ number_format((int) data_get($summary, 'total_trades', 0)) }} / {{ number_format((int) data_get($scoreEvaluationProfile, 'minimum_reliable_trades', 10)) }} trades</strong>
+                            </div>
+                        </div>
+                    @endif
                     <div class="col-md-3">
                         <div class="reward-item h-100"><span>Behaviour Penalty</span><strong>-{{ number_format((float) data_get($scoreEvaluationProfile, 'behavior_score_penalty.points', 0), 2) }} pts</strong></div>
                     </div>
@@ -1755,6 +1837,17 @@
                 <div class="alert alert-info">
                     <strong>{{ $scoreEvaluationProfile['formula'] }}</strong>
                     <div class="mt-1">{{ $scoreEvaluationProfile['meaning'] }}</div>
+                    @if($scoreIsProvisional)
+                        <div class="mt-1">{{ data_get($scoreEvaluationProfile, 'sample_size_note') }}</div>
+                        <div class="mt-2 small">
+                            <strong>Provisional rule:</strong>
+                            under {{ number_format((int) data_get($scoreEvaluationProfile, 'minimum_reliable_trades', 10)) }} trades is marked provisional.
+                            {{ data_get($scoreEvaluationProfile, 'sample_size_formula') }}
+                        </div>
+                        <div class="mt-1 small">
+                            <strong>Calculation:</strong> {{ data_get($scoreEvaluationProfile, 'sample_size_calculation') }}
+                        </div>
+                    @endif
                     <div class="mt-1">{{ data_get($scoreEvaluationProfile, 'behavior_score_penalty.summary', '') }}</div>
                 </div>
 
@@ -1788,7 +1881,7 @@
                                         <td class="{{ $component['points'] < 0 ? 'text-loss' : ($component['points'] > 0 ? 'text-profit' : '') }}">
                                             {{ $component['points'] > 0 ? '+' : '' }}{{ number_format($component['points'], 2) }}
                                         </td>
-                                        <td>{{ $component['is_penalty'] ? 'Penalty' : number_format($component['max_points']) }}</td>
+                                        <td>{{ data_get($component, 'is_adjustment') ? 'Adjustment' : ($component['is_penalty'] ? 'Penalty' : number_format($component['max_points'])) }}</td>
                                         <td><span class="status-label {{ $component['tone'] }}">{{ $component['status'] }}</span></td>
                                         <td>{{ $component['calculation'] }}</td>
                                     </tr>
@@ -1859,6 +1952,18 @@
                         <span>Recovery Quality Progress</span>
                         <strong>{{ number_format($scoreEvaluationProfile['recovery_factor_progress'], 2) }}% toward 3.00 recovery factor</strong>
                     </div>
+                    @if($scoreIsProvisional)
+                        <div class="reward-item">
+                            <span>Trades Marked Provisional</span>
+                            <strong>{{ number_format((int) data_get($summary, 'total_trades', 0)) }} trade(s)</strong>
+                            <div class="small text-muted mt-1">Any score with fewer than {{ number_format((int) data_get($scoreEvaluationProfile, 'minimum_reliable_trades', 10)) }} trades is shown as provisional.</div>
+                        </div>
+                        <div class="reward-item">
+                            <span>Sample Weight / Baseline</span>
+                            <strong>{{ number_format((float) data_get($scoreEvaluationProfile, 'sample_size_raw_weight', 0), 0) }}% raw / {{ number_format((float) data_get($scoreEvaluationProfile, 'sample_size_baseline', 0), 2) }} baseline</strong>
+                            <div class="small text-muted mt-1">Sample cap {{ number_format((float) data_get($scoreEvaluationProfile, 'sample_size_cap', 0), 2) }} pts; adjustment {{ number_format((float) data_get($scoreEvaluationProfile, 'sample_size_adjustment', 0), 2) }} pts.</div>
+                        </div>
+                    @endif
                 </div>
             </div>
             <div class="modal-footer">

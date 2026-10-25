@@ -35,7 +35,7 @@
 <div class="page-content">
     <div class="container-fluid">
         <div class="chat-container">
-            <h2>Chatbot</h2>
+            <h2 class="contrast-dark-title">Chatbot</h2>
             <div id="chat" class="chat-messages">
                 <!-- Chat messages will be displayed here -->
             </div>

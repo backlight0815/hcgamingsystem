@@ -40,8 +40,10 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\CheckBanned::class,
             \App\Http\Middleware\EnsureTraderOnboardingApproved::class,
+            \App\Http\Middleware\EnforcePublicModules::class,
+            \App\Http\Middleware\EnforceBackofficeModules::class,
+            \App\Http\Middleware\EnsureTradingSubmoduleEnabled::class,
             // \App\Http\Middleware\CheckSession::class,
-
 
         ],
 
@@ -49,6 +51,7 @@ class Kernel extends HttpKernel
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class.':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\EnsureTradingSubmoduleEnabled::class,
         ],
     ];
 
@@ -72,14 +75,21 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'check' => \App\Http\Middleware\CheckAge::class,
         'feature' => \App\Http\Middleware\CheckFeatureEnabled::class,
+        'final_exam.passed' => \App\Http\Middleware\EnsureFinalExamPassed::class,
+        'mobile.signal.auth' => \App\Http\Middleware\AuthenticateMobileSignalRequest::class,
+        'mobile.blog.auth' => \App\Http\Middleware\AuthenticateMobileSignalRequest::class,
 
     ];
+
     protected $routeMiddleware = [
         // Other middleware...
         'role' => \App\Http\Middleware\CheckRole::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'pageview' => \App\Http\Middleware\PageViewMiddleware::class,
         'feature' => \App\Http\Middleware\CheckFeatureEnabled::class,
+        'final_exam.passed' => \App\Http\Middleware\EnsureFinalExamPassed::class,
+        'mobile.signal.auth' => \App\Http\Middleware\AuthenticateMobileSignalRequest::class,
+        'mobile.blog.auth' => \App\Http\Middleware\AuthenticateMobileSignalRequest::class,
 
     ];
 }

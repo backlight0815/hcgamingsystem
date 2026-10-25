@@ -48,8 +48,11 @@ class EnsureTraderOnboardingApproved
     private function isAllowedRoute(Request $request): bool
     {
         return $request->routeIs(
+            'trading.hub.outlooks.*',
+            'trading.market-analyst.*',
             'trader.onboarding.*',
             'trader.readiness.*',
+            'final_exam.*',
             'logout',
             'admin.logout',
             'verification.*',

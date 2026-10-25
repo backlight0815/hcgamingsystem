@@ -319,7 +319,7 @@
     }
 
     #signalsTable th {
-        color: #475569;
+        color: var(--bo-table-heading-text, #475569);
         font-size: 12px;
         text-transform: uppercase;
         letter-spacing: .03em;

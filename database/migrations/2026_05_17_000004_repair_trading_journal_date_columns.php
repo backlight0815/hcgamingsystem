@@ -64,7 +64,9 @@ return new class extends Migration
                 ->whereNull('close_date')
                 ->update(['close_date' => DB::raw('trade_date')]);
 
-            DB::statement("ALTER TABLE `{$tableName}` MODIFY `trade_date` DATETIME NULL");
+            if (DB::getDriverName() !== 'sqlite') {
+                DB::statement("ALTER TABLE `{$tableName}` MODIFY `trade_date` DATETIME NULL");
+            }
         }
     }
 };

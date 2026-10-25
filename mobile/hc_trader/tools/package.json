@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "audit:final-exam": "node audit_final_exam_questions.js",
+    "audit:final-exam-protection": "node audit_final_exam_protection.js",
+    "audit:knowledge-centres": "node audit_knowledge_centres.js",
+    "audit:zh": "node audit_chinese_localisation.js",
+    "backfill:final-exam-attempts-zh": "node backfill_final_exam_attempts_zh.js",
+    "backfill:final-exam-zh": "node backfill_final_exam_questions_zh.js",
+    "cleanup:knowledge-centres": "node cleanup_dummy_knowledge_centres.js",
+    "generate:final-exam-500": "node generate_final_exam_questions_500.js",
+    "generate:knowledge-centres-30": "node generate_knowledge_centres_30.js",
+    "seed:bilingual": "node seed_bilingual_content.js",
+    "seed:final-exam-500": "node seed_final_exam_questions.js",
+    "seed:knowledge-centres": "node seed_knowledge_centres.js",
+    "validate:final-exam-500": "node validate_final_exam_question_bank.js",
+    "validate:knowledge-centres": "node validate_knowledge_centres.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0"
+  }
+}

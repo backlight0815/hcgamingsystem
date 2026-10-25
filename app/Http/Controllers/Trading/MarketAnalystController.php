@@ -6,10 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Community;
 use App\Models\MarketAnalysis;
 use App\Models\MarketOutlookDiscord;
+use App\Services\MarketOutlookPublicationService;
+use App\Services\TradingPlanGenerationService;
+use App\Services\Ai\MarketAnalystReportGenerator;
+use App\Support\AdminAudit;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use RuntimeException;
+use Throwable;
 
 class MarketAnalystController extends Controller
 {
@@ -63,6 +71,74 @@ class MarketAnalystController extends Controller
         ]);
 
         return view('admin.market_analyst.marketanalyst_add', compact('communities', 'breadcrumbData'));
+    }
+
+    public function generateTradingPlan(Request $request, TradingPlanGenerationService $generator): JsonResponse
+    {
+        $this->ensureMarketManager();
+        $data = $request->validate([
+            'section' => ['nullable', Rule::in(['bias', 'planA', 'planB', 'planC', 'riskManagement'])],
+            'market' => ['nullable', 'string', 'max:50'],
+            'timeframe' => ['nullable', 'string', 'max:20'],
+            'trend_structure' => ['nullable', Rule::in(['uptrend', 'downtrend', 'ranging'])],
+            'trend_strength' => ['nullable', Rule::in(['weak', 'medium', 'strong'])],
+            'rsi_level' => ['nullable', 'string', 'max:255'],
+            'order_block' => ['nullable', 'string', 'max:255'],
+            'market_overview' => ['nullable', 'string', 'max:8000'],
+            'supports' => ['nullable', 'string', 'max:500'],
+            'resistances' => ['nullable', 'string', 'max:500'],
+            'key_zones' => ['nullable', 'string', 'max:5000'],
+            'entry_zones_description' => ['nullable', 'string', 'max:5000'],
+            'analyst_view' => ['nullable', 'string', 'max:5000'],
+            'strategy' => ['nullable', 'string', 'max:5000'],
+            'chart_signals' => ['nullable', 'string', 'max:5000'],
+        ]);
+
+        try {
+            return response()->json($generator->generate($data, $data['section'] ?? null))
+                ->header('Cache-Control', 'private, no-store');
+        } catch (ValidationException $exception) {
+            throw $exception;
+        } catch (RuntimeException $exception) {
+            return response()->json(['message' => $exception->getMessage()], 503)
+                ->header('Cache-Control', 'private, no-store');
+        } catch (Throwable $exception) {
+            report($exception);
+            return response()->json(['message' => 'AI generation is unavailable. Your form has not changed. Please retry.'], 503)
+                ->header('Cache-Control', 'private, no-store');
+        }
+    }
+
+    public function generateReport(Request $request, MarketAnalystReportGenerator $generator): JsonResponse
+    {
+        $this->ensureMarketManager();
+        $fields = \App\Services\Ai\MarketAnalystGenerationSchema::FIELDS;
+        $rules = [
+            'mode' => ['required', Rule::in(['full', 'empty', 'section', 'field', 'improve'])],
+            'section' => ['required_if:mode,section', 'nullable', Rule::in(['report', 'market_structure', 'chinese_analysis', 'execution_plan'])],
+            'field' => ['required_if:mode,field,improve', 'nullable', Rule::in(array_keys($fields))],
+            'improve_style' => ['nullable', Rule::in(['professional', 'expand', 'summarize', 'clarity', 'grammar', 'simplified_chinese'])],
+            'market' => ['nullable', 'string', 'max:50'], 'analysis_date' => ['nullable', 'date'],
+            'trend_structure' => ['nullable', Rule::in(['uptrend', 'downtrend', 'ranging'])],
+            'trend_strength' => ['nullable', Rule::in(['weak', 'medium', 'strong'])],
+            'supports' => ['nullable', 'string', 'max:500'], 'resistances' => ['nullable', 'string', 'max:500'],
+        ];
+        foreach ($fields as $name => $meta) $rules[$name] = ['nullable', 'string', 'max:'.$meta['max']];
+        $data = $request->validate($rules);
+        try {
+            $result = $generator->generate($data);
+            AdminAudit::record($request->user(), 'market_analyst.ai_draft_generated', 'market_analysis', null,
+                ['mode' => $data['mode'], 'fields' => $result['requested_fields']]);
+            return response()->json($result)->header('Cache-Control', 'private, no-store');
+        } catch (ValidationException $exception) {
+            throw $exception;
+        } catch (RuntimeException $exception) {
+            return response()->json(['message' => $exception->getMessage()], 503)->header('Cache-Control', 'private, no-store');
+        } catch (Throwable $exception) {
+            report($exception);
+            return response()->json(['message' => 'AI generation is unavailable. Your form has not changed. Please retry.'], 503)
+                ->header('Cache-Control', 'private, no-store');
+        }
     }
 
     public function store(Request $request)
@@ -168,6 +244,22 @@ class MarketAnalystController extends Controller
             ]);
     }
 
+    public function publish(int $id, MarketOutlookPublicationService $outlooks)
+    {
+        $this->ensureMarketManager();
+        $outlooks->publish(MarketAnalysis::findOrFail($id));
+
+        return back()->with(['message' => 'Market outlook published to Trading Hub.', 'alert-type' => 'success']);
+    }
+
+    public function unpublish(int $id, MarketOutlookPublicationService $outlooks)
+    {
+        $this->ensureMarketManager();
+        $outlooks->unpublish(MarketAnalysis::findOrFail($id));
+
+        return back()->with(['message' => 'Market outlook unpublished.', 'alert-type' => 'success']);
+    }
+
     public function sendToDiscord($id)
     {
         $this->ensureMarketManager();
@@ -215,12 +307,14 @@ class MarketAnalystController extends Controller
 
                 if ($filePath && File::exists($filePath)) {
                     $response = Http::attach(
-                        'file',
+                        'files[0]',
                         File::get($filePath),
                         basename($filePath)
                     )->post($community->discord_webhook_outlook . '?wait=true', [
-                        'content' => $discordMessage,
-                        'allowed_mentions' => $allowedMentions,
+                        'payload_json' => json_encode([
+                            'content' => $discordMessage,
+                            'allowed_mentions' => $allowedMentions,
+                        ], JSON_THROW_ON_ERROR),
                     ]);
                 } else {
                     $response = Http::post($community->discord_webhook_outlook . '?wait=true', [
@@ -246,6 +340,7 @@ class MarketAnalystController extends Controller
             );
 
             $analysis->update(['discord_sent' => true]);
+            app(MarketOutlookPublicationService::class)->publish($analysis);
 
             return back()->with([
                 'message' => 'Market analysis sent or updated on Discord.',
@@ -259,7 +354,7 @@ class MarketAnalystController extends Controller
             ]);
 
             return back()->with([
-                'message' => 'Discord send failed: ' . $exception->getMessage(),
+                'message' => 'Discord delivery failed. No publication change was made; please retry or use the Trading Hub publish action.',
                 'alert-type' => 'error',
             ]);
         }
@@ -269,10 +364,8 @@ class MarketAnalystController extends Controller
     {
         $this->ensureTradingReader();
 
-        $query = MarketAnalysis::with('community')
-            ->whereHas('community', fn ($builder) => $builder->where('status', 1))
-            ->latest('analysis_date')
-            ->latest();
+        $outlooks = app(MarketOutlookPublicationService::class);
+        $query = $outlooks->visible($request->user());
 
         $this->applyFilters($query, $request);
 
@@ -282,44 +375,42 @@ class MarketAnalystController extends Controller
 
         $latestAnalysis = (clone $query)->first();
         $analyses = $query->paginate(9)->withQueryString();
-        $markets = MarketAnalysis::whereHas('community', fn ($builder) => $builder->where('status', 1))
+        $markets = $outlooks->visible($request->user())
             ->select('market')
             ->whereNotNull('market')
             ->distinct()
+            ->reorder()
             ->orderBy('market')
             ->pluck('market');
 
-        $totalOutlook = MarketAnalysis::whereHas('community', fn ($builder) => $builder->where('status', 1))->count();
-        $weeklyOutlook = MarketAnalysis::whereHas('community', fn ($builder) => $builder->where('status', 1))
-            ->where('created_at', '>=', now()->subDays(7))
+        $totalOutlook = $outlooks->visible($request->user())->count();
+        $weeklyOutlook = $outlooks->visible($request->user())
+            ->where('published_at', '>=', now()->subDays(7))
             ->count();
 
         $breadcrumbData = $this->breadcrumbs([
             ['label' => 'Market Analyst', 'url' => route('trading.market-analyst.index')],
         ]);
 
-        return view('traders.market_analyst.index', compact(
+        return response()->view('traders.market_analyst.index', compact(
             'analyses',
             'latestAnalysis',
             'markets',
             'totalOutlook',
             'weeklyOutlook',
             'breadcrumbData'
-        ));
+        ))->header('Cache-Control', 'private, no-store');
     }
 
     public function traderShow(MarketAnalysis $analysis)
     {
         $this->ensureTradingReader();
-        abort_unless($analysis->community && $analysis->community->status, 404);
+        $outlooks = app(MarketOutlookPublicationService::class);
+        $analysis = $outlooks->findVisibleOrFail($analysis->id, auth()->user());
 
-        $analysis->load('community');
-
-        $relatedAnalyses = MarketAnalysis::with('community')
+        $relatedAnalyses = $outlooks->visible(auth()->user())
             ->where('id', '!=', $analysis->id)
             ->where('market', $analysis->market)
-            ->whereHas('community', fn ($builder) => $builder->where('status', 1))
-            ->latest('analysis_date')
             ->take(3)
             ->get();
 
@@ -328,7 +419,8 @@ class MarketAnalystController extends Controller
             ['label' => $analysis->title, 'url' => route('trading.market-analyst.show', $analysis->id)],
         ]);
 
-        return view('traders.market_analyst.show', compact('analysis', 'relatedAnalyses', 'breadcrumbData'));
+        return response()->view('traders.market_analyst.show', compact('analysis', 'relatedAnalyses', 'breadcrumbData'))
+            ->header('Cache-Control', 'private, no-store');
     }
 
     private function validatedMarketAnalysisData(Request $request, bool $updating = false): array
@@ -580,7 +672,8 @@ class MarketAnalystController extends Controller
 
     private function ensureMarketManager(): void
     {
-        abort_unless(auth()->check() && in_array((int) auth()->user()->role_id, [1, 2, 501], true), 403);
+        abort_unless(auth()->check() && (string) auth()->user()->status === '1'
+            && in_array((int) auth()->user()->role_id, [1, 2, 501], true), 403);
     }
 
     private function ensureTradingReader(): void

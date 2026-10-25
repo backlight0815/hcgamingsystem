@@ -25,7 +25,7 @@
     }
     .notification-head h5 { margin: 0; color: #0f172a; font-weight: 700; }
     .notification-message { margin: 8px 0 0; color: #475569; }
-    .notification-meta { color: #64748b; font-size: 12px; margin-top: 8px; }
+    .notification-meta { color: #475569; font-size: 12px; margin-top: 8px; }
 </style>
 
 <div class="page-content notification-shell">

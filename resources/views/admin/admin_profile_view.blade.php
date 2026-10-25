@@ -26,6 +26,9 @@
     $discordConnectedAt = $adminData->discord_connected_at
         ? \Carbon\Carbon::parse($adminData->discord_connected_at)->format('d M Y H:i')
         : null;
+    $traderLevelProfile = data_get($traderLevelSnapshot ?? [], 'level', []);
+    $traderLevelSummary = data_get($traderLevelSnapshot ?? [], 'summary', []);
+    $traderBehaviorProfile = data_get($traderLevelSnapshot ?? [], 'behavior', []);
 @endphp
 
 <style>
@@ -145,6 +148,32 @@
         color: #1d4ed8;
     }
 
+    .status-pill.success,
+    .status-pill.primary {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .status-pill.success {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .status-pill.warning {
+        background: #fef3c7;
+        color: #b45309;
+    }
+
+    .status-pill.danger {
+        background: #ffe4e6;
+        color: #be123c;
+    }
+
+    .status-pill.secondary {
+        background: #e2e8f0;
+        color: #475569;
+    }
+
     .profile-note {
         color: #64748b;
         font-size: 12px;
@@ -152,9 +181,90 @@
         margin-top: 8px;
     }
 
+    .level-modal-button {
+        background: #0f766e;
+        border: 0;
+        border-radius: 8px;
+        color: #ffffff;
+        cursor: pointer;
+        display: inline-flex;
+        font-size: 12px;
+        font-weight: 900;
+        margin-top: 12px;
+        padding: 9px 12px;
+        text-transform: uppercase;
+    }
+
+    .trader-level-dialog {
+        border: 0;
+        border-radius: 12px;
+        box-shadow: 0 28px 80px rgba(15, 23, 42, .32);
+        max-width: 760px;
+        padding: 0;
+        width: min(92vw, 760px);
+    }
+
+    .trader-level-dialog::backdrop {
+        background: rgba(15, 23, 42, .64);
+    }
+
+    .trader-level-modal-head {
+        align-items: flex-start;
+        border-bottom: 1px solid #dbe4ef;
+        display: flex;
+        gap: 16px;
+        justify-content: space-between;
+        padding: 18px;
+    }
+
+    .trader-level-modal-head h5 {
+        color: #0f172a;
+        font-size: 18px;
+        font-weight: 900;
+        margin: 4px 0 0;
+    }
+
+    .trader-level-modal-close {
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        color: #334155;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 900;
+        padding: 8px 11px;
+        text-transform: uppercase;
+    }
+
+    .trader-level-modal-body {
+        max-height: 70vh;
+        overflow-y: auto;
+        padding: 18px;
+    }
+
+    .level-reasoning-box {
+        margin-top: 12px;
+        padding: 0;
+    }
+
+    .grade-grid {
+        display: grid;
+        gap: 8px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-top: 10px;
+    }
+
+    .grade-item {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
     @@media (max-width: 768px) {
         .profile-hero,
-        .profile-grid {
+        .profile-grid,
+        .grade-grid {
             grid-template-columns: 1fr;
         }
 
@@ -200,6 +310,72 @@
                     <div class="profile-item">
                         <span>Account Level</span>
                         <strong>{{ $displayRoleLabel }}</strong>
+                    </div>
+                    <div class="profile-item">
+                        <span>Trader Level</span>
+                        <strong>
+                            L{{ data_get($traderLevelProfile, 'level_number', 1) }}
+                            - {{ data_get($traderLevelProfile, 'label', 'No Data') }}
+                        </strong>
+                        <div class="profile-note">
+                            <span class="status-pill {{ data_get($traderLevelProfile, 'tone', 'secondary') }}">
+                                {{ data_get($traderLevelProfile, 'sample_label', 'No Data') }}
+                            </span>
+                            <span class="status-pill secondary">
+                                Grade {{ data_get($traderLevelProfile, 'grade', 'G') }}
+                            </span>
+                        </div>
+                        <div class="profile-note">
+                            Score {{ number_format((float) data_get($traderLevelProfile, 'score', 0), 2) }}/100 |
+                            Trades {{ number_format((int) data_get($traderLevelSummary, 'total_trades', 0)) }} |
+                            Net P/L {{ number_format((float) data_get($traderLevelSummary, 'net_profit_loss', 0), 2) }}u |
+                            Behavior {{ number_format((float) data_get($traderBehaviorProfile, 'final_score', data_get($traderBehaviorProfile, 'risk_score', 0)), 2) }}/100
+                        </div>
+                        <div class="profile-note">{{ data_get($traderLevelProfile, 'description', 'Add trading journal records to activate trader level evaluation.') }}</div>
+                        <button type="button" class="level-modal-button" data-trader-level-modal-open="admin-trader-level-modal">
+                            View Level Details
+                        </button>
+
+                        <dialog id="admin-trader-level-modal" class="trader-level-dialog" data-trader-level-modal>
+                            <div class="trader-level-modal-head">
+                                <div>
+                                    <div class="profile-kicker">Trader Level Details</div>
+                                    <h5>L{{ data_get($traderLevelProfile, 'level_number', 1) }} - {{ data_get($traderLevelProfile, 'label', 'No Data') }}</h5>
+                                </div>
+                                <button type="button" class="trader-level-modal-close" data-trader-level-modal-close>Close</button>
+                            </div>
+                            <div class="trader-level-modal-body">
+                                <div class="level-reasoning-box">
+                                    <div class="profile-note"><strong>Grade {{ data_get($traderLevelProfile, 'grade', 'G') }}:</strong> {{ data_get($traderLevelProfile, 'grade_description') }}</div>
+                                    <div class="profile-note"><strong>Level reason:</strong> {{ data_get($traderLevelProfile, 'level_explanation') }}</div>
+                                    @if(data_get($traderLevelProfile, 'cap_active'))
+                                        <div class="profile-note"><strong>Active cap:</strong> {{ data_get($traderLevelProfile, 'cap_reason') }}</div>
+                                        @foreach(collect(data_get($traderLevelProfile, 'cap_details', [])) as $capDetail)
+                                            <div class="profile-note">
+                                                <strong>L{{ data_get($capDetail, 'cap_level_number') }} {{ data_get($capDetail, 'label') }}</strong>
+                                                @if(data_get($capDetail, 'metric'))
+                                                    - {{ data_get($capDetail, 'metric') }}: {{ data_get($capDetail, 'value') }}
+                                                @endif
+                                                <br>
+                                                {{ data_get($capDetail, 'reason') }}
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                    @if(data_get($traderLevelProfile, 'next_level.requirement'))
+                                        <div class="profile-note"><strong>Next requirement:</strong> {{ data_get($traderLevelProfile, 'next_level.requirement') }}</div>
+                                    @endif
+                                    <div class="grade-grid">
+                                        @foreach(collect(data_get($traderLevelProfile, 'grade_scale', [])) as $gradeRow)
+                                            <div class="grade-item">
+                                                <strong>Grade {{ data_get($gradeRow, 'grade') }}</strong>
+                                                <div class="profile-note">{{ data_get($gradeRow, 'levels') }}</div>
+                                                <div class="profile-note">{{ data_get($gradeRow, 'description') }}</div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </dialog>
                     </div>
                     <div class="profile-item">
                         <span>Strategy Certification Status</span>
@@ -280,5 +456,41 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('[data-trader-level-modal-open]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                const modal = document.getElementById(button.getAttribute('data-trader-level-modal-open'));
+
+                if (modal && typeof modal.showModal === 'function') {
+                    modal.showModal();
+                } else if (modal) {
+                    modal.setAttribute('open', 'open');
+                }
+            });
+        });
+
+        document.querySelectorAll('[data-trader-level-modal-close]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                const modal = button.closest('dialog');
+
+                if (modal && typeof modal.close === 'function') {
+                    modal.close();
+                } else if (modal) {
+                    modal.removeAttribute('open');
+                }
+            });
+        });
+
+        document.querySelectorAll('dialog[data-trader-level-modal]').forEach(function (modal) {
+            modal.addEventListener('click', function (event) {
+                if (event.target === modal && typeof modal.close === 'function') {
+                    modal.close();
+                }
+            });
+        });
+    });
+</script>
 
 @endsection

@@ -1,0 +1,34 @@
+{
+  "name": "hc-trader-notifications",
+  "private": true,
+  "main": "index.js",
+  "engines": {
+    "node": "22"
+  },
+  "scripts": {
+    "check": "node --check index.js && node --check trading_signal_update_functions.js && node --check stock_market_functions.js && node --check feature_configuration_functions.js && node --check leaderboard_functions.js && node --check publishing_schedule_functions.js && node --check registration_functions.js && node --check role_permissions.js && node --check performance_rating_engine.js && node --check performance_rating_functions.js && node --check mt5_import_functions.js && node --check daily_quiz_functions.js && node --check coursework_functions.js && node --check market_analyst_functions.js && node --check publisher_audit_functions.js && node --check trade_call_statistics_functions.js && node --check scripts/seed_knowledge_centre_categories.js && node --check scripts/repair_designated_referral.js && node --check scripts/migrate_rbac_ratings_v3.js && node --check scripts/migrate_admin_user_search_v1.js && node --check scripts/cleanup_obsolete_metadata_v4.js && node --check scripts/migrate_personality_assessments_v1.js && node --check scripts/migrate_daily_exam_to_coursework_legacy.js && node --check scripts/migrate_coursework_theme_references.js && node --check scripts/audit_mt5_balance_misclassification.js",
+    "test": "node test/financial_platform_functions.test.js && node test/referral_registration.test.js && node test/role_permissions.test.js && node test/performance_rating_engine.test.js && node test/mt5_import_functions.test.js && node test/migration_v3.test.js && node test/admin_user_search_migration.test.js && node test/cleanup_metadata_v4.test.js && node test/personality_migration_v1.test.js && node test/daily_quiz_functions.test.js && node test/coursework_functions.test.js && node test/coursework_theme_migration.test.js && node test/trade_call_statistics_functions.test.js && node test/trading_signal_update_functions.test.js && node test/publisher_audit_functions.test.js && node test/account_deletion_scope.test.js",
+    "test:rules": "node test/mt5_main_account_rules.test.js && node test/multiple_account_strategy_rules.test.js && node test/security_rules_v4.test.js && node test/trading_signal_lifecycle_rules.test.js && node test/coursework_seed_rules.test.js && node test/storage_rules_v4.test.js",
+    "test:multiple-account:rules": "node test/multiple_account_strategy_rules.test.js",
+    "test:coursework:rules": "node test/coursework_seed_rules.test.js",
+    "seed:knowledge-categories": "node scripts/seed_knowledge_centre_categories.js",
+    "repair:designated-referral": "node scripts/repair_designated_referral.js",
+    "migrate:rbac-ratings": "node scripts/migrate_rbac_ratings_v3.js",
+    "migrate:admin-user-search": "node scripts/migrate_admin_user_search_v1.js",
+    "cleanup:metadata": "node scripts/cleanup_obsolete_metadata_v4.js",
+    "migrate:personality": "node scripts/migrate_personality_assessments_v1.js",
+    "audit:mt5-balances": "node scripts/audit_mt5_balance_misclassification.js",
+    "migrate:coursework-themes": "node scripts/migrate_coursework_theme_references.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.10.0",
+    "firebase-functions": "^7.2.5"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.0",
+    "firebase": "^12.7.0"
+  },
+  "overrides": {
+    "uuid": "^11.1.1"
+  }
+}

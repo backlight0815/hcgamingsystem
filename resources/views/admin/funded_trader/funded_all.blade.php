@@ -45,6 +45,45 @@
     .review-badge.daily { background: #fef3c7; color: #92400e; }
     .review-badge.total { background: #fee2e2; color: #991b1b; }
     .review-badge.locked { background: #fee2e2; color: #991b1b; }
+    .review-badge.risk-high { background: #fee2e2; color: #991b1b; }
+    .review-badge.risk-mid { background: #fef3c7; color: #92400e; }
+    .review-badge.risk-low { background: #dcfce7; color: #166534; }
+
+    .risk-filter-bar {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .risk-filter-card {
+        border: 1px solid #dfe5ec;
+        border-radius: 8px;
+        color: #334155;
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 14px;
+        text-decoration: none;
+    }
+
+    .risk-filter-card:hover {
+        color: #0f172a;
+        text-decoration: none;
+    }
+
+    .risk-filter-card.active {
+        border-color: #2563eb;
+        box-shadow: inset 0 0 0 1px #2563eb;
+    }
+
+    .risk-filter-card span {
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+    }
+
+    .risk-filter-card strong {
+        font-size: 18px;
+    }
 
     .question-box {
         display: none;
@@ -92,19 +131,37 @@
         @endif
 
         <div class="row mb-4">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-4 col-xl-2 mb-3">
                 <div class="prop-card metric">
                     <span>Waiting Review</span>
-                    <strong>{{ $reviewTraders->count() }}</strong>
+                    <strong>{{ $allReviewTradersCount ?? $reviewTraders->count() }}</strong>
                 </div>
             </div>
-            <div class="col-md-4 mb-3">
+            <div class="col-md-4 col-xl-2 mb-3">
+                <div class="prop-card metric">
+                    <span>High Risk</span>
+                    <strong>{{ data_get($reviewRiskSummary ?? [], 'high.count', 0) }}</strong>
+                </div>
+            </div>
+            <div class="col-md-4 col-xl-2 mb-3">
+                <div class="prop-card metric">
+                    <span>Mid Risk</span>
+                    <strong>{{ data_get($reviewRiskSummary ?? [], 'mid.count', 0) }}</strong>
+                </div>
+            </div>
+            <div class="col-md-4 col-xl-2 mb-3">
+                <div class="prop-card metric">
+                    <span>Low Risk</span>
+                    <strong>{{ data_get($reviewRiskSummary ?? [], 'low.count', 0) }}</strong>
+                </div>
+            </div>
+            <div class="col-md-4 col-xl-2 mb-3">
                 <div class="prop-card metric">
                     <span>Funded Approved</span>
                     <strong>{{ $fundedTraders->count() }}</strong>
                 </div>
             </div>
-            <div class="col-md-4 mb-3">
+            <div class="col-md-4 col-xl-2 mb-3">
                 <div class="prop-card metric">
                     <span>Rejected</span>
                     <strong>{{ $rejectedTraders->count() }}</strong>
@@ -116,7 +173,31 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="mb-0">Manual Review Queue</h5>
-                    <span class="text-muted small">Approval unlocks the next stage.</span>
+                    <span class="text-muted small">Showing {{ $reviewTraders->count() }} of {{ $allReviewTradersCount ?? $reviewTraders->count() }} review(s), sorted by risk priority.</span>
+                </div>
+
+                @php
+                    $riskFilters = [
+                        ['key' => 'all', 'label' => 'All Reviews', 'count' => data_get($reviewRiskSummary ?? [], 'all.count', $allReviewTradersCount ?? $reviewTraders->count())],
+                        ['key' => 'high', 'label' => 'High Risk', 'count' => data_get($reviewRiskSummary ?? [], 'high.count', 0)],
+                        ['key' => 'mid', 'label' => 'Mid Risk', 'count' => data_get($reviewRiskSummary ?? [], 'mid.count', 0)],
+                        ['key' => 'low', 'label' => 'Low Risk', 'count' => data_get($reviewRiskSummary ?? [], 'low.count', 0)],
+                    ];
+                @endphp
+
+                <div class="risk-filter-bar mb-3">
+                    @foreach($riskFilters as $filter)
+                        @php
+                            $isActiveRiskFilter = ($selectedRiskCategory ?? 'all') === $filter['key'];
+                            $riskFilterUrl = $filter['key'] === 'all'
+                                ? route('admin.funded_traders.index')
+                                : route('admin.funded_traders.index', ['risk_category' => $filter['key']]);
+                        @endphp
+                        <a href="{{ $riskFilterUrl }}" class="risk-filter-card {{ $isActiveRiskFilter ? 'active' : '' }}">
+                            <span>{{ $filter['label'] }}</span>
+                            <strong>{{ $filter['count'] }}</strong>
+                        </a>
+                    @endforeach
                 </div>
 
                 <div class="table-responsive">
@@ -124,6 +205,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Trader</th>
+                                <th>Risk Priority</th>
                                 <th>Current Phase</th>
                                 <th>Review Gate</th>
                                 <th>Lock</th>
@@ -136,18 +218,55 @@
                             @forelse($reviewTraders as $trader)
                                 @php
                                     $reviewStatus = $trader->prop_firm_review_status;
-                                    $isProfitTargetReview = $reviewStatus === 'phase1_profit_target_review';
+                                    $isPhase1ProfitTargetReview = $reviewStatus === 'phase1_profit_target_review';
+                                    $isPhase2ProfitTargetReview = $reviewStatus === 'phase2_profit_target_review';
+                                    $isProfitTargetReview = $isPhase1ProfitTargetReview || $isPhase2ProfitTargetReview;
                                     $isPhase2Review = $reviewStatus === 'pending_phase2';
+                                    $isFundedReview = $reviewStatus === 'pending_funded';
                                     $isDailyLossReview = $reviewStatus === 'daily_loss_review';
                                     $isTotalLossReview = $reviewStatus === 'total_loss_review';
                                     $reviewBadgeClass = $isTotalLossReview ? 'total' : ($isDailyLossReview ? 'daily' : ($isProfitTargetReview ? 'profit-review' : ($isPhase2Review ? 'phase2' : 'funded')));
                                     $reviewLabel = $isTotalLossReview ? 'Total Loss Review' : ($isDailyLossReview ? 'Daily Loss Review' : ($isProfitTargetReview ? 'Profit Target Review' : ($isPhase2Review ? 'Approve Phase 2' : 'Approve Funded Account')));
-                                    $profitableDayRule = $trader->phase1_profitable_day_rule ?? null;
+                                    $profitableDayRule = $trader->profit_target_profitable_day_rule ?? $trader->phase1_profitable_day_rule ?? null;
+                                    $currentProfitableDays = (int) data_get($profitableDayRule, 'profitable_days', 0);
+                                    $defaultRequiredDays = (int) data_get($profitableDayRule, 'required_days', 3);
+                                    $requireDayOptions = collect([1, 2])
+                                        ->map(function ($additionalDays) use ($currentProfitableDays, $defaultRequiredDays) {
+                                            $totalRequiredDays = min($defaultRequiredDays, max(1, $currentProfitableDays + $additionalDays));
+
+                                            return [
+                                                'additional' => $additionalDays,
+                                                'total' => $totalRequiredDays,
+                                            ];
+                                        })
+                                        ->filter(fn ($option) => $option['total'] > $currentProfitableDays)
+                                        ->unique('total')
+                                        ->values();
+                                    $approveNowLabel = $isPhase2ProfitTargetReview ? 'Approve Funded Now' : 'Approve Phase 2 Now';
+                                    $approveNowConfirm = $isPhase2ProfitTargetReview
+                                        ? 'Approve funded account now without waiting for additional profitable days?'
+                                        : 'Approve Phase 2 now without waiting for additional profitable days?';
+                                    $requireDaysRoute = $isPhase2ProfitTargetReview
+                                        ? route('admin.funded_traders.phase_two.require_profitable_days', $trader->id)
+                                        : route('admin.funded_traders.phase_one.require_profitable_days', $trader->id);
+                                    $riskProfile = (array) ($trader->admin_risk_profile ?? []);
+                                    $riskCategory = data_get($riskProfile, 'category', 'low');
                                 @endphp
                                 <tr>
                                     <td>
                                         <strong>{{ $trader->name ?: $trader->username }}</strong>
                                         <div class="text-muted small">{{ $trader->email }}</div>
+                                    </td>
+                                    <td>
+                                        <span class="review-badge risk-{{ $riskCategory }}">
+                                            {{ data_get($riskProfile, 'label', 'Low Risk') }}
+                                        </span>
+                                        <div class="small mt-1">
+                                            Score:
+                                            <strong>{{ number_format((float) data_get($riskProfile, 'score', 0), 2) }}/100</strong>
+                                        </div>
+                                        <div class="text-muted small">{{ data_get($riskProfile, 'style_label', 'Controlled Trader') }}</div>
+                                        <div class="text-muted small">{{ data_get($riskProfile, 'priority_note', 'Review by normal queue order.') }}</div>
                                     </td>
                                     <td>Phase {{ $trader->prop_firm_phase ?? 1 }}</td>
                                     <td>
@@ -184,16 +303,26 @@
                                         @if($isProfitTargetReview)
                                             <form action="{{ route('admin.funded_traders.approve', $trader->id) }}" method="POST" class="d-inline">
                                                 @csrf
-                                                <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Approve Phase 2 now without waiting for 3 profitable days?');">
-                                                    Approve Phase 2 Now
+                                                <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('{{ $approveNowConfirm }}');">
+                                                    {{ $approveNowLabel }}
                                                 </button>
                                             </form>
-                                            <form action="{{ route('admin.funded_traders.phase_one.require_profitable_days', $trader->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                <button type="submit" class="btn btn-outline-secondary btn-sm" onclick="return confirm('Require this trader to complete 3 profitable days before Phase 2?');">
-                                                    Require 3 Days
-                                                </button>
-                                            </form>
+                                            @foreach($requireDayOptions as $option)
+                                                @php
+                                                    $additionalDays = (int) $option['additional'];
+                                                    $totalRequiredDays = (int) $option['total'];
+                                                    $requireDaysConfirm = $isPhase2ProfitTargetReview
+                                                        ? 'Require this trader to complete ' . $totalRequiredDays . ' total profitable day(s) before funded account approval?'
+                                                        : 'Require this trader to complete ' . $totalRequiredDays . ' total profitable day(s) before Phase 2?';
+                                                @endphp
+                                                <form action="{{ $requireDaysRoute }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <input type="hidden" name="required_profitable_days" value="{{ $totalRequiredDays }}">
+                                                    <button type="submit" class="btn btn-outline-secondary btn-sm" onclick="return confirm('{{ $requireDaysConfirm }}');">
+                                                        Require {{ $additionalDays }} More {{ \Illuminate\Support\Str::plural('Day', $additionalDays) }}
+                                                    </button>
+                                                </form>
+                                            @endforeach
                                             <form action="{{ route('admin.funded_traders.reject', $trader->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Reject this prop firm review?');">
@@ -247,7 +376,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7" class="p-0">
+                                    <td colspan="8" class="p-0">
                                         <div class="question-box" id="question-{{ $trader->id }}">
                                             <form action="{{ route('admin.funded_traders.questions.store', $trader->id) }}" method="POST">
                                                 @csrf
@@ -279,7 +408,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center text-muted py-4">No trader is waiting for manual review.</td>
+                                    <td colspan="8" class="text-center text-muted py-4">No trader matches this review filter.</td>
                                 </tr>
                             @endforelse
                         </tbody>

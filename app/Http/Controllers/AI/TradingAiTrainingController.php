@@ -32,7 +32,7 @@ class TradingAiTrainingController extends Controller
                 $query->where(fn ($q) => $q->where('title', 'like', '%'.$term.'%')->orWhere('content', 'like', '%'.$term.'%'));
             })->when(in_array($request->query('status'), array_keys($this->statuses()), true),
                 fn ($query) => $query->where('status', $request->query('status')))
-            ->when(in_array($request->query('language'), ['en', 'zh'], true),
+            ->when(in_array($request->query('language'), ['en', 'zh', 'ms'], true),
                 fn ($query) => $query->where('language', $request->query('language')))
             ->orderByDesc('updated_at')->paginate(15, ['*'], 'questions_page')->withQueryString();
         $unanswered = DB::table('ai_unanswered_questions as u')
@@ -52,10 +52,14 @@ class TradingAiTrainingController extends Controller
         $topTopics = DB::table('ai_unanswered_questions')->select('category')
             ->selectRaw('SUM(frequency) as questions')
             ->groupBy('category')->orderByDesc('questions')->limit(5)->get();
+        $needsReview = AiKnowledgeBase::query()->where('entry_type', 'article')
+            ->whereIn('status', ['active', 'published'])
+            ->where(fn ($query) => $query->whereNull('last_verified_at')
+                ->orWhere('last_verified_at', '<', now()->subDays(180)))->count();
         return view('admin.ai_knowledge_base.training', [
             'tab' => $tab, 'entries' => $entries, 'unanswered' => $unanswered,
             'history' => $history, 'metrics' => $metrics, 'topTopics' => $topTopics,
-            'statuses' => $this->statuses(),
+            'statuses' => $this->statuses(), 'needsReview' => $needsReview,
             'modules' => AiKnowledgeBase::modules(), 'settings' => TradingAiSettings::get(),
         ]);
     }
@@ -229,7 +233,7 @@ class TradingAiTrainingController extends Controller
     {
         $this->authorizeAdmin($request);
         $data = $request->validate(['question' => ['required', 'string', 'min:2', 'max:2000'],
-            'language' => ['required', Rule::in(['en', 'zh'])]]);
+            'language' => ['required', Rule::in(['en', 'zh', 'ms'])]]);
         $settings = TradingAiSettings::get();
         $result = $assistant->answer($data['question'], $request->user(), [
             'language' => $data['language'], 'maximum_risk_percent' => $settings['maximum_risk_percent'],
@@ -271,7 +275,7 @@ class TradingAiTrainingController extends Controller
             'alternative_questions' => ['nullable', 'string', 'max:4000'],
             'keywords' => ['nullable', 'string', 'max:500'],
             'module' => ['required', Rule::in(array_keys(AiKnowledgeBase::modules()))],
-            'language' => ['required', Rule::in(['en', 'zh'])],
+            'language' => ['required', Rule::in(['en', 'zh', 'ms'])],
             'priority' => ['required', 'integer', 'min:0', 'max:100'],
             'effective_at' => ['nullable', 'date'],
         ]);

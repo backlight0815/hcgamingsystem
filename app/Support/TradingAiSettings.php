@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 
 class TradingAiSettings
 {
-    public const BUILD = 2;
+    public const BUILD = 3;
 
     public static function get(): array
     {
@@ -38,6 +38,9 @@ class TradingAiSettings
             'language_fallback' => in_array($settings['language_fallback'] ?? 'en', ['en', 'none'], true)
                 ? ($settings['language_fallback'] ?? 'en') : 'en',
             'response_rules' => (string) ($settings['response_rules'] ?? 'Answer from published, approved TradingHub knowledge. Explain terms clearly. Ask for clarification when needed. Never invent live prices, account data, policies or guaranteed profits. Escalate unsupported customer support questions.'),
+            'live_data_enabled' => false,
+            'chart_reading_enabled' => false,
+            'journal_mode_enabled' => filter_var($settings['journal_mode_enabled'] ?? '1', FILTER_VALIDATE_BOOLEAN),
         ];
     }
 }

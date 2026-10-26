@@ -896,6 +896,7 @@ Route::middleware(['auth'])->controller(GeminiAssistantController::class)->group
     Route::get('/ai-assistant', 'index')->name('ai.assistant.index');
     Route::get('/ai-assistant/status', 'status')->name('ai.assistant.status');
     Route::post('/ai-assistant/ask', 'ask')->middleware('throttle:15,1')->name('ai.assistant.ask');
+    Route::post('/ai-assistant/questions/{message}/retry', 'retry')->middleware('throttle:15,1')->name('ai.assistant.retry');
     Route::get('/ai-assistant/conversations', 'conversations')->name('ai.assistant.conversations');
     Route::post('/ai-assistant/conversations', 'createConversation')->name('ai.assistant.conversations.create');
     Route::get('/ai-assistant/conversations/{conversation}/messages', 'messages')->name('ai.assistant.messages');
@@ -905,6 +906,7 @@ Route::middleware(['auth'])->controller(GeminiAssistantController::class)->group
     Route::put('/ai-assistant/preferences', 'savePreferences')->name('ai.assistant.preferences.update');
     Route::post('/ai-assistant/risk', 'risk')->middleware('throttle:30,1')->name('ai.assistant.risk');
     Route::post('/ai-assistant/break-even', 'breakEven')->middleware('throttle:30,1')->name('ai.assistant.break_even');
+    Route::post('/ai-assistant/performance', 'performance')->middleware('throttle:30,1')->name('ai.assistant.performance');
     Route::post('/ai-assistant/structure', 'structure')->middleware('throttle:30,1')->name('ai.assistant.structure');
     Route::post('/ai-assistant/feedback', 'feedback')->name('ai.assistant.feedback');
 });
@@ -912,6 +914,7 @@ Route::middleware(['auth'])->controller(GeminiAssistantController::class)->group
 Route::middleware(['auth'])->controller(\App\Http\Controllers\AI\TradingAiSettingsController::class)->group(function (): void {
     Route::get('/admin/ai-settings', 'index')->name('admin.ai_settings.index');
     Route::put('/admin/ai-settings', 'update')->name('admin.ai_settings.update');
+    Route::post('/admin/ai-settings/feedback/{feedback}/resolve', 'resolveFeedback')->name('admin.ai_settings.feedback.resolve');
 });
 
 Route::middleware(['auth'])->controller(\App\Http\Controllers\AI\TradingAiTrainingController::class)->group(function (): void {
@@ -928,12 +931,19 @@ Route::middleware(['auth'])->controller(\App\Http\Controllers\AI\TradingAiTraini
     Route::post('/admin/ai-training/{entry}/rollback/{version}', 'rollback')->name('admin.ai_training.rollback');
 });
 
+Route::middleware(['auth'])->controller(\App\Http\Controllers\AI\TradingAiPromptController::class)->group(function (): void {
+    Route::get('/admin/ai-prompts', 'index')->name('admin.ai_prompts.index');
+    Route::post('/admin/ai-prompts', 'store')->name('admin.ai_prompts.store');
+    Route::post('/admin/ai-prompts/{prompt}/transition', 'transition')->name('admin.ai_prompts.transition');
+});
+
 Route::middleware(['auth'])->controller(AiKnowledgeBaseController::class)->group(function (): void {
     Route::get('/admin/ai-knowledge-base', 'index')->name('admin.ai_knowledge_base.index');
     Route::get('/admin/ai-knowledge-base/create', 'create')->name('admin.ai_knowledge_base.create');
     Route::post('/admin/ai-knowledge-base', 'store')->name('admin.ai_knowledge_base.store');
     Route::get('/admin/ai-knowledge-base/{knowledgeBase}/edit', 'edit')->name('admin.ai_knowledge_base.edit');
     Route::put('/admin/ai-knowledge-base/{knowledgeBase}', 'update')->name('admin.ai_knowledge_base.update');
+    Route::post('/admin/ai-knowledge-base/{knowledgeBase}/transition', 'transition')->name('admin.ai_knowledge_base.transition');
     Route::delete('/admin/ai-knowledge-base/{knowledgeBase}', 'destroy')->name('admin.ai_knowledge_base.destroy');
 });
 

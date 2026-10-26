@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
         CommunityShowcaseSeeder::class,
         AiKnowledgeBaseSeeder::class,
         TradingCoachKnowledgeSeeder::class,
+        TradingAiMasterPromptSeeder::class,
+        TradingAiCurriculumSeeder::class,
         FinalExamQuestionSeeder::class,
     ]);
 }

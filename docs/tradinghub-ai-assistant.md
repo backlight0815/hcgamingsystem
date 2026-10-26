@@ -1,5 +1,7 @@
 # TradingHub AI assistant
 
+Build 3 extends this build 2 design with a versioned master prompt, multilingual curriculum, decimal performance calculations and linked answer retries. See `docs/tradinghub-ai-v3-runbook.md` for the current operator and release checklist.
+
 ## Files changed
 
 - Chat: `app/Http/Controllers/AI/GeminiAssistantController.php`, `app/Services/TradingHubAssistantService.php`, `app/Services/GeminiAssistantService.php`, `resources/views/ai/assistant/index.blade.php`, `routes/web.php`.
@@ -29,7 +31,7 @@ The assistant never sends raw database records or user identifiers to Gemini. Kn
 
 Foreign keys delete dependent messages and feedback when a conversation is deleted. An admin “Unpublish” action retains a knowledge record. The `trading-ai:prune` scheduled command removes conversations and usage older than the configured retention period (90 days by default).
 
-`2026_10_25_000002_add_trading_ai_training_and_question_tracking.php` adds FAQ workflow fields to the existing knowledge table, a version metadata snapshot, TradingHub conversation scoping, message idempotency/status/source/timing fields, separate long-text response settings, and a privacy-redacted unanswered question queue. Existing knowledge articles remain `active`; new FAQ entries are visible only when their status is `published`, they have approval metadata, and their effective date has arrived. The assistant module build is 2.
+`2026_10_25_000002_add_trading_ai_training_and_question_tracking.php` adds FAQ workflow fields to the existing knowledge table, a version metadata snapshot, TradingHub conversation scoping, message idempotency/status/source/timing fields, separate long-text response settings, and a privacy-redacted unanswered question queue. Existing knowledge articles remain `active`; new FAQ entries are visible only when their status is `published`, they have approval metadata, and their effective date has arrived. This was assistant module build 2; the current build is 3.
 
 `2026_10_25_000003_track_trading_ai_unanswered_status.php` records the original AI result (`unanswered` or `failed`) on grouped review questions.
 

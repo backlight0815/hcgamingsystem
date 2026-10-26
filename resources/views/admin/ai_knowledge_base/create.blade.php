@@ -48,7 +48,7 @@
                                 <label for="status" class="form-label">Status</label>
                                 <select name="status" id="status" class="form-control" required>
                                     @foreach($statuses as $value => $label)
-                                        <option value="{{ $value }}" {{ old('status', 'active') === $value ? 'selected' : '' }}>{{ $label }}</option>
+                                        <option value="{{ $value }}" {{ old('status', 'draft') === $value ? 'selected' : '' }}>{{ $label }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -58,7 +58,15 @@
                                 <div class="col-md-4 mb-3"><label for="language" class="form-label">Language</label><input name="language" id="language" class="form-control" maxlength="12" value="{{ old('language', 'en') }}"></div>
                                 <div class="col-md-4 mb-3"><label for="reviewed_at" class="form-label">Last reviewed</label><input type="date" name="reviewed_at" id="reviewed_at" class="form-control" value="{{ old('reviewed_at') }}"></div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Create Record</button>
+                            <div class="row">
+                                <div class="col-md-4 mb-3"><label for="assetClasses" class="form-label">Asset classes</label><input id="assetClasses" name="asset_classes" class="form-control" value="{{ old('asset_classes') }}" placeholder="forex, metals"></div>
+                                <div class="col-md-4 mb-3"><label for="sourceType" class="form-label">Source type</label><select id="sourceType" name="source_type" class="form-control"><option value="editorial">HC editorial</option><option value="primary_source">Primary source</option><option value="platform_documentation">Platform documentation</option><option value="owner_specification">Owner specification</option></select></div>
+                                <div class="col-md-4 mb-3"><label for="contentOwner" class="form-label">Content owner</label><input id="contentOwner" name="content_owner" class="form-control" maxlength="100" value="{{ old('content_owner','HC TradingHub') }}"></div>
+                                <div class="col-md-6 mb-3"><label for="sourceUrl" class="form-label">Original source URL, if applicable</label><input id="sourceUrl" name="source_url" type="url" class="form-control" value="{{ old('source_url') }}"></div>
+                                <div class="col-md-3 mb-3"><label for="lastVerified" class="form-label">Last verified</label><input id="lastVerified" name="last_verified_at" type="date" class="form-control" value="{{ old('last_verified_at') }}"></div>
+                                <div class="col-md-3 mb-3"><label for="effectiveUntil" class="form-label">Expires</label><input id="effectiveUntil" name="effective_until" type="date" class="form-control" value="{{ old('effective_until') }}"></div>
+                            </div>
+                            <p class="text-muted small">New articles begin as Draft and require review, approval and publication.</p><button type="submit" class="btn btn-primary">Create Draft</button>
                         </form>
                     </div>
                 </div>

@@ -8,6 +8,7 @@ use App\Services\TradingIdeaRiskCalculator;
 use App\Services\MarketStructureEvaluator;
 use App\Support\ModuleAccess;
 use App\Support\TradingAiSettings;
+use App\Support\TradingAiPrompt;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +41,8 @@ class GeminiAssistantController extends Controller
             'mode' => $settings['operation_mode'],
             'knowledge_available' => \App\Models\AiKnowledgeBase::query()->active()->exists(),
             'external_generation_enabled' => $settings['external_enabled'] && $settings['operation_mode'] !== 'knowledge_only',
+            'live_data_enabled' => $settings['live_data_enabled'],
+            'chart_reading_enabled' => $settings['chart_reading_enabled'],
         ])->header('Cache-Control', 'private, no-store');
     }
 
@@ -152,6 +155,26 @@ class GeminiAssistantController extends Controller
         ]);
     }
 
+    public function performance(Request $request, TradingIdeaRiskCalculator $calculator): JsonResponse
+    {
+        $this->authorized($request);
+        $data = $request->validate([
+            'net_result' => ['required', 'numeric'], 'planned_risk' => ['required', 'numeric', 'gt:0'],
+            'win_rate_percent' => ['required', 'numeric', 'between:0,100'],
+            'average_win' => ['required', 'numeric', 'min:0'], 'average_loss' => ['required', 'numeric', 'min:0'],
+            'peak_equity' => ['required', 'numeric', 'gt:0'],
+            'current_equity' => ['required', 'numeric', 'min:0', 'lte:peak_equity'],
+            'spread' => ['required', 'numeric', 'min:0'], 'units' => ['required', 'numeric', 'gt:0'],
+            'value_per_price_unit' => ['required', 'numeric', 'gt:0'],
+        ]);
+        return response()->json($calculator->performance(
+            (float) $data['net_result'], (float) $data['planned_risk'],
+            (float) $data['win_rate_percent'], (float) $data['average_win'], (float) $data['average_loss'],
+            (float) $data['peak_equity'], (float) $data['current_equity'],
+            (float) $data['spread'], (float) $data['units'], (float) $data['value_per_price_unit'],
+        ));
+    }
+
     public function structure(Request $request, MarketStructureEvaluator $evaluator): JsonResponse
     {
         $this->authorized($request);
@@ -189,12 +212,13 @@ class GeminiAssistantController extends Controller
             if ($existing->content !== $question || ($conversationId && (int) $existing->conversation_id !== (int) $conversationId)) {
                 return response()->json(['message' => 'This message identifier was already used for a different question.'], 409);
             }
-            $reply = DB::table('ai_chat_messages')->where('reply_to_message_id', $existing->id)->first();
+            $reply = DB::table('ai_chat_messages')->where('reply_to_message_id', $existing->id)->orderByDesc('id')->first();
             if ($reply) return response()->json([
                 'answer' => $reply->content, 'sources' => json_decode($reply->sources ?? '[]', true) ?: [],
                 'response_source' => $reply->response_source, 'unanswered' => in_array($reply->status, ['unanswered', 'failed'], true),
                 'conversation_id' => $existing->conversation_id, 'question_id' => $existing->id,
                 'message_id' => $reply->id, 'duplicate' => true,
+                'answer_type' => $reply->answer_type, 'prompt_version' => $reply->prompt_version,
             ])->header('Cache-Control', 'private, no-store');
             return response()->json(['message' => 'Your question is saved and still being processed.',
                 'conversation_id' => $existing->conversation_id, 'question_id' => $existing->id,
@@ -213,8 +237,12 @@ class GeminiAssistantController extends Controller
             return response()->json(['message' => 'Daily AI request limit reached. Please try again tomorrow.'], 429);
         }
         $preferences = $this->getPreferences($request);
+        if (! DB::table('ai_chat_preferences')->where('user_id', $request->user()->id)->exists()) {
+            $preferences['language'] = $this->detectLanguage($question);
+        }
+        $policy = TradingAiPrompt::current();
         try {
-            [$conversationId, $questionId, $usageId] = DB::transaction(function () use ($request, $conversationId, $question, $clientId, $preferences): array {
+            [$conversationId, $questionId, $usageId] = DB::transaction(function () use ($request, $conversationId, $question, $clientId, $preferences, $policy): array {
                 if (! $conversationId) {
                     $conversationId = DB::table('ai_chat_conversations')->insertGetId([
                         'user_id' => $request->user()->id, 'module' => 'tradinghub',
@@ -224,10 +252,12 @@ class GeminiAssistantController extends Controller
                 $questionId = DB::table('ai_chat_messages')->insertGetId([
                     'conversation_id' => $conversationId, 'role' => 'user', 'content' => $question,
                     'client_message_id' => $clientId, 'status' => 'pending',
-                    'language' => $preferences['language'], 'created_at' => now(), 'updated_at' => now(),
+                    'language' => $preferences['language'], 'prompt_version' => $policy['version'],
+                    'created_at' => now(), 'updated_at' => now(),
                 ]);
                 $usageId = DB::table('ai_chat_usage')->insertGetId(['user_id' => $request->user()->id,
-                    'status' => 'started', 'created_at' => now(), 'updated_at' => now()]);
+                    'status' => 'started', 'request_id' => $clientId,
+                    'prompt_version' => $policy['version'], 'created_at' => now(), 'updated_at' => now()]);
                 return [$conversationId, $questionId, $usageId];
             });
         } catch (\Illuminate\Database\UniqueConstraintViolationException $exception) {
@@ -236,9 +266,77 @@ class GeminiAssistantController extends Controller
             report($exception);
             return response()->json(['message' => 'Your question could not be saved. Please retry.'], 503);
         }
+        return $this->completeQuestion($request, $assistant, $question, $conversationId, $questionId,
+            $usageId, $preferences, $history, $idea, $policy, true);
+    }
+
+    public function retry(Request $request, TradingHubAssistantService $assistant, int $message): JsonResponse
+    {
+        $this->authorized($request);
+        $attemptId = $request->validate(['attempt_id' => ['required', 'uuid']])['attempt_id'];
+        $question = DB::table('ai_chat_messages as m')
+            ->join('ai_chat_conversations as c', 'c.id', '=', 'm.conversation_id')
+            ->where('m.id', $message)->where('m.role', 'user')
+            ->where('c.user_id', $request->user()->id)->where('c.module', 'tradinghub')
+            ->select('m.*')->first();
+        abort_unless($question, 404);
+        $existing = DB::table('ai_chat_messages')->where('client_message_id', $attemptId)->first();
+        if ($existing) {
+            abort_unless((int) $existing->reply_to_message_id === (int) $question->id, 409);
+            return response()->json(['answer' => $existing->content,
+                'sources' => json_decode($existing->sources ?? '[]', true) ?: [],
+                'response_source' => $existing->response_source, 'answer_type' => $existing->answer_type,
+                'prompt_version' => $existing->prompt_version,
+                'unanswered' => in_array($existing->status, ['unanswered', 'failed'], true),
+                'conversation_id' => $question->conversation_id, 'question_id' => $question->id,
+                'message_id' => $existing->id, 'duplicate' => true]);
+        }
+        if ($question->status === 'pending' && \Carbon\Carbon::parse($question->updated_at)->greaterThan(now()->subMinutes(2))) {
+            return response()->json(['message' => 'This question is still being processed.'], 202);
+        }
+        if (DB::table('ai_chat_messages')->where('reply_to_message_id', $question->id)->count() >= 4) {
+            return response()->json(['message' => 'The retry limit for this question has been reached.'], 429);
+        }
+        $limit = TradingAiSettings::get()['daily_request_limit'];
+        if (DB::table('ai_chat_usage')->where('user_id', $request->user()->id)
+            ->where('created_at', '>=', now()->startOfDay())->count() >= $limit) {
+            return response()->json(['message' => 'Daily AI request limit reached. Please try again tomorrow.'], 429);
+        }
+        $policy = TradingAiPrompt::current();
+        try {
+            $usageId = DB::transaction(function () use ($request, $question, $policy, $attemptId): int {
+                $claimed = DB::table('ai_chat_messages')->where('id', $question->id)
+                    ->where(fn ($query) => $query->where('status', '!=', 'pending')
+                        ->orWhere('updated_at', '<', now()->subMinutes(2)))
+                    ->update(['status' => 'pending', 'updated_at' => now()]);
+                if (! $claimed) throw new \DomainException('retry_in_progress');
+                return DB::table('ai_chat_usage')->insertGetId([
+                    'user_id' => $request->user()->id, 'status' => 'started',
+                    'request_id' => $attemptId, 'prompt_version' => $policy['version'],
+                    'created_at' => now(), 'updated_at' => now(),
+                ]);
+            });
+        } catch (\Illuminate\Database\UniqueConstraintViolationException $exception) {
+            return response()->json(['message' => 'This answer attempt is already being processed.'], 202);
+        } catch (\DomainException $exception) {
+            return response()->json(['message' => 'This question is already being processed.'], 202);
+        }
+        $history = DB::table('ai_chat_messages')->where('conversation_id', $question->conversation_id)
+            ->orderByDesc('id')->limit(6)->get(['role', 'content'])->reverse()->values()->toArray();
+        $preferences = $this->getPreferences($request);
+        $preferences['language'] = $question->language;
+        return $this->completeQuestion($request, $assistant, $question->content,
+            (int) $question->conversation_id, (int) $question->id, $usageId,
+            $preferences, $history, null, $policy, false, $attemptId);
+    }
+
+    private function completeQuestion(Request $request, TradingHubAssistantService $assistant, string $question,
+        int $conversationId, int $questionId, int $usageId, array $preferences, array $history,
+        ?array $idea, array $policy, bool $firstAttempt, ?string $attemptId = null): JsonResponse
+    {
         $started = microtime(true);
         try {
-            $result = $assistant->answer($question, $request->user(), $preferences, $history, $idea);
+            $result = $assistant->answer($question, $request->user(), $preferences, $history, $idea, $policy);
         } catch (Throwable $exception) {
             report($exception);
             $result = ['answer' => "I don't have enough verified information to answer that question accurately yet.",
@@ -248,26 +346,44 @@ class GeminiAssistantController extends Controller
         $unansweredRecorded = false;
         if ($result['unanswered'] ?? false) {
             try {
-                $this->recordUnanswered($question, ($result['provider_failure_code'] ?? null) === 'internal_error' ? 'failed' : 'unanswered');
-                $unansweredRecorded = true;
+                if ($firstAttempt) {
+                    $this->recordUnanswered($question, ($result['provider_failure_code'] ?? null) === 'internal_error' ? 'failed' : 'unanswered');
+                    $unansweredRecorded = true;
+                } else {
+                    $unansweredRecorded = DB::table('ai_unanswered_questions')->where('question_hash',
+                        hash('sha256', \App\Models\AiKnowledgeBase::normalizeQuestion($question)))->exists();
+                }
             } catch (Throwable $exception) {
                 Log::error('TradingHub AI unanswered question aggregation failed', ['exception' => get_class($exception)]);
             }
             $result['answer'] .= $unansweredRecorded
                 ? ' Your question has been recorded for our team to review.'
                 : ' Your question is saved in this conversation, but the review queue could not be updated. Please retry later or contact support.';
+            $result['review_recorded'] = $unansweredRecorded;
         }
         $elapsedMs = (int) round((microtime(true) - $started) * 1000);
         $source = $result['response_source'] ?? (($result['guarded'] ?? false) ? 'fallback' : 'external_ai');
+        $answerType = $result['answer_type'] ?? match ($source) {
+            'approved_faq', 'knowledge_base' => 'educational_explanation',
+            'external_ai' => isset($result['market']) || isset($result['insight']) ? 'historical_analysis' : 'educational_explanation',
+            default => 'unable_to_verify',
+        };
+        $providerAttempted = $source === 'external_ai' || (isset($result['provider_failure_code'])
+            && ! in_array($result['provider_failure_code'], ['provider_disabled', 'internal_error'], true));
+        $model = $providerAttempted ? TradingAiSettings::get()['model'] : null;
         $status = ($result['provider_failure_code'] ?? null) === 'internal_error'
             ? 'failed' : (($result['unanswered'] ?? false) ? 'unanswered' : 'answered');
         try {
-            $assistantMessageId = DB::transaction(function () use ($conversationId, $questionId, $result, $source, $status, $elapsedMs, $preferences, $usageId, $question): int {
+            $assistantMessageId = DB::transaction(function () use ($conversationId, $questionId, $result, $source, $status, $answerType, $model, $elapsedMs, $preferences, $usageId, $question, $policy, $attemptId): int {
                 $assistantMessageId = DB::table('ai_chat_messages')->insertGetId([
                     'conversation_id' => $conversationId, 'role' => 'assistant', 'content' => $result['answer'],
                     'sources' => empty($result['sources']) ? null : json_encode($result['sources']),
                     'reply_to_message_id' => $questionId, 'status' => $status,
+                    'client_message_id' => $attemptId,
                     'response_source' => $source, 'language' => $preferences['language'],
+                    'answer_type' => $answerType, 'prompt_version' => $policy['version'],
+                    'model' => $model,
+                    'completed_at' => now(),
                     'response_time_ms' => $elapsedMs,
                     'provider_failure_code' => $result['provider_failure_code'] ?? null,
                     'created_at' => now(), 'updated_at' => now(),
@@ -275,7 +391,12 @@ class GeminiAssistantController extends Controller
                 DB::table('ai_chat_messages')->where('id', $questionId)->update(['status' => $status, 'updated_at' => now()]);
                 DB::table('ai_chat_usage')->where('id', $usageId)->update(['status' => $status === 'answered' ? 'completed' : $status,
                     'response_source' => $source, 'provider_failure_code' => $result['provider_failure_code'] ?? null,
-                    'response_time_ms' => $elapsedMs, 'updated_at' => now()]);
+                    'response_time_ms' => $elapsedMs,
+                    'model' => $model,
+                    'input_tokens' => $result['provider_usage']['input_tokens'] ?? null,
+                    'output_tokens' => $result['provider_usage']['output_tokens'] ?? null,
+                    'provider_model_version' => $result['provider_usage']['provider_model_version'] ?? null,
+                    'retrieval_hits' => count($result['sources'] ?? []), 'updated_at' => now()]);
             if (DB::table('ai_chat_conversations')->where('id', $conversationId)->value('title') === 'New conversation') {
                     DB::table('ai_chat_conversations')->where('id', $conversationId)->update(['title' => mb_substr($question, 0, 90)]);
                 }
@@ -289,7 +410,8 @@ class GeminiAssistantController extends Controller
             return response()->json(['message' => 'Your question was saved, but the response could not be saved. Please refresh the conversation.',
                 'conversation_id' => $conversationId, 'question_id' => $questionId], 503);
         }
-        return response()->json($result + ['conversation_id' => $conversationId,
+        return response()->json($result + ['answer_type' => $answerType, 'prompt_version' => $policy['version'],
+            'conversation_id' => $conversationId,
             'question_id' => $questionId, 'message_id' => $assistantMessageId])
             ->header('Cache-Control', 'private, no-store');
     }
@@ -321,6 +443,13 @@ class GeminiAssistantController extends Controller
         };
     }
 
+    private function detectLanguage(string $question): string
+    {
+        if (preg_match('/\p{Han}/u', $question)) return 'zh';
+        if (preg_match('/\b(?:apakah|bagaimana|boleh|mengapa|saya|dagangan|risiko|untung|rugi)\b/iu', $question)) return 'ms';
+        return 'en';
+    }
+
     public function feedback(Request $request): JsonResponse
     {
         $this->authorized($request);
@@ -328,6 +457,7 @@ class GeminiAssistantController extends Controller
             'message_id' => ['required', 'integer'],
             'rating' => ['required', Rule::in(['helpful', 'not_helpful'])],
             'comment' => ['nullable', 'string', 'max:500'],
+            'issue_category' => ['nullable', Rule::in(['incorrect', 'outdated', 'unsafe', 'unclear', 'missing_data', 'other'])],
         ]);
         $owned = DB::table('ai_chat_messages')->join('ai_chat_conversations',
             'ai_chat_conversations.id', '=', 'ai_chat_messages.conversation_id')
@@ -337,6 +467,7 @@ class GeminiAssistantController extends Controller
         abort_unless($owned, 404);
         DB::table('ai_chat_feedback')->updateOrInsert(['user_id' => $request->user()->id,
             'message_id' => $data['message_id']], ['rating' => $data['rating'],
+            'issue_category' => $data['issue_category'] ?? null,
             'comment' => $data['comment'] ?? null, 'created_at' => now(), 'updated_at' => now()]);
         return response()->json(['saved' => true]);
     }

@@ -116,7 +116,7 @@ PROMPT;
     {
     }
 
-    public function ask(string $message, User $user): array
+    public function ask(string $message, User $user, ?array $policy = null): array
     {
         $message = $this->cleanMessage($message);
 
@@ -139,8 +139,10 @@ PROMPT;
         $prompt = $this->buildPrompt($message, $context);
         $knowledge = $context['knowledge'];
 
+        $generation = $this->sendToGemini($prompt, $policy['content'] ?? \App\Support\TradingAiPrompt::current()['content']);
+
         return [
-            'answer' => $this->sendToGemini($prompt),
+            'answer' => $generation['answer'],
             'sources' => $knowledge instanceof Collection
                 ? $knowledge->map(fn (AiKnowledgeBase $item): array => [
                     'module' => $item->module,
@@ -150,10 +152,12 @@ PROMPT;
             'statistics' => $context['statistics'],
             'guarded' => false,
             'intent' => $context['intent'],
+            'response_source' => 'external_ai',
+            'provider_usage' => $generation['provider_usage'],
         ];
     }
 
-    private function sendToGemini(string $prompt): string
+    private function sendToGemini(string $prompt, string $systemPrompt): array
     {
         $apiKey = trim((string) config('services.gemini.key'));
 
@@ -177,6 +181,7 @@ PROMPT;
                 ->asJson()
                 ->timeout(max(5, (int) config('services.gemini.timeout', 20)))
                 ->post($url, [
+                    'systemInstruction' => ['parts' => [['text' => $systemPrompt]]],
                     'contents' => [
                         [
                             'role' => 'user',
@@ -222,7 +227,12 @@ PROMPT;
             throw new TradingAiProviderException('empty_response');
         }
 
-        return $answer;
+        $payload = $response->json();
+        return ['answer' => $answer, 'provider_usage' => [
+            'input_tokens' => data_get($payload, 'usageMetadata.promptTokenCount'),
+            'output_tokens' => data_get($payload, 'usageMetadata.candidatesTokenCount'),
+            'provider_model_version' => data_get($payload, 'modelVersion'),
+        ]];
     }
 
     private function buildPrompt(string $message, array $context): string

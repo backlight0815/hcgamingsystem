@@ -24,7 +24,9 @@ class TradingAiSettingsController extends Controller
             'settings' => TradingAiSettings::get(),
             'models' => config('services.gemini.allowed_models', []),
             'feedback' => DB::table('ai_chat_feedback')->join('ai_chat_messages', 'ai_chat_messages.id', '=', 'ai_chat_feedback.message_id')
-                ->select('ai_chat_feedback.rating', 'ai_chat_feedback.comment', 'ai_chat_feedback.created_at', 'ai_chat_messages.content')
+                ->select('ai_chat_feedback.id', 'ai_chat_feedback.rating', 'ai_chat_feedback.issue_category',
+                    'ai_chat_feedback.comment', 'ai_chat_feedback.created_at', 'ai_chat_feedback.reviewed_at',
+                    'ai_chat_feedback.resolution', 'ai_chat_messages.content', 'ai_chat_messages.prompt_version')
                 ->orderByDesc('ai_chat_feedback.id')->paginate(20),
         ]);
     }
@@ -48,15 +50,28 @@ class TradingAiSettingsController extends Controller
             'response_length' => ['sometimes', 'required', Rule::in(['short', 'balanced', 'detailed'])],
             'language_fallback' => ['sometimes', 'required', Rule::in(['en', 'none'])],
             'response_rules' => ['sometimes', 'required', 'string', 'max:4000'],
+            'journal_mode_enabled' => ['sometimes', 'required', 'boolean'],
         ]);
         foreach ($data as $key => $value) {
             $table = in_array($key, ['operation_mode', 'external_enabled', 'ai_name', 'ai_role', 'tone',
-                'response_length', 'language_fallback', 'response_rules'], true)
+                'response_length', 'language_fallback', 'response_rules', 'journal_mode_enabled'], true)
                 ? 'ai_chat_response_settings' : 'ai_chat_settings';
             DB::table($table)->updateOrInsert(['key' => $key], [
                 'value' => (string) $value, 'created_at' => now(), 'updated_at' => now(),
             ]);
         }
         return redirect()->route('admin.ai_settings.index')->with('success', 'TradingHub AI settings updated.');
+    }
+
+    public function resolveFeedback(Request $request, int $feedback)
+    {
+        $this->authorizeAdmin($request);
+        $data = $request->validate(['resolution' => ['required', 'string', 'min:3', 'max:2000']]);
+        $updated = DB::table('ai_chat_feedback')->where('id', $feedback)->update([
+            'resolution' => $data['resolution'], 'reviewed_at' => now(),
+            'reviewer_id' => $request->user()->id, 'updated_at' => now(),
+        ]);
+        abort_unless($updated, 404);
+        return back()->with('success', 'Feedback review recorded. Historical answers were not changed.');
     }
 }

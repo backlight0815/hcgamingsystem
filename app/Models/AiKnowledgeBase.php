@@ -46,12 +46,15 @@ class AiKnowledgeBase extends Model
         'entry_type', 'normalized_question', 'alternative_questions', 'alternative_normalized', 'keywords', 'priority',
         'effective_at', 'approved_at', 'published_at', 'last_tested_at',
         'created_by', 'updated_by', 'approved_by',
+        'asset_classes', 'source_type', 'source_url', 'content_owner',
+        'last_verified_at', 'effective_until', 'superseded_by',
     ];
 
     protected $casts = [
         'alternative_questions' => 'array', 'alternative_normalized' => 'array', 'keywords' => 'array',
         'effective_at' => 'datetime', 'approved_at' => 'datetime',
         'published_at' => 'datetime', 'last_tested_at' => 'datetime',
+        'asset_classes' => 'array', 'last_verified_at' => 'datetime', 'effective_until' => 'datetime',
     ];
 
     public static function normalizeQuestion(string $question): string
@@ -82,14 +85,27 @@ class AiKnowledgeBase extends Model
         return [
             self::STATUS_ACTIVE => 'Active',
             self::STATUS_INACTIVE => 'Inactive',
+            self::STATUS_DRAFT => 'Draft',
+            self::STATUS_PENDING_REVIEW => 'Pending review',
+            self::STATUS_APPROVED => 'Approved',
+            self::STATUS_PUBLISHED => 'Published',
+            self::STATUS_ARCHIVED => 'Archived',
         ];
     }
 
     public function scopeActive(Builder $query): Builder
     {
-        return $query->where(function (Builder $builder): void {
+        return $query->whereNull('superseded_by')->where(function (Builder $expiry): void {
+            $expiry->whereNull('effective_until')->orWhere('effective_until', '>', now());
+        })->where(function (Builder $builder): void {
             $builder->where(function (Builder $articles): void {
-                $articles->where('entry_type', 'article')->where('status', self::STATUS_ACTIVE);
+                $articles->where('entry_type', 'article')
+                    ->where(function (Builder $status): void {
+                        $status->where('status', self::STATUS_ACTIVE)
+                            ->orWhere(function (Builder $approved): void {
+                                $approved->where('status', self::STATUS_PUBLISHED)->whereNotNull('approved_at');
+                            });
+                    });
             })->orWhere(function (Builder $faqs): void {
                 $faqs->where('entry_type', 'faq')->where('status', self::STATUS_PUBLISHED)
                     ->whereNotNull('approved_at')

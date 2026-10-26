@@ -7,6 +7,7 @@ use App\Models\AiKnowledgeBase;
 use App\Models\User;
 use App\Support\TradingSubmodules;
 use App\Support\TradingAiSettings;
+use App\Support\TradingAiPrompt;
 use App\Services\MarketInsight\MarketInsightService;
 use App\Services\MarketInsight\MarketInsightSettings;
 use Illuminate\Support\Facades\DB;
@@ -25,9 +26,10 @@ class TradingHubAssistantService
         private readonly MarketInsightService $insights,
     ) {}
 
-    public function answer(string $question, User $user, array $preferences, array $history = [], ?array $idea = null): array
+    public function answer(string $question, User $user, array $preferences, array $history = [], ?array $idea = null, ?array $policy = null): array
     {
         $settings = TradingAiSettings::get();
+        $policy ??= TradingAiPrompt::current();
         $language = in_array($preferences['language'] ?? 'en', ['en', 'zh', 'ms'], true) ? $preferences['language'] : 'en';
         if (preg_match('/\b(?:ignore|override|reveal|show)\b.{0,70}\b(?:system (?:prompt|instructions)|api key|secret|other (?:user|customer)s? data)\b/i', $question)) {
             return ['answer' => 'I can help with TradingHub knowledge and your permitted account features, but I cannot disclose internal instructions, credentials or another customer’s data.',
@@ -37,6 +39,40 @@ class TradingHubAssistantService
         if (preg_match('/\b(?:current price|live price|price now|quote now|market price right now)\b/i', $question)) {
             return ['answer' => 'I cannot verify a live quote in this chat. Check an authorized market feed and its timestamp. I can explain a published outlook or a hypothetical structure scenario if you provide the symbol and timeframe.',
                 'sources' => [], 'statistics' => null, 'guarded' => true, 'intent' => 'live_quote_unavailable'];
+        }
+        if (preg_match('/(?:现在|当前|实时|今日).{0,50}(?:XAUUSD|黄金|价格|买入|卖出)|(?:黄金|价格).{0,30}(?:现在|实时)/u', $question)
+            || preg_match('/\b(?:harga|beli|jual)\b.{0,45}\b(?:sekarang|terkini)\b/iu', $question)) {
+            $answer = $language === 'zh'
+                ? '本聊天无法核验实时价格或当前图表。请提供带时间戳的图表或OHLCV数据；在证据不足时，不应声称有即时买卖信号。'
+                : ($language === 'ms'
+                    ? 'Sembang ini tidak dapat mengesahkan harga atau carta semasa. Sila berikan data carta atau OHLCV bertanda masa; tanpa bukti itu saya tidak boleh mengesahkan isyarat dagangan sekarang.'
+                    : 'I cannot verify current prices or charts in this chat. Provide timestamped chart or OHLCV data for conditional educational analysis.');
+            return ['answer' => $answer, 'sources' => [], 'guarded' => true,
+                'intent' => 'market_current', 'answer_type' => 'unable_to_verify',
+                'response_source' => 'fallback', 'unanswered' => false];
+        }
+        if (preg_match('/\b(?:should I (?:buy|sell)|buy now|sell now|guaranteed signal|100% win)\b/i', $question)
+            && ! $settings['live_data_enabled']) {
+            return ['answer' => "I can't verify a current buy or sell setup from this chat. Please provide the symbol, timeframe and a timestamped chart or OHLCV observations. I can then explain conditional bullish, bearish and no-trade scenarios, including invalidation and total idea risk, without treating an unverified chart as live data.",
+                'sources' => [], 'guarded' => true, 'intent' => 'market_data_unavailable',
+                'answer_type' => 'unable_to_verify', 'response_source' => 'fallback', 'unanswered' => false];
+        }
+        if (preg_match('/\b(?:latest news|news today|economic release today|interest rate today|earnings today)\b/i', $question)) {
+            return ['answer' => 'I cannot verify a current news release or its timestamp from this chat. Check the original central bank, exchange, company or official economic release; I can explain its general market mechanisms after you provide the source and date.',
+                'sources' => [], 'guarded' => true, 'intent' => 'market_current',
+                'answer_type' => 'unable_to_verify', 'response_source' => 'fallback', 'unanswered' => false];
+        }
+        if (! $settings['live_data_enabled']
+            && preg_match('/\b(?:today|latest|current|right now|now)\b/i', $question)
+            && preg_match('/\b(?:XAUUSD|XAGUSD|BTCUSD|ETHUSD|EURUSD|GBPUSD|USDJPY|AUDUSD|USDCAD|USDCHF|NZDUSD)\b/i', $question)) {
+            return ['answer' => 'I cannot verify a current quote or H4/H1/M15 chart for that symbol from this chat. A published outlook is historical context, not a live signal. Provide a timestamped chart or OHLCV snapshot and broker specifications for a conditional educational scenario; otherwise wait rather than assuming a current setup.',
+                'sources' => [], 'guarded' => true, 'intent' => 'market_data_unavailable',
+                'answer_type' => 'unable_to_verify', 'response_source' => 'fallback', 'unanswered' => false];
+        }
+        if (preg_match('/\b(?:analy[sz]e|read|see)\b.{0,35}\b(?:uploaded chart|chart image|screenshot)\b/i', $question)) {
+            return ['answer' => 'Chart image reading is not connected to this assistant. I cannot inspect an upload or infer exact levels from its filename. Share timestamped OHLCV data or describe the H4, H1 and M15 swings and zones for a conditional educational review.',
+                'sources' => [], 'guarded' => true, 'intent' => 'chart_upload',
+                'answer_type' => 'unable_to_verify', 'response_source' => 'fallback', 'unanswered' => false];
         }
         if (preg_match('/\b(?:increase|double|raise)\b.{0,45}\b(?:lot|leverage|risk|position size)\b.{0,60}\b(?:recover|loss|win back)\b/i', $question)
             || preg_match('/\b(?:recover|win back)\b.{0,60}\b(?:loss|money)\b.{0,60}\b(?:lot|leverage|risk|martingale)\b/i', $question)) {
@@ -56,16 +92,25 @@ class TradingHubAssistantService
         if ($faq) {
             return ['answer' => ($faq->language !== $language ? 'Approved answer available in English: ' : '').$faq->content,
                 'sources' => [['type' => 'approved_faq', 'id' => $faq->id, 'title' => $faq->title,
-                    'source' => $faq->source, 'version' => $faq->version]],
+                    'source' => $faq->source, 'version' => $faq->version, 'source_type' => $faq->source_type,
+                    'source_url' => $faq->source_url, 'verified_at' => $faq->last_verified_at?->toIso8601String()]],
                 'statistics' => null, 'guarded' => false, 'intent' => 'approved_faq',
                 'response_source' => 'approved_faq', 'unanswered' => false];
         }
         if (preg_match('/\b(my journal|my statistics|my stats|add journal|edit journal|export journal)\b/i', $question)) {
-            if ($settings['operation_mode'] === 'knowledge_only' || ! $settings['external_enabled']) {
+            if (! $settings['journal_mode_enabled'] || $settings['operation_mode'] === 'knowledge_only' || ! $settings['external_enabled']) {
                 return $this->unanswered('provider_disabled');
             }
             try {
-                return $this->journalAssistant->ask($question, $user);
+                $result = $this->journalAssistant->ask($question, $user, $policy);
+                if (preg_match('~https?://~i', $result['answer'] ?? '')
+                    || preg_match('/\b(?:current|live)\s+(?:price|quote|ATR|EMA)\s*(?:is|at|:)\s*\d/i', $result['answer'] ?? '')) {
+                    Log::warning('TradingHub AI discarded an unverified journal claim', ['reason' => 'unsupported_source_or_live_claim']);
+                    return $this->unanswered('unverified_output') + ['provider_usage' => $result['provider_usage'] ?? []];
+                }
+                $result['sources'] = array_values(array_filter($result['sources'] ?? [], fn (array $source) =>
+                    isset($source['title']) && mb_stripos($result['answer'], $source['title']) !== false));
+                return $result;
             } catch (TradingAiProviderException $exception) {
                 return $this->unanswered($exception->failureCode);
             } catch (RuntimeException $exception) {
@@ -87,8 +132,10 @@ class TradingHubAssistantService
             $article = $this->directArticle($question, $knowledge, $language, $settings['language_fallback']);
             if ($article) {
                 return ['answer' => ($article->language !== $language ? 'Approved explanation available in English: ' : '').$article->content,
-                    'sources' => [['type' => 'knowledge', 'title' => $article->title,
-                        'source' => $article->source, 'version' => $article->version]],
+                    'sources' => [['type' => 'knowledge', 'id' => $article->id, 'title' => $article->title,
+                        'source' => $article->source, 'version' => $article->version,
+                        'source_type' => $article->source_type, 'source_url' => $article->source_url,
+                        'verified_at' => $article->last_verified_at?->toIso8601String()]],
                     'statistics' => null, 'guarded' => false, 'intent' => 'knowledge_answer',
                     'response_source' => 'knowledge_base', 'unanswered' => false];
             }
@@ -100,6 +147,8 @@ class TradingHubAssistantService
         $sources = $knowledge->map(fn (AiKnowledgeBase $row) => [
             'type' => 'knowledge', 'title' => $row->title, 'source' => $row->source,
             'version' => $row->version, 'reviewed_at' => $row->reviewed_at,
+            'source_type' => $row->source_type, 'source_url' => $row->source_url,
+            'verified_at' => $row->last_verified_at?->toIso8601String(),
         ])->all();
         if ($market) $sources[] = $market['citation'];
         if ($insight) $sources[] = $insight['citation'];
@@ -126,14 +175,23 @@ class TradingHubAssistantService
         ]);
 
         try {
-            $answer = $this->generate($prompt);
+            $generation = $this->generate($prompt, $policy['content']);
         } catch (TradingAiProviderException $exception) {
             return $this->unanswered($exception->failureCode);
         }
-        return ['answer' => $answer, 'sources' => $sources, 'statistics' => null, 'guarded' => false,
+        $answer = $generation['answer'];
+        if (preg_match('~https?://~i', $answer)
+            || (! $insight && preg_match('/\b(?:current|live)\s+(?:price|quote|ATR|EMA)\s*(?:is|at|:)\s*\d/i', $answer))) {
+            Log::warning('TradingHub AI discarded an unverified generated claim', ['reason' => 'unsupported_source_or_live_claim']);
+            return $this->unanswered('unverified_output') + ['provider_usage' => $generation['provider_usage']];
+        }
+        $citedSources = array_values(array_filter($sources, fn (array $source) =>
+            isset($source['title']) && mb_stripos($answer, $source['title']) !== false));
+        return ['answer' => $answer, 'sources' => $citedSources, 'statistics' => null, 'guarded' => false,
             'intent' => ($market || $insight) ? 'market_context' : ($risk ? 'risk_scenario' : 'trading_education'),
             'market' => $market['data'] ?? null, 'insight' => $insight['data'] ?? null, 'risk' => $risk,
-            'response_source' => 'external_ai', 'unanswered' => false];
+            'response_source' => 'external_ai', 'unanswered' => false,
+            'provider_usage' => $generation['provider_usage']];
     }
 
     private function approvedFaq(string $question, string $language, string $fallback): ?AiKnowledgeBase
@@ -147,7 +205,8 @@ class TradingHubAssistantService
                 $query->where('normalized_question', $normalized)
                     ->orWhereJsonContains('alternative_normalized', $normalized);
             })->orderByRaw('CASE WHEN language = ? THEN 0 ELSE 1 END', [$language])
-            ->orderByDesc('priority')->first();
+            ->orderByDesc('priority')->limit(10)->get()
+            ->first(fn (AiKnowledgeBase $item) => ! $this->containsUntrustedInstruction($item->content));
     }
 
     private function directArticle(string $question, $knowledge, string $language, string $fallback): ?AiKnowledgeBase
@@ -156,7 +215,8 @@ class TradingHubAssistantService
         $requiresMultiplePositions = (bool) preg_match('/\b(?:multiple|several|five|all)\b.*\b(?:position|trade|order)s?\b|\b\d+\s+(?:position|trade|order)s?\b/i', $question);
         $words = array_values(array_filter(explode(' ', $normalized), fn ($word) => mb_strlen($word) > 3));
         foreach ($knowledge as $article) {
-            if ($article->entry_type !== 'article' || ($article->language !== $language && $fallback !== $article->language)) continue;
+            if ($article->entry_type !== 'article' || $this->containsUntrustedInstruction($article->content)
+                || ($article->language !== $language && $fallback !== $article->language)) continue;
             $title = AiKnowledgeBase::normalizeQuestion($article->title);
             if ($requiresMultiplePositions && ! preg_match('/\b(?:multiple|positions|orders)\b/', $title)) continue;
             $titleWords = array_values(array_filter(explode(' ', $title), fn ($word) => mb_strlen($word) > 3 && ! in_array($word, ['with', 'through', 'from', 'that'], true)));
@@ -192,13 +252,20 @@ class TradingHubAssistantService
                         ->orWhere('content', 'like', '%'.$token.'%');
                 }
             })
-            ->select(['id', 'module', 'entry_type', 'language', 'title', 'content', 'source', 'version', 'reviewed_at'])
-            ->limit(80)->get()->map(function ($row) use ($tokens) {
+            ->select(['id', 'module', 'entry_type', 'language', 'title', 'content', 'source', 'version', 'reviewed_at',
+                'source_type', 'source_url', 'last_verified_at'])
+            ->limit(80)->get()->filter(fn (AiKnowledgeBase $row) => ! $this->containsUntrustedInstruction($row->content))
+            ->map(function ($row) use ($tokens) {
                 $title = Str::lower($row->title.' '.str_replace('_', ' ', $row->module));
                 $body = Str::lower($row->content);
                 $score = $tokens->sum(fn ($token) => (str_contains($title, $token) ? 5 : 0) + (str_contains($body, $token) ? 1 : 0));
                 return ['row' => $row, 'score' => $score];
             })->filter(fn ($item) => $item['score'] > 0)->sortByDesc('score')->take(TradingAiSettings::get()['retrieval_limit'])->pluck('row')->values();
+    }
+
+    private function containsUntrustedInstruction(string $content): bool
+    {
+        return (bool) preg_match('/(?:ignore|override|disregard)\s+(?:all\s+)?(?:previous|system|developer)\s+(?:instructions|rules|prompt)|(?:reveal|print|expose)\s+(?:the\s+)?(?:system\s+prompt|api\s+key|secret)|you\s+are\s+now\s+(?:an?\s+)?(?:administrator|system)/i', $content);
     }
 
     private function marketContext(string $question, User $user): ?array
@@ -252,7 +319,7 @@ class TradingHubAssistantService
             'source' => 'Verified REAL dataset', 'symbol' => $instrument->symbol]];
     }
 
-    private function generate(string $prompt): string
+    private function generate(string $prompt, string $systemPrompt): array
     {
         $key = trim((string) config('services.gemini.key'));
         if ($key === '') throw new TradingAiProviderException('not_configured');
@@ -264,11 +331,13 @@ class TradingHubAssistantService
         try {
             $response = Http::withHeaders(['x-goog-api-key' => $key])->acceptJson()->asJson()
                 ->timeout(max(5, (int) config('services.gemini.timeout', 20)))
-                ->post($url, ['contents' => [['role' => 'user', 'parts' => [['text' => $prompt]]]],
+                ->post($url, ['systemInstruction' => ['parts' => [['text' => $systemPrompt]]],
+                    'contents' => [['role' => 'user', 'parts' => [['text' => $prompt]]]],
                     'generationConfig' => ['temperature' => 0.2, 'maxOutputTokens' => 1400]]);
         } catch (\Illuminate\Http\Client\ConnectionException $exception) {
-            Log::warning('TradingHub AI provider connection failed', ['failure_code' => 'connection']);
-            throw new TradingAiProviderException('connection');
+            $reason = str_contains(strtolower($exception->getMessage()), 'timed out') ? 'timeout' : 'connection';
+            Log::warning('TradingHub AI provider connection failed', ['failure_code' => $reason]);
+            throw new TradingAiProviderException($reason);
         }
         if ($response->failed()) {
             $status = $response->status();
@@ -289,6 +358,11 @@ class TradingHubAssistantService
             Log::warning('TradingHub AI provider returned no usable answer', ['failure_code' => 'empty_response', 'model' => $model]);
             throw new TradingAiProviderException('empty_response');
         }
-        return $answer;
+        $payload = $response->json();
+        return ['answer' => $answer, 'provider_usage' => [
+            'input_tokens' => data_get($payload, 'usageMetadata.promptTokenCount'),
+            'output_tokens' => data_get($payload, 'usageMetadata.candidatesTokenCount'),
+            'provider_model_version' => data_get($payload, 'modelVersion'),
+        ]];
     }
 }

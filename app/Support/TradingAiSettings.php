@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 
 class TradingAiSettings
 {
-    public const BUILD = 3;
+    public const BUILD = 4;
 
     public static function get(): array
     {

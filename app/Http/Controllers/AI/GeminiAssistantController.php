@@ -72,6 +72,10 @@ class GeminiAssistantController extends Controller
     {
         $this->owned($request, $conversation);
         return response()->json(DB::table('ai_chat_messages')->where('conversation_id', $conversation)
+            ->select(['id', 'conversation_id', 'role', 'content', 'sources', 'reply_to_message_id',
+                'client_message_id', 'status', 'response_source', 'language', 'answer_type',
+                'prompt_version', 'model', 'response_time_ms', 'provider_failure_code',
+                'created_at', 'updated_at', 'completed_at'])
             ->orderByDesc('id')->paginate(30));
     }
 
@@ -347,7 +351,9 @@ class GeminiAssistantController extends Controller
         if ($result['unanswered'] ?? false) {
             try {
                 if ($firstAttempt) {
-                    $this->recordUnanswered($question, ($result['provider_failure_code'] ?? null) === 'internal_error' ? 'failed' : 'unanswered');
+                    $this->recordUnanswered($question,
+                        ($result['provider_failure_code'] ?? null) === 'internal_error' ? 'failed' : 'unanswered',
+                        $result['provider_failure_code'] ?? null);
                     $unansweredRecorded = true;
                 } else {
                     $unansweredRecorded = DB::table('ai_unanswered_questions')->where('question_hash',
@@ -378,6 +384,7 @@ class GeminiAssistantController extends Controller
                 $assistantMessageId = DB::table('ai_chat_messages')->insertGetId([
                     'conversation_id' => $conversationId, 'role' => 'assistant', 'content' => $result['answer'],
                     'sources' => empty($result['sources']) ? null : json_encode($result['sources']),
+                    'claim_evidence' => empty($result['claim_evidence']) ? null : json_encode($result['claim_evidence']),
                     'reply_to_message_id' => $questionId, 'status' => $status,
                     'client_message_id' => $attemptId,
                     'response_source' => $source, 'language' => $preferences['language'],
@@ -410,21 +417,31 @@ class GeminiAssistantController extends Controller
             return response()->json(['message' => 'Your question was saved, but the response could not be saved. Please refresh the conversation.',
                 'conversation_id' => $conversationId, 'question_id' => $questionId], 503);
         }
+        unset($result['claim_evidence']);
         return response()->json($result + ['answer_type' => $answerType, 'prompt_version' => $policy['version'],
             'conversation_id' => $conversationId,
             'question_id' => $questionId, 'message_id' => $assistantMessageId])
             ->header('Cache-Control', 'private, no-store');
     }
 
-    private function recordUnanswered(string $question, string $aiStatus): void
+    private function recordUnanswered(string $question, string $aiStatus, ?string $failureCode): void
     {
         $normalized = \App\Models\AiKnowledgeBase::normalizeQuestion($question);
-        $hash = hash('sha256', $normalized);
+        $concepts = app(\App\Support\TradingConceptResolver::class)->resolve($question);
+        $conceptId = count($concepts) === 1 ? $concepts[0]['id'] : null;
+        $gapKind = in_array($failureCode, ['knowledge_conflict', 'unverified_output', 'provider_disabled'], true)
+            ? $failureCode : 'provider_error';
+        $hash = hash('sha256', $conceptId
+            ? 'concept:'.$conceptId.'|intent:'.$this->questionCategory($question).'|gap:'.$gapKind
+            : $normalized);
+        $severity = in_array($gapKind, ['knowledge_conflict', 'unverified_output'], true) ? 3
+            : ($gapKind === 'provider_error' ? 2 : 1);
         $redacted = preg_replace('/[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}/', '[email removed]', $question);
         $redacted = preg_replace('/\b(?:\+?\d[\d\s()-]{8,}\d)\b/', '[number removed]', $redacted);
         DB::table('ai_unanswered_questions')->insertOrIgnore([
             'question_hash' => $hash, 'question' => mb_substr($redacted, 0, 2000),
             'category' => $this->questionCategory($question), 'ai_status' => $aiStatus,
+            'canonical_concept_id' => $conceptId, 'gap_kind' => $gapKind, 'severity' => $severity,
             'frequency' => 0, 'status' => 'pending', 'last_asked_at' => now(),
             'created_at' => now(), 'updated_at' => now(),
         ]);

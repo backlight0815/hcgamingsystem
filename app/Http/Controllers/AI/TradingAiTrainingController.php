@@ -42,6 +42,7 @@ class TradingAiTrainingController extends Controller
                 $query->where('u.question', 'like', '%'.mb_substr(trim((string) $request->query('search')), 0, 100).'%');
             })->when(in_array($request->query('queue_status'), ['pending', 'training', 'resolved', 'archived'], true),
                 fn ($query) => $query->where('u.status', $request->query('queue_status')))
+            ->orderByDesc('u.severity')
             ->orderByDesc($request->query('sort') === 'frequency' ? 'u.frequency' : 'u.last_asked_at')
             ->paginate(15, ['*'], 'unanswered_page')->withQueryString();
         $history = DB::table('ai_knowledge_versions as v')
@@ -55,7 +56,7 @@ class TradingAiTrainingController extends Controller
         $needsReview = AiKnowledgeBase::query()->where('entry_type', 'article')
             ->whereIn('status', ['active', 'published'])
             ->where(fn ($query) => $query->whereNull('last_verified_at')
-                ->orWhere('last_verified_at', '<', now()->subDays(180)))->count();
+                ->orWhere('review_after_at', '<=', now()))->count();
         return view('admin.ai_knowledge_base.training', [
             'tab' => $tab, 'entries' => $entries, 'unanswered' => $unanswered,
             'history' => $history, 'metrics' => $metrics, 'topTopics' => $topTopics,
@@ -160,8 +161,10 @@ class TradingAiTrainingController extends Controller
             if ($action === 'publish') {
                 $hashes = array_map(fn ($phrase) => hash('sha256', $phrase),
                     array_merge([$locked->normalized_question], $locked->alternative_normalized ?? []));
-                DB::table('ai_unanswered_questions')->where(function ($query) use ($locked, $hashes): void {
-                    $query->where('training_id', $locked->id)->orWhereIn('question_hash', $hashes);
+                $exactQuestions = array_filter(array_merge([$locked->title], $locked->alternative_questions ?? []));
+                DB::table('ai_unanswered_questions')->where(function ($query) use ($locked, $hashes, $exactQuestions): void {
+                    $query->where('training_id', $locked->id)->orWhereIn('question_hash', $hashes)
+                        ->orWhereIn('question', $exactQuestions);
                 })->update(['training_id' => $locked->id, 'status' => 'resolved', 'updated_at' => now()]);
             }
         });
@@ -256,9 +259,11 @@ class TradingAiTrainingController extends Controller
                 fputcsv($out, ['Metric', 'Value']);
                 foreach ($this->metrics($request) as $name => $value) fputcsv($out, [$name, $value]);
             } else {
-                fputcsv($out, ['Question ID', 'Question', 'Frequency', 'Last asked (Malaysia)', 'Status', 'Training ID']);
+                fputcsv($out, ['Question ID', 'Question', 'Concept', 'Gap', 'Severity', 'Frequency',
+                    'Last asked (Malaysia)', 'Status', 'Training ID']);
                 DB::table('ai_unanswered_questions')->orderBy('id')->chunk(200, function ($rows) use ($out): void {
-                    foreach ($rows as $row) fputcsv($out, [$row->id, $this->safeCsv($row->question), $row->frequency,
+                    foreach ($rows as $row) fputcsv($out, [$row->id, $this->safeCsv($row->question),
+                        $row->canonical_concept_id, $row->gap_kind, $row->severity, $row->frequency,
                         \Carbon\Carbon::parse($row->last_asked_at)->timezone('Asia/Kuala_Lumpur')->format('Y-m-d H:i:s'),
                         $row->status, $row->training_id]);
                 });
@@ -301,7 +306,9 @@ class TradingAiTrainingController extends Controller
         if ($conflict) throw ValidationException::withMessages(['question' => 'This question or one of its alternatives already exists.']);
         return [
             'title' => trim($data['question']), 'normalized_question' => $normalized,
-            'content' => trim($data['answer']), 'module' => $data['module'],
+            'content' => trim($data['answer']),
+            'content_hash' => AiKnowledgeBase::contentFingerprint($data['answer']),
+            'module' => $data['module'],
             'language' => $data['language'], 'priority' => (int) $data['priority'],
             'effective_at' => isset($data['effective_at'])
                 ? \Carbon\Carbon::parse($data['effective_at'], 'Asia/Kuala_Lumpur')->utc()->toDateTimeString() : null,

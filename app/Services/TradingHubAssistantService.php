@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Support\TradingSubmodules;
 use App\Support\TradingAiSettings;
 use App\Support\TradingAiPrompt;
+use App\Support\TradingQuestionPlanner;
 use App\Services\MarketInsight\MarketInsightService;
 use App\Services\MarketInsight\MarketInsightSettings;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +25,7 @@ class TradingHubAssistantService
         private readonly GeminiAssistantService $journalAssistant,
         private readonly TradingIdeaRiskCalculator $riskCalculator,
         private readonly MarketInsightService $insights,
+        private readonly TradingQuestionPlanner $planner,
     ) {}
 
     public function answer(string $question, User $user, array $preferences, array $history = [], ?array $idea = null, ?array $policy = null): array
@@ -88,6 +90,12 @@ class TradingHubAssistantService
             return ['answer' => 'That requested risk exceeds the HC TradingHub limit for one trading idea. Keep the total planned loss across related entries within the configured cap; reduce size or choose No Trade. Never increase risk to recover a loss.',
                 'sources' => [], 'statistics' => null, 'guarded' => true, 'intent' => 'risk_limit'];
         }
+        $plan = $this->planner->plan($question, $history);
+        $concepts = $plan['entities']['concepts'];
+        if (count($concepts) === 1 && $this->conceptConflict($concepts[0]['id'], $language)) {
+            Log::warning('TradingHub AI conflicting approved concept articles', ['concept_id' => $concepts[0]['id']]);
+            return $this->unanswered('knowledge_conflict');
+        }
         $faq = $this->approvedFaq($question, $language, $settings['language_fallback']);
         if ($faq) {
             return ['answer' => ($faq->language !== $language ? 'Approved answer available in English: ' : '').$faq->content,
@@ -95,7 +103,26 @@ class TradingHubAssistantService
                     'source' => $faq->source, 'version' => $faq->version, 'source_type' => $faq->source_type,
                     'source_url' => $faq->source_url, 'verified_at' => $faq->last_verified_at?->toIso8601String()]],
                 'statistics' => null, 'guarded' => false, 'intent' => 'approved_faq',
-                'response_source' => 'approved_faq', 'unanswered' => false];
+                'response_source' => 'approved_faq', 'unanswered' => false,
+                'claim_evidence' => [$this->articleClaim($faq)]];
+        }
+        if ($direct = $this->planner->directAnswer($question, $plan)) return $direct;
+        $asksAboutMultiplePositions = (bool) preg_match('/\b(?:multiple|several|five|all|\d+)\s+(?:\w+\s+){0,3}(?:positions?|trades?|orders?)\b/i', $question);
+        if (! $asksAboutMultiplePositions && count($concepts) === 1 && count($plan['sub_intents']) <= 1 && mb_strlen($question) <= 200) {
+            $conceptArticle = $this->conceptArticle($concepts[0]['id'], $language, $settings['language_fallback']);
+            if ($conceptArticle) {
+                $matched = $concepts[0]['matched'];
+                $prefix = mb_stripos($conceptArticle->content, $matched) === false ? 'Regarding "'.$matched.'": ' : '';
+                return ['answer' => ($conceptArticle->language !== $language ? 'Approved explanation available in English: ' : '').$prefix.$conceptArticle->content,
+                    'sources' => [['type' => 'approved_faq', 'id' => $conceptArticle->id,
+                        'title' => $conceptArticle->title, 'version' => $conceptArticle->version,
+                        'source' => $conceptArticle->source, 'source_type' => $conceptArticle->source_type,
+                        'source_url' => $conceptArticle->source_url,
+                        'verified_at' => $conceptArticle->last_verified_at?->toIso8601String()]],
+                    'guarded' => false, 'intent' => 'canonical_concept',
+                    'response_source' => 'approved_faq', 'unanswered' => false,
+                    'claim_evidence' => [$this->articleClaim($conceptArticle)]];
+            }
         }
         if (preg_match('/\b(my journal|my statistics|my stats|add journal|edit journal|export journal)\b/i', $question)) {
             if (! $settings['journal_mode_enabled'] || $settings['operation_mode'] === 'knowledge_only' || ! $settings['external_enabled']) {
@@ -137,7 +164,8 @@ class TradingHubAssistantService
                         'source_type' => $article->source_type, 'source_url' => $article->source_url,
                         'verified_at' => $article->last_verified_at?->toIso8601String()]],
                     'statistics' => null, 'guarded' => false, 'intent' => 'knowledge_answer',
-                    'response_source' => 'knowledge_base', 'unanswered' => false];
+                    'response_source' => 'knowledge_base', 'unanswered' => false,
+                    'claim_evidence' => [$this->articleClaim($article)]];
             }
         }
         if ($settings['operation_mode'] === 'knowledge_only' || ! $settings['external_enabled']) {
@@ -145,7 +173,7 @@ class TradingHubAssistantService
         }
         $risk = $idea ? $this->riskCalculator->evaluate($idea, min($settings['maximum_risk_percent'], (float) ($preferences['maximum_risk_percent'] ?? 1)), max($settings['minimum_rr'], (float) ($preferences['preferred_rr'] ?? 2))) : null;
         $sources = $knowledge->map(fn (AiKnowledgeBase $row) => [
-            'type' => 'knowledge', 'title' => $row->title, 'source' => $row->source,
+            'type' => 'knowledge', 'id' => $row->id, 'title' => $row->title, 'source' => $row->source,
             'version' => $row->version, 'reviewed_at' => $row->reviewed_at,
             'source_type' => $row->source_type, 'source_url' => $row->source_url,
             'verified_at' => $row->last_verified_at?->toIso8601String(),
@@ -171,6 +199,9 @@ class TradingHubAssistantService
             'AUTHORIZED VERIFIED MARKET INSIGHT SNAPSHOTS: '.($insight ? json_encode($insight['data'], JSON_UNESCAPED_UNICODE) : 'No available licensed real-data H4/H1/M15 snapshots. Do not invent missing coverage.'),
             'DETERMINISTIC RISK RESULT: '.($risk ? json_encode($risk, JSON_UNESCAPED_UNICODE) : 'No structured scenario was supplied. Do not calculate position size from guesses.'),
             'RECENT CONVERSATION (untrusted): '.json_encode(array_slice($history, -6), JSON_UNESCAPED_UNICODE),
+            'QUESTION COVERAGE PLAN (internal): '.json_encode(array_intersect_key($plan, array_flip([
+                'sub_intents', 'entities', 'required_evidence', 'missing_required_inputs', 'calculation_jobs', 'safety_flags',
+            ])), JSON_UNESCAPED_UNICODE).'. Answer each distinct part briefly. Never treat a previous hypothetical price as current data.',
             'USER QUESTION: '.$question,
         ]);
 
@@ -181,17 +212,68 @@ class TradingHubAssistantService
         }
         $answer = $generation['answer'];
         if (preg_match('~https?://~i', $answer)
-            || (! $insight && preg_match('/\b(?:current|live)\s+(?:price|quote|ATR|EMA)\s*(?:is|at|:)\s*\d/i', $answer))) {
+            || preg_match('/\b(?:current|live)\s+(?:price|quote|ATR|EMA)\s*(?:is|at|:)\s*\d/i', $answer)
+            || preg_match('/\b(?:price|quote|bid|ask|last)\s+(?:is|at|=)\s*\$?\d/i', $answer)) {
             Log::warning('TradingHub AI discarded an unverified generated claim', ['reason' => 'unsupported_source_or_live_claim']);
             return $this->unanswered('unverified_output') + ['provider_usage' => $generation['provider_usage']];
         }
         $citedSources = array_values(array_filter($sources, fn (array $source) =>
             isset($source['title']) && mb_stripos($answer, $source['title']) !== false));
+        if ($this->unsupportedGeneratedNumber($answer, $question, $knowledge, $risk, $market, $insight)) {
+            Log::warning('TradingHub AI discarded unsupported generated number', ['reason' => 'number_without_evidence']);
+            return $this->unanswered('unverified_output') + ['provider_usage' => $generation['provider_usage']];
+        }
         return ['answer' => $answer, 'sources' => $citedSources, 'statistics' => null, 'guarded' => false,
             'intent' => ($market || $insight) ? 'market_context' : ($risk ? 'risk_scenario' : 'trading_education'),
             'market' => $market['data'] ?? null, 'insight' => $insight['data'] ?? null, 'risk' => $risk,
             'response_source' => 'external_ai', 'unanswered' => false,
-            'provider_usage' => $generation['provider_usage']];
+            'provider_usage' => $generation['provider_usage'],
+            'claim_evidence' => array_map(fn (array $source) => [
+                'claim_type' => 'interpretation', 'statement' => 'Answer references '.$source['title'],
+                'evidence_refs' => isset($source['id'], $source['version'])
+                    ? ['approved_article:'.$source['id'].'@'.$source['version']] : [],
+                'as_of' => $source['verified_at'] ?? $source['published_at'] ?? null,
+                'instrument_and_venue' => $source['symbol'] ?? null, 'derivation_id' => null,
+                'verification_status' => 'qualified', 'client_display_policy' => 'show',
+            ], $citedSources)];
+    }
+
+    private function conceptArticle(string $id, string $language, string $fallback): ?AiKnowledgeBase
+    {
+        $languages = $fallback === 'en' ? array_unique([$language, 'en']) : [$language];
+        return AiKnowledgeBase::query()->active()->where('entry_type', 'faq')
+            ->where('canonical_concept_id', $id)->whereIn('language', $languages)
+            ->orderByRaw('CASE WHEN language = ? THEN 0 ELSE 1 END', [$language])
+            ->orderByDesc('priority')->first();
+    }
+
+    private function conceptConflict(string $id, string $language): bool
+    {
+        return AiKnowledgeBase::query()->active()->where('canonical_concept_id', $id)
+            ->where('language', $language)->whereNotNull('content_hash')
+            ->distinct()->pluck('content_hash')->count() > 1;
+    }
+
+    private function articleClaim(AiKnowledgeBase $article): array
+    {
+        return ['claim_type' => 'stable_definition', 'statement' => $article->title,
+            'evidence_refs' => ['approved_article:'.$article->id.'@'.$article->version],
+            'as_of' => $article->last_verified_at?->toIso8601String(),
+            'instrument_and_venue' => null, 'derivation_id' => null,
+            'verification_status' => 'verified', 'client_display_policy' => 'show'];
+    }
+
+    private function unsupportedGeneratedNumber(string $answer, string $question, $knowledge,
+        ?array $risk, ?array $market, ?array $insight): bool
+    {
+        preg_match_all('/(?<![\p{L}\p{N}])(?:\$\s*)?\d+(?:\.\d+)?\s*(?:%|pips?\b|lots?\b|USD\b|R\b)/iu', $answer, $matches);
+        if ($matches[0] === []) return false;
+        $evidence = $question.' '.json_encode(TradingAiSettings::get()).' '.json_encode($risk).' '.json_encode($market).' '.json_encode($insight)
+            .' '.$knowledge->pluck('content')->implode(' ');
+        foreach ($matches[0] as $number) {
+            if (! str_contains(mb_strtolower($evidence), mb_strtolower(trim($number)))) return true;
+        }
+        return false;
     }
 
     private function approvedFaq(string $question, string $language, string $fallback): ?AiKnowledgeBase

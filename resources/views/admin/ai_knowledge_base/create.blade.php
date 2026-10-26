@@ -66,6 +66,14 @@
                                 <div class="col-md-3 mb-3"><label for="lastVerified" class="form-label">Last verified</label><input id="lastVerified" name="last_verified_at" type="date" class="form-control" value="{{ old('last_verified_at') }}"></div>
                                 <div class="col-md-3 mb-3"><label for="effectiveUntil" class="form-label">Expires</label><input id="effectiveUntil" name="effective_until" type="date" class="form-control" value="{{ old('effective_until') }}"></div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3"><label for="conceptId" class="form-label">Canonical concept</label><select id="conceptId" name="canonical_concept_id" class="form-select"><option value="">None / new concept</option>@foreach(array_keys(config('trading_ai_concepts.concepts', [])) as $concept)<option value="{{ $concept }}" @selected(old('canonical_concept_id') === $concept)>{{ str_replace('_',' ',ucfirst($concept)) }}</option>@endforeach</select></div>
+                                <div class="col-md-4 mb-3"><label for="sourceOwner" class="form-label">Original source owner</label><input id="sourceOwner" name="source_owner" class="form-control" value="{{ old('source_owner') }}" maxlength="150"></div>
+                                <div class="col-md-4 mb-3"><label for="licenseStatus" class="form-label">Permission / use</label><select id="licenseStatus" name="license_status" class="form-select">@foreach(['owner_original'=>'Owner original','permission_confirmed'=>'Permission confirmed','link_only'=>'Link and original summary only','unknown'=>'Unknown, review needed'] as $value=>$label)<option value="{{ $value }}" @selected(old('license_status','owner_original') === $value)>{{ $label }}</option>@endforeach</select></div>
+                                <div class="col-md-4 mb-3"><label for="sourcePublished" class="form-label">Source published / updated</label><input id="sourcePublished" name="source_published_at" type="date" class="form-control" value="{{ old('source_published_at') }}"></div>
+                                <div class="col-md-4 mb-3"><label for="sourceRetrieved" class="form-label">Source retrieved</label><input id="sourceRetrieved" name="source_retrieved_at" type="date" class="form-control" value="{{ old('source_retrieved_at') }}"></div>
+                                <div class="col-md-4 mb-3"><label for="reviewAfter" class="form-label">Review after</label><input id="reviewAfter" name="review_after_at" type="date" class="form-control" value="{{ old('review_after_at') }}"></div>
+                            </div>
                             <p class="text-muted small">New articles begin as Draft and require review, approval and publication.</p><button type="submit" class="btn btn-primary">Create Draft</button>
                         </form>
                     </div>

@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         TradingCoachKnowledgeSeeder::class,
         TradingAiMasterPromptSeeder::class,
         TradingAiCurriculumSeeder::class,
+        TradingAiAdvancedCurriculumSeeder::class,
         FinalExamQuestionSeeder::class,
     ]);
 }

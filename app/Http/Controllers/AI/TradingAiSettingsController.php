@@ -26,7 +26,8 @@ class TradingAiSettingsController extends Controller
             'feedback' => DB::table('ai_chat_feedback')->join('ai_chat_messages', 'ai_chat_messages.id', '=', 'ai_chat_feedback.message_id')
                 ->select('ai_chat_feedback.id', 'ai_chat_feedback.rating', 'ai_chat_feedback.issue_category',
                     'ai_chat_feedback.comment', 'ai_chat_feedback.created_at', 'ai_chat_feedback.reviewed_at',
-                    'ai_chat_feedback.resolution', 'ai_chat_messages.content', 'ai_chat_messages.prompt_version')
+                    'ai_chat_feedback.resolution', 'ai_chat_messages.content', 'ai_chat_messages.prompt_version',
+                    'ai_chat_messages.claim_evidence', 'ai_chat_messages.sources', 'ai_chat_messages.model')
                 ->orderByDesc('ai_chat_feedback.id')->paginate(20),
         ]);
     }

@@ -48,6 +48,8 @@ class AiKnowledgeBase extends Model
         'created_by', 'updated_by', 'approved_by',
         'asset_classes', 'source_type', 'source_url', 'content_owner',
         'last_verified_at', 'effective_until', 'superseded_by',
+        'canonical_concept_id', 'content_hash', 'license_status', 'source_owner',
+        'source_published_at', 'source_retrieved_at', 'review_after_at',
     ];
 
     protected $casts = [
@@ -55,12 +57,18 @@ class AiKnowledgeBase extends Model
         'effective_at' => 'datetime', 'approved_at' => 'datetime',
         'published_at' => 'datetime', 'last_tested_at' => 'datetime',
         'asset_classes' => 'array', 'last_verified_at' => 'datetime', 'effective_until' => 'datetime',
+        'source_published_at' => 'datetime', 'source_retrieved_at' => 'datetime', 'review_after_at' => 'datetime',
     ];
 
     public static function normalizeQuestion(string $question): string
     {
         $question = mb_strtolower(Str::squish($question));
         return trim((string) preg_replace('/[^\p{L}\p{N}]+/u', ' ', $question));
+    }
+
+    public static function contentFingerprint(string $content): string
+    {
+        return hash('sha256', mb_strtolower(trim((string) preg_replace('/\s+/u', ' ', strip_tags($content)))));
     }
 
     public static function modules(): array
@@ -95,7 +103,9 @@ class AiKnowledgeBase extends Model
 
     public function scopeActive(Builder $query): Builder
     {
-        return $query->whereNull('superseded_by')->where(function (Builder $expiry): void {
+        return $query->whereNull('superseded_by')->where(function (Builder $review): void {
+            $review->whereNull('review_after_at')->orWhere('review_after_at', '>', now());
+        })->where(function (Builder $expiry): void {
             $expiry->whereNull('effective_until')->orWhere('effective_until', '>', now());
         })->where(function (Builder $builder): void {
             $builder->where(function (Builder $articles): void {

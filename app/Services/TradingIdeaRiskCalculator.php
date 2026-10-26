@@ -9,6 +9,24 @@ use InvalidArgumentException;
 /** Pure decimal calculations; instrument values must come from a verified specification. */
 class TradingIdeaRiskCalculator
 {
+    /** Price-distance R only; this cannot determine money risk or tradable volume. */
+    public function priceDistanceR(string $entry, string $stop, string $observed, string $side): string
+    {
+        $entryPrice = $this->decimal($entry);
+        $stopPrice = $this->decimal($stop);
+        $observedPrice = $this->decimal($observed);
+        if (! in_array($side, ['buy', 'sell'], true)
+            || $entryPrice->isNegativeOrZero() || $stopPrice->isNegativeOrZero()
+            || $observedPrice->isNegativeOrZero()
+            || ($side === 'buy' && $stopPrice->isGreaterThanOrEqualTo($entryPrice))
+            || ($side === 'sell' && $stopPrice->isLessThanOrEqualTo($entryPrice))) {
+            throw new InvalidArgumentException('Entry, stop and side must describe a valid hypothetical position.');
+        }
+        $distance = $entryPrice->minus($stopPrice)->abs();
+        $move = $side === 'buy' ? $observedPrice->minus($entryPrice) : $entryPrice->minus($observedPrice);
+        return (string) $move->dividedBy($distance, 4, RoundingMode::HALF_UP)->stripTrailingZeros();
+    }
+
     public function evaluate(array $idea, float $maximumRiskPercent = 1, float $minimumRewardRatio = 2): array
     {
         $equity = $this->decimal($idea['equity'] ?? 0);

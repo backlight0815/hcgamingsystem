@@ -1,6 +1,6 @@
 # TradingHub AI assistant
 
-Build 3 extends this build 2 design with a versioned master prompt, multilingual curriculum, decimal performance calculations and linked answer retries. See `docs/tradinghub-ai-v3-runbook.md` for the current operator and release checklist.
+Build 4 adds canonical terminology, a small multi-intent planner, claim evidence, source governance and advanced instrument lessons to the build 3 assistant. See `docs/tradinghub-ai-phase2-runbook.md` for the incremental gap matrix, current operator steps and release checklist. The build 3 baseline remains in `docs/tradinghub-ai-v3-runbook.md`.
 
 ## Files changed
 

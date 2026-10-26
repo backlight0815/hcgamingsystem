@@ -27,6 +27,11 @@ class PmRelease extends Model
     return $this->belongsTo(PmProject::class);
     }
 
+    public function associatedProjects()
+    {
+        return $this->belongsToMany(PmProject::class, 'pm_project_releases', 'release_id', 'project_id')->withTimestamps();
+    }
+
     public function cycle()
     {
     return $this->belongsTo(PmCycle::class);

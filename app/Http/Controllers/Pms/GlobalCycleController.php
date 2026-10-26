@@ -200,7 +200,9 @@ class GlobalCycleController extends Controller
         $history = DB::table('pm_global_cycle_history')->leftJoin('users', 'users.id', '=', 'pm_global_cycle_history.actor_id')
             ->where('cycle_id', $cycle->id)->select('pm_global_cycle_history.*', 'users.name as actor_name')
             ->orderByDesc('pm_global_cycle_history.id')->paginate(20, ['*'], 'history_page')->withQueryString();
-        $projectOptions = PmProject::whereIn('id', $visibleIds)->whereNull('archived_at')->orderBy('name')->get(['id', 'key', 'name']);
+        $projectOptions = PmProject::whereIn('id', $visibleIds)->whereNull('archived_at')
+            ->whereNotIn('id', $cycle->projects()->select('pm_projects.id'))
+            ->orderBy('name')->limit(50)->get(['id', 'key', 'name', 'status', 'current_global_cycle_id']);
         $departments = DB::table('pms_departments')->where('active', true)->orderBy('name')->get(['id', 'name']);
         $assignees = User::whereIn('id', (clone $allVisible)->whereNotNull('developer_id')->select('developer_id'))
             ->orWhereIn('id', (clone $allVisible)->whereNotNull('qa_id')->select('qa_id'))
@@ -263,37 +265,80 @@ class GlobalCycleController extends Controller
     public function assignProjects(Request $request, PmGlobalCycle $cycle, PmsGlobalCycleService $service)
     {
         abort_unless(PmsGlobalAccess::manageCycles($request->user()), 403);
-        $data = $request->validate(['project_ids' => 'required|array|min:1|max:50', 'project_ids.*' => 'required|integer|distinct|exists:pm_projects,id']);
+        abort_if($cycle->archived_at || in_array($cycle->status, ['Completed', 'Cancelled'], true), 422, 'This cycle cannot accept projects.');
+        $data = $request->validate(['project_ids' => 'required|array|min:1|max:50', 'project_ids.*' => 'required|integer|exists:pm_projects,id']);
         $projects = PmProject::whereIn('id', $data['project_ids'])->get();
         foreach ($projects as $project) {
             abort_unless(PmsAccess::allows($request->user(), $project, 'manage_cycle'), 403);
         }
-        DB::transaction(function () use ($request, $cycle, $service, $projects): void {
+        $added = DB::transaction(function () use ($request, $cycle, $service, $projects): int {
+            $added = 0;
             foreach ($projects as $project) {
                 $inserted = DB::table('pm_global_cycle_projects')->insertOrIgnore([
                     'cycle_id' => $cycle->id, 'project_id' => $project->id,
                     'assigned_by' => $request->user()->id, 'created_at' => now(), 'updated_at' => now(),
                 ]);
                 if ($inserted) {
+                    $added++;
                     $service->history($cycle, $request->user(), 'project_assigned', ['project_id' => $project->id]);
+                    app(\App\Services\PmsProjectPlanningService::class)->audit($project, $request->user(),
+                        'project.cycle_assigned', ['cycle_id' => $cycle->id, 'cycle_key' => $cycle->cycle_key]);
+                }
+                if (! $project->current_global_cycle_id) {
+                    PmProject::whereKey($project->id)->whereNull('current_global_cycle_id')
+                        ->update(['current_global_cycle_id' => $cycle->id]);
                 }
             }
+            return $added;
         });
 
-        return $request->expectsJson() ? response()->json(['assigned' => $projects->count()]) : back()->with('success', 'Projects assigned to cycle.');
+        return $request->expectsJson() ? response()->json(['assigned' => $added, 'total_assigned' => $cycle->projects()->count()])
+            : back()->with('success', $added ? $added.' project(s) assigned to cycle.' : 'Assignments already up to date.');
+    }
+
+    public function projectCandidates(Request $request, PmGlobalCycle $cycle)
+    {
+        abort_unless(PmsGlobalAccess::manageCycles($request->user()), 403);
+        $data = $request->validate(['q' => 'nullable|string|max:100', 'page' => 'nullable|integer|min:1']);
+        $query = PmProject::query()->whereNull('archived_at')
+            ->whereIn('id', PmsGlobalAccess::visibleProjectIds($request->user()));
+        if (! $request->user()->isGlobalSuperAdmin()) {
+            $members = DB::table('pm_project_members')->where('user_id', $request->user()->id);
+            if (! PmsAccess::productOwner($request->user())) $members->where('role', 'Project Manager');
+            $query->whereIn('id', $members->select('project_id'));
+        }
+        if (filled($data['q'] ?? null)) {
+            $term = '%'.str_replace(['%', '_'], ['\\%', '\\_'], trim($data['q'])).'%';
+            $query->where(fn ($q) => $q->where('name', 'like', $term)
+                ->orWhere('key', 'like', $term)->orWhere('project_reference', 'like', $term));
+        }
+        $page = $query->with(['currentGlobalCycle:id,cycle_key'])
+            ->withCount(['globalCycles as assigned_here_count' => fn ($q) => $q->where('pm_global_cycles.id', $cycle->id)])
+            ->orderBy('name')->paginate(25, ['id', 'project_reference', 'key', 'name', 'status', 'current_global_cycle_id']);
+        return response()->json($page);
     }
 
     public function removeProject(Request $request, PmGlobalCycle $cycle, PmProject $project, PmsGlobalCycleService $service)
     {
         abort_unless(PmsAccess::allows($request->user(), $project, 'manage_cycle'), 403);
-        DB::transaction(function () use ($request, $cycle, $project, $service): void {
+        if ((int) $project->current_global_cycle_id === (int) $cycle->id && $project->currentRelease?->global_cycle_id === $cycle->id) {
+            throw ValidationException::withMessages(['project_id' => 'Choose a different Release or clear it on the project before removing this cycle.']);
+        }
+        $removed = DB::transaction(function () use ($request, $cycle, $project, $service): bool {
             $removed = DB::table('pm_global_cycle_projects')->where('cycle_id', $cycle->id)->where('project_id', $project->id)->delete();
             if ($removed) {
                 $service->history($cycle, $request->user(), 'project_removed', ['project_id' => $project->id]);
+                if ((int) $project->current_global_cycle_id === (int) $cycle->id) {
+                    $project->forceFill(['current_global_cycle_id' => null])->save();
+                }
+                app(\App\Services\PmsProjectPlanningService::class)->audit($project, $request->user(),
+                    'project.cycle_removed', ['cycle_id' => $cycle->id, 'cycle_key' => $cycle->cycle_key]);
             }
+            return (bool) $removed;
         });
 
-        return $request->expectsJson() ? response()->json(['removed' => true]) : back()->with('success', 'Project removed from cycle. Its tickets remain unchanged.');
+        return $request->expectsJson() ? response()->json(['removed' => $removed])
+            : back()->with('success', $removed ? 'Project removed from cycle. Its tickets remain unchanged.' : 'Project was already unassigned.');
     }
 
     public function assignTicket(Request $request, PmGlobalCycle $cycle, PmsGlobalCycleService $service)

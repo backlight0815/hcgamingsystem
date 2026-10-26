@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ asset('backend/assets/css/pms-delivery-summary.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/assets/css/pms-release-board.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/assets/css/pms-global-cycles.css') }}">
+    @if(request()->routeIs('pms.projects.*', 'pms.global-cycles.*'))<link rel="stylesheet" href="{{ asset('backend/assets/css/pms-planning.css') }}?v=20261026a">@endif
     <link rel="stylesheet" href="{{ asset('backend/assets/css/pms-wiki.css') }}?v=20261021d">
     <link rel="stylesheet" href="{{ asset('backend/assets/css/pms-editor.css') }}">
     <link rel="stylesheet" href="{{ asset('backend/assets/css/pms-management.css') }}">

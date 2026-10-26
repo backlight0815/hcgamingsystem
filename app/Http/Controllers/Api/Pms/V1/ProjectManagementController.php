@@ -68,7 +68,9 @@ class ProjectManagementController extends Controller
 
     private function projectData(PmProject $project): array
     {
-        $project->loadMissing('owner:id,name');
+        $project->loadMissing('owner:id,name', 'currentGlobalCycle:id,cycle_key,name,status,start_date,end_date',
+            'currentRelease:id,release_key,name,status,global_cycle_id',
+            'globalCycles:id,cycle_key,name,status', 'associatedReleases:id,release_key,name,status');
         $manager = $project->manager_id ? User::with('pmsProfile')->find($project->manager_id) : null;
         return [
             'project_id' => $project->id, 'project_key' => $project->key, 'name' => $project->name,
@@ -81,6 +83,17 @@ class ProjectManagementController extends Controller
             'manager' => $manager ? ['user_id' => $manager->id, 'full_name' => $manager->name,
                 'job_position' => $manager->pmsProfile?->job_position] : null,
             'owner' => $project->owner ? ['user_id' => $project->owner->id, 'full_name' => $project->owner->name] : null,
+            'current_global_cycle_id' => $project->current_global_cycle_id,
+            'current_release_id' => $project->current_release_id,
+            'development_cycle' => $project->currentGlobalCycle ? [
+                'id' => $project->currentGlobalCycle->id, 'key' => $project->currentGlobalCycle->cycle_key,
+                'name' => $project->currentGlobalCycle->name, 'status' => $project->currentGlobalCycle->status] : null,
+            'related_cycles' => $project->globalCycles->map(fn ($cycle) => [
+                'id' => $cycle->id, 'key' => $cycle->cycle_key, 'name' => $cycle->name,
+                'current' => (int) $cycle->id === (int) $project->current_global_cycle_id])->all(),
+            'release' => $project->currentRelease ? [
+                'id' => $project->currentRelease->id, 'key' => $project->currentRelease->release_key,
+                'name' => $project->currentRelease->name, 'status' => $project->currentRelease->status] : null,
             'lock_version' => $project->lock_version,
             'created_at' => $project->created_at?->toIso8601String(), 'updated_at' => $project->updated_at?->toIso8601String(),
         ];
@@ -114,7 +127,8 @@ class ProjectManagementController extends Controller
 
         if ($status = $this->statusInput($request, 'project')) $request->merge(['status' => $status]);
         $changes = $request->only(['name', 'description', 'objective', 'category', 'priority', 'status',
-            'planned_start_date', 'target_date', 'related_module', 'manager_id', 'owner_id']);
+            'planned_start_date', 'target_date', 'related_module', 'manager_id', 'owner_id',
+            'current_global_cycle_id', 'current_release_id']);
         if ($changes === []) throw ValidationException::withMessages(['action' => 'Provide at least one project field to update.']);
         if (array_key_exists('priority', $changes)) $changes['priority'] = $this->priority($changes['priority']);
         if (array_key_exists('status', $changes)) $changes['status'] = $this->projectStatus($changes['status']);
@@ -284,12 +298,27 @@ class ProjectManagementController extends Controller
 
     public function getAssignableUsers(Request $request): JsonResponse
     {
-        $data = $request->validate(['assignment_type' => ['required', Rule::in(['developer', 'qa', 'manager'])],
+        $data = $request->validate(['assignment_type' => ['required', Rule::in(['developer', 'qa', 'manager', 'project_owner'])],
             'project_id' => 'nullable|integer|min:1', 'search' => 'nullable|string|max:100',
             'department_id' => 'nullable|integer|exists:pms_departments,id',
             'job_position_id' => 'nullable|integer|exists:pms_job_positions,id']);
         $project = isset($data['project_id']) ? PmProject::findOrFail($data['project_id']) : null;
         if ($project) abort_unless(PmsAccess::allows($request->user(), $project, 'view'), 403);
+        if ($data['assignment_type'] === 'project_owner') {
+            abort_unless($project ? PmsAccess::manageOwner($request->user(), $project)
+                : PmsAccess::administrator($request->user()), 403);
+            $query = app(\App\Services\PmsProjectOwnerService::class)->candidateQuery();
+            if (filled($data['search'] ?? null)) {
+                $term = '%'.str_replace(['%', '_'], ['\\%', '\\_'], trim($data['search'])).'%';
+                $query->where(fn ($q) => $q->where('name', 'like', $term)->orWhere('email', 'like', $term));
+            }
+            $users = $query->orderBy('name')->limit(50)->get()->map(fn ($user) => [
+                'user_id' => $user->id, 'full_name' => $user->name,
+                'job_position' => $user->pmsProfile?->job_position,
+                'display_name' => $user->name, 'is_active' => true,
+            ])->all();
+            return $this->ok($request, 'ASSIGNABLE_USERS_RETRIEVED', 'Eligible Project Owner candidates retrieved.', $users);
+        }
         $query = User::query()->with('pmsProfile')->where('status', 1)
             ->whereHas('pmsProfile', function ($profile) use ($data, $project): void {
                 $profile->where('status', 'active');

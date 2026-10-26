@@ -49,9 +49,16 @@ class ReleaseController extends Controller
     public function index(Request $request)
     {
         $projects = $this->projects($request);
-        $query = PmRelease::with(['project:id,key,name', 'cycle:id,cycle_key,name', 'globalCycle:id,cycle_key,name', 'owner:id,name'])->whereIn('project_id', $projects->pluck('id'));
+        $visibleProjectIds = $projects->pluck('id');
+        $query = PmRelease::with(['project:id,key,name',
+            'associatedProjects' => fn ($linked) => $linked->whereIn('pm_projects.id', $visibleProjectIds)
+                ->select('pm_projects.id', 'key', 'name', 'project_reference'),
+            'cycle:id,cycle_key,name', 'globalCycle:id,cycle_key,name', 'owner:id,name'])
+            ->where(fn ($q) => $q->whereIn('project_id', $visibleProjectIds)
+                ->orWhereHas('associatedProjects', fn ($linked) => $linked->whereIn('pm_projects.id', $visibleProjectIds)));
         if ($request->filled('project')) {
-            $query->where('project_id', $request->integer('project'));
+            $query->where(fn ($q) => $q->where('project_id', $request->integer('project'))
+                ->orWhereHas('associatedProjects', fn ($linked) => $linked->where('pm_projects.id', $request->integer('project'))));
         }
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -79,7 +86,9 @@ class ReleaseController extends Controller
             'prd' => (clone $ticketScope)->where('classification_key', 'PRD')->count(),
             'critical' => $open()->whereIn('priority', ['P0', 'P1'])->count(),
             'overdue' => $open()->whereDate('due_date', '<', today())->count(),
-            'active_milestones' => PmRelease::whereIn('project_id', $projects->pluck('id'))->whereNotIn('status', ['Released','Completed','Cancelled'])->count(),
+            'active_milestones' => PmRelease::where(fn ($q) => $q->whereIn('project_id', $visibleProjectIds)
+                ->orWhereHas('associatedProjects', fn ($linked) => $linked->whereIn('pm_projects.id', $visibleProjectIds)))
+                ->whereNotIn('status', ['Released','Completed','Cancelled'])->count(),
         ];
         $byPriority = $open()->selectRaw('priority, count(*) as total')->groupBy('priority')->pluck('total', 'priority');
         $byStatus = $open()->selectRaw('status, count(*) as total')->groupBy('status')->orderByDesc('total')->limit(8)->pluck('total', 'status');
@@ -148,6 +157,10 @@ class ReleaseController extends Controller
                 'release_type' => $data['release_type'] ?? 'standard',
                 'planned_start_date' => $cycle?->start_date ?? $globalCycle?->start_date, 'status' => 'Planned', 'created_by' => $request->user()->id,
             ]))->save();
+            DB::table('pm_project_releases')->insertOrIgnore([
+                'project_id' => $project->id, 'release_id' => $release->id,
+                'assigned_by' => $request->user()->id, 'created_at' => now(), 'updated_at' => now(),
+            ]);
             $this->record($request, $release, 'created', null, 'Planned');
 
             return $release;
@@ -158,8 +171,27 @@ class ReleaseController extends Controller
 
     public function show(Request $request, PmRelease $release, PmsReleaseService $service)
     {
-        abort_unless(PmsAccess::allows($request->user(), $release->project, 'view'), 403);
-        $release->load(['project.members:id,name', 'cycle.phases', 'globalCycle.stages', 'owner:id,name', 'tickets.developer:id,name', 'tickets.qa:id,name']);
+        $owningVisible = PmsAccess::allows($request->user(), $release->project, 'view');
+        $canView = $owningVisible
+            || $release->associatedProjects()->whereHas('members', fn ($q) => $q->where('users.id', $request->user()->id))->exists();
+        abort_unless($canView, 403);
+        $visibleProjectIds = PmsGlobalAccess::visibleProjectIds($request->user());
+        if (! $owningVisible) {
+            $release->load(['globalCycle:id,cycle_key,name', 'associatedProjects' => fn ($q) =>
+                $q->whereIn('pm_projects.id', $visibleProjectIds)
+                    ->select('pm_projects.id', 'key', 'name', 'project_reference')]);
+            $planning = ['id' => $release->id, 'key' => $release->release_key, 'name' => $release->name,
+                'status' => $release->status, 'planned_deploy_date' => $release->planned_deploy_date?->toDateString(),
+                'cycle' => $release->globalCycle?->cycle_key,
+                'projects' => $release->associatedProjects->map(fn ($project) => [
+                    'id' => $project->id, 'reference' => $project->project_reference, 'name' => $project->name])->all()];
+            return $request->expectsJson() ? response()->json(['release' => $planning])
+                : view('pms.release-linked', compact('release', 'planning'));
+        }
+        $release->load(['project.members:id,name',
+            'associatedProjects' => fn ($q) => $q->whereIn('pm_projects.id', $visibleProjectIds)
+                ->select('pm_projects.id', 'key', 'name', 'project_reference'),
+            'cycle.phases', 'globalCycle.stages', 'owner:id,name', 'tickets.developer:id,name', 'tickets.qa:id,name']);
         $readiness = $service->readiness($release);
         $visibleTickets = $release->tickets->filter(function ($ticket) use ($request): bool {
             return (! $request->filled('category') || $ticket->classification_key === $request->category)

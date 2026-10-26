@@ -68,6 +68,26 @@ class PmProject extends Model
         return $this->hasMany(PmCycle::class, 'project_id');
     }
 
+    public function globalCycles()
+    {
+        return $this->belongsToMany(PmGlobalCycle::class, 'pm_global_cycle_projects', 'project_id', 'cycle_id')->withTimestamps();
+    }
+
+    public function currentGlobalCycle()
+    {
+        return $this->belongsTo(PmGlobalCycle::class, 'current_global_cycle_id');
+    }
+
+    public function currentRelease()
+    {
+        return $this->belongsTo(PmRelease::class, 'current_release_id');
+    }
+
+    public function associatedReleases()
+    {
+        return $this->belongsToMany(PmRelease::class, 'pm_project_releases', 'project_id', 'release_id')->withTimestamps();
+    }
+
     public function releases()
     {
         return $this->hasMany(PmRelease::class, 'project_id');

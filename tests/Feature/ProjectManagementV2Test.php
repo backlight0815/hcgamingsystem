@@ -54,7 +54,7 @@ class ProjectManagementV2Test extends TestCase
         $four = PmCycle::where('cycle_key', 'PMS-CYCLE-001')->firstOrFail();
         $this->assertSame('2026-10-28', $four->target_end_date->toDateString());
         $this->assertSame([14, 7, 7], $four->phases->pluck('planned_start_date')->map(fn ($date, $index) => $four->phases[$index]->planned_start_date->diffInDays($four->phases[$index]->planned_end_date) + 1)->all());
-        $this->actingAs($admin)->getJson(route('pms.cycles.show', $four))->assertOk()->assertJsonPath('analytics.basis', 'issue count');
+        $this->actingAs($admin)->getJson(route('pms.cycles.show', $four))->assertOk()->assertJsonPath('analytics.basis', 'development-applicable tickets');
 
         $this->actingAs($admin)->postJson(route('pms.cycles.store'), [
             'project_id' => $project->id, 'name' => 'Six week working cycle', 'week_mode' => 'working',

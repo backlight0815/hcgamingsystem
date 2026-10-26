@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Pms;
 
 use App\Http\Controllers\Controller;
 use App\Models\PmProject;
+use App\Models\PmGlobalCycle;
+use App\Models\PmRelease;
 use App\Models\PmTicketAttachment;
 use App\Models\PmWikiPage;
 use App\Models\PmsProfile;
@@ -14,6 +16,7 @@ use App\Support\PmsProjectDescription;
 use App\Support\PmsWikiAccess;
 use App\Services\PmsChangeReviewService;
 use App\Services\PmsProjectOwnerService;
+use App\Services\PmsProjectPlanningService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -59,8 +62,14 @@ class ProjectController extends Controller
 
         $ownerCandidates = !$request->expectsJson() && PmsAccess::administrator($request->user())
             ? app(PmsProjectOwnerService::class)->candidates() : collect();
+        $cycleOptions = !$request->expectsJson() && PmsAccess::administrator($request->user())
+            ? PmGlobalCycle::whereNull('archived_at')->whereNotIn('status', ['Cancelled', 'Completed'])
+                ->orderByDesc('start_date')->get() : collect();
+        $releaseOptions = !$request->expectsJson() && PmsAccess::administrator($request->user())
+            ? PmRelease::whereNotIn('status', ['Cancelled'])->whereNull('cycle_id')
+                ->orderByDesc('planned_deploy_date')->get() : collect();
 
-        return $request->expectsJson() ? response()->json($projects) : view('pms.projects', compact('projects', 'ownerCandidates'));
+        return $request->expectsJson() ? response()->json($projects) : view('pms.projects', compact('projects', 'ownerCandidates', 'cycleOptions', 'releaseOptions'));
     }
 
     public function store(Request $request)
@@ -76,14 +85,19 @@ class ProjectController extends Controller
             'related_module' => 'nullable|string|max:40',
             'manager_id' => 'nullable|integer|exists:users,id',
             'owner_id' => 'nullable|integer|exists:users,id',
+            'current_global_cycle_id' => 'nullable|integer|exists:pm_global_cycles,id',
+            'current_release_id' => 'nullable|integer|exists:pm_releases,id',
         ]);
-        app(PmsProjectOwnerService::class)->validate($data['owner_id'] ?? null);
+        app(PmsProjectOwnerService::class)->validate($data['owner_id'] ?? $request->user()->id);
+        [$cycle, $release] = app(PmsProjectPlanningService::class)->validateSelection(
+            $data['current_global_cycle_id'] ?? null, $data['current_release_id'] ?? null, null, $request->user());
         if (! empty($data['manager_id']) && ! PmsPosition::eligible(User::with('pmsProfile')->find($data['manager_id']), 'manager')) {
             throw \Illuminate\Validation\ValidationException::withMessages(['manager_id' => 'Choose an active PMS manager.']);
         }
         if (isset($data['description'])) $data['description'] = PmsProjectDescription::canonicalize($data['description']);
         if (array_key_exists('status', $data) && $data['status'] === null) unset($data['status']);
-        $project = DB::transaction(function () use ($request, $data) {
+        unset($data['current_global_cycle_id'], $data['current_release_id']);
+        $project = DB::transaction(function () use ($request, $data, $cycle, $release) {
             $project = PmProject::create(array_merge($data, [
                 'key' => strtoupper($data['key']), 'owner_id' => $data['owner_id'] ?? $request->user()->id,
                 'created_by' => $request->user()->id, 'updated_by' => $request->user()->id,
@@ -100,8 +114,9 @@ class ProjectController extends Controller
                 'status' => 'active', 'approved_by' => $request->user()->id, 'approved_at' => now(), 'deactivated_at' => null,
             ]);
             $this->audit($request, 'project.created', $project);
+            app(PmsProjectPlanningService::class)->apply($project, $cycle, $release, $request->user());
 
-            return $project;
+            return $project->fresh();
         });
 
         return $request->expectsJson() ? response()->json($project, 201) : redirect()->route('pms.projects.show', $project)->with('success', 'Project created.');
@@ -110,7 +125,8 @@ class ProjectController extends Controller
     public function show(Request $request, PmProject $project)
     {
         abort_unless(PmsAccess::allows($request->user(), $project, 'view'), 403);
-        $project->load(['owner:id,name', 'members:id,name,email', 'cycles' => fn ($query) => $query->latest('start_date')->limit(8),
+        $project->load(['owner:id,name', 'currentGlobalCycle', 'currentRelease', 'globalCycles', 'associatedReleases',
+            'members:id,name,email', 'cycles' => fn ($query) => $query->latest('start_date')->limit(8),
             'releases' => fn ($query) => $query->latest('planned_deploy_date')->limit(8)]);
         $issues = $project->issues()->with(['developer:id,name', 'qa:id,name'])->latest()->paginate(20);
         $users = PmsAccess::allows($request->user(), $project, 'manage')
@@ -118,11 +134,24 @@ class ProjectController extends Controller
             : collect();
         $ownerCandidates = !$request->expectsJson() && PmsAccess::allows($request->user(), $project, 'edit_project')
             ? app(PmsProjectOwnerService::class)->candidates() : collect();
+        $cycleOptions = PmsAccess::manageCycle($request->user(), $project)
+            ? PmGlobalCycle::whereNull('archived_at')->whereNotIn('status', ['Cancelled', 'Completed'])
+                ->orderByDesc('start_date')->get() : collect();
+        $releaseOptions = PmsAccess::manageCycle($request->user(), $project)
+            ? PmRelease::with('cycle:id,global_cycle_id')->whereNotIn('status', ['Cancelled'])->where(function ($query) use ($project): void {
+                $query->whereNull('cycle_id')->orWhere('project_id', $project->id);
+            })->where(function ($query) use ($request, $project): void {
+                $query->whereIn('project_id', \App\Support\PmsGlobalAccess::visibleProjectIds($request->user()))
+                    ->orWhere('id', $project->current_release_id ?? 0);
+            })
+                ->orderByDesc('planned_deploy_date')->get() : collect();
         if (!$request->expectsJson() && PmsAccess::allows($request->user(), $project, 'edit_project')
             && $project->owner_id && !$ownerCandidates->contains('id', $project->owner_id)) {
             $currentOwner = User::with('pmsProfile')->find($project->owner_id);
             if ($currentOwner) {
                 $currentOwner->setAttribute('is_historical_owner', true);
+                $currentOwner->setAttribute('historical_owner_reason', app(PmsProjectOwnerService::class)->prohibited($currentOwner)
+                    ? 'ineligible position' : 'inactive');
                 $ownerCandidates->prepend($currentOwner);
             }
         }
@@ -133,8 +162,8 @@ class ProjectController extends Controller
             'in_progress' => $project->issues()->whereIn('status', ['In Progress', 'Development', 'Internal Testing', 'QAT in Progress', 'Code Review'])->count(),
             'completed' => $project->issues()->whereIn('status', ['Completed', 'Production Done', 'QAT Done'])->count(),
             'overdue' => $project->issues()->whereDate('due_date', '<', today())->whereNotIn('status', ['Completed', 'Production Done', 'Cancelled'])->count(),
-            'active_releases' => $project->releases()->whereNotIn('status', ['Completed', 'Cancelled'])->count(),
-            'cycles' => $project->cycles()->count(),
+            'active_releases' => $project->associatedReleases()->whereNotIn('status', ['Completed', 'Cancelled'])->count(),
+            'cycles' => $project->cycles()->count() + $project->globalCycles()->count(),
         ];
         $files = PmTicketAttachment::with(['issue:id,project_id,reference,issue_key,summary', 'uploader:id,name'])
             ->where('category', 'evidence')
@@ -157,7 +186,7 @@ class ProjectController extends Controller
             ->get()->filter(fn ($page) => PmsWikiAccess::viewPage($request->user(), $page));
         $changeReviews = app(PmsChangeReviewService::class)->history('project', $project->id);
 
-        return $request->expectsJson() ? response()->json($project) : view('pms.project', compact('project', 'issues', 'users', 'ownerCandidates', 'impact', 'wikiPages', 'metrics', 'files', 'activity', 'descriptionHtml', 'attachmentTargets', 'changeReviews'));
+        return $request->expectsJson() ? response()->json($project) : view('pms.project', compact('project', 'issues', 'users', 'ownerCandidates', 'cycleOptions', 'releaseOptions', 'impact', 'wikiPages', 'metrics', 'files', 'activity', 'descriptionHtml', 'attachmentTargets', 'changeReviews'));
     }
 
     public function previewDescription(Request $request, PmProject $project)
@@ -215,7 +244,19 @@ class ProjectController extends Controller
             'related_module' => 'nullable|string|max:40', 'lock_version' => 'required|integer|min:0',
             'manager_id' => 'nullable|integer|exists:users,id',
             'owner_id' => 'nullable|integer|exists:users,id',
+            'current_global_cycle_id' => 'nullable|integer|exists:pm_global_cycles,id',
+            'current_release_id' => 'nullable|integer|exists:pm_releases,id',
         ]);
+        $planningChanged = array_key_exists('current_global_cycle_id', $data) || array_key_exists('current_release_id', $data);
+        $selectedCycle = null;
+        $selectedRelease = null;
+        if ($planningChanged) {
+            abort_unless(PmsAccess::manageCycle($request->user(), $project), 403);
+            [$selectedCycle, $selectedRelease] = app(PmsProjectPlanningService::class)->validateSelection(
+                array_key_exists('current_global_cycle_id', $data) ? $data['current_global_cycle_id'] : $project->current_global_cycle_id,
+                array_key_exists('current_release_id', $data) ? $data['current_release_id'] : $project->current_release_id,
+                $project, $request->user());
+        }
         $ownerChanged = array_key_exists('owner_id', $data)
             && (int) ($data['owner_id'] ?? 0) !== (int) $project->owner_id;
         if ($ownerChanged) {
@@ -240,18 +281,20 @@ class ProjectController extends Controller
             throw \Illuminate\Validation\ValidationException::withMessages(['manager_id' => 'Choose an active PMS manager.']);
         }
         if (isset($data['description'])) $data['description'] = PmsProjectDescription::canonicalize($data['description']);
-        DB::transaction(function () use ($request, $project, $data) {
+        DB::transaction(function () use ($request, $project, $data, $planningChanged, $selectedCycle, $selectedRelease) {
             $locked = PmProject::lockForUpdate()->findOrFail($project->id);
             if ($locked->lock_version !== (int) $data['lock_version']) {
             throw \Illuminate\Validation\ValidationException::withMessages(['lock_version' => 'Project changed. Refresh and retry.']);
             }
             unset($data['lock_version']);
+            unset($data['current_global_cycle_id'], $data['current_release_id']);
             $before = $locked->only(array_keys($data));
             $locked->fill($data);
             $locked->completed_at = $locked->status === 'Completed' ? ($locked->completed_at ?: today()) : null;
             $locked->updated_by = $request->user()->id;
             $locked->lock_version++;
             $locked->save();
+            if ($planningChanged) app(PmsProjectPlanningService::class)->apply($locked, $selectedCycle, $selectedRelease, $request->user());
             if (array_key_exists('owner_id', $data) && $data['owner_id']
                 && ! $locked->members()->where('users.id', $data['owner_id'])->exists()) {
                 $locked->members()->attach($data['owner_id'], ['role' => 'Viewer']);
@@ -270,6 +313,31 @@ class ProjectController extends Controller
         });
 
         return $request->expectsJson() ? response()->json($project->fresh()) : back()->with('success', 'Project updated.');
+    }
+
+    public function updatePlanning(Request $request, PmProject $project)
+    {
+        abort_unless(PmsAccess::manageCycle($request->user(), $project), 403);
+        $data = $request->validate([
+            'lock_version' => 'required|integer|min:0',
+            'current_global_cycle_id' => 'nullable|integer|exists:pm_global_cycles,id',
+            'current_release_id' => 'nullable|integer|exists:pm_releases,id',
+        ]);
+        [$cycle, $release] = app(PmsProjectPlanningService::class)->validateSelection(
+            $data['current_global_cycle_id'] ?? null, $data['current_release_id'] ?? null, $project, $request->user());
+        $project = DB::transaction(function () use ($request, $project, $data, $cycle, $release): PmProject {
+            $locked = PmProject::lockForUpdate()->findOrFail($project->id);
+            if ((int) $locked->lock_version !== (int) $data['lock_version']) {
+                throw \Illuminate\Validation\ValidationException::withMessages(['lock_version' => 'Project changed. Refresh and retry.']);
+            }
+            if ((int) $locked->current_global_cycle_id !== (int) ($cycle?->id ?? 0)
+                || (int) $locked->current_release_id !== (int) ($release?->id ?? 0)) {
+                app(PmsProjectPlanningService::class)->apply($locked, $cycle, $release, $request->user());
+                $locked->forceFill(['updated_by' => $request->user()->id, 'lock_version' => $locked->lock_version + 1])->save();
+            }
+            return $locked->fresh();
+        });
+        return $request->expectsJson() ? response()->json($project) : back()->with('success', 'Project planning links saved. Tickets were not moved.');
     }
 
     public function archive(Request $request, PmProject $project)

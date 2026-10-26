@@ -1299,6 +1299,7 @@ Route::middleware(['auth:pms,web', \App\Http\Middleware\EnsurePmsAccess::class])
         Route::post('/projects/{project}/description/preview', [\App\Http\Controllers\Pms\ProjectController::class, 'previewDescription'])->middleware('throttle:60,1')->name('projects.description.preview');
         Route::post('/projects/{project}/attachments', [\App\Http\Controllers\Pms\ProjectController::class, 'storeAttachments'])->name('projects.attachments.store');
         Route::put('/projects/{project}', [\App\Http\Controllers\Pms\ProjectController::class, 'update'])->name('projects.update');
+        Route::put('/projects/{project}/planning', [\App\Http\Controllers\Pms\ProjectController::class, 'updatePlanning'])->name('projects.planning.update');
         Route::post('/projects/{project}/archive', [\App\Http\Controllers\Pms\ProjectController::class, 'archive'])->name('projects.archive');
         Route::post('/projects/{project}/unarchive', [\App\Http\Controllers\Pms\ProjectController::class, 'unarchive'])->name('projects.unarchive');
         Route::delete('/projects/{project}', [\App\Http\Controllers\Pms\ProjectController::class, 'trash'])->name('projects.trash');
@@ -1333,6 +1334,7 @@ Route::middleware(['auth:pms,web', \App\Http\Middleware\EnsurePmsAccess::class])
         Route::put('/delivery-cycles/{cycle}', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'update'])->name('global-cycles.update');
         Route::put('/delivery-cycles/{cycle}/stages', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'stages'])->name('global-cycles.stages');
         Route::post('/delivery-cycles/{cycle}/projects', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'assignProjects'])->name('global-cycles.projects.store');
+        Route::get('/delivery-cycles/{cycle}/project-candidates', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'projectCandidates'])->name('global-cycles.project-candidates');
         Route::delete('/delivery-cycles/{cycle}/projects/{project}', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'removeProject'])->name('global-cycles.projects.destroy');
         Route::post('/delivery-cycles/{cycle}/tickets', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'assignTicket'])->name('global-cycles.tickets.store');
         Route::post('/delivery-cycles/{cycle}/tickets/{ticket}/stage', [\App\Http\Controllers\Pms\GlobalCycleController::class, 'assignTicketStage'])->name('global-cycles.tickets.stage');

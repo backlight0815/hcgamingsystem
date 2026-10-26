@@ -1,0 +1,15 @@
+.pm-form-grid [data-planning-search],
+.pm-form-grid [data-planning-select],
+.pm-form-grid #pm-cycle-project-options { width: 100%; min-width: 0; max-width: 100%; }
+.pm-form-grid [data-planning-select],
+.pm-form-grid #pm-cycle-project-options { margin-top: 6px; }
+.pm-form-grid #pm-cycle-project-options { min-height: 13rem; }
+.pm-form-grid .pm-muted.wide,
+.pm-form-grid .pm-form-actions { grid-column: 1 / -1; }
+.pm-form-grid [data-planning-search]:focus-visible,
+.pm-form-grid [data-planning-select]:focus-visible,
+.pm-form-grid #pm-cycle-project-options:focus-visible { outline: 2px solid var(--pm-blue); outline-offset: 2px; }
+@media (max-width: 620px) {
+    .pm-form-grid #pm-cycle-project-options { min-height: 11rem; }
+    .pm-form-grid .pm-form-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+}
